@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
+    >
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="689dp"
+        android:id="@+id/mainspace"
+        android:background="@color/blackTransparent">
+
+        <RelativeLayout
+            android:layout_width="487dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/view_border_white_in"
+            android:id="@+id/quantity_popup">
+
+            <com.example.blackbox.graphics.CustomEditText
+                android:layout_width="447dp"
+                android:layout_height="42dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/view_border_white_in"
+                android:hint="@string/quantity"
+                android:inputType="number"
+                android:id="@+id/quantity_insert"
+                android:selectAllOnFocus="true"
+                android:gravity="center"
+                android:textColorHighlight="@color/gray"
+                android:textCursorDrawable="@null"
+                android:textColor="@color/blackTransparent"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="18dp"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mainspace"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

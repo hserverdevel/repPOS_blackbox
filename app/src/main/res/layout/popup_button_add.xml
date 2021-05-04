@@ -1,0 +1,1777 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/popup_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="689dp"
+        android:id="@+id/mainspace"
+        android:background="@color/blackTransparent">
+
+    <!--   TYPE CHOOSING WINDOW   -->
+
+        <RelativeLayout
+            android:layout_width="477dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/ButtonTypeChooser"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="487dp"
+                android:layout_height="62dp"
+                android:background="@drawable/view_base_background">
+
+                <com.example.blackbox.graphics.CustomButton
+                    style="@style/PopupWindowButton"
+                    android:layout_width="237dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/category"
+                    android:textAllCaps="true"
+                    android:id="@+id/category"
+                    />
+
+                <View
+                    android:id="@+id/line"
+                    android:layout_width="2dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layerType="software"
+                    android:background="@drawable/vertical_dashed_line"
+                    />
+
+                <com.example.blackbox.graphics.CustomButton
+                    style="@style/PopupWindowButton"
+                    android:layout_width="238dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/product"
+                    android:textAllCaps="true"
+                    android:id="@+id/product"
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <!--   CATEGORY WINDOW  -->
+
+        <RelativeLayout
+            android:layout_width="487dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/CategorySetup"
+            android:background="@drawable/view_base_background"
+            android:layout_centerInParent="true"
+            android:visibility="gone">
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:text="@string/category"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:id="@+id/category_tv"
+                android:layout_centerHorizontal="true"
+                custom:typeface="franklin_gothic_demi"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/category_tv"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/category_base_settings_window"
+                android:background="@color/white">
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:hint="@string/title"
+                    android:inputType="textCapWords|textAutoCorrect"
+                    android:id="@+id/catTitleInsert"
+                    android:selectAllOnFocus="true"
+                    android:gravity="center"
+                    android:nextFocusDown="@+id/catSubTitleInsert"
+                    android:textColorHighlight="@color/gray"
+                    android:background="@drawable/view_border"
+                    android:textCursorDrawable="@null"
+                    android:textColor="@color/blackTransparent"
+                    custom:typeface="roboto_black" />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:hint="@string/subtitle"
+                    android:inputType="textCapWords|textAutoCorrect"
+                    android:layout_toRightOf="@id/catTitleInsert"
+                    android:gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:selectAllOnFocus="true"
+                    android:id="@+id/catSubTitleInsert"
+                    android:textColorHighlight="@color/gray"
+                    android:background="@drawable/view_border"
+                    android:textCursorDrawable="@null"
+                    android:textColor="@color/blackTransparent"/>
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:text="@string/selectIcon"
+                    android:layout_below="@id/catTitleInsert"
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/catImgChooser"
+                    android:background="@drawable/popup_button_gray"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textAllCaps="false"
+                    android:textSize="15sp"
+                    custom:letterSpacing="0.0"/>
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:text="@string/buttonColor"
+                    android:layout_below="@id/catSubTitleInsert"
+                    android:layout_toRightOf="@id/catImgChooser"
+                    android:id="@+id/catColorPicker"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@drawable/popup_button_gray"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"/>
+
+                <Spinner
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:text="@string/select_printer"
+                    android:layout_below="@id/catImgChooser"
+                    android:id="@+id/select_kitchen_printer"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/view_border"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    android:letterSpacing="0.0"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:spinnerMode="dialog"
+                    />
+
+                <ImageButton
+                    android:id="@+id/fidelity_credit_checkbox"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@id/select_kitchen_printer"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/view_border"
+                    android:src="@drawable/checkbox_selector" />
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/fidelity_credit_checkbox_tv"
+                    android:layout_width="160dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@id/select_kitchen_printer"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginTop="15dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/credit_fidelity"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_book"
+                    android:layout_toRightOf="@id/fidelity_credit_checkbox"
+                    />
+                <ImageButton
+                    android:id="@+id/fidelity_discount_checkbox"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@id/select_kitchen_printer"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toRightOf="@id/fidelity_credit_checkbox_tv"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/view_border"
+                    android:src="@drawable/checkbox_selector" />
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/fidelity_discount_checkbox_tv"
+                    android:layout_width="160dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@id/select_kitchen_printer"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginTop="15dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/credit_discount"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_book"
+                    android:layout_toRightOf="@id/fidelity_discount_checkbox"
+                    />
+
+
+
+                <View
+                    android:layout_width="447dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/divider_line_horizontal"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/fidelity_credit_checkbox"
+                    android:id="@+id/category_add_hline"
+                    />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:text="@string/go_to_category"
+                    android:layout_below="@id/category_add_hline"
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/goToCategory"
+                    android:layout_centerHorizontal="true"
+                    android:elevation="0dp"
+                    android:background="@drawable/popup_button_green"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:textAllCaps="false"
+                    android:textSize="15sp"/>
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:text="@string/delete_category"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:id="@+id/deleteCategory"
+                    android:layout_centerHorizontal="true"
+                    android:elevation="0dp"
+                    android:layout_below="@id/goToCategory"
+                    android:background="@drawable/popup_button_red"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textSize="15sp"
+                    custom:letterSpacing="0.0"
+                    android:textAllCaps="false"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <!--  PRODUCT WINDOW  -->
+
+        <RelativeLayout
+            android:layout_width="487dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/ProductSetup"
+            android:background="@drawable/view_base_background"
+            android:visibility="gone">
+<!--
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:text="@string/product"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:id="@+id/product_tv"
+                android:layout_centerHorizontal="true"
+                custom:typeface="franklin_gothic_demi"/>
+            -->
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:id="@+id/product_tv"
+                android:layout_width="237dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="4dp"
+                android:background="@color/green_2"
+                android:gravity="center"
+                android:text="@string/product"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:typeface="franklin_gothic_demi" />
+
+            <LinearLayout
+                android:id="@+id/title_divider"
+                android:layout_width="3dp"
+                android:layout_height="48dp"
+                android:background="@drawable/vertical_divider_white_3dp"
+                android:layout_toRightOf="@+id/product_tv"
+                android:orientation="vertical"
+                android:layout_marginTop="6dp"
+                >
+            </LinearLayout>
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="237dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="4dp"
+                android:text="@string/combo"
+                android:layout_toRightOf="@+id/title_divider"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:typeface="franklin_gothic_demi"
+                android:gravity="center"
+                android:id="@+id/combo_tv"
+                />
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/product_tv"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/product_base_settings_window"
+                android:background="@color/white">
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:hint="@string/title"
+                    android:inputType="textCapWords|textAutoCorrect"
+                    android:id="@+id/prodTitleInsert"
+                    android:selectAllOnFocus="true"
+                    android:gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:nextFocusDown="@+id/prodSubTitleInsert"
+                    android:textColorHighlight="@color/gray"
+                    android:background="@drawable/view_border"
+                    android:textCursorDrawable="@null"
+                    android:textColor="@color/blackTransparent"
+                    custom:typeface="franklin_gothic_demi"/>
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:hint="@string/subtitle"
+                    android:inputType="textCapWords|textAutoCorrect"
+                    android:layout_toRightOf="@id/prodTitleInsert"
+                    android:gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:selectAllOnFocus="true"
+                    android:nextFocusDown="@+id/prodPriceInsert"
+                    android:id="@+id/prodSubTitleInsert"
+                    android:textColorHighlight="@color/gray"
+                    android:background="@drawable/view_border"
+                    android:textCursorDrawable="@null"
+                    android:textColor="@color/blackTransparent"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:hint="@string/price"
+                    android:inputType="numberDecimal"
+                    android:id="@+id/prodPriceInsert"
+                    android:selectAllOnFocus="true"
+                    android:gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/prodTitleInsert"
+                    android:nextFocusDown="@+id/ivaInsert"
+                    android:nextFocusForward="@+id/ivaInsert"
+                    android:nextFocusRight="@+id/ivaInsert"
+                    android:textColorHighlight="@color/gray"
+                    android:background="@drawable/view_border"
+                    android:textCursorDrawable="@null"
+                    android:textColor="@color/blackTransparent"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:hint="@string/vat"
+                    android:layout_toEndOf="@id/prodPriceInsert"
+                    android:layout_below="@id/prodSubTitleInsert"
+                    android:gravity="center"
+                    android:id="@+id/prodTaxInsert"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginStart="15dp"
+                    android:elevation="0dp"
+                    android:background="@drawable/view_border"
+                    android:textColor="@color/blackTransparent"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:textSize="18sp"
+                    android:textAllCaps="false"/>
+
+                <Spinner
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:text="@string/select_printer"
+                    android:layout_below="@id/prodPriceInsert"
+                    android:id="@+id/prodBarcode"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:elevation="0dp"
+                    android:background="@drawable/view_border"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:spinnerMode="dialog"
+                    />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:text="@string/buttonColor"
+                    android:layout_below="@id/prodPriceInsert"
+                    android:layout_toRightOf="@id/prodBarcode"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/prodButtonColor"
+                    android:elevation="0dp"
+                    android:background="@drawable/popup_button_gray"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    custom:letterSpacing="0.0"/>
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:id="@+id/read_barcode"
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/prodBarcode"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/button_lightblue_3dp_grey_press"
+                    android:text="@string/barcode_scan"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi"
+                    android:visibility="gone"/>
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:hint="@string/credit_value"
+                    android:inputType="numberDecimal"
+                    android:id="@+id/credit_value_input"
+                    android:selectAllOnFocus="true"
+                    android:gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/read_barcode"
+                    android:textColorHighlight="@color/gray"
+                    android:background="@drawable/view_border"
+                    android:textCursorDrawable="@null"
+                    android:textColor="@color/blackTransparent"
+                    custom:typeface="franklin_gothic_demi"
+
+                    />
+
+                <ImageButton
+                    android:id="@+id/fidelity_discount_checkbox_prod"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@id/read_barcode"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="21dp"
+                    android:background="@drawable/view_border"
+                    android:src="@drawable/checkbox_selector"
+                    android:layout_toRightOf="@id/credit_value_input"
+                    />
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/fidelity_discount_checkbox_prod_tv"
+                    android:layout_width="160dp"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/read_barcode"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginTop="15dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/credit_discount"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_book"
+                    android:layout_toRightOf="@id/fidelity_discount_checkbox_prod"
+                    />
+
+
+                <View
+                    android:layout_width="447dp"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/divider_line_horizontal"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/fidelity_discount_checkbox_prod"
+                    android:id="@+id/product_add_hline"
+                    />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/productModifiers"
+                    android:layout_below="@id/product_add_hline"
+                    android:id="@+id/goToModifiers"
+                    android:background="@drawable/popup_button_green"
+                    android:textColor="@color/white"
+                    android:textAllCaps="false"
+                    android:textSize="15sp"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"/>
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:text="@string/deleteProduct"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:id="@+id/deleteProduct"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/goToModifiers"
+                    android:background="@drawable/popup_button_red"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:textAllCaps="false"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <!--   VAT POPUP WINDOW   -->
+
+
+        <RelativeLayout
+            android:id="@+id/new_Popup_Vat_Insert"
+            android:layout_width="487dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/view_base_background"
+            android:visibility="gone">
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:id="@+id/vat_title"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:background="@color/blackTransparent"
+                android:gravity="center"
+                android:text="@string/preset_vat"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:typeface="franklin_gothic_demi" />
+
+            <RelativeLayout
+                android:id="@+id/vat_window"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/vat_title"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/white">
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/vat_value_insert"
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
+                    android:hint="@string/vat__value"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/blackTransparent"
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null"
+                    custom:typeface="franklin_gothic_demi" />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/vat_perc_insert"
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toEndOf="@+id/vat_value_insert"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
+                    android:hint="@string/vat_percent"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/blackTransparent"
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null"
+                    custom:typeface="franklin_gothic_demi" />
+
+
+                <View
+                    android:id="@+id/vat_add_hline"
+                    android:layout_width="447dp"
+                    android:layout_height="2dp"
+                    android:layout_below="@id/vat_value_insert"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/divider_line_horizontal" />
+
+                <LinearLayout
+                    android:layout_width="447dp"
+                    android:layout_height="165dp"
+                    android:layout_below="@id/vat_add_hline"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/view_border">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/vat_value_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/white">
+
+                    </android.support.v7.widget.RecyclerView>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <!-- COLOR CHOOSING WINDOW -->
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="626dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="49dp"
+            android:id="@+id/colors_container"
+            android:visibility="gone"
+            >
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/top_hline"
+                android:background="@drawable/divider_line_horizontal"/>
+
+            <RelativeLayout
+                android:layout_width="490dp"
+                android:layout_height="620dp"
+                android:layout_below="@id/top_hline"
+                android:id="@+id/left_pane">
+
+                <!-- SURPRISE -->
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="156dp"
+                    android:id="@+id/colorPaletteContainer_1">
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteName_tv"
+                        android:text="@string/surprise"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="21sp"
+                        android:textColor="@color/white"
+                        android:inputType="textCapWords"
+                        android:gravity="center_vertical|start"/>
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteNumber_tv"
+                        android:layout_toRightOf="@id/paletteName_tv"
+                        android:text="@string/color_palette_1"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center_vertical|end"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="86dp"
+                        android:id="@+id/colorSetContainer"
+                        android:layout_below="@id/paletteName_tv">
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color1"
+                            android:background="#bd7e9e"
+                            />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline1"
+                            android:layout_toRightOf="@id/color1"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color2"
+                            android:background="#e18888"
+                            android:layout_toRightOf="@id/vline1"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline2"
+                            android:layout_toRightOf="@id/color2"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color3"
+                            android:background="#e66e39"
+                            android:layout_toRightOf="@id/vline2"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline3"
+                            android:layout_toRightOf="@id/color3"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color4"
+                            android:background="#91e1ba"
+                            android:layout_toRightOf="@id/vline3"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline4"
+                            android:layout_toRightOf="@id/color4"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color5"
+                            android:background="#5cafb6"
+                            android:layout_toRightOf="@id/vline4"
+                            android:layout_marginStart="7dp"/>
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:id="@+id/hline1_left"
+                        android:layout_below="@id/colorSetContainer"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/divider_line_horizontal"/>
+
+                </RelativeLayout>
+
+                <!-- FORESTY -->
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="156dp"
+                    android:id="@+id/colorPaletteContainer_2"
+                    android:layout_below="@id/colorPaletteContainer_1">
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteName_tv"
+                        android:text="@string/foresty"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="21sp"
+                        android:textColor="@color/white"
+                        android:inputType="textCapWords"
+                        android:gravity="center_vertical|start"/>
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteNumber_tv"
+                        android:layout_toRightOf="@id/paletteName_tv"
+                        android:text="@string/color_palette_2"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center_vertical|end"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="86dp"
+                        android:id="@+id/colorSetContainer"
+                        android:layout_below="@id/paletteName_tv">
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color1"
+                            android:background="#045c2e"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline1"
+                            android:layout_toRightOf="@id/color1"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color2"
+                            android:background="#098243"
+                            android:layout_toRightOf="@id/vline1"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline2"
+                            android:layout_toRightOf="@id/color2"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color3"
+                            android:background="#70b576"
+                            android:layout_toRightOf="@id/vline2"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline3"
+                            android:layout_toRightOf="@id/color3"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color4"
+                            android:background="#aa986f"
+                            android:layout_toRightOf="@id/vline3"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline4"
+                            android:layout_toRightOf="@id/color4"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color5"
+                            android:background="#8e7945"
+                            android:layout_toRightOf="@id/vline4"
+                            android:layout_marginStart="7dp"/>
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:id="@+id/hline2_left"
+                        android:layout_below="@id/colorSetContainer"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/divider_line_horizontal"/>
+
+                </RelativeLayout>
+
+                <!-- STONE COLD -->
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="156dp"
+                    android:id="@+id/colorPaletteContainer_3"
+                    android:layout_below="@id/colorPaletteContainer_2">
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteName_tv"
+                        android:text="@string/stone_cold"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="21sp"
+                        android:textColor="@color/white"
+                        android:inputType="textCapWords"
+                        android:gravity="center_vertical|start"/>
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteNumber_tv"
+                        android:layout_toRightOf="@id/paletteName_tv"
+                        android:text="@string/color_palette_3"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center_vertical|end"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="86dp"
+                        android:id="@+id/colorSetContainer"
+                        android:layout_below="@id/paletteName_tv">
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color1"
+                            android:background="#a9b9ae"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline1"
+                            android:layout_toRightOf="@id/color1"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color2"
+                            android:background="#91949b"
+                            android:layout_toRightOf="@id/vline1"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline2"
+                            android:layout_toRightOf="@id/color2"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color3"
+                            android:background="#6c6f7c"
+                            android:layout_toRightOf="@id/vline2"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline3"
+                            android:layout_toRightOf="@id/color3"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color4"
+                            android:background="#4a4e5d"
+                            android:layout_toRightOf="@id/vline3"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline4"
+                            android:layout_toRightOf="@id/color4"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color5"
+                            android:background="#2f3446"
+                            android:layout_toRightOf="@id/vline4"
+                            android:layout_marginStart="7dp"/>
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:id="@+id/hline3_left"
+                        android:layout_below="@id/colorSetContainer"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/divider_line_horizontal"/>
+
+                </RelativeLayout>
+
+                <!-- SUNDOWN -->
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="156dp"
+                    android:id="@+id/colorPaletteContainer_4"
+                    android:layout_below="@id/colorPaletteContainer_3">
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteName_tv"
+                        android:text="@string/sundown"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="21sp"
+                        android:textColor="@color/white"
+                        android:inputType="textCapWords"
+                        android:gravity="center_vertical|start"/>
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteNumber_tv"
+                        android:layout_toRightOf="@id/paletteName_tv"
+                        android:text="@string/color_palette_4"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center_vertical|end"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="86dp"
+                        android:id="@+id/colorSetContainer"
+                        android:layout_below="@id/paletteName_tv">
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color1"
+                            android:background="#f2a426"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline1"
+                            android:layout_toRightOf="@id/color1"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color2"
+                            android:background="#f57617"
+                            android:layout_toRightOf="@id/vline1"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline2"
+                            android:layout_toRightOf="@id/color2"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color3"
+                            android:background="#c01a1a"
+                            android:layout_toRightOf="@id/vline2"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline3"
+                            android:layout_toRightOf="@id/color3"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color4"
+                            android:background="#7a1e05"
+                            android:layout_toRightOf="@id/vline3"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline4"
+                            android:layout_toRightOf="@id/color4"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color5"
+                            android:background="#581504"
+                            android:layout_toRightOf="@id/vline4"
+                            android:layout_marginStart="7dp"/>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="612dp"
+                android:background="@drawable/divider_line"
+                android:id="@+id/middle_line"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="6dp"
+                android:layout_below="@id/top_hline"
+                android:layout_toRightOf="@id/left_pane"/>
+
+            <RelativeLayout
+                android:layout_width="490dp"
+                android:layout_height="620dp"
+                android:layout_below="@id/top_hline"
+                android:layout_toRightOf="@id/middle_line"
+                android:layout_marginStart="6dp"
+                android:id="@+id/right_pane">
+
+                <!-- BASICS -->
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="156dp"
+                    android:id="@+id/colorPaletteContainer_5">
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteName_tv"
+                        android:text="@string/basics"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="21sp"
+                        android:textColor="@color/white"
+                        android:inputType="textCapWords"
+                        android:gravity="center_vertical|start"/>
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteNumber_tv"
+                        android:layout_toRightOf="@id/paletteName_tv"
+                        android:text="@string/color_palette_5"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center_vertical|end"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="86dp"
+                        android:id="@+id/colorSetContainer"
+                        android:layout_below="@id/paletteName_tv">
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color1"
+                            android:background="#84a944"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline1"
+                            android:layout_toRightOf="@id/color1"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color2"
+                            android:background="#bbaa06"
+                            android:layout_toRightOf="@id/vline1"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline2"
+                            android:layout_toRightOf="@id/color2"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color3"
+                            android:background="#4e91c2"
+                            android:layout_toRightOf="@id/vline2"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline3"
+                            android:layout_toRightOf="@id/color3"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color4"
+                            android:background="#ec463d"
+                            android:layout_toRightOf="@id/vline3"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline4"
+                            android:layout_toRightOf="@id/color4"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color5"
+                            android:background="#a40f7c"
+                            android:layout_toRightOf="@id/vline4"
+                            android:layout_marginStart="7dp"/>
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:id="@+id/hline5_right"
+                        android:layout_below="@id/colorSetContainer"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/divider_line_horizontal"/>
+
+                </RelativeLayout>
+
+                <!-- GREY RULES -->
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="156dp"
+                    android:id="@+id/colorPaletteContainer_6"
+                    android:layout_below="@id/colorPaletteContainer_5">
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteName_tv"
+                        android:text="@string/grey_rules"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="21sp"
+                        android:textColor="@color/white"
+                        android:inputType="textCapWords"
+                        android:gravity="center_vertical|start"/>
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteNumber_tv"
+                        android:layout_toRightOf="@id/paletteName_tv"
+                        android:text="@string/color_palette_6"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center_vertical|end"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="86dp"
+                        android:id="@+id/colorSetContainer"
+                        android:layout_below="@id/paletteName_tv">
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color1"
+                            android:background="#494545"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline1"
+                            android:layout_toRightOf="@id/color1"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color2"
+                            android:background="#676363"
+                            android:layout_toRightOf="@id/vline1"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline2"
+                            android:layout_toRightOf="@id/color2"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color3"
+                            android:background="#7a7575"
+                            android:layout_toRightOf="@id/vline2"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline3"
+                            android:layout_toRightOf="@id/color3"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color4"
+                            android:background="#928e8e"
+                            android:layout_toRightOf="@id/vline3"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline4"
+                            android:layout_toRightOf="@id/color4"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color5"
+                            android:background="#aca4a4"
+                            android:layout_toRightOf="@id/vline4"
+                            android:layout_marginStart="7dp"/>
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:id="@+id/hline6_right"
+                        android:layout_below="@id/colorSetContainer"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/divider_line_horizontal"/>
+
+                </RelativeLayout>
+
+                <!-- SKYISH -->
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="156dp"
+                    android:id="@+id/colorPaletteContainer_7"
+                    android:layout_below="@id/colorPaletteContainer_6">
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteName_tv"
+                        android:text="@string/skyish"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="21sp"
+                        android:textColor="@color/white"
+                        android:inputType="textCapWords"
+                        android:gravity="center_vertical|start"/>
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteNumber_tv"
+                        android:layout_toRightOf="@id/paletteName_tv"
+                        android:text="@string/color_palette_7"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center_vertical|end"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="86dp"
+                        android:id="@+id/colorSetContainer"
+                        android:layout_below="@id/paletteName_tv">
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color1"
+                            android:background="#81b9d2"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline1"
+                            android:layout_toRightOf="@id/color1"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color2"
+                            android:background="#00aeda"
+                            android:layout_toRightOf="@id/vline1"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline2"
+                            android:layout_toRightOf="@id/color2"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color3"
+                            android:background="#0085c7"
+                            android:layout_toRightOf="@id/vline2"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline3"
+                            android:layout_toRightOf="@id/color3"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color4"
+                            android:background="#005483"
+                            android:layout_toRightOf="@id/vline3"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline4"
+                            android:layout_toRightOf="@id/color4"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color5"
+                            android:background="#003755"
+                            android:layout_toRightOf="@id/vline4"
+                            android:layout_marginStart="7dp"/>
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:id="@+id/hline7_right"
+                        android:layout_below="@id/colorSetContainer"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/divider_line_horizontal"/>
+
+                </RelativeLayout>
+
+                <!-- NATURAL -->
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="156dp"
+                    android:id="@+id/colorPaletteContainer_8"
+                    android:layout_below="@id/colorPaletteContainer_7">
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteName_tv"
+                        android:text="@string/natural"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="21sp"
+                        android:textColor="@color/white"
+                        android:inputType="textCapWords"
+                        android:gravity="center_vertical|start"/>
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="245dp"
+                        android:layout_height="62dp"
+                        android:id="@+id/paletteNumber_tv"
+                        android:layout_toRightOf="@id/paletteName_tv"
+                        android:text="@string/color_palette_8"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:gravity="center_vertical|end"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="86dp"
+                        android:id="@+id/colorSetContainer"
+                        android:layout_below="@id/paletteName_tv">
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color1"
+                            android:background="#4a4d10"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline1"
+                            android:layout_toRightOf="@id/color1"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color2"
+                            android:background="#6f7317"
+                            android:layout_toRightOf="@id/vline1"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline2"
+                            android:layout_toRightOf="@id/color2"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color3"
+                            android:background="#999c4b"
+                            android:layout_toRightOf="@id/vline2"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline3"
+                            android:layout_toRightOf="@id/color3"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color4"
+                            android:background="#a1a376"
+                            android:layout_toRightOf="@id/vline3"
+                            android:layout_marginStart="7dp"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="86dp"
+                            android:background="@drawable/divider_line"
+                            android:id="@+id/vline4"
+                            android:layout_toRightOf="@id/color4"
+                            android:layout_marginStart="7dp"/>
+
+                        <ImageButton
+                            android:layout_width="86dp"
+                            android:layout_height="86dp"
+                            android:id="@+id/color5"
+                            android:background="#a7a97f"
+                            android:layout_toRightOf="@id/vline4"
+                            android:layout_marginStart="7dp"/>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/bottom_hline"
+                android:layout_below="@id/left_pane"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/divider_line_horizontal"/>
+
+        </RelativeLayout>
+
+        <!-- ICON CHOOSER -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="656dp"
+            android:layout_marginTop="49dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:id="@+id/iconsContainer"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/icons_top_hline"
+                android:background="@drawable/divider_line_horizontal"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="606dp"
+                android:id="@+id/icons_rv"
+                android:layout_below="@id/icons_top_hline"
+                android:layout_marginTop="8dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/icons_bottom_hline"
+                android:layout_below="@id/icons_rv"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/divider_line_horizontal"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mainspace"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

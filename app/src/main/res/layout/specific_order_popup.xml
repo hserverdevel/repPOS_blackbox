@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.blackbox.activities.OrderActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="689dp"
+        android:id="@+id/mainspace"
+        android:background="@color/blackTransparent">
+
+
+        <RelativeLayout
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/backgroundtexturepattern1"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:id="@+id/popup_container">
+
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:id="@+id/cash_order"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:layout_width="79dp"
+                android:layout_height="34dp"
+                android:background="@color/red"
+                android:layout_marginTop="15dp"
+                android:text="@string/order_"
+                android:textAllCaps="true"
+                custom:typeface="franklin_gothic_demi"
+                android:gravity="center|left"
+                android:paddingLeft="6dp" >
+
+            </com.example.blackbox.graphics.CustomTextView>
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:id="@+id/cash_order_number"
+                android:textSize="17sp"
+                android:layout_width="79dp"
+                android:layout_height="34dp"
+                android:background="@color/red"
+                android:layout_marginTop="15dp"
+                android:text="#1"
+                android:layout_toRightOf="@id/cash_order"
+                android:textColor="@color/white"
+                custom:typeface="franklin_gothic_demi"
+                android:gravity="center|right"
+                android:paddingRight="6dp">
+
+            </com.example.blackbox.graphics.CustomTextView>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/cash_order_number"
+                android:id="@+id/cash_table_container">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/cash_table"
+                    android:textSize="12sp"
+                    android:layout_marginTop="15dp"
+                    android:layout_width="79dp"
+                    android:layout_height="34dp"
+                    android:background="@color/red"
+                    android:text="@string/table"
+                    android:textAllCaps="true"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    android:gravity="center|left"
+                    android:paddingLeft="6dp">
+
+                </com.example.blackbox.graphics.CustomTextView>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/cash_table_number"
+                    android:textSize="17sp"
+                    android:layout_marginTop="15dp"
+                    android:layout_width="80dp"
+                    android:layout_height="34dp"
+                    android:background="@color/red"
+                    android:layout_toRightOf="@id/cash_table"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    android:gravity="center|right"
+                    android:paddingRight="6dp">
+
+                </com.example.blackbox.graphics.CustomTextView>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/cash_table_not_set"
+                    android:textSize="12sp"
+                    android:layout_marginTop="15dp"
+                    android:layout_width="159dp"
+                    android:layout_height="34dp"
+                    android:background="@color/eletric_blue"
+                    android:text="@string/table"
+                    android:textAllCaps="true"
+                    android:layout_marginLeft="5dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    android:gravity="center|left"
+                    android:visibility="gone">
+
+                </com.example.blackbox.graphics.CustomTextView>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cash_order_number"
+                android:id="@+id/cash_client_container"
+                android:layout_marginTop="5dp">
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="322dp"
+                android:layout_height="2dp"
+                android:layout_below="@id/cash_client_container"
+                android:background="@color/black"
+                android:id="@+id/cash_hline"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cash_hline"
+                android:id="@+id/cash_container">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cash_recycler_container"
+                    >
+
+                    <LinearLayout
+                        android:id="@+id/cash_header"
+                        android:layout_width="322dp"
+                        android:layout_height="23dp"
+                        android:orientation="horizontal"
+                        android:background="@color/white"
+                        >
+
+                        <com.example.blackbox.graphics.CustomTextView
+                            android:id="@+id/cash_product_label"
+                            android:layout_width="161dp"
+                            android:layout_height="23dp"
+                            android:text="@string/product"
+                            android:textAllCaps="true"
+                            android:textSize="10sp"
+                            android:textColor="@color/black"
+                            custom:typeface="franklin_gothic_demi"
+                            android:gravity="center|left"
+                            android:paddingLeft="6dp"
+                            android:paddingTop="4dp"
+                            android:background="@drawable/left_border"
+                            />
+
+                        <View
+                            android:layout_marginTop="3dp"
+                            android:background="@drawable/divider_line_black"
+                            android:layout_width="1dp"
+                            android:layout_height="17dp"
+                            android:id="@+id/cash_firstline"
+                            />
+
+                        <com.example.blackbox.graphics.CustomTextView
+                            android:id="@+id/cash_qta_label"
+                            android:layout_width="56dp"
+                            android:layout_height="23dp"
+                            android:text="@string/qty"
+                            android:textAllCaps="true"
+                            android:textSize="10sp"
+                            android:textColor="@color/black"
+                            custom:typeface="franklin_gothic_demi"
+                            android:gravity="center"
+                            android:layout_marginTop="0dp"
+                            />
+
+                        <View
+                            android:layout_marginTop="3dp"
+                            android:background="@drawable/divider_line_black"
+                            android:layout_width="1dp"
+                            android:layout_height="17dp"
+                            android:id="@+id/cash_secondline"
+                            />
+
+                        <com.example.blackbox.graphics.CustomTextView
+                            android:id="@+id/cash_total_label"
+                            android:layout_width="103dp"
+                            android:layout_height="23dp"
+                            android:text="@string/total"
+                            android:textAllCaps="true"
+                            android:textSize="10sp"
+                            android:textColor="@color/black"
+                            custom:typeface="franklin_gothic_demi"
+                            android:gravity="center|right"
+                            android:paddingRight="6dp"
+                            android:background="@drawable/right_border"
+                            />
+
+                    </LinearLayout>
+
+                    <View
+                        android:background="@drawable/divider_line_horizontal_black"
+                        android:layout_width="320dp"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/cash_header"
+                        android:id="@+id/cash_second_hline"/>
+
+                    <ExpandableListView
+                        android:layout_width="322dp"
+                        android:layout_height="364dp"
+                        android:id="@+id/cash_recyclerView"
+                        android:layout_below="@id/cash_second_hline"
+                        android:background="@drawable/three_borders"
+                        android:groupIndicator="@null"
+                        android:childIndicator="@null"
+                        android:divider="@null"
+                        android:dividerHeight="0dp"
+                        />
+
+                    <RelativeLayout
+                        android:id="@+id/layout_1"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="322dp"
+                        android:layout_height="46dp"
+                        android:layout_below="@id/cash_recyclerView"
+                        android:orientation="horizontal"
+                        android:background="@color/red"
+                        >
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/euro_icon_no_discount">
+
+                            <ImageView
+                                android:id="@+id/cash_euro_label"
+                                android:src="@drawable/new_euro_icon"
+                                android:layout_width="21dp"
+                                android:layout_height="20dp"
+                                android:layout_marginLeft="6dp"
+                                android:gravity="center"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="6dp">
+
+                            </ImageView>
+
+                        </RelativeLayout>
+
+                        <com.example.blackbox.graphics.CustomTextView
+                            android:id="@+id/cash_euro_total"
+                            android:layout_width="322dp"
+                            android:layout_height="46dp"
+                            android:layout_toRightOf="@id/euro_icon_discount"
+                            android:text="0.0"
+                            android:textColor="@color/white"
+                            custom:letterSpacing="0.0"
+                            android:gravity="end|center_vertical"
+                            android:textSize="30sp"
+                            android:paddingRight="6dp"
+                            >
+
+                        </com.example.blackbox.graphics.CustomTextView>
+
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/layout_2"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="322dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/layout_1"
+                        android:orientation="horizontal"
+                        >
+
+                        <com.example.blackbox.graphics.CustomButton
+                            android:id="@+id/print_order_1"
+                            android:textSize="12sp"
+                            android:background="@drawable/button_lightblue_3dp_white_press"
+                            android:layout_width="158dp"
+                            android:layout_height="34dp"
+                            android:textColor="@color/white"
+                            android:text="@string/print"
+                            android:textAllCaps="true"
+                            custom:typeface="franklin_gothic_demi"
+                            android:gravity="center"
+                            />
+
+                        <com.example.blackbox.graphics.CustomButton
+                            android:id="@+id/reprint_order"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:layout_width="158dp"
+                            android:layout_height="34dp"
+                            android:background="@drawable/button_lightblue_3dp_white_press"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/order_print"
+                            android:textAllCaps="true"
+                            custom:typeface="franklin_gothic_demi"
+                            android:gravity="center"
+                            android:layout_toRightOf="@+id/print_order_1"
+                            />
+
+                        <com.example.blackbox.graphics.CustomButton
+                            android:id="@+id/go_to_payment"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:layout_width="322dp"
+                            android:layout_height="34dp"
+                            android:background="@drawable/button_lightblue_3dp_white_press"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="15dp"
+                            android:text="@string/payment"
+                            android:textAllCaps="true"
+                            custom:typeface="franklin_gothic_demi"
+                            android:gravity="center"
+                            android:layout_below="@+id/print_order_1"
+                            />
+
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mainspace"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

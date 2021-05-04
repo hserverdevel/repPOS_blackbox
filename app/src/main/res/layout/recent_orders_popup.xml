@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:background="@color/blackTransparent">
+
+
+
+
+
+    <RelativeLayout
+        android:layout_width="487dp"
+        android:layout_height="206dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/view_base_background"
+        android:id="@+id/recent_orders_window">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:id="@+id/dialog_header"
+            android:layout_marginTop="5dp">
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/info_tv_delete_order"
+                android:textColor="@color/white"
+                android:id="@+id/delete_header"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:layout_below="@id/dialog_header"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp">
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="139dp"
+                android:layout_height="42dp"
+                android:text="@string/delete"
+                android:id="@+id/first_button"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/popup_button_red"
+                android:textColor="@color/white"
+                custom:typeface="roboto_black"
+                custom:letterSpacing="0.0"
+                android:textAllCaps="false"/>
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="139dp"
+                android:layout_height="42dp"
+                android:text="@string/unpaid"
+                android:id="@+id/second_button"
+                android:layout_toRightOf="@id/first_button"
+                android:background="@drawable/popup_button_red"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="15dp"
+                android:textAllCaps="false"
+                custom:letterSpacing="0.0"
+                android:textColor="@color/white"
+                custom:typeface="roboto_black"/>
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="139dp"
+                android:layout_height="42dp"
+                android:text="@string/partial"
+                android:id="@+id/third_button"
+                android:layout_toRightOf="@id/second_button"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/popup_button_red"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:textAllCaps="false"
+                custom:letterSpacing="0.0"
+                android:textColor="@color/white"
+                custom:typeface="roboto_black"/>
+
+            <View
+                android:layout_width="447dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/divider_line_horizontal"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/third_button"
+                android:id="@+id/recent_orders_hline"
+                />
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="447dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:textAllCaps="false"
+                android:text="@string/cancel_delete"
+                android:layout_below="@id/recent_orders_hline"
+                android:background="@drawable/popup_button_green"
+                android:textColor="@color/white"
+                custom:typeface="franklin_gothic_demi"
+                custom:letterSpacing="0.0"
+                android:id="@+id/cancel_delete_button"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+</RelativeLayout>

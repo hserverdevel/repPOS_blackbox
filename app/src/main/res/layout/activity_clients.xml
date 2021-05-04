@@ -1,0 +1,946 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.blackbox.activities.ClientsActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blackTransparent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="618dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="49dp"
+        android:orientation="horizontal"
+        android:id="@+id/linear_container">
+        <RelativeLayout
+            android:layout_width="490dp"
+            android:layout_height="match_parent"
+            android:id="@+id/left_pane">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline1"
+                android:background="@drawable/divider_line_horizontal"/>
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="69dp"
+                android:id="@+id/title_tv"
+                android:layout_below="@id/hline1"
+                android:textColor="@color/white"
+                android:text="@string/registered_clients"
+                android:textAllCaps="true"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="18sp"
+                android:gravity="center"/>
+            <com.example.blackbox.graphics.CustomEditText
+                android:layout_width="match_parent"
+                android:layout_height="57dp"
+                android:layout_marginTop="6dp"
+                android:id="@+id/search_et"
+                android:background="@color/white"
+                android:hint="@string/search"
+                android:layout_below="@id/hline1"
+                android:textColor="@color/black"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:imeOptions="actionDone"
+                android:visibility="gone"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline2"
+                android:layout_below="@id/title_tv"
+                android:background="@drawable/divider_line_horizontal"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:id="@+id/hline_rv_top"
+                android:layout_below="@id/hline2"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/divider_line_horizontal1dp"/>
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="457dp"
+                android:id="@+id/clients_rv"
+                android:layout_below="@id/hline_rv_top"/>
+            <!--<View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:id="@+id/hline_rv_bottom"
+                android:layout_below="@id/clients_rv"
+                android:layout_marginTop="-3dp"
+                android:background="@drawable/divider_line_horizontal1dp"/>-->
+            <!--android:layout_below="@id/hline3"-->
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:id="@+id/search_client_button"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/white"
+                android:background="@drawable/view_border"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="18sp"
+                android:layout_alignParentBottom="true"
+                android:text="@string/search_clients"
+                android:textAllCaps="true"/>
+            <!--android:layout_below="@id/clients_rv"-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline3"
+                android:layout_above="@id/search_client_button"
+                android:background="@drawable/divider_line_horizontal"
+                android:layout_marginTop="20dp"/>
+        </RelativeLayout>
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/divider_line"
+            android:layout_marginLeft="6dp"/>
+
+        <!-- RIGHT PANEL -->
+        <RelativeLayout
+            android:layout_width="490dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="6dp"
+            android:id="@+id/right_pane">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline1_right"
+                android:background="@drawable/divider_line_horizontal"/>
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="69dp"
+                android:id="@+id/title_right_tv"
+                android:layout_below="@id/hline1_right"
+                android:textColor="@color/white"
+                android:text="@string/new_clients_info"
+                android:textAllCaps="true"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="18sp"
+                android:gravity="center"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline2_right"
+                android:layout_below="@id/title_right_tv"
+                android:background="@drawable/divider_line_horizontal"/>
+
+           <RelativeLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:layout_below="@id/hline2_right"
+               android:layout_marginTop="14dp"
+               android:id="@+id/client_info_container">
+
+               <TextView
+                   android:layout_width="260dp"
+                   android:layout_height="42dp"
+                   android:textAllCaps="true"
+                   android:gravity="center"
+                   android:id="@+id/add_fidelity_code"
+                   android:background="@drawable/view_border_white_in"
+                   android:textSize="21sp"
+                   android:paddingStart="10dp"
+                   android:inputType="textCapWords"
+                   custom:typeface="franklin_gothic_book_cd"
+                   android:nextFocusDown="@id/name_et"
+                   />
+
+               <TextView
+                   android:layout_width="170dp"
+                   android:layout_height="42dp"
+                   android:layout_toEndOf="@id/add_fidelity_code"
+                   android:hint="@string/fidelity_code"
+                   android:textAllCaps="true"
+                   android:gravity="right"
+                   android:id="@+id/show_fidelity_credit"
+                   android:background="@drawable/view_border_white_in"
+                   android:textSize="21sp"
+                   android:paddingStart="10dp"
+                   android:inputType="textCapWords"
+                   custom:typeface="franklin_gothic_book_cd"
+                   android:nextFocusDown="@id/name_et"
+                   />
+
+
+
+               <ImageButton
+                   android:id="@+id/add_fidelity_credit_button"
+                   android:layout_width="42dp"
+                   android:layout_height="42dp"
+                   android:layout_alignParentEnd="true"
+                   android:padding="20dp"
+                   android:adjustViewBounds="true"
+                   android:scaleType="centerInside"
+                   android:src="@drawable/big_plus_button"
+                   />
+
+               <View
+                   android:layout_width="match_parent"
+                   android:layout_height="2dp"
+                   android:background="@drawable/divider_line_horizontal"
+                   android:layout_marginTop="6dp"
+                   android:id="@+id/hline_fidelity_code"
+                   android:layout_below="@id/add_fidelity_code"/>
+
+
+               <com.example.blackbox.graphics.CustomEditText
+                   android:layout_width="238dp"
+                   android:layout_height="42dp"
+                   android:hint="@string/name"
+                   android:background="@drawable/view_border_white_in"
+                   android:id="@+id/name_et"
+                   custom:typeface="franklin_gothic_book_cd"
+                   android:textSize="21sp"
+                   android:paddingStart="10dp"
+                   android:inputType="textCapWords"
+                   android:nextFocusDown="@id/surname_et"
+                   android:layout_below="@+id/hline_fidelity_code"
+                   android:layout_marginTop="6dp"/>
+               <View
+                   android:layout_width="2dp"
+                   android:layout_height="42dp"
+                   android:id="@+id/vline1_right"
+                   android:background="@drawable/divider_line"
+                   android:layout_toRightOf="@id/name_et"
+                   android:layout_below="@+id/hline_fidelity_code"
+                   android:layout_marginStart="6dp"
+                   android:layout_marginTop="6dp"/>
+               <com.example.blackbox.graphics.CustomEditText
+                   android:layout_width="238dp"
+                   android:layout_height="42dp"
+                   custom:typeface="franklin_gothic_book_cd"
+                   android:textSize="21sp"
+                   android:paddingStart="10dp"
+                   android:layout_marginStart="6dp"
+                   android:id="@+id/surname_et"
+                   android:hint="@string/surname"
+                   android:background="@drawable/view_border_white_in"
+                   android:layout_toRightOf="@id/vline1_right"
+                   android:layout_below="@+id/hline_fidelity_code"
+                   android:inputType="textCapWords"
+                   android:nextFocusDown="@id/email_et"
+                   android:layout_marginTop="6dp"/>
+               <View
+                   android:layout_width="match_parent"
+                   android:layout_height="2dp"
+                   android:background="@drawable/divider_line_horizontal"
+                   android:layout_below="@id/name_et"
+                   android:layout_marginTop="6dp"
+                   android:id="@+id/hline3_right"/>
+               <com.example.blackbox.graphics.CustomEditText
+                   android:layout_width="match_parent"
+                   android:layout_height="42dp"
+                   android:layout_below="@id/hline3_right"
+                   android:id="@+id/email_et"
+                   android:inputType="textEmailAddress"
+                   android:imeOptions="actionDone"
+                   android:gravity="center"
+                   custom:typeface="franklin_gothic_book_cd"
+                   android:textSize="21sp"
+                   android:layout_marginTop="6dp"
+                   android:hint="@string/email_address"
+                   android:background="@drawable/view_border_white_in"/>
+               <View
+                   android:layout_width="match_parent"
+                   android:layout_height="2dp"
+                   android:id="@+id/hline4_right"
+                   android:layout_below="@id/email_et"
+                   android:background="@drawable/divider_line_horizontal"
+                   android:layout_marginTop="6dp"/>
+
+               <com.example.blackbox.graphics.CustomButton
+                   android:layout_width="238dp"
+                   android:layout_height="42dp"
+                   android:id="@+id/client_type_button"
+                   android:text="@string/set_client_type"
+                   android:textAllCaps="true"
+                   android:layout_marginTop="6dp"
+                   android:layout_below="@id/hline4_right"
+                   custom:typeface="franklin_gothic_demi"
+                   android:textSize="14dp"
+                   android:textColor="@color/white"
+                   android:background="@drawable/view_border_3_gray_in"
+                   android:visibility="gone"/>
+
+               <View
+                   android:layout_width="2dp"
+                   android:layout_height="42dp"
+                   android:id="@+id/vline2"
+                   android:background="@drawable/divider_line"
+                   android:layout_below="@id/hline4_right"
+                   android:layout_toRightOf="@id/client_type_button"
+                   android:layout_marginRight="6dp"
+                   android:layout_marginLeft="6dp"
+                   android:layout_marginTop="6dp"
+                   android:visibility="gone"/>
+
+               <com.example.blackbox.graphics.CustomButton
+                   android:layout_width="238dp"
+                   android:layout_height="42dp"
+                   android:id="@+id/discount_button"
+                   android:text="@string/set_discount"
+                   android:textAllCaps="true"
+                   android:layout_below="@id/hline4_right"
+                   android:layout_toRightOf="@id/vline2"
+                   android:layout_marginTop="6dp"
+                   android:background="@drawable/view_border_3_gray_in"
+                   custom:typeface="franklin_gothic_demi"
+                   android:textSize="14sp"
+                   android:textColor="@color/white"
+                   android:visibility="gone"/>
+
+               <View
+                   android:layout_width="match_parent"
+                   android:layout_height="2dp"
+                   android:id="@+id/hline5"
+                   android:layout_below="@id/discount_button"
+                   android:background="@drawable/divider_line_horizontal"
+                   android:layout_marginTop="6dp"
+                   android:visibility="gone"/>
+
+               <com.example.blackbox.graphics.CustomButton
+                   android:layout_width="238dp"
+                   android:layout_height="42dp"
+                   android:text="@string/company_info"
+                   android:textAllCaps="true"
+                   android:gravity="center"
+                   android:id="@+id/add_company_info_button"
+                   android:background="@drawable/view_border3dp_lighblue_in"
+                   android:textColor="@color/white"
+                   custom:typeface="franklin_gothic_demi"
+                   android:textSize="14sp"
+                   android:layout_below="@id/hline5"
+                   android:layout_marginTop="6dp"
+                   />
+               <View
+                   android:layout_width="2dp"
+                   android:layout_height="42dp"
+                   android:id="@+id/vline4_right"
+                   android:background="@drawable/divider_line"
+                   android:layout_toRightOf="@id/add_company_info_button"
+                   android:layout_below="@id/hline5"
+                   android:layout_marginStart="6dp"
+                   android:layout_marginTop="6dp"/>
+
+               <com.example.blackbox.graphics.CustomButton
+                   android:layout_width="238dp"
+                   android:layout_height="42dp"
+                   android:text="@string/personal_info"
+                   android:textAllCaps="true"
+                   android:gravity="center"
+                   android:id="@+id/add_personal_info_button"
+                   android:background="@drawable/view_border3dp_lighblue_in"
+                   android:textColor="@color/white"
+                   custom:typeface="franklin_gothic_demi"
+                   android:textSize="14sp"
+                   android:layout_below="@id/hline5"
+                   android:layout_marginTop="6dp"
+                   android:layout_marginLeft="6dp"
+                   android:layout_toRightOf="@id/vline4_right"
+                   />
+
+               <!-- COMPANY INFO -->
+               <ScrollView
+                   android:id="@+id/company_info_scroll"
+                   android:layout_width="fill_parent"
+                   android:layout_height="260dp"
+
+                   android:layout_below="@id/add_company_info_button"
+
+                   android:visibility="gone">
+
+                   <RelativeLayout
+                       android:id="@+id/company_info_container"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_below="@id/add_company_info_button"
+                       android:layout_marginTop="6dp"
+
+                       android:visibility="gone">
+
+                       <View
+                           android:id="@+id/hline6_right"
+                           android:layout_width="match_parent"
+                           android:layout_height="2dp"
+                           android:background="@drawable/divider_line_horizontal" />
+
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:id="@+id/company_name_et"
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline6_right"
+                           android:layout_marginTop="6dp"
+                           android:background="@drawable/view_border_white_in"
+                           android:hint="@string/company_name"
+                           android:inputType="textCapWords"
+                           android:nextFocusDown="@id/vat_number_et"
+                           android:paddingStart="10dp"
+                           android:textSize="21sp"
+                           custom:typeface="franklin_gothic_book_cd" />
+
+                       <View
+                           android:id="@+id/vline2_right_company"
+                           android:layout_width="2dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline6_right"
+                           android:layout_marginStart="6dp"
+                           android:layout_marginTop="6dp"
+                           android:layout_toRightOf="@id/company_name_et"
+                           android:background="@drawable/divider_line" />
+
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:id="@+id/vat_number_et"
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline6_right"
+                           android:layout_marginStart="6dp"
+                           android:layout_marginTop="6dp"
+                           android:layout_toRightOf="@id/vline2_right_company"
+                           android:background="@drawable/view_border_white_in"
+                           android:hint="@string/vat_number"
+                           android:inputType="number"
+                           android:maxLength="11"
+                           android:nextFocusDown="@id/codice_destinatario_et"
+                           android:paddingStart="10dp"
+                           android:textSize="21sp"
+                           custom:typeface="franklin_gothic_book_cd" />
+
+                       <View
+                           android:id="@+id/hline7_right"
+                           android:layout_width="match_parent"
+                           android:layout_height="2dp"
+                           android:layout_below="@id/company_name_et"
+                           android:layout_marginTop="6dp"
+                           android:background="@drawable/divider_line_horizontal" />
+
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:id="@+id/codice_destinatario_et"
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline7_right"
+                           android:layout_marginTop="6dp"
+                           android:background="@drawable/view_border_white_in"
+                           android:hint="@string/office_code"
+                           android:inputType="textCapCharacters"
+                           android:maxLength="7"
+                           android:nextFocusDown="@id/pec_et"
+                           android:paddingStart="10dp"
+                           android:textAllCaps="true"
+                           android:textSize="21sp"
+                           custom:typeface="franklin_gothic_book_cd" />
+
+                       <View
+                           android:id="@+id/vline2_right_coddest"
+                           android:layout_width="2dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline6_right"
+                           android:layout_marginStart="6dp"
+                           android:layout_marginTop="6dp"
+                           android:layout_toRightOf="@id/codice_destinatario_et"
+                           android:background="@drawable/divider_line" />
+
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:id="@+id/pec_et"
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline7_right"
+                           android:layout_marginStart="6dp"
+                           android:layout_marginTop="6dp"
+                           android:layout_toRightOf="@id/vline2_right_coddest"
+                           android:background="@drawable/view_border_white_in"
+                           android:hint="@string/cem"
+                           android:inputType="textEmailAddress"
+                           android:maxLength="11"
+                           android:nextFocusDown="@id/address_et"
+                           android:paddingStart="10dp"
+                           android:textSize="21sp"
+                           custom:typeface="franklin_gothic_book_cd" />
+
+                       <View
+                           android:id="@+id/hline11_right"
+                           android:layout_width="match_parent"
+                           android:layout_height="2dp"
+                           android:layout_below="@id/codice_destinatario_et"
+                           android:layout_marginTop="6dp"
+                           android:background="@drawable/divider_line_horizontal" />
+
+
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:id="@+id/address_et"
+                           android:layout_width="match_parent"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline11_right"
+                           android:layout_marginTop="6dp"
+                           android:background="@drawable/view_border_white_in"
+                           android:hint="@string/address"
+                           android:inputType="textCapWords"
+                           android:nextFocusDown="@id/postal_code_et"
+                           android:paddingStart="10dp"
+                           android:textSize="21sp"
+                           custom:typeface="franklin_gothic_book_cd" />
+
+                       <View
+                           android:id="@+id/hline8_right"
+                           android:layout_width="match_parent"
+                           android:layout_height="2dp"
+                           android:layout_below="@id/address_et"
+                           android:layout_marginTop="6dp"
+                           android:background="@drawable/divider_line_horizontal" />
+
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:id="@+id/postal_code_et"
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline8_right"
+                           android:layout_marginTop="6dp"
+                           android:background="@drawable/view_border_white_in"
+                           android:hint="@string/postal_code"
+                           android:inputType="number"
+                           android:nextFocusDown="@id/city_et"
+                           android:paddingStart="10dp"
+                           android:textSize="21sp"
+                           custom:typeface="franklin_gothic_book_cd" />
+
+                       <View
+                           android:id="@+id/vline3_right_coddest"
+                           android:layout_width="2dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline8_right"
+                           android:layout_marginStart="6dp"
+                           android:layout_marginTop="6dp"
+                           android:layout_toRightOf="@id/postal_code_et"
+                           android:background="@drawable/divider_line" />
+
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:id="@+id/city_et"
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline8_right"
+                           android:layout_marginLeft="6dp"
+                           android:layout_marginTop="6dp"
+                           android:layout_toRightOf="@id/vline3_right_coddest"
+                           android:background="@drawable/view_border_white_in"
+                           android:hint="@string/city"
+                           android:inputType="textCapWords"
+                           android:nextFocusDown="@id/provincia_et"
+                           android:paddingStart="10dp"
+                           android:textSize="21sp"
+                           custom:typeface="franklin_gothic_book_cd" />
+
+                       <View
+                           android:id="@+id/hline9_right"
+                           android:layout_width="match_parent"
+                           android:layout_height="2dp"
+                           android:layout_below="@id/postal_code_et"
+                           android:layout_marginTop="6dp"
+                           android:background="@drawable/divider_line_horizontal" />
+
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:id="@+id/provincia_et"
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline9_right"
+                           android:layout_marginTop="6dp"
+
+                           android:background="@drawable/view_border_white_in"
+                           android:hint="@string/province"
+                           android:inputType="textCapWords"
+                           android:maxLength="2"
+                           android:nextFocusDown="@id/country_et"
+                           android:paddingStart="10dp"
+                           android:textSize="21sp"
+                           custom:typeface="franklin_gothic_book_cd" />
+
+                       <View
+                           android:id="@+id/vline3_right"
+                           android:layout_width="2dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline9_right"
+                           android:layout_marginStart="6dp"
+                           android:layout_marginTop="6dp"
+                           android:layout_toRightOf="@id/provincia_et"
+                           android:background="@drawable/divider_line" />
+
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:id="@+id/country_et"
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline9_right"
+                           android:layout_marginStart="6dp"
+                           android:layout_marginTop="6dp"
+                           android:layout_toRightOf="@id/vline3_right"
+                           android:background="@drawable/view_border_white_in"
+                           android:hint="@string/country"
+                           android:imeOptions="actionDone"
+                           android:inputType="textCapWords"
+                           android:paddingStart="10dp"
+                           android:textSize="21sp"
+                           custom:typeface="franklin_gothic_book_cd" />
+
+                       <View
+                           android:id="@+id/hline10_right"
+                           android:layout_width="match_parent"
+                           android:layout_height="2dp"
+                           android:layout_below="@id/provincia_et"
+                           android:layout_marginTop="6dp"
+                           android:background="@drawable/divider_line_horizontal" />
+
+                   </RelativeLayout>
+                   <!--partita iva personale-->
+                   <!--  -->
+
+               </ScrollView>
+               <ScrollView
+                   android:layout_width="fill_parent"
+                   android:layout_height="260dp"
+                   android:layout_below="@id/add_company_info_button"
+
+                   android:id="@+id/personal_info_scroll"
+                   android:visibility="gone"
+                   >
+                   <RelativeLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:id="@+id/personal_info_container"
+                       android:layout_below="@id/add_company_info_button"
+                       android:layout_marginTop="6dp"
+                       android:visibility="gone">
+                       <View
+                           android:layout_width="match_parent"
+                           android:layout_height="2dp"
+                           android:id="@+id/hline6_right_p"
+                           android:background="@drawable/divider_line_horizontal"/>
+
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline6_right_p"
+                           android:id="@+id/codice_fiscale_et_p"
+                           custom:typeface="franklin_gothic_book_cd"
+                           android:textSize="21sp"
+                           android:paddingStart="10dp"
+                           android:layout_marginTop="6dp"
+                           android:hint="@string/fiscal_code"
+                           android:background="@drawable/view_border_white_in"
+                           android:inputType="textCapWords"
+                           android:nextFocusDown="@id/vat_number_et_p"
+                           android:textAllCaps="true"/>
+                       <View
+                           android:layout_width="2dp"
+                           android:layout_height="42dp"
+                           android:id="@+id/vline2_right_company_p"
+                           android:background="@drawable/divider_line"
+                           android:layout_toRightOf="@id/codice_fiscale_et_p"
+                           android:layout_below="@id/hline6_right_p"
+                           android:layout_marginStart="6dp"
+                           android:layout_marginTop="6dp"/>
+
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_toRightOf="@id/vline2_right_company_p"
+                           android:layout_below="@id/hline6_right_p"
+                           android:id="@+id/vat_number_et_p"
+                           custom:typeface="franklin_gothic_book_cd"
+                           android:textSize="21sp"
+                           android:paddingStart="10dp"
+                           android:layout_marginTop="6dp"
+                           android:layout_marginStart="6dp"
+                           android:hint="@string/vat_number"
+                           android:background="@drawable/view_border_white_in"
+                           android:inputType="number"
+                           android:nextFocusDown="@id/codice_destinatario_et_p"
+                           android:maxLength="11"/>
+                       <View
+                           android:layout_width="match_parent"
+                           android:layout_height="2dp"
+                           android:id="@+id/hline7_right_p"
+                           android:layout_below="@id/codice_fiscale_et_p"
+                           android:layout_marginTop="6dp"
+                           android:background="@drawable/divider_line_horizontal"/>
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline7_right_p"
+                           android:id="@+id/codice_destinatario_et_p"
+                           custom:typeface="franklin_gothic_book_cd"
+                           android:textSize="21sp"
+                           android:paddingStart="10dp"
+                           android:layout_marginTop="6dp"
+                           android:hint="@string/office_code"
+                           android:background="@drawable/view_border_white_in"
+                           android:inputType="textCapCharacters"
+                           android:textAllCaps="true"
+                           android:nextFocusDown="@id/pec_et_p"
+                           android:maxLength="7"/>
+                       <View
+                           android:layout_width="2dp"
+                           android:layout_height="42dp"
+                           android:id="@+id/vline2_right_coddest_p"
+                           android:background="@drawable/divider_line"
+                           android:layout_toRightOf="@id/codice_destinatario_et_p"
+                           android:layout_below="@id/hline6_right_p"
+                           android:layout_marginStart="6dp"
+                           android:layout_marginTop="6dp"/>
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_toRightOf="@id/vline2_right_coddest_p"
+                           android:layout_below="@id/hline7_right_p"
+                           android:id="@+id/pec_et_p"
+                           custom:typeface="franklin_gothic_book_cd"
+                           android:textSize="21sp"
+                           android:paddingStart="10dp"
+                           android:layout_marginTop="6dp"
+                           android:layout_marginStart="6dp"
+                           android:hint="@string/cem"
+                           android:background="@drawable/view_border_white_in"
+                           android:inputType="textEmailAddress"
+                           android:nextFocusDown="@id/address_et_p"
+                           android:maxLength="11"/>
+                       <View
+                           android:layout_width="match_parent"
+                           android:layout_height="2dp"
+                           android:id="@+id/hline11_right_p"
+                           android:layout_below="@id/codice_destinatario_et_p"
+                           android:layout_marginTop="6dp"
+                           android:background="@drawable/divider_line_horizontal"/>
+
+
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:layout_width="match_parent"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline11_right_p"
+                           android:id="@+id/address_et_p"
+                           custom:typeface="franklin_gothic_book_cd"
+                           android:textSize="21sp"
+                           android:paddingStart="10dp"
+                           android:layout_marginTop="6dp"
+                           android:hint="@string/address"
+                           android:background="@drawable/view_border_white_in"
+                           android:inputType="textCapWords"
+                           android:nextFocusDown="@id/postal_code_et_p"/>
+
+                       <View
+                           android:layout_width="match_parent"
+                           android:layout_height="2dp"
+                           android:id="@+id/hline8_right_p"
+                           android:layout_below="@id/address_et_p"
+                           android:layout_marginTop="6dp"
+                           android:background="@drawable/divider_line_horizontal"/>
+
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline8_right_p"
+                           android:id="@+id/postal_code_et_p"
+                           custom:typeface="franklin_gothic_book_cd"
+                           android:textSize="21sp"
+                           android:paddingStart="10dp"
+                           android:layout_marginTop="6dp"
+                           android:hint="@string/postal_code"
+                           android:background="@drawable/view_border_white_in"
+                           android:inputType="number"
+                           android:nextFocusDown="@id/city_et_p"/>
+                       <View
+                           android:layout_width="2dp"
+                           android:layout_height="42dp"
+                           android:id="@+id/vline2_right_p"
+                           android:layout_below="@id/hline8_right_p"
+                           android:background="@drawable/divider_line"
+                           android:layout_toRightOf="@id/postal_code_et_p"
+                           android:layout_marginStart="6dp"
+                           android:layout_marginTop="6dp"/>
+
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline8_right_p"
+                           android:layout_toRightOf="@+id/vline2_right_p"
+                           android:id="@+id/city_et_p"
+                           custom:typeface="franklin_gothic_book_cd"
+                           android:textSize="21sp"
+                           android:paddingStart="10dp"
+                           android:layout_marginTop="6dp"
+                           android:layout_marginLeft="6dp"
+                           android:hint="@string/city"
+                           android:background="@drawable/view_border_white_in"
+                           android:inputType="textCapWords"
+                           android:nextFocusDown="@id/provincia_et_p"/>
+
+                       <View
+                           android:layout_width="match_parent"
+                           android:layout_height="2dp"
+                           android:id="@+id/hline9_right_p"
+                           android:layout_below="@id/postal_code_et_p"
+                           android:layout_marginTop="6dp"
+                           android:background="@drawable/divider_line_horizontal"/>
+
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline9_right_p"
+                           android:id="@+id/provincia_et_p"
+                           custom:typeface="franklin_gothic_book_cd"
+                           android:textSize="21sp"
+                           android:paddingStart="10dp"
+                           android:layout_marginTop="6dp"
+                           android:hint="@string/province"
+                           android:background="@drawable/view_border_white_in"
+                           android:inputType="textCapWords"
+                           android:maxLength="2"
+                           android:nextFocusDown="@id/country_et_p"/>
+
+                       <View
+                           android:layout_width="2dp"
+                           android:layout_height="42dp"
+                           android:id="@+id/vline3_right_p"
+                           android:layout_below="@id/hline9_right_p"
+                           android:background="@drawable/divider_line"
+                           android:layout_toRightOf="@id/provincia_et_p"
+                           android:layout_marginStart="6dp"
+                           android:layout_marginTop="6dp"/>
+                       <com.example.blackbox.graphics.CustomEditText
+                           android:layout_width="238dp"
+                           android:layout_height="42dp"
+                           android:layout_below="@id/hline9_right_p"
+                           android:layout_toRightOf="@id/vline3_right_p"
+                           android:id="@+id/country_et_p"
+                           custom:typeface="franklin_gothic_book_cd"
+                           android:textSize="21sp"
+                           android:paddingStart="10dp"
+                           android:layout_marginTop="6dp"
+                           android:layout_marginStart="6dp"
+                           android:hint="@string/country"
+                           android:background="@drawable/view_border_white_in"
+                           android:inputType="textCapWords"
+                           android:imeOptions="actionDone"/>
+                       <View
+                           android:layout_width="match_parent"
+                           android:layout_height="2dp"
+                           android:id="@+id/hline10_right_p"
+                           android:layout_below="@id/provincia_et_p"
+                           android:layout_marginTop="6dp"
+                           android:background="@drawable/divider_line_horizontal"/>
+
+                   </RelativeLayout>
+               </ScrollView>
+
+           </RelativeLayout>
+
+               <com.example.blackbox.graphics.CustomButton
+                   android:layout_width="490dp"
+                   android:layout_height="46dp"
+                   android:id="@+id/add_new_client_button"
+                   android:text="@string/add_new_client"
+                   android:textAllCaps="true"
+                   android:textColor="@color/white"
+                   android:background="@drawable/view_border"
+                   custom:typeface="franklin_gothic_demi"
+                   android:textSize="18sp"
+                   android:layout_alignParentBottom="true"/>
+               <View
+                   android:layout_width="match_parent"
+                   android:layout_height="2dp"
+                   android:id="@+id/hline5_right"
+                   android:background="@drawable/divider_line_horizontal"
+                   android:layout_above="@id/add_new_client_button"
+                   android:layout_marginBottom="6dp"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:id="@+id/bottom_hline"
+        android:layout_below="@id/linear_container"
+        android:background="@drawable/divider_line_horizontal"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        />
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/bottom_hline"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

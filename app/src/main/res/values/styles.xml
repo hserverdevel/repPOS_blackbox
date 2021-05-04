@@ -1,0 +1,80 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="ToolbarButtons" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">bottom|center</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:layout_width">166dp</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_below">@id/topbarline</item>
+        <item name="typeface">franklin_gothic_demi</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:background">@color/black</item>
+    </style>
+
+    <style name="TopBarLines">
+        <item name="android:layerType">software</item>
+        <item name="android:layout_width">2dp</item>
+        <item name="android:layout_height">28dp</item>
+        <item name="android:layout_marginTop">7dp</item>
+        <item name="android:background">@drawable/vertical_dashed_line</item>
+        <item name="android:layout_below">@id/topbarheader</item>
+    </style>
+
+    <style name="TopBarLinesCash">
+        <item name="android:layerType">software</item>
+        <item name="android:layout_width">2dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:background">@drawable/vertical_dashed_line</item>
+        <item name="android:layout_below">@id/cash_hline</item>
+    </style>
+
+    <style name="PopupWindowButton" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:gravity">center</item>
+        <item name="typeface">franklin_gothic_demi</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="CalculatorButton" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:layout_height">75dp</item>
+        <item name="android:layout_width">75dp</item>
+        <item name="android:background">@drawable/calculator_button</item>
+        <item name="android:textSize">36sp</item>
+        <item name="typeface">franklin_gothic_demi</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="CalculatorSButton" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:layout_height">75dp</item>
+        <item name="android:layout_width">75dp</item>
+        <item name="android:background">@drawable/calculator_sbutton</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="PinpadButton" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:layout_height">98dp</item>
+        <item name="android:layout_width">98dp</item>
+        <item name="android:background">@drawable/pinpad_button</item>
+        <item name="android:textSize">48sp</item>
+        <item name="typeface">franklin_gothic_demi</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    
+    <style name="DatePickerTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="colorAccent">@color/eletric_blue</item>
+    </style>
+
+</resources>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.blackbox.activities.Login"
+    android:id="@+id/main"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:keepScreenOn="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <ScrollView
+            android:id="@+id/scrollview"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="630dp"
+            android:fillViewport="true"
+            >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+
+                />
+        </ScrollView>
+        <com.example.blackbox.graphics.CustomButton
+            android:id="@+id/firstButton"
+            android:layout_width="200dp"
+            android:layout_height="54dp"
+            android:text="scroll top"
+            android:layout_below="@+id/scrollview"/>
+        <com.example.blackbox.graphics.CustomButton
+            android:id="@+id/secondButton"
+            android:layout_width="200dp"
+            android:layout_height="54dp"
+            android:text="scroll bottom"
+            android:layout_toRightOf="@+id/firstButton"
+            android:layout_below="@+id/scrollview"/>
+        <com.example.blackbox.graphics.CustomButton
+            android:id="@+id/thirdButton"
+            android:layout_width="200dp"
+            android:layout_height="54dp"
+            android:text="email"
+            android:layout_below="@+id/scrollview"
+            android:layout_toRightOf="@+id/secondButton"/>
+        <com.example.blackbox.graphics.CustomEditText
+            android:id="@+id/fourthButton"
+            android:layout_width="200dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="6dp"
+            android:text=""
+            android:layout_below="@+id/scrollview"
+            android:layout_toRightOf="@+id/thirdButton"
+            android:gravity="center"
+            android:hint="1"
+            android:inputType="number"
+            android:selectAllOnFocus="true"
+            android:textColorHighlight="@color/gray"
+            android:background="@drawable/view_border"
+            android:textCursorDrawable="@null"
+            android:textColor="@color/black"
+            custom:typeface="roboto_black"/>
+        <com.example.blackbox.graphics.CustomButton
+            android:id="@+id/fifthButton"
+            android:layout_width="200dp"
+            android:layout_height="54dp"
+            android:text="UPDATE INVOICE NUMBER"
+            android:layout_below="@+id/scrollview"
+            android:layout_toRightOf="@+id/fourthButton"/>
+
+
+
+
+        <!-- BASELINE X AND OK BUTTONS -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:id="@+id/footer"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="1dp"
+            android:background="@color/black">
+
+            <ImageButton style="@style/PopupWindowButton"
+                android:layout_width="512dp"
+                android:layout_height="52dp"
+                android:id="@+id/kill"
+                android:background="@drawable/dismiss_button_background"
+                android:src="@drawable/cancelbutton"
+                />
+            <View
+                android:layout_width="2dp"
+                android:layout_height="40dp"
+                android:background="@drawable/vertical_dashed_line"
+                android:layerType="software"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline"
+                />
+            <ImageButton style="@style/PopupWindowButton"
+                android:layout_width="512dp"
+                android:layout_height="52dp"
+                android:id="@+id/ok"
+                android:src="@drawable/okbutton"
+                android:background="@drawable/ok_button_background"/>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,572 @@
+<resources>
+    <string name="app_name">HANDY bb</string>
+    <string name="crash_toast_text">Crash app</string>
+
+    <!-- Dictionary -->
+
+    <!-- A -->
+    <string name="accepted">Accepted</string>
+    <string name="activate_api_option">Activate API Option</string>
+    <string name="add">Add</string>
+    <string name="add_client">Add Client</string>
+    <string name="add_group">Add Group</string>
+    <string name="add_groups">Add Groups</string>
+    <string name="add_modifier">Add Modifier</string>
+    <string name="add_new_client">Add New Client</string>
+    <string name="add_notes_input">Add Notes Input</string>
+    <string name="admin_email_is_not_well_formed">Admin Email is not well formed</string>
+    <string name="addNewUser">New User</string>
+    <string name="address">Address</string>
+    <string name="administrator">Administrator</string>
+    <string name="administrator_">Administrator:</string>
+    <string name="admin_email">Admin E-Mail</string>
+    <string name="admin_registration">Admin Registration</string>
+    <string name="adults">Adults</string>
+    <string name="_adults">%1d Adults</string>
+    <string name="adults_children_disabled">%d Adults / %d Children / %d Disabled</string>
+    <string name="all_sessions">All Sessions</string>
+    <string name="already_gratis">Already Gratis</string>
+    <string name="already_homage">Already homage</string>
+    <string name="alternative_payment">Alternative Payment</string>
+    <string name="amount">Amount</string>
+    <string name="amount_cant_be_greater_than_cost">Amount can\'t be grater than cost</string>
+    <string name="annually">Annually</string>
+    <string name="applications">Applications</string>
+    <string name="apply_changes">Apply Changes</string>
+    <string name="assumed_profit">Assumed Profit</string>
+    <string name="at_least_one_of_name_surname_or_email_must_be_present">At least one of Name, Surname or Email must be present</string>
+
+    <!-- B -->
+    <string name="bank_card">Bank Card</string>
+    <string name="basics" translatable="false">Basics</string>
+    <string name="black_box" translatable="false">Black Box</string>
+    <string name="blackbox" translatable="false">BlackBox</string>
+    <string name="business_email">Business E-Mail</string>
+    <string name="business_name">Business Name</string>
+    <string name="buttonColor">Button Color</string>
+
+    <!-- C -->
+    <string name="calculate">Calculate</string>
+    <string name="cancel">Cancel</string>
+    <string name="cancel_delete">Cancel Delete</string>
+    <string name="cancel_element">Cancel Element</string>
+    <string name="cancel_reservation">Cancel Reservation</string>
+    <string name="cant_connect_printer">Can\'t connect printer</string>
+    <string name="cant_define_payment_type_please_ask_t">Can\'t define payment type, please ask T.</string>
+    <string name="cant_reprint_this_bill">Can\'t reprint this bill, try from order</string>
+    <string name="cant_update_license_code">Can\'t Update License Code</string>
+    <string name="capacity">Capacity</string>
+    <string name="capacity_cant_be_0">Capacity can\'t be 0</string>
+    <string name="card_accepted">Card Accepted?</string>
+    <string name="cash">Cash</string>
+    <string name="cash_drawer">Cash Drawer</string>
+    <string name="category">Category</string>
+    <string name="category_has_not_been_created_yet">Category has not been created yet</string>
+    <string name="cem">CEM</string>
+    <string name="change">Change</string>
+    <string name="change_modifiers">Change Modifiers</string>
+    <string name="checkBox_cashier">Select User As Cashier</string>
+    <string name="checkBox_manager">Select User As Manager</string>
+    <string name="children">Children</string>
+    <string name="city">City</string>
+    <string name="client">Client</string>
+    <string name="client_already_present">Client Already Present</string>
+    <string name="client_credit">Client Credit</string>
+    <string name="client_type">Client Type</string>
+    <string name="client_updated">Client Updated</string>
+    <string name="clients">Clients</string>
+    <string name="clients_arrived">Clients Arrived</string>
+    <string name="clients_didnt_arrived">Clients Didn\'t Arrived</string>
+    <string name="client_has_no_company">Client has no company</string>
+    <string name="client_has_no_email">Client has no E-Mail</string>
+    <string name="closing_tax">Closing Tax</string>
+    <string name="color_palette_1"># 01 / Color Palette</string>
+    <string name="color_palette_2"># 02 / Color Palette</string>
+    <string name="color_palette_3"># 03 / Color Palette</string>
+    <string name="color_palette_4"># 04 / Color Palette</string>
+    <string name="color_palette_5"># 05 / Color Palette</string>
+    <string name="color_palette_6"># 06 / Color Palette</string>
+    <string name="color_palette_7"># 07 / Color Palette</string>
+    <string name="color_palette_8"># 08 / Color Palette</string>
+    <string name="color_set">Color set</string>
+    <string name="combo" translatable="false">Combo</string>
+    <string name="company_info">Company Info</string>
+    <string name="company_name">Company Name</string>
+    <string name="company_name_or_fiscal_code_must_be_present">Company Name or Fiscal Code must be present</string>
+    <string name="configure">Configure</string>
+    <string name="confirm_delete">Confirm Delete</string>
+    <string name="cost">Cost</string>
+    <string name="cost_cant_be_greater_than_pay_amount">Cost can\'t be grater than pay amount</string>
+    <string name="customer_seat">Customer Seat</string>
+    <string name="country">Country</string>
+    <string name="create">Create</string>
+    <string name="create_buttons">Create Buttons</string>
+    <string name="createSession">Create Session</string>
+    <string name="credit">Credit</string>
+    <string name="credit_amount">Credit Amount</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="credit_value">Credit Value</string>
+    <string name="credit_fidelity">Credit Fidelity</string>
+    <string name="credit_discount">Credit Discount</string>
+    <string name="credit_id">Credit ID</string>
+    <string name="current_orders">Current Orders</string>
+    <string name="cash_status">Cash Status</string>
+    <string name="cash_management">Cash Management</string>
+    <string name="cash_withdraw_amount">Cash Withdraw Amount</string>
+
+    <!-- D -->
+    <string name="daily">Daily</string>
+    <string name="delete">Delete</string>
+    <string name="delete_">Delete %1s</string>
+    <string name="delete_2">Delete %1s %2s</string>
+    <string name="delete_category">Delete Category</string>
+    <string name="delete_group">Delete Group</string>
+    <string name="delete_modifier">Delete Modifier</string>
+    <string name="delete_room">Delete Room</string>
+    <string name="deleteProduct">Delete Product</string>
+    <string name="delete_table">Delete Table</string>
+    <string name="delete_this_client">Delete This Client?</string>
+    <string name="deleted">Deleted</string>
+    <string name="deleted_order">Deleted Order</string>
+    <string name="disabled">Disabled</string>
+    <string name="discount">Discount</string>
+    <string name="discount_is_bigger_than_price">Discount is bigger than price</string>
+    <string name="discount_name_not_accepted">Discount name not accepted</string>
+    <string name="discount_value_not_valid">Discount value not valid</string>
+    <string name="do_you_want_to_modify_or_cancel_discount">Do You Want To Modify Or Cancel Discount?</string>
+    <string name="do_you_want_to_remove_all_discount">Do You Want To Remove All Discount?</string>
+    <string name="drinks">Drinks</string>
+    <string name="duplicate_vat_value">Duplicate Vat Value</string>
+    <string name="deposit">Cash Deposit</string>
+    <string name="database_options">Database Options</string>
+    <string name="database_name">Database Name</string>
+
+    <!-- E -->
+    <string name="email" translatable="false">E-Mail</string>
+    <string name="email_address">E-Mail Address</string>
+    <string name="email_it">E-Mail It</string>
+    <string name="end_search">End Search</string>
+    <string name="endSession">End Session</string>
+    <string name="endTime">End Time</string>
+    <string name="erase">Erase</string>
+    <string name="error">Error</string>
+    <string name="error_blackbox_comm">Blackbox %1$s (%2$s) is not responding</string>
+    <string name="estimated_cost">Estimated Cost</string>
+    <string name="estimations">Estimations</string>
+    <string name="euro" translatable="false">Euro</string>
+    <string name="euro_all_caps" translatable="false">EURO</string>
+    <string name="event_report">Event Report</string>
+    <string name="existing_client">Existing Client</string>
+    <string name="exchange">Cash Exchange</string>
+    <string name="export_database">Export Database</string>
+
+    <!-- F -->
+    <string name="favourites">Favourites</string>
+    <string name="fill_admin_info_please">Fill Admin info please</string>
+    <string name="fill_license_string_please">Fill license string please</string>
+    <string name="fiscal">Fiscal</string>
+    <string name="fiscal_code">Fiscal Code</string>
+    <string name="foresty" translatable="false">Foresty</string>
+    <string name="file_location" translatable="true">File Location Folder: Download</string>
+    <string name="fidelity_code" translatable="true">Add Fidelitity Code</string>
+
+    <!-- G -->
+    <string name="goTo">Go To</string>
+    <string name="goTo_">Go To %1s</string>
+    <string name="goTo_2">Go To %1s %2s</string>
+    <string name="go_to_category">Go To Category</string>
+    <string name="gratis_all_caps" translatable="false">GRATIS</string>
+    <string name="grey_rules" translatable="false">Grey Rules</string>
+    <string name="group_has_not_been_created_yet">Group has not been created yet</string>
+    <string name="group_of_people">Group Of People</string>
+    <string name="group_title">Group Title</string>
+    <string name="groups">Groups</string>
+
+    <!-- H -->
+    <string name="homage">Homage</string>
+    <string name="how_do_you_want_to_pay">How Do You Want To Pay?</string>
+
+    <!-- I -->
+    <string name="info_tv_subcategory">Create your subcategory buttons and set them up</string>
+    <string name="info_tv_category">Create your category buttons and set them up</string>
+    <string name="info_tv_maincategory">Create your main category buttons and set them up</string>
+    <string name="info_tv_section">Create your section buttons and set them up</string>
+    <string name="info_tv_main_modifiers">Select your modifiers and add them to product</string>
+    <string name="info_tv_main_permanent_modifiers">Select your permanent modifiers and add them to product</string>
+    <string name="info_tv_new_modifier">Set Modifier Group</string>
+    <string name="info_tv_delete_order">Select Order Status</string>
+    <string name="info_tv_vat">Preset VAT</string>
+    <string name="info_tv_client_type">Client Type</string>
+    <string name="info_tv_discount_type">Discount Type</string>
+    <string name="select_printer">Select Printer</string>
+    <string name="insert_a_valid_client_name">Insert a valid Client name</string>
+    <string name="insert_a_valid_license_key">Insert A Valid License Key</string>
+    <string name="insert_a_valid_quantity_value">Insert a valid quantity value</string>
+    <string name="insert_a_valid_reservation_time">Insert a valid reservation time</string>
+    <string name="insert_a_valid_value">Insert Valid Value</string>
+    <string name="insert_a_valid_vat_value">Insert a valid Vat Value</string>
+    <string name="insert_discount">Insert Discount</string>
+    <string name="insert_license_code">Insert License Code</string>
+    <string name="insert_number_">Insert Number:</string>
+    <string name="insert_price">Insert Price</string>
+    <string name="insert_reservation_timer_period">Insert Reservation Timer Period</string>
+    <string name="insert_split_quantity_all_caps">INSERT SPLIT QUANTITY</string>
+    <string name="insert_percentage_">Insert Percentage:</string>
+    <string name="insert_reservation">Insert Reservation</string>
+    <string name="insert_title">Insert Title</string>
+    <string name="insert_waiting_list_element">Insert Waiting List Element</string>
+    <string name="invalid_passcode">Invalid Passcode</string>
+    <string name="invoice">Invoice</string>
+    <string name="invoice_aborted">Invoice Aborted</string>
+    <string name="ip_address">IP Address</string>
+    <string name="ip_settings">IP Settings</string>
+    <string name="item_already_processed">Item already processed</string>
+    <string name="items_price_is_bigger_than_left_cost">Items price is bigger than left cost</string>
+    <string name="import_database">Import Database</string>
+
+    <!-- J -->
+
+    <!-- K -->
+    <string name="keypad">Keypad</string>
+    <string name="kitchen">Kitchen</string>
+    <string name="kitchen_note">Kitchen Note</string>
+    <string name="kitchen_note_">Kitchen Note</string>
+
+    <!-- L -->
+    <string name="license">License</string>
+    <string name="license_code">License Code</string>
+    <string name="license_expiration_14_days">License Expiration: 14 days</string>
+    <string name="license_expiration__days">License Expiration: %1d days</string>
+    <string name="license_code_already_used">License Code already used</string>
+    <string name="license_updated">License Updated</string>
+    <string name="logout">Logout</string>
+
+    <!-- M -->
+    <string name="mainCategory">Main Category</string>
+    <string name="main_menu">Main Menu</string>
+    <string name="max">Max</string>
+    <string name="max_100">Max 100</string>
+    <string name="max_number_of__reached">Max Number Of %1s Reached</string>
+    <string name="max_number_of_groups_reached">Max Number Of Groups Reached</string>
+    <string name="max_number_of_modifiers_reached">Max Number Of Modifiers Reached</string>
+    <string name="max_number_of_products_reached">Max Number Of Products Reached</string>
+    <string name="merge_table">Merge Table</string>
+    <string name="_minutes">%d Minutes</string>
+    <string name="modifier_has_not_been_created_yet">Modifier has not been created yet</string>
+    <string name="modifiers">Modifiers</string>
+    <string name="modify">Modify</string>
+    <string name="modify_element">Modify Element</string>
+    <string name="modify_reservation">Modify Reservation</string>
+    <string name="monthly">Monthly</string>
+    <string name="municipality">Municipality</string>
+    <string name="min_cash">Min Cash</string>
+    <string name="max_cash">Max Cash</string>
+    <string name="min_withdraw">Min Withdraw</string>
+    <string name="min_withdraw_is_">Min Withdraw is %1f</string>
+
+    <!-- Messages -->
+
+    <string name="message_01">Orders are still open</string>
+
+    <!-- N -->
+    <string name="name">Name</string>
+    <string name="name_cant_be_empty">Name can\'t be empty</string>
+    <string name="name_client_type">Name Client Type</string>
+    <string name="name_new_zone">Name New Zone</string>
+    <string name="nameSession">Name Session</string>
+    <string name="name_unspecified_item">Name Unspecified Item</string>
+    <string name="natural" translatable="false">Natural</string>
+    <string name="net_sales">Net Sales</string>
+    <string name="new_client">New Client</string>
+    <string name="new_client_reservation">New Client Reservation</string>
+    <string name="new_clients_info">New Clients Info</string>
+    <string name="new_reservation">New Reservation</string>
+    <string name="new_reservations">New Reservations</string>
+    <string name="newSession">New Session</string>
+    <string name="newUser">New User</string>
+    <string name="new_user_created_password_">New User Created. Password: %1s</string>
+    <string name="new_vat_value_inserted">New VAT Value Inserted</string>
+    <string name="new_waiting_list_element">New Waiting List Element</string>
+    <string name="no">No</string>
+    <string name="no_customer_on_this_bill">No customer on this bill</string>
+    <string name="no_credit">No Credit</string>
+    <string name="no_item_selected">No Item selected</string>
+    <string name="no_person_selected">No Person selected</string>
+    <string name="no_split_for_one">No split for one</string>
+    <string name="no_you_cant">No You Can\'t</string>
+    <string name="non_fiscal">Non Fiscal</string>
+    <string name="not_accepted">Not Accepted</string>
+    <string name="not_allowed_for_invoice">Not allowed for invoice</string>
+    <string name="no_application_found_for_sending_emails">No application found for sending emails</string>
+    <string name="not_a_valid_email">Not A Valid E-Mail</string>
+    <string name="null_client">Null Client</string>
+    <string name="notifications_admin_channel_name" translatable="false">fcm_default_channel</string>
+    <!--
+        This is the name that users will see when interacting with this channel.
+        It should describe the category of notifications that will be sent through this channel
+     -->
+    <string name="notifications_admin_channel_description" translatable="false">Weather</string>
+
+
+    <!-- O -->
+    <string name="office_code">Office Code</string>
+    <string name="on_line" translatable="false">On-Line</string>
+    <string name="only_integer_numbers_allowed">Only integer numbers allowed</string>
+    <string name="open_bill_please_close">Open bill, please close</string>
+    <string name="open_modifiers">Open Modifiers</string>
+    <string name="operation">Operative</string>
+    <string name="order">Order</string>
+    <string name="order_">Order:</string>
+    <string name="order_print">Order Print</string>
+    <string name="orders">Orders</string>
+    <string name="original_all_caps">ORIGINAL</string>
+    <string name="original_bill">Original Bill</string>
+    <string name="ok" translatable="false">Ok</string>
+    <string name="overview" translatable="false">Overview</string>
+
+    <!-- P -->
+    <string name="part_of_this_bill_is_already_paid">Part of this bill is already paid</string>
+    <string name="partial">Partial</string>
+    <string name="partial_amount">Partial Amount</string>
+    <string name="partial_cant_be_greater_than_cost">Partial can\'t be grater than cost</string>
+    <string name="partial_order">Partial Order</string>
+    <string name="passcode">Passcode</string>
+    <string name="passcode_is_already_used">Passcode is already used, select another one</string>
+    <string name="payment">Payment</string>
+    <string name="payment_type_receipt_options">Payment Type &amp; Receipt Options</string>
+    <string name="per_clients">Per Clients</string>
+    <string name="per_item">Per Item</string>
+    <string name="per_number">Per Number</string>
+    <string name="per_person">Per Person</string>
+    <string name="percentage_cant_be_greater_than_100">Percentage can\'t be greater than 100</string>
+    <string name="please_add_at_least_one_adult">Please add at least one adult</string>
+    <string name="please_configure_at_least_one_button">Please, configure at least one button before use operative part</string>
+    <string name="please_fill_all_fields">Please Fill All Fields</string>
+    <string name="please_fill_cash_and_withdraw_fields">Please fill Deposit Cash and withdraw fields</string>
+    <string name="please_fill_cash_management_first">Please fill cash management first</string>
+    <string name="please_fill_first_registration_form">Please Fill First Registration Form</string>
+    <string name="please_fill_passcode">Please Fill Passcode</string>
+    <string name="please_fill_withdraw_value">Please fill withdraw value</string>
+    <string name="please_insert_value">Please insert value</string>
+    <string name="please_insert_a_new_discount_value">Please insert a new discount value</string>
+    <string name="please_insert_products_for_all_customers_before_pay">Please insert products for all customers before pay</string>
+    <string name="please_insert_your_store_name">Please Insert Your Store Name</string>
+    <string name="please_insert_your_supervisor_passcode">Please, insert your supervisor passcode</string>
+    <string name="please_pay_other_split_bill_first">Please Pay Other Split Bill First</string>
+    <string name="please_perform_this_operation_from_operative">Please perform this operation from Operative</string>
+    <string name="please_reserve_the_table">Please Reserve The Table!</string>
+    <string name="please_select_a_client_with_vat_number">Please select a client with VAT number</string>
+    <string name="please_select_a_registered_client">Please select a registered client</string>
+    <string name="please_split_before_giving_discount">Please, split before giving discount</string>
+    <string name="port">Port</string>
+    <string name="pos" translatable="false">POS</string>
+    <string name="pos_registration">POS Registration</string>
+    <string name="postal_code">Postal Code</string>
+    <string name="preset_vat">Preset REPARTI</string>
+    <string name="price">Price</string>
+    <string name="print">Print</string>
+    <string name="print_separate_order">Print Separate Order</string>
+    <string name="print_journal">Print Journal</string>
+    <string name="printer_functions">PRINTER FUNCTIONS</string>
+    <string name="printer_name">Printer Name</string>
+    <string name="printer_model">Printer Model</string>
+    <string name="printerOption">Printer Option</string>
+    <string name="printer_port">Printer Port</string>
+    <string name="printer_setup">Printer Setup</string>
+    <string name="printer_test">Printer Test</string>
+    <string name="printer_ip">Printer IP</string>
+    <string name="printing_error">Printing Error </string>
+    <string name="process_the_credit_card_">Process The Credit Card</string>
+    <string name="processing_receipt_error">Processing Receipt Error</string>
+    <string name="product">Product</string>
+    <string name="product_has_not_been_created_yet">Product Has Not Been Created Yet</string>
+    <string name="products">Products</string>
+    <string name="productModifier">Product Modifier</string>
+    <string name="productModifiers">Product Modifiers</string>
+    <string name="province">Province</string>
+    <string name="presence_verification">Presence Verification</string>
+    <string name="personal_info">Personal Vat</string>
+    <!-- Q -->
+    <string name="quantity">Quantity</string>
+    <string name="quantity_cant_be_0">Quantity can\'t be 0</string>
+    <string name="qty" translatable="false">qty</string>
+
+    <!-- R -->
+    <string name="recent_applications">Recent Applications</string>
+    <string name="recent_orders">Recent Orders</string>
+    <string name="recent_tables">Recent Tables</string>
+    <string name="recent_take_away">Recent Take Away</string>
+    <string name="registered_clients">Registered Clients</string>
+    <string name="reinsert_reservation">Reinsert Reservation</string>
+    <string name="reprint">Reprint</string>
+    <string name="reservations">Reservations</string>
+    <string name="reserved">Reserved</string>
+    <string name="reserved_tables">Reserved Tables</string>
+    <string name="reset_discount">Reset discount</string>
+    <string name="reset_orders">Reset Orders</string>
+    <string name="room">Room</string>
+    <string name="room_name">Room Name</string>
+    <string name="round" translatable="false">Round</string>
+    <string name="round_it">Round It</string>
+    <string name="rfid_settings_button">RFID Setting</string>
+    <string name="route_check_false" translatable="false">Error on route %1s.\nReason: %2s</string>
+
+
+    <!-- S -->
+    <string name="save">Save</string>
+    <string name="save_current_bill">Save Current Bill</string>
+    <string name="search">Search</string>
+    <string name="search_clients">Search Clients</string>
+    <string name="search_orders">Search Orders</string>
+    <string name="search_reservations">Search Reservations</string>
+    <string name="search_waiting_list">Search Waiting List</string>
+    <string name="section">Section</string>
+    <string name="select">Select</string>
+    <string name="select_button">Select Button</string>
+    <string name="select_group">Select Group</string>
+    <string name="selectIcon">Select Icon</string>
+    <string name="select_a_port_number">Select a port number</string>
+    <string name="select_an_address">Select An Address</string>
+    <string name="select_modifier">Select Modifier</string>
+    <string name="select_modifiers">Select Modifiers</string>
+    <string name="select_modifiers_all_caps">SELECT MODIFIERS</string>
+    <string name="select_modifier_group">Select modifier group</string>
+    <string name="select_one_name">Select One Name</string>
+    <string name="select_permanent_modifiers">Select permanent modifiers</string>
+    <string name="select_permanent_modifier_group">Select permanent modifier group</string>
+    <string name="select_printer_model">Select Printer Model</string>
+    <string name="select_tables_to_merge">Select Tables To Merge</string>
+    <string name="set_as_manager">Set As Manager</string>
+    <string name="set_client_type">Set Client Type</string>
+    <string name="set_clients">Set Clients</string>
+    <string name="set_date">Set Date</string>
+    <string name="set_discount">Set Discount</string>
+    <string name="set_modifier">Set Modifier</string>
+    <string name="set_reservation_date">Set Reservation Date</string>
+    <string name="set_reservation_time">Set Reservation Time</string>
+    <string name="set_table">Set Table</string>
+    <string name="set_tables">Set Tables</string>
+    <string name="set_time">Set Time</string>
+    <string name="settings_menu">Settings Menu</string>
+    <string name="skip_partial_payment">Skip Partial Payment</string>
+    <string name="skyish" translatable="false">Skyish</string>
+    <string name="software_license">Software License</string>
+    <string name="sorry_we_cant_print_this_bill">Sorry, we can\'t print this bill</string>
+    <string name="sorry__wrong_passcode">Sorry %1s, wrong passcode</string>
+    <string name="sorry_you_already_set_an_homage">Sorry, you already set an homage, you can\'t split the bill</string>
+    <string name="sorry_you_cant_modify_another_selected_client">Sorry, you can\'t modify another selected client</string>
+    <string name="sorry_you_dont_have_permission">Sorry, you don\'t have permission to configure, call your Administrator</string>
+    <string name="split_item">Split Item</string>
+    <string name="splitting_the_split_is_not_allowed">Splitting the Split is not allowed</string>
+    <string name="startTime">Start Time</string>
+    <string name="status_of_reservation">Status Of Reservation</string>
+    <string name="stone_cold" translatable="false">Stone Cold</string>
+    <string name="store_email_is_not_well_formed">Store email is not well formed</string>
+    <string name="subcategory">Subcategory</string>
+    <string name="subtitle">Subtitle</string>
+    <string name="sundown" translatable="false">Sundown</string>
+    <string name="surname">Surname</string>
+    <string name="surprise" translatable="false">Surprise</string>
+    <string name="switch_to_permanent_modifiers_mode">Switch to permanent modifiers mode</string>
+    <string name="settings">Settings</string>
+    <string name="barcode_scan">Scan Barcode</string>
+    <string name="select_btdevice">Select Bluetooth Device</string>
+    <string name="selected_btdevice">Selected Bluetooth Device</string>
+    <string name="storename">Store Name</string>
+
+
+    <!-- T -->
+    <string name="table">Table</string>
+    <string name="table_capacity_type">Table %1d / Capacity %1d / Type %1d</string>
+    <string name="table_name">Table Name</string>
+    <string name="table_orders">Table Orders</string>
+    <string name="table_sharing">Table Sharing</string>
+    <string name="tables">Tables</string>
+    <string name="take_away">Take Away</string>
+    <string name="take_out" translatable="false">Take-Out</string>
+    <string name="telephone_number">Telephone Number</string>
+    <string name="thats_the_main_table">That\'s the main table</string>
+    <string name="the_whole_group_has_been_attached_to_product_already">The whole group has been attached to product already</string>
+    <string name="this_is_a_number_subdivision">This is a number subdivision</string>
+    <string name="this_is_not_allowed">This is not allowed</string>
+    <string name="this_name_is_already_saved">This name is already saved</string>
+    <string name="this_room_already_exists">This room already exists</string>
+    <string name="this_table_cannot_be_merged">This Table Cannot Be Merged</string>
+    <string name="ticket_amount_all_caps">TICKET AMOUNT</string>
+    <string name="tickets">Tickets</string>
+    <string name="tips_">Tips:</string>
+    <string name="tips_all_caps">TIPS</string>
+    <string name="title">Title</string>
+    <string name="to_be_decided">To Be Decided</string>
+    <string name="total">Total</string>
+    <string name="total_bill_error_in_amount">Total bill, Error in amount</string>
+    <string name="total_deposit_amount">Total Deposit Amount</string>
+    <string name="total_withdraw_amount">Total Withdraw Amount</string>
+    <string name="total_cash_amount">Total Cash Amount</string>
+
+    <!-- U -->
+    <string name="unpaid">Unpaid</string>
+    <string name="unpaid_order">Unpaid Order</string>
+    <string name="updated">Updated</string>
+    <string name="user">User</string>
+    <string name="user_options">USER OPTIONS</string>
+    <string name="update_invoice_number">Update Invoice Number</string>
+
+    <!-- V -->
+    <string name="value_is_already_zero">Value is already zero</string>
+    <string name="vat">Reparto</string>
+    <string name="vat_id">VAT ID</string>
+    <string name="vat_number">VAT Number</string>
+    <string name="vat_number_must_be_declared">VAT number must be declared</string>
+    <string name="vat_number_must_be_present">VAT Number must be present</string>
+    <string name="vat_set">Vat Set</string>
+    <string name="vat_value">Vat Value</string>
+    <string name="vat_value_not_found">Vat Value not found</string>
+    <string name="vat__value">Numero Reparto</string>
+    <string name="vat_percent" translatable="false">IVA</string>
+
+    <!-- W -->
+    <string name="wait_im_closing_">Wait, I\'m Closing;</string>
+    <string name="waiting_list">Waiting List</string>
+    <string name="waiting_time">Waiting Time</string>
+    <string name="weekly">Weekly</string>
+    <string name="which_kind_of_print_do_you_want_to_reprint">Which kind of print do you want to reprint</string>
+    <string name="withdraw">Cash Withdrawal</string>
+    <string name="write_card">Write RFID Card</string>
+
+    <!-- X -->
+
+    <!-- Y -->
+    <string name="yes">Yes</string>
+    <string name="you_are_deleting_2">You Are Deleting %1s %2s</string>
+    <string name="you_are_deleting__product">You Are Deleting %1s Product</string>
+    <string name="you_are_deleting__group">You Are Deleting %1s Group</string>
+    <string name="you_are_deleting__modifier">You Are Deleting %1s Modifier</string>
+    <string name="you_can_split_item_only_on_original_bill">You can split item only from original bill</string>
+    <string name="you_cant_add_products">You can\'t add products to an already paid bill</string>
+    <string name="you_cant_apply_discount_to_a_null_total">You can\'t apply discount to a null total</string>
+    <string name="you_cant_change_your_admin_role">You can\'t change your admin role</string>
+    <string name="you_cant_modify">You can\'t modify</string>
+    <string name="you_cant_split_item_which_is_already_homage">You can\'t split item which is already homage</string>
+    <string name="you_cant_withdraw_more_than_current_total">You can\'t withdraw this amount</string>
+    <string name="you_have_added_new_reservation_">You Have Added New Reservation;</string>
+    <string name="you_have_already_homage_the_whole_bill">You have already homage the whole bill</string>
+    <string name="you_have_reinserted_modified_reservation_">You Have Reinserted Modified Reservation;</string>
+
+    <!-- Z -->
+    <string name="zip_code">ZIP Code</string>
+
+    <!-- HEAD RECEIPT -->
+    <string-array name="company_head_printer">
+        <item>"      Burgheria srl      "</item>
+        <item>"     via valprato 68     "</item>
+        <item>"      112233445566        "</item>
+    </string-array>
+    <string name="user_">USER:</string>
+    <string name="export_in_blackbox">Export in Blackbox</string>
+    <string name="hint_blackbox_ip">10.10.10.116:8888</string>
+    <string name="insert_blackbox_ip_header">Insert BlackBox IP</string>
+    <string name="price_not_zero">Product price can\'t be zero or lower</string>
+
+
+</resources>

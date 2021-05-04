@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/popup_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
+    >
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="689dp"
+        android:id="@+id/mainspace"
+        android:background="@color/blackTransparent">
+
+
+        <!-- ADMIN -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="689dp"
+            android:id="@+id/prov"
+            android:layout_alignParentTop="true"
+            >
+
+            <RelativeLayout
+                android:layout_width="487dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/AdminWindow"
+                android:background="@drawable/view_base_background"
+                android:visibility="visible"
+                >
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="52dp"
+                    android:text="@string/administrator"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:id="@+id/administrator_tv"
+                    android:layout_centerHorizontal="true"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/administrator_tv"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:id="@+id/administrator_window"
+                    android:background="@color/white">
+
+                    <com.example.blackbox.graphics.CustomButton
+                        android:layout_width="216dp"
+                        android:layout_height="42dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="15dp"
+                        android:textAllCaps="false"
+                        android:text="@string/configure"
+                        android:textSize="14sp"
+                        android:background="@drawable/popup_button_darkgray"
+                        android:textColor="@color/white"
+                        custom:typeface="franklin_gothic_demi"
+                        custom:letterSpacing="0.0"
+                        android:id="@+id/configure_button"/>
+
+                    <com.example.blackbox.graphics.CustomButton
+                        android:layout_width="216dp"
+                        android:layout_height="42dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="15dp"
+                        android:textAllCaps="false"
+                        android:text="@string/operation"
+                        android:textSize="14sp"
+                        android:layout_toRightOf="@id/configure_button"
+                        android:background="@drawable/popup_button_lightgray"
+                        android:textColor="@color/white"
+                        custom:typeface="franklin_gothic_demi"
+                        custom:letterSpacing="0.0"
+                        android:id="@+id/operation_button"/>
+
+                    <View
+                        android:layout_width="447dp"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/divider_line_horizontal"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/configure_button"
+                        android:id="@+id/admin_hline"
+                        />
+
+                    <com.example.blackbox.graphics.CustomButton
+                        android:layout_width="447dp"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:textAllCaps="false"
+                        android:text="@string/addNewUser"
+                        android:textSize="14sp"
+                        android:layout_below="@id/admin_hline"
+                        android:background="@drawable/popup_button_green"
+                        android:textColor="@color/white"
+                        custom:typeface="franklin_gothic_demi"
+                        custom:letterSpacing="0.0"
+                        android:id="@+id/addUser_button"/>
+
+                    <!--
+                                 com.example.pos.graphics.CustomButtontton
+                                        android:layout_width="447dp"
+                                        android:layout_height="42dp"
+                                        android:layout_marginStart="15dp"
+                                        android:layout_marginTop="15dp"
+                                        android:layout_marginEnd="15dp"
+                                        android:textAllCaps="false"
+                                        android:text="@string/endSession"
+                                        android:layout_below="@id/addUser_button"
+                                        android:background="@drawable/popup_button_red"
+                                        android:textColor="@color/white"
+                                        custom:typeface="franklin_gothic_demi"
+                                        custom:letterSpacing="0.0"
+                                        android:id="@+id/endSession_button"/>
+                    -->
+
+
+                    <com.example.blackbox.graphics.CustomButton
+                        android:layout_width="447dp"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:textAllCaps="false"
+                        android:text="@string/printerOption"
+                        android:textSize="14sp"
+                        android:layout_below="@id/addUser_button"
+                        android:background="@drawable/popup_button_green"
+                        android:textColor="@color/white"
+                        custom:typeface="franklin_gothic_demi"
+                        custom:letterSpacing="0.0"
+                        android:id="@+id/printerOption_button"/>
+
+                    <com.example.blackbox.graphics.CustomButton
+                        android:id="@+id/cashstatus_button"
+                        android:layout_width="447dp"
+                        android:layout_height="42dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_below="@+id/printerOption_button"
+                        android:background="@drawable/popup_button_green"
+                        android:text="@string/cash_status"
+                        android:textSize="14sp"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        custom:letterSpacing="0.0"
+                        custom:typeface="franklin_gothic_demi" />
+
+                    <com.example.blackbox.graphics.CustomButton
+                        android:id="@+id/presence_verification_button"
+                        android:layout_width="447dp"
+                        android:layout_height="42dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_below="@+id/cashstatus_button"
+                        android:background="@drawable/popup_button_green"
+                        android:text="@string/presence_verification"
+                        android:textSize="14sp"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        custom:letterSpacing="0.0"
+                        custom:typeface="franklin_gothic_demi" />
+
+                    <com.example.blackbox.graphics.CustomButton
+                        android:layout_width="447dp"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:textAllCaps="false"
+                        android:text="@string/logout"
+                        android:textSize="14sp"
+                        android:layout_below="@id/presence_verification_button"
+                        android:background="@drawable/popup_button_gray"
+                        android:textColor="@color/white"
+                        custom:typeface="franklin_gothic_demi"
+                        custom:letterSpacing="0.0"
+                        android:id="@+id/switchUser_button"/>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <!-- SESSIONS -->
+
+            <RelativeLayout
+                android:layout_width="487dp"
+                android:layout_height="192dp"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/userWindow"
+                android:background="@drawable/view_base_background"
+                android:visibility="gone"
+                >
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="52dp"
+                    android:text="@string/user"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:typeface="franklin_gothic_book"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:id="@+id/user_tv"
+                    android:layout_centerHorizontal="true"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/user_tv"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:id="@+id/user_window"
+                    android:background="@color/white">
+
+                    <com.example.blackbox.graphics.CustomButton
+                        android:layout_width="447dp"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:textAllCaps="false"
+                        android:text="@string/endSession"
+                        android:background="@drawable/popup_button_green"
+                        android:textColor="@color/white"
+                        custom:typeface="franklin_gothic_demi"
+                        custom:letterSpacing="0.0"
+                        android:id="@+id/userEndSession_button"/>
+
+                    <com.example.blackbox.graphics.CustomButton
+                        android:layout_width="447dp"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:textAllCaps="false"
+                        android:text="@string/logout"
+                        android:layout_below="@id/userEndSession_button"
+                        android:background="@drawable/popup_button_green"
+                        android:textColor="@color/white"
+                        custom:typeface="franklin_gothic_demi"
+                        custom:letterSpacing="0.0"
+                        android:id="@+id/userSwitchUser_button"/>
+
+
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <!-- ADD USER -->
+
+
+            <RelativeLayout
+                android:layout_width="487dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/AddUserWindow"
+                android:background="@drawable/view_base_background"
+                android:visibility="gone"
+                >
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="52dp"
+                    android:text="@string/newUser"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:id="@+id/addUser_tv"
+                    android:layout_centerHorizontal="true"
+                    />
+
+                <RelativeLayout
+                    android:id="@+id/addUser_window"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/addUser_tv"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/white">
+
+                    <com.example.blackbox.graphics.CustomEditText
+                        android:id="@+id/name_et"
+                        android:layout_width="216dp"
+                        android:layout_height="42dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/view_border"
+                        android:gravity="center"
+                        android:hint="@string/name"
+                        android:textAllCaps="false"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/gray"
+                        custom:letterSpacing="0.0"
+                        custom:typeface="franklin_gothic_demi" />
+
+                    <com.example.blackbox.graphics.CustomEditText
+                        android:id="@+id/surname_et"
+                        android:layout_width="216dp"
+                        android:layout_height="42dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_toRightOf="@id/name_et"
+                        android:background="@drawable/view_border"
+                        android:gravity="center"
+                        android:hint="@string/surname"
+                        android:textAllCaps="false"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/gray"
+                        custom:letterSpacing="0.0"
+                        custom:typeface="franklin_gothic_demi" />
+
+                    <com.example.blackbox.graphics.CustomEditText
+                        android:id="@+id/email_et"
+                        android:layout_width="447dp"
+                        android:layout_height="42dp"
+                        android:layout_below="@id/name_et"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/view_border"
+                        android:gravity="center"
+                        android:hint="@string/email"
+                        android:textAllCaps="false"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/gray"
+                        custom:letterSpacing="0.0"
+                        custom:typeface="franklin_gothic_demi" />
+
+
+                    <com.example.blackbox.graphics.CustomEditText
+                        android:id="@+id/passcode_et"
+                        android:layout_width="216dp"
+                        android:layout_height="42dp"
+                        android:layout_below="@id/email_et"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/view_border"
+                        android:digits="0123456789"
+                        android:gravity="center"
+                        android:hint="@string/passcode"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberPassword"
+                        android:maxLength="6"
+                        android:selectAllOnFocus="true"
+                        android:textAllCaps="false"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/gray"
+                        custom:letterSpacing="0.0"
+                        custom:typeface="franklin_gothic_demi" />
+
+                    <ImageButton
+                        android:id="@+id/manager_checkbox"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_below="@+id/email_et"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="21dp"
+                        android:layout_toRightOf="@+id/passcode_et"
+                        android:background="@drawable/view_border"
+                        android:src="@drawable/checkbox_selector" />
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:id="@+id/manager_checkbox_tv"
+                        android:layout_width="175dp"
+                        android:layout_height="42dp"
+                        android:layout_below="@+id/email_et"
+                        android:layout_marginLeft="11dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:layout_toRightOf="@id/manager_checkbox"
+                        android:gravity="center_vertical"
+                        android:letterSpacing="0.0"
+                        android:text="@string/set_as_manager"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        custom:letterSpacing="0.0"
+                        custom:typeface="franklin_gothic_book" />
+
+                    <com.example.blackbox.graphics.CustomButton
+                        android:id="@+id/write_card"
+                        android:layout_width="447dp"
+                        android:layout_height="42dp"
+                        android:layout_below="@id/manager_checkbox_tv"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/button_lightblue_3dp_grey_press"
+                        android:text="@string/write_card"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        custom:letterSpacing="0.0"
+                        custom:typeface="franklin_gothic_demi" />
+
+                    <View
+                        android:id="@+id/admin_hline_newuser"
+                        android:layout_width="447dp"
+                        android:layout_height="2dp"
+                        android:layout_below="@id/write_card"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/divider_line_horizontal" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/users_recycler"
+                        android:layout_width="447dp"
+                        android:layout_height="188dp"
+                        android:layout_below="@+id/admin_hline_newuser"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/view_border"
+                        android:paddingLeft="3dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="3dp"
+                        android:paddingBottom="3dp"></android.support.v7.widget.RecyclerView>
+
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+            <!-- Session Part-->
+
+            <RelativeLayout
+                android:layout_width="487dp"
+                android:layout_height="331dp"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/SessionWindow_ma"
+                android:background="@drawable/view_base_background"
+                android:visibility="gone"
+
+                >
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="57dp"
+                    android:text="@string/newSession"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:typeface="franklin_gothic_book"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:id="@+id/newSession_tv"
+                    android:layout_centerHorizontal="true"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/newSession_tv"
+                    android:background="@color/white"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    >
+                    <LinearLayout
+                        android:layout_width="447dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:orientation="horizontal"
+                        android:id="@+id/newSession_input_tv"
+                        >
+
+                        <com.example.blackbox.graphics.CustomEditText
+                            android:layout_gravity="center"
+                            android:layout_width="215dp"
+                            android:layout_height="match_parent"
+                            android:textAllCaps="false"
+                            android:gravity="center"
+                            android:hint="@string/nameSession"
+                            android:selectAllOnFocus="true"
+                            android:inputType="textAutoComplete"
+                            android:background="@drawable/view_border"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/gray"
+                            custom:typeface="franklin_gothic_demi"
+                            custom:letterSpacing="0.0"
+                            android:id="@+id/new_session_name_et"
+                            />
+
+                        <com.example.blackbox.graphics.CustomButton
+                            android:layout_width="101dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="15dp"
+                            android:text="@string/startTime"
+                            android:textAllCaps="false"
+                            android:background="@drawable/view_border_greybg_in"
+                            custom:typeface="franklin_gothic_demi"
+                            android:textColor="@color/white"
+                            android:textSize="14dp"
+                            custom:letterSpacing="0.0"
+                            android:id="@+id/start_session_button_et"
+                            />
+
+                        <com.example.blackbox.graphics.CustomButton
+                            android:layout_width="101dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="15dp"
+                            android:textColor="@color/white"
+                            android:textSize="14dp"
+                            android:text="@string/endTime"
+                            android:textAllCaps="false"
+                            android:background="@drawable/view_border_greybg_in"
+                            custom:typeface="franklin_gothic_demi"
+                            custom:letterSpacing="0.0"
+                            android:id="@+id/end_session_button_et"
+                            />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="446dp"
+                        android:layout_height="2dp"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/divider_line_horizontal"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/newSession_input_tv"
+                        android:id="@+id/newSession_hline"
+                        />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="165dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/view_border"
+                        android:layout_below="@id/newSession_hline">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:layout_width="437dp"
+                            android:layout_height="155dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:id="@+id/session_time_recycler"
+                            android:background="@color/white">
+
+                        </android.support.v7.widget.RecyclerView>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mainspace"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

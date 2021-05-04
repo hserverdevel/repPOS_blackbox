@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cash_modifier_container"
+    >
+    <com.example.blackbox.graphics.CustomTextView
+        android:layout_width="162dp"
+        android:layout_height="25dp"
+        custom:typeface="franklin_gothic_book_cd"
+        android:textAllCaps="false"
+        custom:letterSpacing="0.0"
+        android:textSize="15dp"
+        android:id="@+id/cash_modifier_title"
+        android:textColor="@color/black"
+        android:layout_below="@+id/cash_title"
+        android:paddingLeft="12dp"
+        android:gravity="center|left"
+        />
+    <com.example.blackbox.graphics.CustomTextView
+        android:layout_width="57dp"
+        android:layout_height="25dp"
+        custom:typeface="franklin_gothic_book_cd"
+        android:textAllCaps="true"
+        android:textSize="15dp"
+        android:id="@+id/cash_modifier_quantity"
+        android:textColor="@color/black"
+        android:layout_toRightOf="@+id/cash_modifier_title"
+        android:gravity="center"
+        android:background="@color/qty_gray"
+        android:paddingLeft="1dp"/>
+    <com.example.blackbox.graphics.CustomTextView
+        android:layout_width="101dp"
+        android:layout_height="25dp"
+        custom:typeface="franklin_gothic_book_cd"
+        android:textAllCaps="true"
+        android:textSize="15dp"
+        android:id="@+id/cash_modifier_price"
+        android:textColor="@color/black"
+        android:layout_toRightOf="@+id/cash_modifier_quantity"
+        android:gravity="center|right"
+        android:paddingRight="6dp"/>
+
+   <!--
+    <View
+        android:layout_width="322dp"
+        android:layout_height="2dp"
+        android:background="@drawable/divider_line_horizontal"
+        android:id="@+id/modifier_hdivider_line"
+        android:layout_below="@+id/cash_modifier_title"
+        android:layout_marginTop="4dp"
+    />-->
+</RelativeLayout>

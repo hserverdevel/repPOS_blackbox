@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="679dp"
+    android:layout_height="match_parent"
+    android:id="@+id/operative_fragment_visibility">
+
+
+    <RelativeLayout
+        android:layout_width="679dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@drawable/backgroundtexturepattern"
+        android:id="@+id/operative_layout"
+        >
+
+
+        <!-- Piece of Layout becoming visible as goToCategory gets Clicked -->
+        <RelativeLayout
+            android:layout_width="679dp"
+            android:layout_height="109dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="15dp"
+            android:visibility="gone"
+            android:id="@+id/above_recyclerView" >
+            <ImageButton
+                android:layout_width="154dp"
+                android:layout_height="86dp"
+                android:id="@+id/backButton"
+                android:background="@color/gray"
+                android:src="@drawable/backarrowsymbol"/>
+            <View
+                android:layout_width="2dp"
+                android:layout_height="88dp"
+                android:layout_toRightOf="@id/backButton"
+                android:layout_marginLeft="6dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/divider_line"
+                android:id="@+id/backButton_vline"/>
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/backButton_vline"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="1dp"
+                android:id="@+id/infoTextView"
+                custom:typeface="roboto_light_italic"
+                custom:letterSpacing="0.0"
+                android:textColor="@color/black"
+                android:text="@string/select_button"/>
+            <View
+                android:layout_width="493dp"
+                android:layout_height="2dp"
+                android:layout_toRightOf="@id/backButton_vline"
+                android:layout_below="@id/infoTextView"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/divider_line_horizontal"
+                android:id="@+id/infoTextView_hline"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="3dp"
+                android:layout_toRightOf="@id/backButton_vline"
+                android:layout_below="@id/infoTextView_hline"
+                android:id="@+id/categoryTitleBox">
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:textSize="23sp"
+                    custom:letterSpacing="0.1"
+                    android:textAllCaps="true"
+                    android:textColor="@color/black"
+                    custom:typeface="roboto_bold"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/categoryTitle"/>
+            </RelativeLayout>
+            <View
+                android:layout_width="658dp"
+                android:layout_height="2dp"
+                android:layout_below="@id/backButton"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/divider_line_horizontal"
+                android:id="@+id/backButton_hline"/>
+
+        </RelativeLayout><!--android:paddingStart="15dp"
+                android:paddingBottom="15dp"-->
+        <android.support.v7.widget.RecyclerView
+
+            android:layout_width="677dp"
+            android:layout_height="634dp"
+            android:padding="15dp"
+            android:paddingEnd="-11dp"
+            android:clipToPadding="false"
+            android:scrollbars="none"
+            android:layout_below="@id/above_recyclerView"
+            android:id="@+id/recyclerView"/>
+    </RelativeLayout>
+
+
+</LinearLayout>

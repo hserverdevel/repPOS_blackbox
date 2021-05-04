@@ -1,0 +1,22 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:state_activated="false"
+        >
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="oval">
+            <solid android:color="#666666"/>
+
+        </shape>
+
+    </item>
+    <item
+        android:state_activated="true"
+        >
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="oval">
+            <solid android:color="@color/green_2"/>
+        </shape>
+
+    </item>
+</selector>
+

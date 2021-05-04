@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="33dp"
+    android:layout_height="33dp"
+    android:id="@+id/room_grid_container"
+    android:gravity="center">
+    <RelativeLayout
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginLeft="6dp"
+    >
+    <View
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:background="@drawable/circle_room"
+        android:id="@+id/circle_view"
+        />
+    </RelativeLayout>
+</RelativeLayout>

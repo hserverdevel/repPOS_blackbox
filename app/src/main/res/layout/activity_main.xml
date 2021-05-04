@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="1024dp"
+    android:layout_height="match_parent"
+    tools:context="com.example.blackbox.activities.MainActivity"
+    android:id="@+id/main"
+    android:background="@color/black"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/topbarheader"
+        android:background="@drawable/blackbox"
+        android:layout_alignParentStart="true"
+       />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/rainbowbar"
+        android:id="@+id/topbarline"
+        android:layout_below="@id/topbarheader"
+        />
+
+    <com.example.blackbox.graphics.CustomButton
+        style="@style/ToolbarButtons"
+        android:text="@string/settings"
+        android:id="@+id/cashier"
+        android:paddingTop="7dp"
+        android:layout_width="175dp"/>
+
+    <View style="@style/TopBarLines"
+        android:id="@+id/firstline"
+        android:layout_toRightOf="@id/cashier"
+        />
+
+    <com.example.blackbox.graphics.CustomButton
+        style="@style/ToolbarButtons"
+        android:text="@string/clients"
+        android:id="@+id/clients"
+        android:layout_toRightOf="@id/firstline"
+        />
+
+    <View style="@style/TopBarLines"
+        android:id="@+id/secondline"
+        android:layout_toRightOf="@id/clients"
+        />
+
+    <com.example.blackbox.graphics.CustomButton
+        style="@style/ToolbarButtons"
+        android:text="@string/orders"
+        android:id="@+id/orders"
+        android:layout_toRightOf="@id/secondline"
+        />
+
+    <View style="@style/TopBarLines"
+        android:id="@+id/thirdline"
+        android:layout_toRightOf="@id/orders"
+        />
+
+    <com.example.blackbox.graphics.CustomButton
+        style="@style/ToolbarButtons"
+        android:text="@string/reservations"
+        android:id="@+id/reservations"
+        android:layout_toRightOf="@id/thirdline"
+        />
+
+    <View style="@style/TopBarLines"
+        android:id="@+id/fourthline"
+        android:layout_toRightOf="@id/reservations"
+        />
+
+    <com.example.blackbox.graphics.CustomTextView
+        android:layout_height="36dp"
+        android:layout_width="140dp"
+        android:gravity="center_vertical"
+        android:text="@string/administrator_"
+        custom:typeface="roboto_bold"
+        custom:textAllCaps="true"
+        android:textSize="13sp"
+        android:textColor="@color/white"
+        android:paddingStart="10dp"
+        android:layout_toRightOf="@id/fourthline"
+        android:layout_below="@id/topbarline"
+        android:id="@+id/admin_button_tv"/>
+
+    <com.example.blackbox.graphics.CustomTextView
+        android:layout_height="36dp"
+        android:layout_width="223dp"
+        android:gravity="end|center_vertical"
+        custom:typeface="franklin_gothic_demi"
+        android:textSize="13sp"
+        android:textColor="@color/white"
+        android:paddingEnd="10dp"
+        android:layout_toRightOf="@id/admin_button_tv"
+        android:layout_below="@id/topbarline"
+        android:id="@+id/admin_username_button_tv"/>
+
+    <com.example.blackbox.graphics.CustomButton
+        style="@style/ToolbarButtons"
+        android:id="@+id/admin"
+        custom:typeface="franklin_gothic_demi"
+        android:textSize="13sp"
+        android:paddingStart="10dp"
+        android:textAlignment="viewStart"
+        android:layout_toRightOf="@id/fourthline"
+        android:background="@color/transparent"
+        android:layout_width="343dp"
+        />
+
+    <LinearLayout
+        android:baselineAligned="false"
+        android:layout_width="match_parent"
+        android:layout_height="651dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/cashier"
+        android:id="@+id/linear"
+        android:background="@color/white">
+        <RelativeLayout
+            android:layout_width="679dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+
+            android:background="@drawable/backgroundtexturepattern1"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1">
+
+<!-- Piece of Layout becoming visible as goToCategory gets Clicked -->
+
+            <RelativeLayout
+                android:layout_width="679dp"
+                android:layout_height="109dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="15dp"
+                android:visibility="gone"
+                android:id="@+id/above_recyclerView" >
+                <ImageButton
+                    android:layout_width="154dp"
+                    android:layout_height="86dp"
+                    android:id="@+id/backButton"
+                    android:background="@color/gray"
+                    android:src="@drawable/backarrowsymbol"/>
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="88dp"
+                    android:layout_toRightOf="@id/backButton"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/divider_line"
+                    android:id="@+id/backButton_vline"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/backButton_vline"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginTop="1dp"
+                    android:id="@+id/infoTextView"
+                    custom:typeface="franklin_gothic_book"
+                    custom:letterSpacing="0.0"
+                    android:textColor="@color/black"
+                    android:text="@string/create_buttons"/>
+
+                <View
+                    android:layout_width="493dp"
+                    android:layout_height="2dp"
+                    android:layout_toRightOf="@id/backButton_vline"
+                    android:layout_below="@id/infoTextView"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginLeft="6dp"
+                    android:background="@drawable/divider_line_horizontal"
+                    android:id="@+id/infoTextView_hline"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="3dp"
+                    android:layout_toRightOf="@id/backButton_vline"
+                    android:layout_below="@id/infoTextView_hline"
+                    android:id="@+id/categoryTitleBox">
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:textSize="23sp"
+                        custom:letterSpacing="0.1"
+                        android:textAllCaps="true"
+                        android:textColor="@color/black"
+                        custom:typeface="franklin_gothic_demi"
+                        android:layout_centerVertical="true"
+                        android:id="@+id/categoryTitle"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="658dp"
+                    android:layout_height="2dp"
+                    android:layout_below="@id/backButton"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/divider_line_horizontal"
+                    android:id="@+id/backButton_hline"/>
+
+            </RelativeLayout><!--android:paddingStart="15dp"
+                android:paddingBottom="15dp"-->
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="677dp"
+                android:layout_height="648dp"
+                android:padding="15dp"
+                android:paddingEnd="-11dp"
+                android:clipToPadding="false"
+                android:scrollbars="none"
+                android:layout_below="@id/above_recyclerView"
+                android:id="@+id/recyclerView"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="343dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@drawable/backgroundtexturepattern1"
+            >
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:id="@+id/table_set"
+                android:textSize="12sp"
+                android:layout_marginTop="15dp"
+                android:layout_width="323dp"
+                android:layout_height="34dp"
+                android:background="@color/red"
+                android:text="@string/tables"
+                android:textAllCaps="true"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/white"
+                custom:typeface="franklin_gothic_demi"
+                android:gravity="center"
+                android:paddingStart="6dp">
+
+            </com.example.blackbox.graphics.CustomTextView>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="679dp"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/blackbox"
+        android:id="@+id/footerview">
+
+        <!--com.example.pos.graphics.CustomButtontton
+            android:layout_width="658dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="15dp"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            custom:typeface="roboto_bold"
+            android:background="@color/transparent"
+            android:id="@+id/erase"
+            /> -->
+        </RelativeLayout>
+       <!-- Linea tratteggiata  footer
+        <View style="@style/TopBarLines"
+            android:layout_height="46dp"
+            android:layout_width="2dp"
+            android:layout_marginTop="676.5dp"
+            android:layout_toRightOf="@id/footerview"
+            android:id="@+id/bottomline"
+            /> -->
+</RelativeLayout>

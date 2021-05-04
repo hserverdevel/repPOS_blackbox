@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/popup_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
+    >
+
+    <!-- ADMIN -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="689dp"
+        android:id="@+id/mainspace"
+        android:background="@color/blackTransparent">
+
+
+        <RelativeLayout
+            android:id="@+id/uWindow"
+            android:layout_width="487dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/view_base_background"
+            >
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:id="@+id/u_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="@string/settings_menu"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:typeface="franklin_gothic_demi" />
+
+            <RelativeLayout
+                android:id="@+id/u_window"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/u_tv"
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:background="@color/white">
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:id="@+id/registration_button"
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/popup_button_green"
+                    android:text="@string/pos_registration"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi" />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:id="@+id/ipsetting_button"
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/registration_button"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/popup_button_green"
+                    android:text="@string/ip_settings"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:id="@+id/rfid_setting_button"
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/ipsetting_button"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/popup_button_green"
+                    android:text="@string/rfid_settings_button"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:id="@+id/database_button"
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/rfid_setting_button"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/popup_button_green"
+                    android:text="@string/database_options"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:id="@+id/cash_management_button"
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/database_button"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/popup_button_green"
+                    android:text="@string/cash_management"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:id="@+id/update_invoice_number_button"
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/cash_management_button"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/popup_button_green"
+                    android:text="@string/update_invoice_number"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mainspace"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>
+
+

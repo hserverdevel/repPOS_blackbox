@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.blackbox.activities.PaymentActivity"
+    android:id="@+id/main">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blackTransparent">
+
+        <FrameLayout
+            android:layout_width="322dp"
+            android:layout_height="421dp"
+            android:layout_marginTop="48dp"
+            android:layout_marginLeft="15dp"
+            android:background="@color/transparent"
+            android:id="@+id/calc"/>
+        <FrameLayout
+            android:layout_width="322dp"
+            android:layout_height="421dp"
+            android:layout_marginTop="48dp"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@id/calc"
+            android:background="@color/transparent"
+            android:id="@+id/payment_options"/>
+        <FrameLayout
+            android:layout_width="322dp"
+            android:layout_height="517dp"
+            android:layout_marginTop="48dp"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@id/payment_options"
+            android:id="@+id/order"/>
+
+        <!-- Bottom buttons -->
+        <View
+            android:layout_width="658dp"
+            android:layout_height="2dp"
+            android:background="@drawable/divider_line_horizontal"
+            android:id="@+id/bottom_hline1_button_container"
+            android:layout_below="@id/calc"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="15dp"
+            />
+        <RelativeLayout
+            android:layout_width="658dp"
+            android:layout_height="30dp"
+            android:id="@+id/button_container"
+            android:layout_below="@id/bottom_hline1_button_container"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="15dp"
+            >
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="154dp"
+                android:layout_height="30dp"
+                android:text="@string/per_clients"
+                android:textAllCaps="true"
+                android:id="@+id/percentage_button"
+                android:textColor="@color/white"
+                android:background="@drawable/subdivision_buttons_background"
+                custom:typeface="franklin_gothic_demi"/>
+            <View
+                android:layout_width="2dp"
+                android:layout_height="30dp"
+                android:background="@drawable/divider_line"
+                android:id="@+id/vline1"
+                android:layout_toRightOf="@id/percentage_button"
+                android:layout_marginLeft="6dp"/>
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="154dp"
+                android:layout_height="30dp"
+                android:text="@string/per_person"
+                android:textAllCaps="true"
+                android:id="@+id/perperson_button"
+                android:layout_toRightOf="@id/vline1"
+                android:layout_marginLeft="6dp"
+                android:textColor="@color/white"
+                android:background="@drawable/subdivision_buttons_background"
+                custom:typeface="franklin_gothic_demi"/>
+            <View
+                android:layout_width="2dp"
+                android:layout_height="30dp"
+                android:background="@drawable/divider_line"
+                android:id="@+id/vline2"
+                android:layout_toRightOf="@id/perperson_button"
+                android:layout_marginLeft="6dp"/>
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="154dp"
+                android:layout_height="30dp"
+                android:text="@string/per_item"
+                android:textAllCaps="true"
+                android:id="@+id/peritem_button"
+                android:layout_toRightOf="@id/vline2"
+                android:layout_marginLeft="6dp"
+                android:textColor="@color/white"
+                android:background="@drawable/subdivision_buttons_background"
+                custom:typeface="franklin_gothic_demi"
+                />
+            <View
+                android:layout_width="2dp"
+                android:layout_height="30dp"
+                android:background="@drawable/divider_line"
+                android:id="@+id/vline3"
+                android:layout_toRightOf="@id/peritem_button"
+                android:layout_marginLeft="6dp"/>
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="154dp"
+                android:layout_height="30dp"
+                android:text="@string/per_number"
+                android:textAllCaps="true"
+                android:id="@+id/pernumber_button"
+                android:layout_toRightOf="@id/vline3"
+                android:layout_marginLeft="6dp"
+                android:textColor="@color/white"
+                android:background="@drawable/subdivision_buttons_background"
+                custom:typeface="franklin_gothic_demi"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="658dp"
+            android:layout_height="2dp"
+            android:background="@drawable/divider_line_horizontal"
+            android:id="@+id/bottom_hline2_button_container"
+            android:layout_below="@id/button_container"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="15dp"/>
+
+        <!--<FrameLayout
+            android:layout_width="322dp"
+            android:layout_height="334dp"
+            android:id="@+id/nn"/>-->
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="95dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:id="@+id/order_subdivision"
+            android:layout_below="@id/bottom_hline2_button_container"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/divider_line_horizontal"
+            android:id="@+id/bottom_hline3"
+            android:layout_below="@id/order_subdivision"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            />
+
+
+        <!-- BASELINE X AND OK BUTTONS -->
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/bottom_hline3"
+            android:id="@+id/footer"
+            android:background="@color/black">
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:id="@+id/footerspace">
+
+
+                <RelativeLayout
+                    android:layout_width="511dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/cancelspace">
+
+                    <ImageButton
+                        android:id="@+id/kill"
+                        android:layout_width="match_parent"
+                        android:layout_centerHorizontal="true"
+                        android:layout_height="55dp"
+                        android:background="@drawable/dismiss_button_background"
+                        android:src="@drawable/cancelbutton" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="38dp"
+                    android:layout_toRightOf="@+id/cancelspace"
+                    android:background="@drawable/vertical_dashed_line"
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/bottomline" />
+
+                <RelativeLayout
+                    android:layout_width="511dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/bottomline"
+                    android:id="@+id/okspace">
+
+                    <ImageButton
+                        android:layout_width="match_parent"
+                        android:layout_centerHorizontal="true"
+                        android:layout_height="55dp"
+                        android:id="@+id/ok"
+                        android:src="@drawable/okbutton"
+                        android:background="@drawable/ok_button_background"/>
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

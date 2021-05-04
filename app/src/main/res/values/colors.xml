@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="transparent">#00000000</color>
+    <color name="black">#000000</color>
+    <color name="blackTransparent">#DD000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="orange">#FF6600</color>
+    <color name="red">#cd0046</color>
+    <color name="blue">#003399</color>
+    <color name="light_blue">#6995ee</color>
+    <color name="eletric_blue">#05a8c0</color>
+    <color name="eletric_bluelight">#07bdd9</color>
+    <color name="yellow">#FFC600</color>
+    <color name="gray_light">#e8e8e8</color>
+    <color name="gray">#c6c5c6</color>
+    <color name="gray2">#333333</color>
+    <color name="light_gray">#7d7d7d</color>
+    <color name="dark_gray">#3d3d3d</color>
+    <color name="dark_gray_2">#666666</color>
+    <color name="green_2">#5cae32</color>
+    <color name="qty_gray">#f2f2f2</color>
+
+    <color name="table_default">#444444</color>
+    <color name="table_seated">#cd0046</color>
+    <color name="table_leaving">#5cae32</color>
+
+    <color name="pinpad_background">#ebebeb</color>
+
+    <color name="fidelity">#FF6347</color>
+
+
+
+
+
+
+</resources>

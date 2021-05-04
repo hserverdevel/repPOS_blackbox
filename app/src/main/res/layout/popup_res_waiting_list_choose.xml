@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="689dp"
+    android:id="@+id/total_layout"
+    android:background="@color/blackTransparent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="689dp"
+        android:id="@+id/mainspace"
+        android:background="@color/blackTransparent">
+
+        <RelativeLayout
+            android:layout_width="477dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/ButtonTypeChooser"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="487dp"
+                android:layout_height="62dp"
+                android:background="@drawable/view_base_background">
+
+                <com.example.blackbox.graphics.CustomButton
+                    style="@style/PopupWindowButton"
+                    android:layout_width="237dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/waiting_list"
+                    android:textAllCaps="true"
+                    android:id="@+id/waiting_list"
+                    />
+
+                <View
+                    android:id="@+id/line"
+                    android:layout_width="2dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layerType="software"
+                    android:background="@drawable/vertical_dashed_line"
+                    />
+
+                <com.example.blackbox.graphics.CustomButton
+                    style="@style/PopupWindowButton"
+                    android:layout_width="238dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/reservations"
+                    android:textAllCaps="true"
+                    android:id="@+id/reservations"
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+    <!--<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mainspace"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>-->
+
+</RelativeLayout>

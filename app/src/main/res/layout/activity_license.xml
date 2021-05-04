@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blackTransparent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.blackbox.activities.ActivityLicense"
+    android:id="@+id/main"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:keepScreenOn="true"
+    >
+
+    <RelativeLayout
+        android:layout_width="487dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/view_base_background"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        >
+
+        <com.example.blackbox.graphics.CustomTextView
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/license_expiration_14_days"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            custom:typeface="franklin_gothic_demi"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:id="@+id/expiration_text_window"
+            android:layout_centerHorizontal="true"
+            />
+
+        <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_width="477dp"
+            android:layout_height="72dp"
+            android:background="@color/white"
+            android:layout_below="@+id/expiration_text_window"
+            android:orientation="horizontal">
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="216dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/popup_button_green"
+                android:text="@string/ok"
+                android:textAllCaps="true"
+                android:textSize="14dp"
+                custom:typeface="franklin_gothic_demi"
+                android:textColor="@color/white"
+                android:id="@+id/ok_button"/>
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="216dp"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/popup_button_green"
+                android:text="@string/license_code"
+                android:textSize="14dp"
+                custom:typeface="franklin_gothic_demi"
+                android:textColor="@color/white"
+                android:id="@+id/update_code_button"/>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
+
+

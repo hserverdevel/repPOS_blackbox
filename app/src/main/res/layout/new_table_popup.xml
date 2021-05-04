@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
+    android:id="@+id/new_table_popup"
+   >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="689dp"
+        android:id="@+id/mainspace"
+        android:background="@color/blackTransparent">
+
+        <RelativeLayout
+            android:layout_width="487dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/view_border_white_in_5dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/table_popup_container"
+            >
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="477dp"
+                android:layout_height="57dp"
+                android:text="@string/set_tables"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:typeface="franklin_gothic_demi"
+                android:gravity="center"
+                android:id="@+id/table_popup_text"
+                android:background="@color/black"/>
+
+            <RelativeLayout
+                android:layout_width="477dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_below="@+id/table_popup_text"
+                android:id="@+id/table_input_container"
+                >
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="215dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:hint="@string/table_name"
+                    android:inputType="textCapWords|textAutoCorrect"
+                    android:id="@+id/table_name_input"
+                    android:selectAllOnFocus="true"
+                    android:gravity="center"
+                    android:textColorHighlight="@color/gray"
+                    android:background="@drawable/view_border"
+                    android:textCursorDrawable="@null"
+                    android:textColor="@color/blackTransparent"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="101dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:hint="@string/capacity"
+                    android:textSize="14sp"
+                    android:inputType="number"
+                    android:id="@+id/table_capacity_input"
+                    android:selectAllOnFocus="true"
+                    android:gravity="center"
+                    android:textColorHighlight="@color/white"
+                    android:textColorHint="@color/white"
+                    android:background="@drawable/view_border_greybg_in"
+                    android:textCursorDrawable="@null"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    android:layout_toRightOf="@+id/table_name_input"
+                    />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="101dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:hint="@string/quantity"
+                    android:textSize="14sp"
+                    android:inputType="numberDecimal"
+                    android:id="@+id/table_quantity_input"
+                    android:selectAllOnFocus="true"
+                    android:gravity="center"
+                    android:textColorHighlight="@color/white"
+                    android:textColorHint="@color/white"
+                    android:background="@drawable/view_border_greybg_in"
+                    android:textCursorDrawable="@null"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    android:layout_toRightOf="@+id/table_capacity_input"
+                    />
+
+                <LinearLayout
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:id="@+id/table_merge_check_container"
+                    android:layout_below="@+id/table_name_input"
+                    >
+
+                    <ImageButton
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="6dp"
+                        android:id="@+id/table_merge_check"
+                        android:background="@drawable/view_border"
+                        android:src="@drawable/checkbox_selector"
+                        />
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginLeft="15dp"
+                        android:id="@+id/table_merge_label"
+                        android:gravity="start|center_vertical"
+                        android:text="@string/merge_table"
+                        android:textColor="@color/black"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="15sp"
+                        custom:letterSpacing="0.0"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/table_sharing_check_container"
+                    android:layout_below="@+id/table_capacity_input"
+                    android:layout_toRightOf="@+id/table_merge_check_container"
+                    android:orientation="horizontal"
+                    >
+
+                    <ImageButton
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="6dp"
+                        android:id="@+id/table_sharing_check"
+                        android:background="@drawable/view_border"
+                        android:src="@drawable/checkbox_selector"
+                        />
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginLeft="15dp"
+                        android:id="@+id/table_sharing_label"
+                        android:gravity="start|center_vertical"
+                        android:text="@string/table_sharing"
+                        android:textColor="@color/black"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="15sp"
+                        custom:letterSpacing="0.0"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="447dp"
+                android:layout_height="2dp"
+                android:background="@drawable/divider_line_horizontal"
+                android:layout_below="@+id/table_input_container"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:id="@+id/table_divider_line"/>
+
+
+            <RelativeLayout
+                android:layout_width="447dp"
+                android:layout_height="135dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:paddingLeft="3dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:paddingRight="3dp"
+                android:background="@drawable/view_border"
+                android:layout_below="@+id/table_divider_line"
+                >
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/table_name_recycler"
+                    >
+                </android.support.v7.widget.RecyclerView>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mainspace"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

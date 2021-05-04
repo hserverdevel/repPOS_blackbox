@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
+    >
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="689dp"
+        android:id="@+id/mainspace"
+        android:background="@color/blackTransparent">
+
+
+        <RelativeLayout
+            android:layout_width="487dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/popup_ip_settings"
+            android:visibility="visible"
+            android:background="@drawable/view_base_background"
+            >
+
+
+            <!-- MENU TITLE SELECTION -->
+
+
+            <RelativeLayout
+                android:layout_width="477dp"
+                android:layout_height="57dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/title_container"
+                android:visibility="visible"
+                >
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="157dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/pos"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:gravity="center"
+                    android:background="@color/green_2"
+                    android:id="@+id/pos_printer"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/title_divider"
+                    android:layout_width="3dp"
+                    android:layout_height="51dp"
+                    android:background="@drawable/vertical_divider_white_3dp"
+                    android:layout_toRightOf="@+id/pos_printer"
+                    android:orientation="vertical"
+                    android:layout_marginTop="3dp"
+                    >
+                </LinearLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="157dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/kitchen"
+                    android:layout_toRightOf="@+id/title_divider"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:gravity="center"
+                    android:id="@+id/kitchen_printer"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/title_divider1"
+                    android:layout_width="3dp"
+                    android:layout_height="51dp"
+                    android:background="@drawable/vertical_divider_white_3dp"
+                    android:layout_toRightOf="@+id/kitchen_printer"
+                    android:orientation="vertical"
+                    android:layout_marginTop="3dp"
+                    >
+                </LinearLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="157dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/black_box"
+                    android:layout_toRightOf="@+id/title_divider1"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:gravity="center"
+                    android:id="@+id/black_box"
+                    />
+
+
+            </RelativeLayout>
+
+
+            <!-- KITCHEN_PRINTER SETTINGS -->
+
+
+            <RelativeLayout
+                android:id="@+id/kitchen_printer_selection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_container"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/white"
+                android:visibility="gone"
+                >
+
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/kitchen_printer_name"
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
+                    android:hint="@string/printer_name"
+                    android:inputType="textCapWords"
+                    android:textColor="@color/blackTransparent"
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null" />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/kitchen_printer_IP"
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toRightOf="@id/kitchen_printer_name"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
+                    android:hint="@string/ip_address"
+                    android:inputType="number|numberDecimal"
+                    android:digits="0123456789."
+                    android:textColor="@color/blackTransparent"
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null" />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/kitchen_printer_port"
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/kitchen_printer_name"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
+                    android:hint="@string/printer_port"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/blackTransparent"
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null"
+                    android:imeOptions="actionDone"/>
+
+
+                <ImageButton
+                    android:id="@+id/apiInputCheckBox"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@id/kitchen_printer_IP"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="21dp"
+                    android:layout_toRightOf="@id/kitchen_printer_port"
+                    android:background="@drawable/view_border"
+                    android:src="@drawable/checkbox_selector" />
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/apiprinter_activation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/kitchen_printer_IP"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toRightOf="@id/apiInputCheckBox"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/print_separate_order"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_book" />
+
+
+                <View
+                    android:id="@+id/printers_add_hline"
+                    android:layout_width="447dp"
+                    android:layout_height="2dp"
+                    android:layout_below="@id/kitchen_printer_port"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/divider_line_horizontal" />
+
+                <LinearLayout
+                    android:layout_width="447dp"
+                    android:layout_height="165dp"
+                    android:layout_below="@id/printers_add_hline"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/view_border">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/printer_selected"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/white">
+
+                    </android.support.v7.widget.RecyclerView>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+            <!-- POS_PRINTER SETTINGS -->
+
+
+            <RelativeLayout
+                android:id="@+id/pos_printer_selection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_container"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/white"
+                android:visibility="visible"
+                >
+
+                <Spinner
+                    android:id="@+id/pos_printer_name"
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
+                    android:hint="@string/printer_name"
+                    android:inputType="textCapWords"
+                    android:textColor="@color/blackTransparent"
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null"
+                    android:spinnerMode="dialog"/>
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/pos_printer_IP"
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toRightOf="@id/pos_printer_name"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
+                    android:hint="@string/ip_address"
+                    android:inputType="number|numberDecimal"
+                    android:digits="0123456789."
+                    android:textColor="@color/blackTransparent"
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null" />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/pos_printer_port"
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/pos_printer_name"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
+                    android:hint="@string/printer_port"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/blackTransparent"
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null" />
+
+
+                <ImageButton
+                    android:id="@+id/api_checkBox"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@id/pos_printer_IP"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="21dp"
+                    android:layout_toRightOf="@id/pos_printer_port"
+                    android:background="@drawable/view_border"
+                    android:src="@drawable/checkbox_selector" />
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/apiInput_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/pos_printer_IP"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toRightOf="@id/api_checkBox"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/activate_api_option"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_book" />
+
+
+                <View
+                    android:id="@+id/printers_add_hline1"
+                    android:layout_width="447dp"
+                    android:layout_height="2dp"
+                    android:layout_below="@id/pos_printer_port"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/divider_line_horizontal" />
+
+                <LinearLayout
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/printers_add_hline1"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/view_border">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/printer_selected1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/white">
+
+                    </android.support.v7.widget.RecyclerView>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+            <!-- BLACK_BOX SETTINGS -->
+
+
+            <RelativeLayout
+                android:id="@+id/blackbox_selection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_container"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/white"
+                android:visibility="gone"
+                >
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/blackbox_name"
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
+                    android:text="@string/blackbox"
+                    android:textSize="16sp"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/black"
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null" />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/blackbox_IP"
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toRightOf="@id/blackbox_name"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
+                    android:hint="@string/ip_address"
+                    android:inputType="textUri"
+                    android:digits="0123456789.:"
+                    android:textColor="@color/blackTransparent"
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null" />
+<!--
+                <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/blackbox_IP"
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toRightOf="@id/blackbox_name"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
+                    android:hint="@string/ip_address"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/blackTransparent"
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null" />
+                    -->
+
+
+                <View
+                    android:id="@+id/printers_add_hline2"
+                    android:layout_width="447dp"
+                    android:layout_height="2dp"
+                    android:layout_below="@id/blackbox_name"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/divider_line_horizontal" />
+
+                <LinearLayout
+                    android:layout_width="447dp"
+                    android:layout_height="165dp"
+                    android:layout_below="@id/printers_add_hline2"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/view_border">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/blackbox_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/white">
+
+                    </android.support.v7.widget.RecyclerView>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mainspace"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

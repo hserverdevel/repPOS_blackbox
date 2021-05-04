@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.blackbox.activities.OrderActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blackTransparent"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="558dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="48dp"
+        android:orientation="horizontal"
+        android:id="@+id/linear_container">
+
+        <RelativeLayout
+            android:layout_width="322dp"
+            android:layout_height="match_parent"
+            android:id="@+id/left_pane">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline1"
+                android:background="@drawable/divider_line_horizontal"/>
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="69dp"
+                android:id="@+id/title_tv"
+                android:layout_below="@id/hline1"
+                android:textColor="@color/white"
+                android:text="@string/take_away"
+                android:textAllCaps="true"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="18sp"
+                android:gravity="center"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline2"
+                android:layout_below="@id/title_tv"
+                android:background="@drawable/divider_line_horizontal"
+                android:layout_marginBottom="14dp"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/take_away_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/hline2"
+                />
+
+<!--
+            <LinearLayout
+                android:layout_width="322dp"
+                android:layout_height="46dp"
+                android:background="#444444"
+                android:id="@+id/element_order_container"
+                android:orientation="horizontal"
+                android:layout_below="@+id/hline2"
+                android:layout_marginBottom="6dp"
+                >
+             com.example.pos.graphics.CustomTextViewView
+                    android:layout_marginTop="6dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_width="236dp"
+                    android:layout_height="34dp"
+                    android:background="#cd0046"
+                    android:text="#100"
+                    custom:typeface="franklin_gothic_book"
+                    custom:letterSpacing="0"
+                    android:gravity="center"
+                    android:textSize="24px"
+                    android:textColor="@color/white"/>
+
+             com.example.pos.graphics.CustomChronometereter
+
+                    android:layout_marginTop="4dp"
+                    android:id="@+id/simpleChronometer"
+                    android:layout_width="68dp"
+                    android:layout_height="34dp"
+                    android:layout_marginLeft="6dp"
+                    android:background="#222222"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="15px"
+                    custom:typeface="franklin_gothic_medium_cd"
+                    android:lines="1"
+                    android:ellipsize="none"
+                    tools:ignore="EllipsizeMaxLines"
+                    android:paddingLeft="14dp"
+                    android:letterSpacing="0"/>
+                <View
+                    android:layout_marginTop="7dp"
+                    android:layout_width="12dp"
+                    android:layout_height="34dp"
+                    android:layout_marginLeft="-12dp"
+                    android:background="#222222">
+
+                </View>
+
+
+            </LinearLayout>
+
+-->
+        </RelativeLayout>
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/divider_line"
+            android:layout_marginLeft="6dp"/>
+
+        <!-- RIGHT PANEL -->
+        <RelativeLayout
+            android:layout_width="322dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="6dp"
+            android:id="@+id/central_pane">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline3_right"
+                android:background="@drawable/divider_line_horizontal"/>
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="69dp"
+                android:id="@+id/title_central_tv"
+                android:layout_below="@id/hline3_right"
+                android:textColor="@color/white"
+                android:text="@string/tables"
+                android:textAllCaps="true"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="18sp"
+                android:gravity="center"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline4_right"
+                android:layout_below="@id/title_central_tv"
+                android:background="@drawable/divider_line_horizontal"
+                android:layout_marginBottom="14dp"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/table_order_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/hline4_right"
+                />
+            <!--
+            <LinearLayout
+                android:layout_width="322dp"
+                android:layout_height="46dp"
+                android:background="#444444"
+                android:id="@+id/table_order_container"
+                android:orientation="horizontal"
+                android:layout_below="@id/hline4_right"
+                android:layout_marginBottom="6dp"
+                >
+
+             com.example.pos.graphics.CustomTextViewView
+                    android:layout_marginTop="6dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_width="68dp"
+                    android:layout_height="34dp"
+                    android:background="#cd0046"
+                    android:text="34"
+                    custom:typeface="franklin_gothic_book"
+                    custom:letterSpacing="0"
+                    android:gravity="center"
+                    android:textSize="24px"
+                    android:textColor="@color/white"/>
+
+             com.example.pos.graphics.CustomTextViewView
+                    android:layout_marginTop="3dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_width="162dp"
+                    android:layout_height="34dp"
+                    android:background="#444444"
+                    android:text="drinks"
+                    custom:typeface="franklin_gothic_medium_cd"
+                    custom:letterSpacing="0"
+                    android:gravity="center"
+                    android:textSize="15px"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"/>
+
+             com.example.pos.graphics.CustomChronometereter
+
+                    android:layout_marginTop="4dp"
+                    android:layout_width="68dp"
+                    android:layout_height="34dp"
+                    android:layout_marginLeft="6dp"
+                    android:background="#222222"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="15px"
+                    custom:typeface="franklin_gothic_medium_cd"
+                    android:lines="1"
+                    android:ellipsize="none"
+                    tools:ignore="EllipsizeMaxLines"
+                    android:paddingLeft="9dp"
+                    android:letterSpacing="0"/>
+                <View
+                    android:layout_marginTop="7dp"
+                    android:layout_width="12dp"
+                    android:layout_height="34dp"
+                    android:layout_marginLeft="-12dp"
+                    android:background="#222222">
+
+                </View>
+
+
+            </LinearLayout>
+
+-->
+        </RelativeLayout>
+
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/divider_line"
+            android:layout_marginLeft="6dp"/>
+
+
+        <RelativeLayout
+            android:layout_width="322dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="6dp"
+            android:id="@+id/right_pane">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline1_right"
+                android:background="@drawable/divider_line_horizontal"/>
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="69dp"
+                android:id="@+id/title_right_tv"
+                android:layout_below="@id/hline1_right"
+                android:textColor="@color/white"
+                android:text="@string/applications"
+                android:textAllCaps="true"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="18sp"
+                android:gravity="center"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline2_right"
+                android:layout_below="@id/title_right_tv"
+                android:background="@drawable/divider_line_horizontal"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:id="@+id/bottom_hline"
+        android:layout_below="@id/linear_container"
+        android:background="@drawable/divider_line_horizontal"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:id="@+id/bottom_button_container"
+        android:orientation="horizontal"
+        android:layout_below="@id/bottom_hline">
+
+        <com.example.blackbox.graphics.CustomButton
+            android:layout_width="490dp"
+            android:layout_height="46dp"
+            android:id="@+id/recent_orders"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/white"
+            android:background="@drawable/view_border"
+            custom:typeface="franklin_gothic_demi"
+            android:textSize="18sp"
+            android:text="@string/recent_orders"
+            android:textAllCaps="true"
+            android:layout_marginLeft="15dp"
+            />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="46dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/divider_line"
+            android:layout_marginLeft="6dp"
+            />
+
+        <com.example.blackbox.graphics.CustomButton
+            android:layout_width="490dp"
+            android:layout_height="46dp"
+            android:id="@+id/search_order"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/white"
+            android:background="@drawable/view_border"
+            custom:typeface="franklin_gothic_demi"
+            android:textSize="18sp"
+            android:text="@string/search_orders"
+            android:textAllCaps="true"
+            android:layout_marginLeft="6dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:id="@+id/bottom_hline_last"
+        android:layout_below="@id/bottom_button_container"
+        android:background="@drawable/divider_line_horizontal"
+        android:layout_marginTop="0dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        />
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/bottom_hline_last"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

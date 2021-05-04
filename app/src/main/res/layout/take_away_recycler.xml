@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.blackbox.activities.OrderActivity"
+    android:layout_width="322dp"
+    android:layout_height="46dp"
+    android:background="#444444"
+    android:id="@+id/take_away_container"
+    android:orientation="horizontal"
+    >
+        <com.example.blackbox.graphics.CustomTextView
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginBottom="6dp"
+            android:layout_width="236dp"
+            android:layout_height="34dp"
+            android:background="#cd0046"
+            android:text="#100"
+            android:id="@+id/take_away_number"
+            custom:typeface="franklin_gothic_book"
+            custom:letterSpacing="0"
+            android:gravity="center"
+            android:textSize="24dp"
+            android:textColor="@color/white"/>
+
+    <com.example.blackbox.graphics.CustomTextView
+        android:layout_marginTop="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_width="236dp"
+        android:layout_height="34dp"
+        android:background="#5cae32"
+        android:text="#100"
+        android:id="@+id/take_away_number_green"
+        custom:typeface="franklin_gothic_book"
+        custom:letterSpacing="0"
+        android:gravity="center"
+        android:textSize="24dp"
+        android:textColor="@color/white"
+        android:visibility="gone"/>
+
+        <com.example.blackbox.graphics.CustomTextView
+
+            android:layout_marginTop="3dp"
+            android:id="@+id/take_away_chronometer"
+            android:layout_width="68dp"
+            android:layout_height="34dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:background="#222222"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            custom:typeface="franklin_gothic_medium_cd"
+            android:lines="1"
+            android:ellipsize="none"
+            tools:ignore="EllipsizeMaxLines"
+            android:letterSpacing="0"/>
+
+
+
+    </LinearLayout>

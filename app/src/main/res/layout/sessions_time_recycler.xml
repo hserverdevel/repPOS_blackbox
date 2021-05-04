@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.blackbox.activities.OrderActivity"
+    android:layout_width="match_parent"
+    android:layout_height="46dp"
+    android:id="@+id/session_time_container"
+    android:orientation="horizontal"
+
+
+    >
+        <com.example.blackbox.graphics.CustomTextView
+            android:layout_width="217dp"
+            android:layout_height="39dp"
+            android:background="@color/white"
+            android:id="@+id/session_name_container"
+            custom:typeface="franklin_gothic_demi"
+            custom:letterSpacing="0"
+            android:gravity="left|center"
+            android:textSize="18dp"
+            android:textColor="@color/black"/>
+
+        <com.example.blackbox.graphics.CustomTextView
+            android:paddingRight="20dp"
+            android:layout_width="220dp"
+            android:layout_height="39dp"
+            android:background="@color/white"
+            android:id="@+id/time_container"
+            custom:typeface="franklin_gothic_demi"
+            custom:letterSpacing="0"
+            android:gravity="right|center"
+            android:textSize="18dp"
+            android:textColor="@color/black"/>
+
+
+
+    </LinearLayout>

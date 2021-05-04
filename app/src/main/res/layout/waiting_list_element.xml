@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+
+    <RelativeLayout
+        android:layout_width="490dp"
+        android:layout_height="100dp"
+        android:id="@+id/waiting_list_display"
+        android:layout_centerVertical="true"
+        android:background="@drawable/view_border_6dp_grey_in">
+
+        <RelativeLayout
+            android:layout_width="220dp"
+            android:layout_height="51dp"
+            android:id="@+id/wait_list_layout"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="20dp">
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/waiting_list_name"
+                custom:typeface="franklin_gothic_book"
+                android:textColor="@color/white"
+                android:gravity="center_vertical"
+                android:textSize="24sp"
+                android:text="@string/new_reservation"
+                custom:letterSpacing="0.0"/>
+        </RelativeLayout>
+
+        <com.example.blackbox.graphics.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="51dp"
+            android:id="@+id/waiting_time_tv"
+            custom:typeface="franklin_gothic_book"
+            android:textColor="@color/white"
+            android:gravity="center_vertical"
+            android:textSize="18sp"
+            android:textAllCaps="true"
+            android:layout_marginTop="6dp"
+            android:text="@string/waiting_time"
+            custom:letterSpacing="0.0"
+            android:layout_toRightOf="@id/wait_list_layout"/>
+
+        <ImageView
+            android:layout_width="19dp"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@id/waiting_time_tv"
+            android:layout_marginTop="22dp"
+            android:layout_marginLeft="14dp"
+            android:src="@drawable/res_arrow"
+            android:id="@+id/reservation_arrow"/>
+
+        <com.example.blackbox.graphics.CustomTextView
+            android:layout_width="82dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginRight="18dp"
+            android:gravity="center"
+            android:layout_toRightOf="@id/reservation_arrow"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:text="000"
+            android:id="@+id/waiting_time"
+            android:textColor="@color/white"
+            custom:typeface="franklin_gothic_book"
+            custom:letterSpacing="0.0"
+            />
+
+        <View
+            android:layout_width="447dp"
+            android:layout_height="1dp"
+            android:background="@drawable/divider_line_horizontal1dp"
+            android:layout_below="@id/wait_list_layout"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/input_display_hline1" />
+
+        <com.example.blackbox.graphics.CustomTextView
+            android:layout_width="490dp"
+            android:layout_height="36dp"
+            android:id="@+id/waiting_list_type"
+            android:layout_below="@+id/input_display_hline1"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="9dp"
+            custom:typeface="franklin_gothic_demi"
+            android:textColor="@color/white"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:text="@string/adults_children_disabled" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

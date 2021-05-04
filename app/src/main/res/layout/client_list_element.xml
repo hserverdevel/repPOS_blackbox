@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="56dp">
+
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/client_infos"
+    android:paddingStart="10dp"
+    android:layout_centerVertical="true">
+
+    <com.example.blackbox.graphics.CustomTextView
+        android:layout_width="421dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/client_name_tv"
+        custom:typeface="franklin_gothic_demi"
+        custom:letterSpacing="0.0"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:text="Kiki Strauss Wagner"/>
+
+    <com.example.blackbox.graphics.CustomTextView
+        android:layout_width="421dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/client_name_tv"
+        android:id="@+id/client_email_tv"
+        custom:typeface="franklin_gothic_book"
+        custom:letterSpacing="0.0"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:text="kstraussw@passionatelovemaking.com"/>
+
+</RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#151515"
+        android:id="@+id/client_delete_button"
+        android:visibility="gone">
+
+        <com.example.blackbox.graphics.CustomTextView
+            android:layout_width="477dp"
+            android:layout_height="44dp"
+            android:layout_marginBottom="6dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginLeft="6dp"
+            android:id="@+id/client_delete"
+            custom:typeface="franklin_gothic_demi"
+            android:background="@color/red"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:text="@string/delete"
+            custom:textAllCaps="true"
+            android:textAllCaps="true"
+            android:textSize="16dp" />
+
+    </LinearLayout>
+
+    <com.example.blackbox.graphics.CustomTextView
+        android:layout_width="68dp"
+        android:layout_height="44dp"
+        android:id="@+id/number_of_orders_tv"
+        android:layout_toRightOf="@id/client_infos"
+        custom:typeface="franklin_gothic_book"
+        android:background="#444444"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="21sp"
+        android:text="01"
+        android:layout_marginTop="6dp"/>
+
+</RelativeLayout>

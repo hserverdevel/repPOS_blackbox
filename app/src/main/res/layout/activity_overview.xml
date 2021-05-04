@@ -1,0 +1,3239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/overview"
+    android:layout_centerHorizontal="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blackTransparent"
+        android:layout_marginTop="-15dp"
+        android:gravity="center"
+        android:id="@+id/splash_screen_container">
+
+        <ImageView
+            android:id="@+id/splash_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/posicon"/>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="192dp"
+            android:layout_height="10dp"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="1"
+            android:id="@+id/progress_bar"
+            android:layout_below="@+id/splash_image"
+            android:progressDrawable="@drawable/linear_progress_bar" />
+
+    </RelativeLayout>
+
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="689dp"
+        android:id="@+id/mainspace"
+        android:background="@color/blackTransparent"
+        android:layout_centerHorizontal="true">
+
+        <LinearLayout
+            android:layout_width="994dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="48dp"
+            android:layout_marginLeft="15dp"
+            android:id="@+id/general_info_view"
+            android:background="@color/transparent"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="322dp"
+                android:layout_height="match_parent"
+                android:id="@+id/date_tv"
+                android:background="@color/eletric_blue">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="240dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/current_date"
+                    android:textSize="24sp"
+                    custom:letterSpacing="0.0"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center_vertical"
+                    android:text="11 Feb, Monday"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/current_time"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:text="17:27"
+                    android:layout_toRightOf="@+id/current_date"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="6dp"/>
+
+            </RelativeLayout>
+
+            <!--TO BE CONCLUED-->
+            <RelativeLayout
+                android:layout_width="322dp"
+                android:layout_height="match_parent"
+                android:id="@+id/weather_view"
+                android:layout_marginLeft="14dp"
+                android:background="@color/eletric_blue">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="76dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="6dp"
+                    android:id="@+id/current_temperature"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="18°C"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/vertical_separator"
+                    android:background="@drawable/vertical_dashed_line"
+                    android:layout_toRightOf="@+id/current_temperature">
+
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="244dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/current_weather"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi"
+                    android:text="Sunny and Windy"
+                    android:layout_toRightOf="@+id/vertical_separator"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginTop="8dp"/>
+
+
+            </RelativeLayout>
+
+            <!--TO BE CONCLUED-->
+            <RelativeLayout
+                android:layout_width="322dp"
+                android:layout_height="match_parent"
+                android:id="@+id/event_report_view"
+                android:layout_marginLeft="14dp"
+                android:background="@color/eletric_blue">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/event_report"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy"
+                    custom:textAllCaps="true"
+                    android:gravity="center_vertical|left"
+                    android:textColor="@color/white"
+                    android:layout_marginLeft="16dp"
+                    android:text="@string/event_report"
+                    android:lineSpacingExtra="1dp"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/vertical_separator_10"
+                    android:background="@drawable/vertical_dashed_line"
+                    android:layout_toRightOf="@+id/event_report">
+
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="244dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/current_event_report"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    android:text="No Events"
+                    custom:letterSpacing="0.0"
+                    android:layout_marginRight="16dp"
+                    android:layout_toRightOf="@+id/vertical_separator_10"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginTop="8dp"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <!--TO BE CONCLUDED-->
+        <LinearLayout
+            android:layout_width="994dp"
+            android:layout_height="24dp"
+            android:id="@+id/all_sessions_view"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal"
+            android:layout_below="@id/general_info_view"
+            android:background="@drawable/overview_separator_line">
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="994dp"
+                android:layout_height="24dp"
+                android:id="@+id/all_sessions_text_view"
+                android:textSize="12sp"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                custom:typeface="franklin_gothic_demioblique"
+                android:text="@string/all_sessions"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="994dp"
+            android:layout_height="84dp"
+            android:id="@+id/general_daily_overview_container"
+            android:layout_marginTop="14dp"
+            android:layout_marginLeft="15dp"
+            android:layout_below="@id/all_sessions_view"
+            android:background="@color/transparent">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/grey_line_horizontal"
+                android:background="@color/dark_gray">
+            </View>
+
+            <LinearLayout
+                android:id="@+id/first_line_container"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_below="@+id/grey_line_horizontal"
+                android:orientation="horizontal">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/cash_label_text_view"
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|left"
+                    android:layout_marginLeft="6dp"
+                    android:text="@string/cash"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy" />
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/cash_number_text_view"
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="6dp"
+                    android:gravity="center_vertical|right"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi" />
+
+                <View
+                    android:id="@+id/first_grey_line_vertical"
+                    android:layout_width="2dp"
+                    android:layout_height="38dp"
+                    android:background="@color/dark_gray">
+
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/credit_card_label_text_view"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="6dp"
+                    android:gravity="left|center_vertical"
+                    android:lineSpacingExtra="2dp"
+                    android:text="@string/credit_card"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy" />
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/credit_card_number_text_view"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="6dp"
+                    android:gravity="right|center_vertical"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi" />
+
+                <View
+                    android:id="@+id/second_grey_line_vertical"
+                    android:layout_width="2dp"
+                    android:layout_height="38dp"
+                    android:background="@color/dark_gray">
+
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/bank_card_label_text_view"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:gravity="left|center_vertical"
+                    android:layout_marginLeft="6dp"
+                    android:text="@string/bank_card"
+                    android:lineSpacingExtra="2dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy" />
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/bank_card_number_text_view"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="6dp"
+                    android:gravity="center_vertical|right"
+                    android:text="1"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi"/>
+
+                <View
+                    android:id="@+id/third_grey_line_vertical"
+                    android:layout_width="2dp"
+                    android:layout_height="38dp"
+                    android:background="@color/dark_gray"></View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/tickets_label_text_view"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:gravity="left|center_vertical"
+                    android:layout_marginLeft="6dp"
+                    android:text="@string/tickets"
+                    android:lineSpacingExtra="2dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy" />
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/tickets_number_text_view"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="6dp"
+                    android:gravity="center_vertical|right"
+                    android:text="6"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi" />
+
+                <View
+                    android:id="@+id/fourth_grey_line_vertical"
+                    android:layout_width="2dp"
+                    android:layout_height="38dp"
+                    android:background="@color/dark_gray">
+
+                </View>
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/client_credit_label_text_view_1"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="6dp"
+                    android:gravity="center_vertical|left"
+                    android:text="@string/client_credit"
+                    android:lineSpacingExtra="2dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy" />
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/client_credit_number_text_view"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="6dp"
+                    android:gravity="center_vertical|right"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi" />
+
+                <View
+                    android:id="@+id/fifth_grey_line_vertical"
+                    android:layout_width="2dp"
+                    android:layout_height="38dp"
+                    android:background="@color/dark_gray">
+
+                </View>
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/deleted_order_label_text_view_1"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="6dp"
+                    android:gravity="center_vertical|left"
+                    android:text="@string/deleted_order"
+                    android:lineSpacingExtra="2dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy" />
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/deleted_order_number_text_view"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="6dp"
+                    android:gravity="center_vertical|right"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi" />
+
+                <View
+                    android:id="@+id/sixth_grey_line_vertical"
+                    android:layout_width="2dp"
+                    android:layout_height="38dp"
+                    android:background="@color/dark_gray">
+
+                </View>
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/partial_order_label_text_view_1"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="6dp"
+                    android:gravity="center_vertical|left"
+                    android:text="@string/partial_order"
+                    android:lineSpacingExtra="2dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy" />
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/partial_order_number_text_view"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="6dp"
+                    android:gravity="center_vertical|right"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi" />
+
+                <View
+                    android:id="@+id/seventh_grey_line_vertical"
+                    android:layout_width="2dp"
+                    android:layout_height="38dp"
+                    android:background="@color/dark_gray">
+
+                </View>
+
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/unpaid_order_label_text_view_1"
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="6dp"
+                    android:gravity="center_vertical|left"
+                    android:text="@string/unpaid_order"
+                    android:lineSpacingExtra="2dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy" />
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/unpaid_order_number_text_view"
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="6dp"
+                    android:gravity="center_vertical|right"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/grey_line_horizontal2"
+                android:background="@color/dark_gray"
+                android:layout_below="@id/first_line_container">
+            </View>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_below="@id/grey_line_horizontal2"
+                android:id="@+id/second_line_container"
+                android:orientation="horizontal">
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/table_orders_label_text_view_1"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy"
+                    android:text="@string/table_orders"
+                    android:lineSpacingExtra="2dp"
+                    android:gravity="center_vertical|left"
+                    android:layout_marginLeft="6dp"/>
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/table_orders_number_text_view"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:layout_marginRight="6dp"
+                    android:gravity="center_vertical|right"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="38dp"
+                    android:id="@+id/first_grey_line_vertical_2"
+                    android:background="@color/dark_gray">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/take_out_label_text_view"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy"
+                    android:text="@string/take_out"
+                    android:lineSpacingExtra="2dp"
+                    android:gravity="left|center_vertical"
+                    android:layout_marginLeft="6dp"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/take_out_number_text_view"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:textSize="18sp"
+                    android:layout_marginRight="6dp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:gravity="center_vertical|right"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="38dp"
+                    android:id="@+id/second_grey_line_vertical_2"
+                    android:background="@color/dark_gray">
+                </View>
+
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/reserved_tables_label_text_view_1"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy"
+                    android:text="@string/reserved_tables"
+                    android:lineSpacingExtra="2dp"
+                    android:gravity="center_vertical|left"
+                    android:layout_marginLeft="6dp"/>
+
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/reserved_tables_number_text_view"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:textSize="18sp"
+                    android:layout_marginRight="6dp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:gravity="center_vertical|right"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="38dp"
+                    android:id="@+id/third_grey_line_vertical_2"
+                    android:background="@color/dark_gray">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/on_line_label_text_view"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy"
+                    android:text="@string/on_line"
+                    android:lineSpacingExtra="2dp"
+                    android:gravity="left|center_vertical"
+                    android:layout_marginLeft="6dp"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/on_line_number_text_view"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:layout_marginRight="6dp"
+                    android:gravity="center_vertical|right"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="38dp"
+                    android:id="@+id/fourth_grey_line_vertical_2"
+                    android:background="@color/dark_gray">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/invoice_label_text_view"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:gravity="left|center_vertical"
+                    android:layout_marginLeft="6dp"
+                    android:text="@string/invoice"
+                    android:lineSpacingExtra="2dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy" />
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/invoice_number_text_view"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:layout_marginRight="6dp"
+                    android:gravity="center_vertical|right"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="38dp"
+                    android:id="@+id/fifth_grey_line_vertical_2"
+                    android:background="@color/dark_gray">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/discount_label_text_view"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|left"
+                    android:layout_marginLeft="6dp"
+                    android:text="@string/discount"
+                    android:lineSpacingExtra="2dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy" />
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/discount_number_text_view"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:layout_marginRight="6dp"
+                    android:gravity="center_vertical|right"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="38dp"
+                    android:id="@+id/sixth_grey_line_vertical_2"
+                    android:background="@color/dark_gray">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/homage_label_text_view"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:gravity="left|center_vertical"
+                    android:layout_marginLeft="6dp"
+                    android:text="@string/homage"
+                    android:lineSpacingExtra="2dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy" />
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/homage_number_text_view"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:layout_marginRight="6dp"
+                    android:gravity="center_vertical|right" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="38dp"
+                    android:id="@+id/seventh_grey_line_vertical_2"
+                    android:background="@color/dark_gray">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/round_it_label_text_view"
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:gravity="left|center_vertical"
+                    android:layout_marginLeft="6dp"
+                    android:text="@string/round_it"
+                    android:lineSpacingExtra="2dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy" />
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/round_it_number_text_view"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:layout_marginRight="6dp"
+                    android:gravity="center_vertical|right" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:id="@+id/grey_line_horizontal3"
+                android:background="@color/dark_gray"
+                android:layout_below="@id/second_line_container">
+            </View>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="168dp"
+            android:id="@+id/general_profits_view"
+            android:background="@color/transparent"
+            android:layout_below="@id/general_daily_overview_container"
+            android:layout_marginLeft="15dp">
+
+            <!--FIRST CONTAINER -> DAILY -->
+            <RelativeLayout
+                android:layout_width="322dp"
+                android:layout_height="match_parent"
+                android:id="@+id/daily_profits_view">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="322dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/daily_label_text_view"
+                    android:text="@string/daily"
+                    android:textColor="@color/white"
+                    android:textAllCaps="false"
+                    android:textSize="15sp"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    />
+
+                <View
+                    android:layout_width="322dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_grey_1dp"
+                    android:layout_below="@id/daily_label_text_view"
+                    android:id="@+id/first_horizontal_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="64dp"
+                    android:layout_height="39dp"
+                    android:id="@+id/net_sales_text_view"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    custom:typeface="franklin_gothic_heavy"
+                    android:textSize="9sp"
+                    android:text="@string/net_sales"
+                    android:gravity="center_vertical|left"
+                    android:layout_marginLeft="6dp"
+                    android:layout_below="@id/first_horizontal_dotted_divider"
+                    />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="39dp"
+                    android:id="@+id/first_vertical_dotted_divider"
+                    android:background="@drawable/vertical_divider_grey_1dp"
+                    android:layout_toRightOf="@id/net_sales_text_view"
+                    android:layout_below="@id/first_horizontal_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="246dp"
+                    android:layout_height="39dp"
+                    android:id="@+id/net_sales_number_text_view"
+                    android:textSize="24sp"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.05"
+                    android:text="725,45€"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/first_vertical_dotted_divider"
+                    android:layout_below="@id/first_horizontal_dotted_divider"
+                    />
+
+                <View
+                    android:layout_width="322dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_grey_1dp"
+                    android:layout_below="@id/net_sales_text_view"
+                    android:id="@+id/second_horizontal_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="64dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/estimated_cost_text_view"
+                    android:textColor="@color/orange"
+                    android:textAllCaps="true"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy"
+                    android:text="@string/estimated_cost"
+                    android:gravity="left|center_vertical"
+                    android:layout_marginLeft="6dp"
+                    android:layout_below="@id/second_horizontal_dotted_divider"
+                    />
+
+                <!--CHANGE LINE'S COLOR -> ORANGE -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/second_vertical_dotted_divider"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_toRightOf="@id/estimated_cost_text_view"
+                    android:layout_below="@id/second_horizontal_dotted_divider">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="137dp"
+                    android:layout_height="31dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/first_orange_line_container"
+                    android:layout_toRightOf="@id/second_vertical_dotted_divider"
+                    android:layout_below="@id/second_horizontal_dotted_divider">
+
+                    <View
+                        android:layout_width="137dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginLeft="2dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/first_horizontal_orange_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:id="@+id/estimated_cost_number_text_view"
+                    android:textSize="21sp"
+                    android:text="1523,00€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/first_orange_line_container"
+                    android:layout_below="@id/second_horizontal_dotted_divider"
+                    />
+
+                <!--CHANGE LINE'S COLOR -> ORANGE -->
+                <View
+                    android:layout_width="322dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/estimated_cost_text_view"
+                    android:id="@+id/third_horizontal_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="64dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/vat_value_text_view"
+                    android:textColor="@color/orange"
+                    android:textAllCaps="true"
+                    android:textSize="9sp"
+                    custom:typeface="franklin_gothic_heavy"
+                    android:text="@string/vat_value"
+                    android:gravity="left|center_vertical"
+                    android:layout_marginLeft="6dp"
+                    android:layout_below="@id/third_horizontal_dotted_divider"
+                    />
+
+                <!--CHANGE LINE'S COLOR -> ORANGE-->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/third_vertical_dotted_divider"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_toRightOf="@id/vat_value_text_view"
+                    android:layout_below="@id/third_horizontal_dotted_divider">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="137dp"
+                    android:layout_height="31dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/second_orange_line_container"
+                    android:layout_toRightOf="@id/third_vertical_dotted_divider"
+                    android:layout_below="@id/third_horizontal_dotted_divider">
+
+                    <View
+                        android:layout_width="137dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginLeft="2dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/second_horizontal_orange_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:id="@+id/vat_value_number_text_view"
+                    android:textSize="21sp"
+                    android:text="1232,00€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/second_orange_line_container"
+                    android:layout_below="@id/third_horizontal_dotted_divider"
+                    />
+
+                <!--CHANGE LINE'S COLOR-->
+                <View
+                    android:layout_width="322dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/vat_value_text_view"
+                    android:id="@+id/fourth_horizontal_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="64dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/assumed_profit_text_view"
+                    android:textColor="@color/yellow"
+                    android:textAllCaps="true"
+                    android:textSize="9sp"
+                    android:text="@string/assumed_profit"
+                    custom:typeface="franklin_gothic_heavy"
+                    android:gravity="left|center_vertical"
+                    android:layout_marginLeft="6dp"
+                    android:layout_below="@id/fourth_horizontal_dotted_divider"
+                    />
+
+                <!--CHANGE LINE'S COLOR -> ORANGE-->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/fourth_vertical_dotted_divider"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_toRightOf="@id/assumed_profit_text_view"
+                    android:layout_below="@id/fourth_horizontal_dotted_divider">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="137dp"
+                    android:layout_height="31dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/third_orange_line_container"
+                    android:layout_toRightOf="@id/fourth_vertical_dotted_divider"
+                    android:layout_below="@id/fourth_horizontal_dotted_divider">
+
+                    <View
+                        android:layout_width="137dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginLeft="2dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/third_horizontal_orange_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:id="@+id/assumed_profit_number_text_view"
+                    android:textSize="21sp"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:textColor="@color/yellow"
+                    android:text="1111,00€"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/third_orange_line_container"
+                    android:layout_below="@id/fourth_horizontal_dotted_divider"
+                    />
+
+                <!--CHANGE LINE'S COLOR-->
+                <View
+                    android:layout_width="322dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/assumed_profit_text_view"
+                    android:id="@+id/fifth_horizontal_dotted_divider">
+                </View>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="168dp"
+                android:id="@+id/vertical_separator_gray"
+                android:background="@drawable/vertical_divider_grey_2dp"
+                android:layout_toRightOf="@+id/daily_profits_view"
+                android:layout_marginLeft="6dp">
+
+            </View>
+
+            <!--SECOND CONTAINER -> WEEKLY-->
+            <RelativeLayout
+                android:layout_width="210dp"
+                android:layout_height="match_parent"
+                android:id="@+id/weekly_profits_view"
+                android:layout_toRightOf="@id/vertical_separator_gray"
+                android:layout_marginLeft="6dp">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="210dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/weekly_label_text_view"
+                    android:text="@string/weekly"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:textAllCaps="false"
+                    android:textSize="15sp"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    />
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_grey_1dp"
+                    android:layout_below="@id/weekly_label_text_view"
+                    android:id="@+id/first_horizontal_dotted_divider_2">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="210dp"
+                    android:layout_height="39dp"
+                    android:id="@+id/net_sales_weekly_number_text_view"
+                    android:textSize="21sp"
+                    android:text="3647,82€"
+                    custom:letterSpacing="0.01"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textColor="@color/white"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_below="@+id/first_horizontal_dotted_divider_2"
+                    />
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_grey_1dp"
+                    android:layout_below="@id/net_sales_weekly_number_text_view"
+                    android:id="@+id/second_horizontal_dotted_divider_2">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="110dp"
+                    android:layout_height="31dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/first_orange_line_container_2"
+                    android:layout_below="@id/second_horizontal_dotted_divider_2">
+
+                    <View
+                        android:layout_width="110dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/first_horizontal_orange_dotted_divider_2">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:id="@+id/estimated_cost_weekly_number_text_view"
+                    android:textSize="18sp"
+                    android:text="1254,00€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/first_orange_line_container_2"
+                    android:layout_below="@id/second_horizontal_dotted_divider_2"
+                    />
+
+                <!--CHANGE LINE'S COLOR -> ORANGE -->
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/estimated_cost_weekly_number_text_view"
+                    android:id="@+id/third_horizontal_dotted_divider_2">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="110dp"
+                    android:layout_height="31dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/second_orange_line_container_2"
+                    android:layout_below="@id/third_horizontal_dotted_divider_2">
+
+                    <View
+                        android:layout_width="110dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/second_horizontal_orange_dotted_divider_2">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:id="@+id/vat_value_weekly_number_text_view"
+                    android:textSize="18sp"
+                    android:text="1245,00€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/second_orange_line_container_2"
+                    android:layout_below="@id/third_horizontal_dotted_divider_2"
+                    />
+
+                <!--CHANGE LINE'S COLOR-->
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/vat_value_weekly_number_text_view"
+                    android:id="@+id/fourth_horizontal_dotted_divider_2">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="110dp"
+                    android:layout_height="31dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/third_orange_line_container_2"
+                    android:layout_below="@id/fourth_horizontal_dotted_divider_2">
+
+                    <View
+                        android:layout_width="110dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/third_horizontal_orange_dotted_divider_2">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:id="@+id/assumed_profit_weekly_number_text_view"
+                    android:textSize="18sp"
+                    android:text="1549,00€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:textColor="@color/yellow"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/third_orange_line_container_2"
+                    android:layout_below="@+id/fourth_horizontal_dotted_divider_2"
+                    />
+
+                <!--CHANGE LINE'S COLOR-->
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/assumed_profit_weekly_number_text_view"
+                    android:id="@+id/fifth_horizontal_dotted_divider_2">
+                </View>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="168dp"
+                android:background="@drawable/vertical_divider_grey_2dp"
+                android:id="@+id/vertical_separator_gray_2"
+                android:layout_marginLeft="6dp"
+                android:layout_toRightOf="@id/weekly_profits_view">
+
+            </View>
+
+            <!--THIRD CONTAINER -> MONTHLY-->
+            <RelativeLayout
+                android:layout_width="210dp"
+                android:layout_height="match_parent"
+                android:id="@+id/monthly_profits_view"
+                android:layout_marginLeft="6dp"
+                android:layout_toRightOf="@id/vertical_separator_gray_2">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="205dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/monthly_label_text_view"
+                    android:text="@string/monthly"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:textColor="@color/white"
+                    android:textAllCaps="false"
+                    android:textSize="15sp"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    />
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_grey_1dp"
+                    android:layout_below="@id/monthly_label_text_view"
+                    android:id="@+id/first_horizontal_dotted_divider_3">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="210dp"
+                    android:layout_height="39dp"
+                    android:id="@+id/net_sales_monthly_number_text_view"
+                    android:textSize="21sp"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:text="1.685,57€"
+                    android:textColor="@color/white"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_below="@+id/first_horizontal_dotted_divider_3"
+                    />
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_grey_1dp"
+                    android:layout_below="@id/net_sales_monthly_number_text_view"
+                    android:id="@+id/second_horizontal_dotted_divider_3">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="110dp"
+                    android:layout_height="31dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/first_orange_line_container_3"
+                    android:layout_below="@+id/second_horizontal_dotted_divider_3">
+
+                    <View
+                        android:layout_width="110dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/first_horizontal_orange_dotted_divider_3">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:id="@+id/estimated_cost_monthly_number_text_view"
+                    android:textSize="18sp"
+                    android:text="1245,00€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/first_orange_line_container_3"
+                    android:layout_below="@id/second_horizontal_dotted_divider_3"
+                    />
+
+                <!--CHANGE LINE'S COLOR -> ORANGE -->
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/estimated_cost_monthly_number_text_view"
+                    android:id="@+id/third_horizontal_dotted_divider_3">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="110dp"
+                    android:layout_height="31dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/second_orange_line_container_3"
+                    android:layout_below="@id/third_horizontal_dotted_divider_3">
+
+                    <View
+                        android:layout_width="110dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/second_horizontal_orange_dotted_divider_3">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:id="@+id/vat_value_monthly_number_text_view"
+                    android:textSize="18sp"
+                    android:text="1875,00€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/second_orange_line_container_3"
+                    android:layout_below="@id/third_horizontal_dotted_divider_3"
+                    />
+
+                <!--CHANGE LINE'S COLOR-->
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/vat_value_monthly_number_text_view"
+                    android:id="@+id/fourth_horizontal_dotted_divider_3">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="110dp"
+                    android:layout_height="31dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/third_orange_line_container_3"
+                    android:layout_below="@id/fourth_horizontal_dotted_divider_3">
+
+                    <View
+                        android:layout_width="110dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/third_horizontal_orange_dotted_divider_3">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:id="@+id/assumed_profit_monthly_number_text_view"
+                    android:textSize="18sp"
+                    android:text="1325,00€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:textColor="@color/yellow"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/third_orange_line_container_3"
+                    android:layout_below="@id/fourth_horizontal_dotted_divider_3"
+                    />
+
+                <!--CHANGE LINE'S COLOR-->
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/assumed_profit_monthly_number_text_view"
+                    android:id="@+id/fifth_horizontal_dotted_divider_3">
+                </View>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="168dp"
+                android:id="@+id/vertical_separator_gray_3"
+                android:background="@drawable/vertical_divider_grey_2dp"
+                android:layout_toRightOf="@id/monthly_profits_view"
+                android:layout_marginLeft="6dp">
+
+            </View>
+
+            <!--FOURTH CONTAINER -> ANNUALLY-->
+            <RelativeLayout
+                android:layout_width="210dp"
+                android:layout_height="match_parent"
+                android:id="@+id/annually_profits_view"
+                android:layout_toRightOf="@id/vertical_separator_gray_3"
+                android:layout_marginLeft="6dp">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:id="@+id/annually_label_text_view"
+                    android:text="@string/annually"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:textAllCaps="false"
+                    android:textSize="15sp"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    />
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_grey_1dp"
+                    android:layout_below="@id/annually_label_text_view"
+                    android:id="@+id/first_horizontal_dotted_divider_4">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="210dp"
+                    android:layout_height="39dp"
+                    android:id="@+id/net_sales_annually_number_text_view"
+                    android:textSize="21sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:text="2.586,45€"
+                    custom:letterSpacing="0.01"
+                    android:textColor="@color/white"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_below="@+id/first_horizontal_dotted_divider_4"
+                    />
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_grey_1dp"
+                    android:layout_below="@id/net_sales_annually_number_text_view"
+                    android:id="@+id/second_horizontal_dotted_divider_4">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="110dp"
+                    android:layout_height="31dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/first_orange_line_container_4"
+                    android:layout_below="@id/second_horizontal_dotted_divider_4">
+
+                    <View
+                        android:layout_width="110dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/first_horizontal_orange_dotted_divider_4">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:id="@+id/estimated_cost_annually_number_text_view"
+                    android:textSize="18sp"
+                    android:text="1000,00€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/first_orange_line_container_4"
+                    android:layout_below="@id/second_horizontal_dotted_divider_4"
+                    />
+
+                <!--CHANGE LINE'S COLOR -> ORANGE -->
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/estimated_cost_annually_number_text_view"
+                    android:id="@+id/third_horizontal_dotted_divider_4">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="110dp"
+                    android:layout_height="31dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/second_orange_line_container_4"
+                    android:layout_below="@id/third_horizontal_dotted_divider_4">
+
+                    <View
+                        android:layout_width="110dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/second_horizontal_orange_dotted_divider_4">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:id="@+id/vat_value_annually_number_text_view"
+                    android:textSize="18sp"
+                    android:text="1240,00€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/second_orange_line_container_4"
+                    android:layout_below="@id/third_horizontal_dotted_divider_4"
+                    />
+
+                <!--CHANGE LINE'S COLOR-->
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/vat_value_annually_number_text_view"
+                    android:id="@+id/fourth_horizontal_dotted_divider_4">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="110dp"
+                    android:layout_height="31dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/third_orange_line_container_4"
+                    android:layout_below="@id/fourth_horizontal_dotted_divider_4">
+
+                    <View
+                        android:layout_width="110dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/third_horizontal_orange_dotted_divider_4">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:id="@+id/assumed_profit_annually_number_text_view"
+                    android:textSize="18sp"
+                    android:text="1652,00€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:textColor="@color/yellow"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/third_orange_line_container_4"
+                    android:layout_below="@id/fourth_horizontal_dotted_divider_4"
+                    />
+
+                <!--CHANGE LINE'S COLOR-->
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/assumed_profit_annually_number_text_view"
+                    android:id="@+id/fifth_horizontal_dotted_divider_4">
+                </View>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <!--TO BE CONCLUDED-->
+        <LinearLayout
+            android:layout_width="994dp"
+            android:layout_height="24dp"
+            android:id="@+id/estimations_view"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="14dp"
+            android:layout_below="@id/general_profits_view"
+            android:orientation="horizontal"
+            android:background="@drawable/overview_separator_line">
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="994dp"
+                android:layout_height="24dp"
+                android:id="@+id/estimations_text_view"
+                android:textSize="12sp"
+                custom:typeface="franklin_gothic_demioblique"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:text="@string/estimations"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <!--ESTIMATIONS-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginLeft="15dp"
+            android:layout_below="@id/estimations_view"
+            android:id="@+id/general_estimations_view"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="322dp"
+                android:layout_height="match_parent"
+                android:id="@+id/daily_estimation_container">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="70dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="15sp"
+                    android:text="0,00%"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:gravity="center"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/first_green_vertical_line"
+                    android:background="@drawable/vertical_divider_green_1dp"
+                    android:layout_toRightOf="@id/increment_text_view">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="246dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/daily_estimation_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="21sp"
+                    android:text="0,00€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:gravity="center_vertical|right"
+                    android:layout_toRightOf="@id/first_green_vertical_line"
+                    android:layout_marginRight="5dp"/>
+
+                <View
+                    android:layout_width="322dp"
+                    android:layout_height="1dp"
+                    android:id="@+id/first_green_horizontal_line"
+                    android:background="@drawable/horizontal_divider_green_1dp"
+                    android:layout_below="@id/increment_text_view">
+
+                </View>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="32dp"
+                android:background="@drawable/vertical_divider_grey_2dp"
+                android:layout_marginLeft="6dp"
+                android:id="@+id/vertical_separator_1">
+
+            </View>
+
+            <RelativeLayout
+                android:layout_width="210dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="6dp"
+                android:id="@+id/weekly_estimation_container">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="70dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/weekly_increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="15sp"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:text="+0,00%"
+                    android:gravity="center"
+                    android:textAlignment="center"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="31dp"
+                    android:background="@drawable/vertical_divider_green_1dp"
+                    android:id="@+id/second_green_vertical_line"
+                    android:layout_toRightOf="@id/weekly_increment_text_view">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="134dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/weekly_estimation_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:text="0,00€"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@+id/second_green_vertical_line"/>
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:id="@+id/second_green_horizontal_line"
+                    android:background="@drawable/horizontal_divider_green_1dp"
+                    android:layout_below="@id/weekly_increment_text_view">
+
+                </View>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="32dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/vertical_divider_grey_2dp"
+                android:id="@+id/vertical_separator_2">
+
+            </View>
+
+            <RelativeLayout
+                android:layout_width="210dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="6dp"
+                android:id="@+id/monthly_estimation_container">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="70dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/monthly_increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="15sp"
+                    android:text="0,00%"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:gravity="center"
+                    android:textAlignment="center"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/third_green_vertical_line"
+                    android:background="@drawable/vertical_divider_green_1dp"
+                    android:layout_toRightOf="@id/monthly_increment_text_view">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="134dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/monthly_estimation_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="18sp"
+                    android:text="0,00€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@+id/third_green_vertical_line"/>
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:id="@+id/third_green_horizontal_line"
+                    android:background="@drawable/horizontal_divider_green_1dp"
+                    android:layout_below="@id/monthly_increment_text_view">
+
+                </View>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="32dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/vertical_divider_grey_2dp"
+                android:id="@+id/vertical_separator_3">
+
+            </View>
+
+            <RelativeLayout
+                android:layout_width="210dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="6dp"
+                android:id="@+id/annually_estimation_container">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="70dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/annually_increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="15sp"
+                    android:text="0,00%"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:gravity="center"
+                    android:textAlignment="center"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/fourth_green_vertical_line"
+                    android:background="@drawable/vertical_divider_green_1dp"
+                    android:layout_toRightOf="@+id/annually_increment_text_view">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="134dp"
+                    android:layout_height="31dp"
+                    android:id="@+id/annually_estimation_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="18sp"
+                    android:text="0,00€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@+id/fourth_green_vertical_line"/>
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:id="@+id/fourth_green_horizontal_line"
+                    android:background="@drawable/horizontal_divider_green_1dp"
+                    android:layout_below="@id/annually_increment_text_view">
+
+                </View>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="994dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginLeft="15dp"
+            android:layout_below="@id/general_estimations_view"
+            android:id="@+id/general_yesterday_info_view"
+            android:background="@color/transparent"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="322dp"
+                android:layout_height="match_parent"
+                android:id="@+id/yesterday_date_tv"
+                android:background="@color/dark_gray">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="234dp"
+                    android:layout_height="32dp"
+                    android:id="@+id/last_year_date"
+                    android:textColor="@color/white"
+                    custom:textAllCaps="false"
+                    android:textSize="18sp"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:text="12 Feb, Tuesday"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center_vertical|left"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="56dp"
+                    android:layout_height="32dp"
+                    android:id="@+id/last_year_year"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:text="2017"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_toRightOf="@+id/last_year_date"
+                    android:gravity="center_vertical|right"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="322dp"
+                android:layout_height="match_parent"
+                android:id="@+id/yesterday_weather_view"
+                android:layout_marginLeft="14dp"
+                android:background="@color/dark_gray">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="76dp"
+                    android:layout_height="32dp"
+                    android:id="@+id/last_year_temperature"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:text="18°C"
+                    android:layout_marginTop="1dp"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:gravity="center"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="22dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/vertical_dashed_line"
+                    android:id="@+id/vert_separator1"
+                    android:layout_toRightOf="@+id/last_year_temperature">
+
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="228dp"
+                    android:layout_height="32dp"
+                    android:id="@+id/last_year_weather"
+                    android:textColor="@color/white"
+                    custom:textAllCaps="false"
+                    android:textSize="15sp"
+                    android:text="Sunny And Windy"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_toRightOf="@+id/vert_separator1"
+                    android:gravity="center_vertical|right"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="322dp"
+                android:layout_height="match_parent"
+                android:id="@+id/yesterday_event_report_view"
+                android:layout_marginLeft="14dp"
+                android:background="@color/dark_gray">
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
+                    android:id="@+id/last_year_event_report"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    android:text="Event Report"
+                    custom:typeface="franklin_gothic_heavy"
+                    custom:textAllCaps="true"
+                    android:lineSpacingExtra="1dp"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center_vertical|left"
+                    />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="22dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/vertical_dashed_line"
+                    android:id="@+id/vert_separator"
+                    android:layout_toRightOf="@+id/last_year_event_report">
+
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="228dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/last_year_events"
+                    android:textColor="@color/white"
+                    custom:textAllCaps="false"
+                    android:textSize="15sp"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.01"
+                    android:text="No Events"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center_vertical|right"
+                    android:layout_toRightOf="@+id/vert_separator"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="994dp"
+            android:layout_height="135dp"
+            android:layout_below="@id/general_yesterday_info_view"
+            android:layout_marginTop="14dp"
+            android:layout_marginLeft="15dp"
+            android:id="@+id/general_last_year_container"
+            android:orientation="horizontal">
+
+            <!--LAST YEAR DAILY STATS-->
+            <RelativeLayout
+                android:layout_width="322dp"
+                android:layout_height="match_parent"
+                android:id="@+id/last_year_daily_stats_view">
+
+                <LinearLayout
+                    android:layout_width="322dp"
+                    android:layout_height="24dp"
+                    android:id="@+id/last_year_daily_view"
+                    android:orientation="horizontal"
+                    android:background="@drawable/overview_separator_line">
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/last_year_daily_text_view"
+                        android:textSize="11sp"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textAlignment="center"
+                        custom:typeface="franklin_gothic_demioblique"
+                        android:text="2017"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/net_sales_daily_last_year_increment_text_view"
+                    android:textColor="@color/red"
+                    android:textSize="13sp"
+                    android:text="-2,57%"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:layout_below="@+id/last_year_daily_view"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_below="@id/last_year_daily_view"
+                    android:layout_toRightOf="@+id/net_sales_daily_last_year_increment_text_view"
+                    android:id="@+id/first_orange_daily_last_year_vertical_line">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="165dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/first_orange_line_daily_last_year_container"
+                    android:layout_toRightOf="@id/first_orange_daily_last_year_vertical_line"
+                    android:layout_below="@id/last_year_daily_view">
+
+                    <View
+                        android:layout_width="165dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/first_horizontal_orange_daily_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="87dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/net_sales_number_daily_last_year_text_view"
+                    android:textSize="15sp"
+                    android:text="7269,58€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/gray"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/first_orange_line_daily_last_year_container"
+                    android:layout_below="@id/last_year_daily_view"
+                    />
+
+                <!--CHANGE LINE'S COLOR-->
+                <View
+                    android:layout_width="322dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/net_sales_number_daily_last_year_text_view"
+                    android:id="@+id/first_horizontal_daily_last_year_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/estimated_cost_last_year_increment_text_view"
+                    android:textColor="@color/red"
+                    android:textSize="13sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:text="0,00%"
+                    android:gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/first_horizontal_daily_last_year_dotted_divider"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_below="@id/first_horizontal_daily_last_year_dotted_divider"
+                    android:layout_toRightOf="@+id/estimated_cost_last_year_increment_text_view"
+                    android:id="@+id/second_orange_daily_last_year_vertical_line">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="165dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/second_orange_line_daily_last_year_container"
+                    android:layout_toRightOf="@id/second_orange_daily_last_year_vertical_line"
+                    android:layout_below="@id/first_horizontal_daily_last_year_dotted_divider">
+
+                    <View
+                        android:layout_width="165dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/second_horizontal_orange_daily_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="87dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/estimated_cost_number_daily_last_year_text_view"
+                    android:textSize="15sp"
+                    android:text="1320,15€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/second_orange_line_daily_last_year_container"
+                    android:layout_below="@id/first_horizontal_daily_last_year_dotted_divider"
+                    />
+
+                <!--CHANGE LINE'S COLOR-->
+                <View
+                    android:layout_width="322dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/estimated_cost_number_daily_last_year_text_view"
+                    android:id="@+id/second_horizontal_daily_last_year_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/vat_value_last_year_increment_text_view"
+                    android:textColor="@color/red"
+                    android:textSize="13sp"
+                    android:text="-6,28%"
+                    android:gravity="center_vertical"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/second_horizontal_daily_last_year_dotted_divider"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_below="@id/second_horizontal_daily_last_year_dotted_divider"
+                    android:layout_toRightOf="@+id/vat_value_last_year_increment_text_view"
+                    android:id="@+id/third_orange_daily_last_year_vertical_line">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="165dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/third_orange_line_daily_last_year_container"
+                    android:layout_toRightOf="@id/third_orange_daily_last_year_vertical_line"
+                    android:layout_below="@id/second_horizontal_daily_last_year_dotted_divider">
+
+                    <View
+                        android:layout_width="165dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/third_horizontal_orange_daily_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="87dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/vat_value_number_daily_last_year_text_view"
+                    android:textSize="15sp"
+                    android:text="2211,59€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/third_orange_line_daily_last_year_container"
+                    android:layout_below="@id/second_horizontal_daily_last_year_dotted_divider"
+                    />
+
+                <View
+                    android:layout_width="322dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/vat_value_number_daily_last_year_text_view"
+                    android:id="@+id/third_horizontal_daily_last_year_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/assumed_profit_last_year_increment_text_view"
+                    android:textColor="@color/red"
+                    android:textSize="13sp"
+                    android:text="0,00%"
+                    android:gravity="center_vertical"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/third_horizontal_daily_last_year_dotted_divider"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_below="@id/third_horizontal_daily_last_year_dotted_divider"
+                    android:layout_toRightOf="@+id/assumed_profit_last_year_increment_text_view"
+                    android:id="@+id/fourth_orange_daily_last_year_vertical_line">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="165dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/fourth_orange_line_daily_last_year_container"
+                    android:layout_toRightOf="@id/fourth_orange_daily_last_year_vertical_line"
+                    android:layout_below="@id/third_horizontal_daily_last_year_dotted_divider">
+
+                    <View
+                        android:layout_width="165dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/fourth_horizontal_orange_daily_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="87dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/assumed_profit_number_daily_last_year_text_view"
+                    android:textSize="15sp"
+                    android:text="2238,63€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/yellow"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/fourth_orange_line_daily_last_year_container"
+                    android:layout_below="@id/third_horizontal_daily_last_year_dotted_divider"
+                    />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="136dp"
+                android:id="@+id/last_year_vertical_separator_gray"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="-3dp"
+                android:background="@drawable/vertical_divider_grey_2dp">
+
+            </View>
+
+            <!--LAST YEAR WEEKLY STATS-->
+            <RelativeLayout
+                android:layout_width="210dp"
+                android:layout_height="match_parent"
+                android:id="@+id/last_year_weekly_stats_view"
+                android:layout_marginLeft="6dp">
+
+                <LinearLayout
+                    android:layout_width="210dp"
+                    android:layout_height="24dp"
+                    android:id="@+id/last_year_weekly_view"
+                    android:orientation="horizontal"
+                    android:background="@drawable/overview_separator_line">
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/last_year_weekly_text_view"
+                        android:textSize="11sp"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textAlignment="center"
+                        custom:typeface="franklin_gothic_demioblique"
+                        android:text="2017"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/net_sales_weekly_last_year_increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="13sp"
+                    android:text="-2,57%"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:layout_below="@+id/last_year_weekly_view"/>
+
+                <View
+                    android:id="@+id/first_orange_weekly_last_year_vertical_line"
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:layout_below="@id/last_year_weekly_view"
+                    android:layout_toRightOf="@+id/net_sales_weekly_last_year_increment_text_view"
+                    android:background="@drawable/vertical_divider_orange_1dp">
+
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="55dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/first_orange_line_weekly_last_year_container"
+                    android:layout_below="@id/last_year_weekly_view"
+                    android:layout_toRightOf="@id/first_orange_weekly_last_year_vertical_line">
+
+                    <View
+                        android:layout_width="55dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/first_horizontal_orange_weekly_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="80dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/net_sales_weekly_last_year_number_text_view"
+                    android:textSize="14sp"
+                    android:text="3.897,27€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/gray"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/first_orange_line_weekly_last_year_container"
+                    android:layout_below="@id/last_year_weekly_view"
+                    />
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/net_sales_weekly_last_year_number_text_view"
+                    android:id="@+id/first_horizontal_weekly_last_year_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/estimated_cost_weekly_last_year_increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="13sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:text="0,00%"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/first_horizontal_weekly_last_year_dotted_divider"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_below="@id/first_horizontal_weekly_last_year_dotted_divider"
+                    android:layout_toRightOf="@+id/estimated_cost_weekly_last_year_increment_text_view"
+                    android:id="@+id/second_orange_weekly_last_year_vertical_line">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="55dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/second_orange_line_weekly_last_year_container"
+                    android:layout_below="@id/first_horizontal_weekly_last_year_dotted_divider"
+                    android:layout_toRightOf="@id/second_orange_weekly_last_year_vertical_line">
+
+                    <View
+                        android:layout_width="55dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/second_horizontal_orange_weekly_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="80dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/estimated_cost_weekly_last_year_number_text_view"
+                    android:textSize="14sp"
+                    android:text="4876,89€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/second_orange_line_weekly_last_year_container"
+                    android:layout_below="@id/first_horizontal_weekly_last_year_dotted_divider"
+                    />
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/estimated_cost_weekly_last_year_number_text_view"
+                    android:id="@+id/second_horizontal_weekly_last_year_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/vat_value_weekly_last_year_increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="13sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:text="-6,28%"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/second_horizontal_weekly_last_year_dotted_divider"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_below="@id/second_horizontal_weekly_last_year_dotted_divider"
+                    android:layout_toRightOf="@+id/vat_value_weekly_last_year_increment_text_view"
+                    android:id="@+id/third_orange_weekly_last_year_vertical_line">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="55dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/third_orange_line_weekly_last_year_container"
+                    android:layout_below="@id/second_horizontal_weekly_last_year_dotted_divider"
+                    android:layout_toRightOf="@id/third_orange_weekly_last_year_vertical_line">
+
+                    <View
+                        android:layout_width="55dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/third_horizontal_orange_weekly_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="80dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/vat_value_weekly_last_year_number_text_view"
+                    android:textSize="14sp"
+                    android:text="2315,29€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/third_orange_line_weekly_last_year_container"
+                    android:layout_below="@+id/second_horizontal_weekly_last_year_dotted_divider"
+                    />
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/vat_value_weekly_last_year_number_text_view"
+                    android:id="@+id/third_horizontal_weekly_last_year_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/assumed_profit_weekly_last_year_increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="13sp"
+                    android:text="0,00%"
+                    android:gravity="center"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/third_horizontal_weekly_last_year_dotted_divider"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_below="@id/third_horizontal_weekly_last_year_dotted_divider"
+                    android:layout_toRightOf="@+id/assumed_profit_weekly_last_year_increment_text_view"
+                    android:id="@+id/fourth_orange_weekly_last_year_vertical_line">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="55dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/fourth_orange_line_weekly_last_year_container"
+                    android:layout_below="@id/third_horizontal_weekly_last_year_dotted_divider"
+                    android:layout_toRightOf="@id/fourth_orange_weekly_last_year_vertical_line">
+
+                    <View
+                        android:layout_width="55dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/fourth_horizontal_orange_weekly_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="80dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/assumed_profit_weekly_last_year_number_text_view"
+                    android:textSize="14sp"
+                    android:text="2.789,16€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/yellow"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/fourth_orange_line_weekly_last_year_container"
+                    android:layout_below="@+id/third_horizontal_weekly_last_year_dotted_divider"
+                    />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="136dp"
+                android:background="@drawable/vertical_divider_grey_2dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="-3dp"
+                android:id="@+id/last_year_vertical_separator_gray2">
+
+            </View>
+
+            <!--LAST YEAR MONTHLY STATS-->
+            <RelativeLayout
+                android:layout_width="210dp"
+                android:layout_height="match_parent"
+                android:id="@+id/last_year_monthly_stats_view"
+                android:layout_marginLeft="6dp">
+
+                <LinearLayout
+                    android:layout_width="210dp"
+                    android:layout_height="24dp"
+                    android:id="@+id/last_year_monthly_view"
+                    android:orientation="horizontal"
+                    android:background="@drawable/overview_separator_line">
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/last_year_monthly_text_view"
+                        android:textSize="12sp"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textAlignment="center"
+                        custom:typeface="franklin_gothic_demioblique"
+                        android:text="2017"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/net_sales_monthly_last_year_increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="13sp"
+                    android:text="-2,57%"
+                    android:gravity="center"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/last_year_monthly_view"/>
+
+                <View
+                    android:id="@+id/first_orange_monthly_last_year_vertical_line"
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:layout_below="@id/last_year_monthly_view"
+                    android:layout_toRightOf="@+id/net_sales_monthly_last_year_increment_text_view"
+                    android:background="@drawable/vertical_divider_orange_1dp">
+
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="55dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/first_orange_line_monthly_last_year_container"
+                    android:layout_below="@id/last_year_monthly_view"
+                    android:layout_toRightOf="@id/first_orange_monthly_last_year_vertical_line">
+
+                    <View
+                        android:layout_width="55dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/first_horizontal_orange_monthly_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="80dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/net_sales_monthly_last_year_number_text_view"
+                    android:textSize="14sp"
+                    android:text="3.897,27€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/gray"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/first_orange_line_monthly_last_year_container"
+                    android:layout_below="@id/last_year_monthly_view"
+                    />
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/net_sales_monthly_last_year_number_text_view"
+                    android:id="@+id/first_horizontal_monthly_last_year_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/estimated_cost_monthly_last_year_increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="13sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:text="0,00%"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/first_horizontal_monthly_last_year_dotted_divider"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_below="@id/first_horizontal_monthly_last_year_dotted_divider"
+                    android:layout_toRightOf="@+id/estimated_cost_monthly_last_year_increment_text_view"
+                    android:id="@+id/second_orange_monthly_last_year_vertical_line">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="55dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/second_orange_line_monthly_last_year_container"
+                    android:layout_below="@id/first_horizontal_monthly_last_year_dotted_divider"
+                    android:layout_toRightOf="@id/second_orange_monthly_last_year_vertical_line">
+
+                    <View
+                        android:layout_width="55dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/second_horizontal_orange_monthly_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="80dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/estimated_cost_monthly_last_year_number_text_view"
+                    android:textSize="14sp"
+                    android:text="8776,89€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/second_orange_line_monthly_last_year_container"
+                    android:layout_below="@id/first_horizontal_monthly_last_year_dotted_divider"
+                    />
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/estimated_cost_monthly_last_year_number_text_view"
+                    android:id="@+id/second_horizontal_monthly_last_year_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/vat_value_monthly_last_year_increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="13sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:text="-6,28%"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/second_horizontal_monthly_last_year_dotted_divider"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_below="@id/second_horizontal_monthly_last_year_dotted_divider"
+                    android:layout_toRightOf="@+id/vat_value_monthly_last_year_increment_text_view"
+                    android:id="@+id/third_orange_monthly_last_year_vertical_line">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="55dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/third_orange_line_monthly_last_year_container"
+                    android:layout_below="@id/second_horizontal_monthly_last_year_dotted_divider"
+                    android:layout_toRightOf="@id/third_orange_monthly_last_year_vertical_line">
+
+                    <View
+                        android:layout_width="55dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/third_horizontal_orange_monthly_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="80dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/vat_value_monthly_last_year_number_text_view"
+                    android:textSize="14sp"
+                    android:text="4315,29€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/third_orange_line_monthly_last_year_container"
+                    android:layout_below="@+id/second_horizontal_monthly_last_year_dotted_divider"
+                    />
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/vat_value_monthly_last_year_number_text_view"
+                    android:id="@+id/third_horizontal_monthly_last_year_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/assumed_profit_monthly_last_year_increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="13sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:text="0,00%"
+                    android:gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/third_horizontal_monthly_last_year_dotted_divider"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_below="@id/third_horizontal_monthly_last_year_dotted_divider"
+                    android:layout_toRightOf="@+id/assumed_profit_monthly_last_year_increment_text_view"
+                    android:id="@+id/fourth_orange_monthly_last_year_vertical_line">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="55dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/fourth_orange_line_monthly_last_year_container"
+                    android:layout_below="@id/third_horizontal_monthly_last_year_dotted_divider"
+                    android:layout_toRightOf="@id/fourth_orange_monthly_last_year_vertical_line">
+
+                    <View
+                        android:layout_width="55dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/fourth_horizontal_orange_monthly_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="80dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/assumed_profit_monthly_last_year_number_text_view"
+                    android:textSize="14sp"
+                    android:text="2.789,16€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/yellow"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/fourth_orange_line_monthly_last_year_container"
+                    android:layout_below="@+id/third_horizontal_monthly_last_year_dotted_divider"
+                    />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="136dp"
+                android:background="@drawable/vertical_divider_grey_2dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="-3dp"
+                android:id="@+id/last_year_vertical_separator_gray3">
+
+            </View>
+
+            <!--LAST YEAR ANNUALLY STATS-->
+            <RelativeLayout
+                android:layout_width="210dp"
+                android:layout_height="match_parent"
+                android:id="@+id/last_year_annually_stats_view"
+                android:layout_marginLeft="6dp">
+
+                <LinearLayout
+                    android:layout_width="210dp"
+                    android:layout_height="24dp"
+                    android:id="@+id/last_year_annually_view"
+                    android:orientation="horizontal"
+                    android:background="@drawable/overview_separator_line">
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/last_year_annually_text_view"
+                        android:textSize="12sp"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textAlignment="center"
+                        custom:typeface="franklin_gothic_demioblique"
+                        android:text="2017"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/net_sales_annually_last_year_increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="13sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:text="-2,57%"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/last_year_annually_view"/>
+
+                <View
+                    android:id="@+id/first_orange_annually_last_year_vertical_line"
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:layout_below="@id/last_year_annually_view"
+                    android:layout_toRightOf="@+id/net_sales_annually_last_year_increment_text_view"
+                    android:background="@drawable/vertical_divider_orange_1dp">
+
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="55dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/first_orange_line_annually_last_year_container"
+                    android:layout_below="@id/last_year_annually_view"
+                    android:layout_toRightOf="@id/first_orange_annually_last_year_vertical_line">
+
+                    <View
+                        android:layout_width="55dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/first_horizontal_orange_annually_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="80dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/net_sales_annually_last_year_number_text_view"
+                    android:textSize="14sp"
+                    android:text="3.897,27€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/gray"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/first_orange_line_annually_last_year_container"
+                    android:layout_below="@id/last_year_annually_view"
+                    />
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/net_sales_annually_last_year_number_text_view"
+                    android:id="@+id/first_horizontal_annually_last_year_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/estimated_cost_annually_last_year_increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="13sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:text="0,00%"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/first_horizontal_annually_last_year_dotted_divider"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_below="@id/first_horizontal_annually_last_year_dotted_divider"
+                    android:layout_toRightOf="@+id/estimated_cost_annually_last_year_increment_text_view"
+                    android:id="@+id/second_orange_annually_last_year_vertical_line">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="55dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/second_orange_line_annually_last_year_container"
+                    android:layout_below="@id/first_horizontal_annually_last_year_dotted_divider"
+                    android:layout_toRightOf="@id/second_orange_annually_last_year_vertical_line">
+
+                    <View
+                        android:layout_width="55dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/second_horizontal_orange_annually_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="80dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/estimated_cost_annually_last_year_number_text_view"
+                    android:textSize="14sp"
+                    android:text="5876,89€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/second_orange_line_annually_last_year_container"
+                    android:layout_below="@id/first_horizontal_annually_last_year_dotted_divider"
+                    />
+
+                <!--CHANGE LINE'S COLOR-->
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/estimated_cost_annually_last_year_number_text_view"
+                    android:id="@+id/second_horizontal_annually_last_year_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/vat_value_annually_last_year_increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="13sp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:text="-6,28%"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/second_horizontal_annually_last_year_dotted_divider"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_below="@id/second_horizontal_annually_last_year_dotted_divider"
+                    android:layout_toRightOf="@+id/vat_value_annually_last_year_increment_text_view"
+                    android:id="@+id/third_orange_annually_last_year_vertical_line">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="55dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/third_orange_line_annually_last_year_container"
+                    android:layout_below="@id/second_horizontal_annually_last_year_dotted_divider"
+                    android:layout_toRightOf="@id/third_orange_annually_last_year_vertical_line">
+
+                    <View
+                        android:layout_width="55dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/third_horizontal_orange_annually_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="80dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/vat_value_annually_last_year_number_text_view"
+                    android:textSize="14sp"
+                    android:text="2.888,50€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/orange"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/third_orange_line_annually_last_year_container"
+                    android:layout_below="@+id/second_horizontal_annually_last_year_dotted_divider"
+                    />
+
+                <!--CHANGE LINE'S COLOR-->
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/horizontal_divider_orange_1dp"
+                    android:layout_below="@id/vat_value_annually_last_year_number_text_view"
+                    android:id="@+id/third_horizontal_annually_last_year_dotted_divider">
+                </View>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="69dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/assumed_profit_annually_last_year_increment_text_view"
+                    android:textColor="@color/green_2"
+                    android:textSize="13sp"
+                    android:text="0,00%"
+                    android:gravity="center_vertical"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textAlignment="center"
+                    android:layout_below="@+id/third_horizontal_annually_last_year_dotted_divider"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="27dp"
+                    android:background="@drawable/vertical_divider_orange_1dp"
+                    android:layout_below="@id/third_horizontal_annually_last_year_dotted_divider"
+                    android:layout_toRightOf="@+id/assumed_profit_annually_last_year_increment_text_view"
+                    android:id="@+id/fourth_orange_annually_last_year_vertical_line">
+                </View>
+
+                <RelativeLayout
+                    android:layout_width="55dp"
+                    android:layout_height="27dp"
+                    android:background="@color/transparent"
+                    android:id="@+id/fourth_orange_line_annually_last_year_container"
+                    android:layout_below="@id/third_horizontal_annually_last_year_dotted_divider"
+                    android:layout_toRightOf="@id/fourth_orange_annually_last_year_vertical_line">
+
+                    <View
+                        android:layout_width="55dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@drawable/horizontal_divider_orange_1dp"
+                        android:id="@+id/fourth_horizontal_orange_annually_last_year_dotted_divider">
+                    </View>
+
+                </RelativeLayout>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="80dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/assumed_profit_annually_last_year_number_text_view"
+                    android:textSize="14sp"
+                    android:text="2.789,16€"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.02"
+                    android:textColor="@color/yellow"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@id/fourth_orange_line_annually_last_year_container"
+                    android:layout_below="@+id/third_horizontal_annually_last_year_dotted_divider"
+                    />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="994dp"
+            android:layout_height="2dp"
+            android:id="@+id/footer_horizontal_divider_line"
+            android:background="@drawable/divider_line_horizontal"
+            android:layout_marginTop="14dp"
+            android:layout_below="@id/general_last_year_container"
+            android:layout_marginLeft="15dp">
+
+        </View>
+
+
+    </RelativeLayout>
+
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/footer"
+        android:background="@color/black"
+        android:layout_below="@+id/mainspace"
+        android:visibility="gone">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

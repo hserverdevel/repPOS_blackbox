@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.blackbox.activities.TableActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/table_main">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blackTransparent"
+        android:id="@+id/table_main_container"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:id="@+id/first_top_hline"
+        android:background="@drawable/divider_line_horizontal"
+        android:layout_marginTop="49dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:id="@+id/room_container"
+        android:gravity="center"
+        android:layout_below="@+id/first_top_hline"
+        android:orientation="horizontal"
+        >
+
+        <com.example.blackbox.graphics.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/room_name_edittext"
+            android:text="@string/room"
+            android:textAllCaps="false"
+            android:textAlignment="center"
+            android:gravity="center"
+            custom:typeface="franklin_gothic_demi"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            custom:letterSpacing="0.0"
+            />
+
+        <RelativeLayout
+            android:layout_marginLeft="0dp"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:id="@+id/room_plus_edittext"
+            android:gravity="center"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_img"
+                android:src="@drawable/room_plus_button"/>
+
+        </RelativeLayout>
+
+        <!--<com.example.pos.CustomButton
+            android:layout_marginLeft="0dp"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/room_plus_edittext"
+            android:background="@drawable/table"
+            android:text="ADD"
+            android:textAlignment="center"
+            android:gravity="center"
+            custom:typeface="franklin_gothic_demi"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            custom:letterSpacing="0.0"
+            android:visibility="gone"
+            />-->
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginLeft="670dp"
+        android:layout_marginRight="15dp"
+        android:id="@+id/room_container_rec"
+        android:gravity="center|right"
+        android:layout_below="@+id/first_top_hline"
+        android:orientation="horizontal"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/room_grid"
+            android:layout_weight="1"
+            android:layout_gravity="center|right"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:id="@+id/top_hline"
+        android:background="@drawable/divider_line_horizontal"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_below="@+id/room_container"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="546dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="0dp"
+        android:id="@+id/linear_container"
+        android:layout_below="@id/top_hline">
+
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/table_grid"
+            />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:id="@+id/bottom_hline"
+        android:layout_below="@id/linear_container"
+        android:background="@drawable/divider_line_horizontal"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        />
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/footer"
+        android:layout_below="@+id/bottom_hline"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

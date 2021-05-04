@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.blackbox.activities.ReservationsActivity"
+    android:id="@+id/main">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blackTransparent"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="618dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="49dp"
+        android:orientation="horizontal"
+        android:id="@+id/linear_container">
+
+        <!--LEFT PANEL-->
+
+        <RelativeLayout
+            android:layout_width="490dp"
+            android:layout_height="match_parent"
+            android:id="@+id/left_panel">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline1"
+                android:background="@drawable/divider_line_horizontal"/>
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="69dp"
+                android:id="@+id/title_tv"
+                android:layout_below="@id/hline1"
+                android:textColor="@color/white"
+                android:text="@string/reservations"
+                custom:textAllCaps="true"
+                custom:typeface="franklin_gothic_demi"
+                android:textAllCaps="true"
+                android:textSize="18sp"
+                android:gravity="center"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline2"
+                android:layout_below="@id/title_tv"
+                android:background="@drawable/divider_line_horizontal"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline1_search"
+                android:background="@drawable/divider_line_horizontal"
+                android:visibility="gone"/>
+
+            <com.example.blackbox.graphics.CustomEditText
+                android:layout_width="match_parent"
+                android:layout_height="57dp"
+                android:layout_marginTop="6dp"
+                android:id="@+id/search_reservation_et"
+                android:background="@color/white"
+                android:hint="@string/search"
+                android:layout_below="@id/hline1_search"
+                android:textColor="@color/black"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:imeOptions="actionDone"
+                android:visibility="gone"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline2_search"
+                android:layout_below="@id/search_reservation_et"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/divider_line_horizontal"
+                android:visibility="gone"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="465dp"
+                android:id="@+id/reservations_rv"
+                android:layout_below="@id/hline1"
+                android:layout_marginTop="85dp"/>
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:id="@+id/search_reservations_button"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/white"
+                android:background="@drawable/view_border"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="18sp"
+                android:layout_alignParentBottom="true"
+                android:text="@string/search_reservations"
+                android:textAllCaps="true"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline3"
+                android:layout_above="@id/search_reservations_button"
+                android:background="@drawable/divider_line_horizontal"
+                android:layout_marginTop="20dp"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/divider_line"
+            android:layout_marginLeft="6dp"/>
+
+        <!--RIGHT PANEL-->
+
+        <RelativeLayout
+            android:layout_width="490dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="6dp"
+            android:id="@+id/right_panel">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline1_right"
+                android:background="@drawable/divider_line_horizontal"/>
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="69dp"
+                android:id="@+id/title_right_tv"
+                android:layout_below="@id/hline1_right"
+                android:textColor="@color/white"
+                android:text="@string/new_reservations"
+                custom:textAllCaps="true"
+                android:textAllCaps="true"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="18sp"
+                android:gravity="center"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline2_right"
+                android:layout_below="@id/title_right_tv"
+                android:background="@drawable/divider_line_horizontal"/>
+
+            <RelativeLayout
+                android:layout_width="490dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="14dp"
+                android:layout_below="@id/hline2_right"
+                android:id="@+id/input_display"
+                android:layout_centerVertical="true"
+                android:background="@drawable/view_border_6dp_light_gray_in">
+
+                <RelativeLayout
+                    android:layout_width="355dp"
+                    android:layout_height="51dp"
+                    android:id="@+id/new_res_name_layout"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginLeft="20dp">
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/new_reservation_name"
+                        custom:typeface="franklin_gothic_book"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:textSize="24sp"
+                        android:text="@string/new_reservation"
+                        custom:letterSpacing="0.0"/>
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="19dp"
+                    android:layout_height="20dp"
+                    android:layout_toRightOf="@id/new_res_name_layout"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginLeft="6dp"
+                    android:src="@drawable/reservation_time_arrow_black"
+                    android:id="@+id/new_res_arrow"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="105dp"
+                    android:layout_height="51dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_toRightOf="@id/new_res_arrow"
+                    android:layout_marginLeft="6dp"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:textSize="24dp"
+                    android:text="01/01/70"
+                    android:id="@+id/new_reservation_date"
+                    android:textColor="@color/black"
+                    custom:typeface="franklin_gothic_book"
+                    custom:letterSpacing="0.0"
+                    android:visibility="gone"
+                    />
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="82dp"
+                    android:layout_height="51dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginRight="18dp"
+                    android:gravity="center"
+                    android:layout_toRightOf="@id/new_reservation_date"
+                    android:textAlignment="center"
+                    android:textSize="24dp"
+                    android:text="00:00"
+                    android:id="@+id/new_reservation_time"
+                    android:textColor="@color/black"
+                    custom:typeface="franklin_gothic_book"
+                    custom:letterSpacing="0.0"
+                    />
+
+                <View
+                    android:layout_width="447dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/divider_line_horizontal1dp"
+                    android:layout_below="@id/new_res_name_layout"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/input_display_hline1" />
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="490dp"
+                    android:layout_height="36dp"
+                    android:id="@+id/new_reservation_type"
+                    android:layout_below="@+id/input_display_hline1"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="9dp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textColor="@color/black"
+                    android:gravity="center_vertical"
+                    android:textSize="14dp"
+                    android:textAllCaps="true"
+                    android:text="@string/adults_children_disabled" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline3_right"
+                android:layout_below="@id/input_display"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/divider_line_horizontal"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="6dp"
+                android:layout_below="@id/hline3_right"
+                android:id="@+id/input_name_surname">
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="238dp"
+                    android:layout_height="42dp"
+                    android:id="@+id/new_res_input_name"
+                    android:hint="@string/name"
+                    android:background="@drawable/view_border_white_in"
+                    android:textSize="18sp"
+                    android:paddingLeft="10dp"
+                    android:inputType="textCapWords"
+                    android:nextFocusDown="@id/new_res_input_surname"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="42dp"
+                    android:id="@+id/vline1_right"
+                    android:background="@drawable/divider_line"
+                    android:layout_toRightOf="@id/new_res_input_name"
+                    android:layout_marginLeft="6dp"/>
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="238dp"
+                    android:layout_height="42dp"
+                    android:id="@+id/new_res_input_surname"
+                    android:hint="@string/surname"
+                    android:background="@drawable/view_border_white_in"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="6dp"
+                    android:paddingLeft="10dp"
+                    android:layout_toRightOf="@id/vline1_right"
+                    android:inputType="textCapWords"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:id="@+id/hline4_right"
+                    android:layout_below="@id/new_res_input_surname"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/divider_line_horizontal"/>
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:id="@+id/new_res_input_telephone"
+                    android:hint="@string/telephone_number"
+                    android:background="@drawable/view_border_white_in"
+                    android:textSize="18sp"
+                    android:paddingLeft="10dp"
+                    android:layout_below="@id/hline4_right"
+                    android:layout_marginTop="6dp"
+                    android:inputType="number"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:id="@+id/hline7_right"
+                    android:layout_below="@id/new_res_input_telephone"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/divider_line_horizontal"/>
+
+                <!--adults button layout-->
+
+                <RelativeLayout
+                    android:layout_width="154dp"
+                    android:layout_height="84dp"
+                    android:layout_below="@id/hline7_right"
+                    android:layout_marginTop="6dp"
+                    android:id="@+id/adults_layout">
+
+                    <com.example.blackbox.graphics.CustomButton
+                        android:layout_width="match_parent"
+                        android:layout_height="43dp"
+                        android:id="@+id/input_adults_button"
+                        android:background="@drawable/view_border_3_gray_in"
+                        android:text="@string/adults"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:textSize="14dp"
+                        custom:typeface="franklin_gothic_demi"
+                        android:textAlignment="center"/>
+
+                    <ImageButton
+                        android:layout_width="74dp"
+                        android:layout_height="35dp"
+                        android:id="@+id/adults_plus_button"
+                        android:textColor="@color/black"
+                        android:layout_below="@id/input_adults_button"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center"
+                        android:background="@color/gray"
+                        android:src="@drawable/plusbutton"
+                        />
+
+                    <ImageButton
+                        android:layout_width="74dp"
+                        android:layout_height="35dp"
+                        android:background="@color/gray"
+                        android:id="@+id/adults_minus_button"
+                        android:textColor="@color/black"
+                        android:layout_below="@id/input_adults_button"
+                        android:layout_marginTop="6dp"
+                        android:layout_toRightOf="@id/adults_plus_button"
+                        android:gravity="center"
+                        android:layout_marginLeft="6dp"
+                        android:src="@drawable/minusbutton">
+
+                    </ImageButton>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="84dp"
+                    android:id="@+id/vline2_right"
+                    android:layout_marginLeft="6dp"
+                    android:background="@drawable/divider_line"
+                    android:layout_toRightOf="@id/adults_layout"
+                    android:layout_below="@id/hline7_right"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"/>
+
+                <!--children button layout-->
+
+                <RelativeLayout
+                    android:layout_width="154dp"
+                    android:layout_height="84dp"
+                    android:layout_below="@id/hline7_right"
+                    android:layout_toRightOf="@id/vline2_right"
+                    android:layout_marginTop="6dp"
+                    android:id="@+id/children_layout"
+                    android:layout_marginLeft="6dp">
+
+                    <com.example.blackbox.graphics.CustomButton
+                        android:layout_width="match_parent"
+                        android:layout_height="43dp"
+                        android:id="@+id/input_children_button"
+                        android:background="@drawable/view_border_3_gray_in"
+                        android:text="@string/children"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:textSize="14dp"
+                        custom:typeface="franklin_gothic_demi"
+                        android:textAlignment="center"/>
+
+                    <ImageButton
+                        android:layout_width="74dp"
+                        android:layout_height="35dp"
+                        android:id="@+id/children_plus_button"
+                        android:textColor="@color/black"
+                        android:layout_below="@id/input_children_button"
+                        android:gravity="center"
+                        android:layout_marginTop="6dp"
+                        android:background="@color/gray"
+                        android:src="@drawable/plusbutton"
+                        />
+
+                    <ImageButton
+                        android:layout_width="74dp"
+                        android:layout_height="35dp"
+                        android:background="@color/gray"
+                        android:id="@+id/children_minus_button"
+                        android:layout_below="@id/input_children_button"
+                        android:textColor="@color/black"
+                        android:layout_toRightOf="@id/children_plus_button"
+                        android:gravity="center"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginTop="6dp"
+                        android:src="@drawable/minusbutton">
+
+                    </ImageButton>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="84dp"
+                    android:id="@+id/vline3_right"
+                    android:background="@drawable/divider_line"
+                    android:layout_below="@id/hline7_right"
+                    android:layout_toRightOf="@id/children_layout"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginTop="6dp"/>
+
+                <!--disabled button layout-->
+
+                <RelativeLayout
+                    android:layout_width="154dp"
+                    android:layout_height="84dp"
+                    android:layout_below="@id/hline7_right"
+                    android:layout_toRightOf="@id/vline3_right"
+                    android:layout_marginLeft="6dp"
+                    android:id="@+id/disabled_layout"
+                    android:layout_marginTop="6dp">
+
+                    <com.example.blackbox.graphics.CustomButton
+                        android:layout_width="match_parent"
+                        android:layout_height="43dp"
+                        android:id="@+id/input_disabled_button"
+                        android:background="@drawable/view_border_3_gray_in"
+                        android:text="@string/disabled"
+                        android:textColor="@color/white"
+                        android:textAllCaps="true"
+                        android:textSize="14dp"
+                        custom:typeface="franklin_gothic_demi"
+                        android:textAlignment="center"/>
+
+                    <ImageButton
+                        android:layout_width="74dp"
+                        android:layout_height="35dp"
+                        android:id="@+id/disabled_plus_button"
+                        android:textColor="@color/black"
+                        android:layout_below="@id/input_disabled_button"
+                        android:gravity="center"
+                        android:layout_marginTop="6dp"
+                        android:background="@color/gray"
+                        android:src="@drawable/plusbutton"
+                        />
+
+                    <ImageButton
+                        android:layout_width="74dp"
+                        android:layout_height="35dp"
+                        android:background="@color/gray"
+                        android:id="@+id/disabled_minus_button"
+                        android:textColor="@color/black"
+                        android:layout_below="@id/input_disabled_button"
+                        android:layout_toRightOf="@id/disabled_plus_button"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center"
+                        android:layout_marginLeft="6dp"
+                        android:src="@drawable/minusbutton">
+
+                    </ImageButton>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="490dp"
+                    android:layout_height="2dp"
+                    android:id="@+id/hline6_right"
+                    android:layout_below="@id/adults_layout"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/divider_line_horizontal" />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="238dp"
+                    android:layout_height="42dp"
+                    android:text="@string/set_date"
+                    android:textAllCaps="true"
+                    android:gravity="center"
+                    android:id="@+id/set_reservation_date_button"
+                    android:background="@drawable/view_border3dp_lighblue_in"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textSize="14sp"
+                    android:layout_below="@id/hline6_right"
+                    android:layout_marginTop="6dp" />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="238dp"
+                    android:layout_height="42dp"
+                    android:text="@string/set_time"
+                    android:textAllCaps="true"
+                    android:gravity="center"
+                    android:id="@+id/set_reservation_time_button"
+                    android:background="@drawable/view_border3dp_lighblue_in"
+                    android:textColor="@color/white"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textSize="14sp"
+                    android:layout_below="@id/hline6_right"
+                    android:layout_toRightOf="@id/set_reservation_date_button"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginTop="6dp" />
+
+            </RelativeLayout>
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="490dp"
+                android:layout_height="46dp"
+                android:id="@+id/insert_reservation_button"
+                android:text="@string/insert_reservation"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:background="@drawable/view_border"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="18sp"
+                android:layout_alignParentBottom="true"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:id="@+id/hline5_right"
+                android:background="@drawable/divider_line_horizontal"
+                android:layout_above="@id/insert_reservation_button"
+                android:layout_marginBottom="6dp"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:id="@+id/bottom_hline"
+        android:layout_below="@id/linear_container"
+        android:background="@drawable/divider_line_horizontal"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"/>
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/bottom_hline"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

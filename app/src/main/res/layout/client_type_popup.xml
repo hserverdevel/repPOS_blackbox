@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="689dp"
+        android:id="@+id/mainspace"
+        android:background="@color/blackTransparent">
+
+
+        <RelativeLayout
+            android:layout_width="487dp"
+            android:layout_height="331dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/popupWindow"
+            android:background="@drawable/view_base_background"
+            >
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="57dp"
+                android:text="@string/client_type"
+                custom:textAllCaps="true"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:typeface="franklin_gothic_demi"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:id="@+id/clientType_tv"
+                android:layout_centerHorizontal="true"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/clientType_tv"
+                android:background="@color/white"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp">
+
+                <LinearLayout
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:orientation="horizontal"
+                    android:id="@+id/client_discount_input_tv"
+                    >
+                    <com.example.blackbox.graphics.CustomEditText
+                        android:layout_width="331dp"
+                        android:layout_height="42dp"
+                        android:textAllCaps="false"
+                        android:gravity="center"
+                        android:hint="@string/name_client_type"
+                        android:selectAllOnFocus="true"
+                        android:inputType="textCapWords"
+                        android:imeOptions="actionDone"
+                        android:background="@drawable/view_border"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/gray"
+                        custom:typeface="franklin_gothic_demi"
+                        custom:letterSpacing="0.0"
+                        android:id="@+id/client_name_type_et"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        />
+                    <com.example.blackbox.graphics.CustomEditText
+                        android:layout_width="101dp"
+                        android:layout_height="42dp"
+                        android:textAllCaps="false"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center"
+                        android:hint="@string/discount"
+                        android:selectAllOnFocus="true"
+                        android:inputType="numberDecimal"
+                        android:imeOptions="actionDone"
+                        android:background="@drawable/view_border"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/gray"
+                        custom:typeface="franklin_gothic_demi"
+                        custom:letterSpacing="0.0"
+                        android:id="@+id/set_discount_et"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        />
+                </LinearLayout>
+                <View
+                    android:layout_width="446dp"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/divider_line_horizontal"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/client_discount_input_tv"
+                    android:id="@+id/client_discount_hline"
+                    />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="165dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/view_border"
+                    android:layout_below="@id/client_discount_hline">
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_width="437dp"
+                        android:layout_height="164dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:id="@+id/discount_value_recycler"
+                        android:background="@color/white">
+                    </android.support.v7.widget.RecyclerView>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mainspace"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

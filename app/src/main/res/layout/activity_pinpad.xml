@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.blackbox.activities.PinpadActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="689dp"
+        android:id="@+id/mainspace"
+        android:background="@color/blackTransparent">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/LoginWindow"
+            android:background="@color/transparent"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/d_container"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/first_d_container"
+                    android:layout_marginLeft="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@color/white">
+                    <View
+                        android:id="@+id/first_d"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@color/blackTransparent"
+                        >
+
+                    </View>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/second_d_container"
+                    android:layout_marginLeft="14dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@color/white">
+                    <View
+                        android:id="@+id/second_d"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@color/blackTransparent"
+                        >
+
+                    </View>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/third_d_container"
+                    android:layout_marginLeft="14dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@color/white">
+                    <View
+                        android:id="@+id/third_d"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@color/blackTransparent"
+                        >
+
+                    </View>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/fourth_d_container"
+                    android:layout_marginLeft="14dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@color/white">
+                    <View
+                        android:id="@+id/fourth_d"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@color/blackTransparent"
+                        >
+
+                    </View>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/fifth_d_container"
+                    android:layout_marginLeft="14dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@color/white">
+                    <View
+                        android:id="@+id/fifth_d"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@color/blackTransparent"
+                        >
+
+                    </View>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/sixth_d_container"
+                    android:layout_marginLeft="14dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@color/white">
+                    <View
+                        android:id="@+id/sixth_d"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@color/blackTransparent"
+                        >
+
+                    </View>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+    <!-- calc container -->
+
+    <RelativeLayout
+        android:layout_width="322dp"
+        android:layout_height="434dp"
+        android:id="@+id/digits_container"
+        android:layout_below="@id/d_container"
+        android:layout_marginTop="55dp"
+       >
+            <!-- First Row -->
+
+            <com.example.blackbox.graphics.CustomButton
+                style="@style/PinpadButton"
+                android:id="@+id/d_7"
+                android:text="7"
+                android:layout_width="98dp"
+                android:layout_height="98dp"
+
+                />
+            <com.example.blackbox.graphics.CustomButton
+                style="@style/PinpadButton"
+                android:id="@+id/d_8"
+                android:text="8"
+                android:layout_toRightOf="@id/d_7"
+                android:layout_width="98dp"
+                android:layout_height="98dp"
+                android:layout_marginLeft="14dp"
+                />
+            <com.example.blackbox.graphics.CustomButton
+                style="@style/PinpadButton"
+                android:id="@+id/d_9"
+                android:text="9"
+                android:layout_toRightOf="@id/d_8"
+                android:layout_width="98dp"
+                android:layout_height="98dp"
+                android:layout_marginLeft="14dp"
+                />
+
+            <!--com.example.pos.graphics.CustomButtontton style="@style/CalculatorSButton"
+                android:id="@+id/d_10"
+                android:text="10 Euro"
+                android:layout_toRightOf="@id/d_9"
+                android:layout_marginLeft="4dp"/> -->
+            <!-- Second Row -->
+            <com.example.blackbox.graphics.CustomButton
+                style="@style/PinpadButton"
+                android:id="@+id/d_4"
+                android:text="4"
+                android:layout_below="@id/d_7"
+                android:layout_width="98dp"
+                android:layout_height="98dp"
+                android:layout_marginTop="14dp"/>
+            <com.example.blackbox.graphics.CustomButton
+                style="@style/PinpadButton"
+                android:id="@+id/d_5"
+                android:text="5"
+                android:layout_below="@id/d_7"
+                android:layout_toRightOf="@id/d_4"
+                android:layout_width="98dp"
+                android:layout_height="98dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="14dp"
+                />
+            <com.example.blackbox.graphics.CustomButton
+                style="@style/PinpadButton"
+                android:id="@+id/d_6"
+                android:text="6"
+                android:layout_below="@id/d_7"
+                android:layout_toRightOf="@id/d_5"
+                android:layout_width="98dp"
+                android:layout_height="98dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="14dp"
+                />
+
+            <!-- Third Row -->
+            <com.example.blackbox.graphics.CustomButton
+                style="@style/PinpadButton"
+                android:id="@+id/d_1"
+                android:text="1"
+                android:layout_below="@id/d_4"
+                android:layout_width="98dp"
+                android:layout_height="98dp"
+                android:layout_marginTop="14dp"
+                />
+            <com.example.blackbox.graphics.CustomButton
+                style="@style/PinpadButton"
+                android:id="@+id/d_2"
+                android:text="2"
+                android:layout_below="@id/d_4"
+                android:layout_toRightOf="@id/d_1"
+                android:layout_width="98dp"
+                android:layout_height="98dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="14dp"
+                />
+            <com.example.blackbox.graphics.CustomButton
+                style="@style/PinpadButton"
+                android:id="@+id/d_3"
+                android:text="3"
+                android:layout_below="@id/d_4"
+                android:layout_toRightOf="@id/d_2"
+                android:layout_width="98dp"
+                android:layout_height="98dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="14dp"
+                />
+
+            <!-- Fourth Row -->
+           <com.example.blackbox.graphics.CustomButton
+               style="@style/PinpadButton"
+                android:id="@+id/d_0"
+                android:text="0"
+               android:layout_width="98dp"
+                android:layout_height="98dp"
+                android:layout_marginLeft="70dp"
+               android:layout_alignParentBottom="true"
+               android:layout_toStartOf="@+id/d_3" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:layout_centerHorizontal="true"
+    android:layout_below="@+id/mainspace"
+    android:id="@+id/footer"
+    android:background="@color/black">
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_height="match_parent"
+        android:id="@+id/footerspace">
+
+
+        <RelativeLayout
+            android:layout_width="511dp"
+            android:layout_height="match_parent"
+            android:id="@+id/cancelspace">
+
+            <ImageButton
+                android:id="@+id/kill"
+                android:layout_width="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_height="55dp"
+                android:background="@drawable/dismiss_button_background"
+                android:src="@drawable/cancelbutton" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="38dp"
+            android:layout_toRightOf="@+id/cancelspace"
+            android:background="@drawable/vertical_dashed_line"
+            android:layout_marginTop="8dp"
+            android:id="@+id/bottomline" />
+
+        <RelativeLayout
+            android:layout_width="511dp"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/bottomline"
+            android:id="@+id/okspace">
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_height="55dp"
+                android:id="@+id/ok"
+                android:src="@drawable/okbutton"
+                android:background="@drawable/ok_button_background"/>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

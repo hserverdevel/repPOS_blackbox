@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/user_container"
+    >
+
+        <com.example.blackbox.graphics.CustomTextView
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_width="217dp"
+            android:layout_height="39dp"
+            android:id="@+id/user_name_container"
+            custom:typeface="franklin_gothic_demi"
+            custom:letterSpacing="0"
+            android:gravity="left|center"
+            android:textSize="18dp"
+            android:textColor="@color/black"
+            />
+
+        <com.example.blackbox.graphics.CustomTextView
+            android:layout_marginTop="5dp"
+            android:paddingRight="20dp"
+            android:layout_width="220dp"
+            android:layout_height="39dp"
+            android:id="@+id/user_spec_container"
+            custom:typeface="franklin_gothic_book_italic"
+            custom:letterSpacing="0"
+            android:gravity="right|center"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@id/user_name_container"/>
+        <com.example.blackbox.graphics.CustomButton
+            android:visibility="gone"
+            android:layout_marginLeft="10dp"
+            android:layout_width="427dp"
+            android:layout_height="39dp"
+            android:id="@+id/user_delete_container"
+            custom:typeface="franklin_gothic_demi"
+            custom:letterSpacing="0"
+            android:gravity="center"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:background="@color/red"
+            android:text="@string/delete"
+            android:textAllCaps="true"
+            android:layout_below="@id/user_name_container"
+            />
+        <View
+            android:layout_width="427dp"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/divider_line_horizontal1dp"
+            android:id="@+id/admin_hline_sep"
+            android:layout_below="@id/user_delete_container"
+
+            />
+
+
+
+    </RelativeLayout>

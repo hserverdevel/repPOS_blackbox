@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blackTransparent">
+
+    <RelativeLayout
+        android:layout_width="487dp"
+        android:layout_height="218dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/view_base_background"
+        android:id="@+id/confirm_window">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:id="@+id/dialog_header"
+            android:layout_marginTop="5dp">
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/status_of_reservation"
+                android:textColor="@color/white"
+                android:textAllCaps="true"
+                android:id="@+id/status_tv"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:layout_below="@id/dialog_header"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp">
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="447dp"
+                android:layout_height="42dp"
+                android:text="@string/clients_arrived"
+                android:id="@+id/clients_arrived_button"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/popup_button_green"
+                android:textColor="@color/white"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="14sp"
+                custom:letterSpacing="0.0"
+                android:textAllCaps="false"/>
+
+            <View
+                android:layout_width="447dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/divider_line_horizontal"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/clients_arrived_button"
+                android:id="@+id/add_hline"
+                />
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="216dp"
+                android:layout_height="42dp"
+                android:text="@string/cancel_reservation"
+                android:id="@+id/cancel_res_button"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/popup_button_red"
+                android:textColor="@color/white"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="14sp"
+                custom:letterSpacing="0.0"
+                android:layout_below="@id/add_hline"
+                android:textAllCaps="false"/>
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="216dp"
+                android:layout_height="42dp"
+                android:text="@string/clients_didnt_arrived"
+                android:id="@+id/clients_not_arrived_button"
+                android:layout_below="@id/add_hline"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/cancel_res_button"
+                android:background="@drawable/popup_button_red"
+                android:textColor="@color/white"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="14sp"
+                custom:letterSpacing="0.0"
+                android:textAllCaps="false"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:id="@+id/discount_memorized"
+    android:layout_width="447dp"
+    android:layout_height="162dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp">
+
+    <com.example.blackbox.graphics.CustomTextView
+        android:layout_width="331dp"
+        android:layout_height="39dp"
+        android:background="@color/white"
+        android:id="@+id/discount_name_container"
+        custom:typeface="franklin_gothic_demi"
+        custom:letterSpacing="0"
+        android:textSize="18dp"
+        android:paddingLeft="2dp"
+        android:textColor="@color/black"
+        android:gravity="center_vertical"
+        android:visibility="visible"
+        />
+
+    <com.example.blackbox.graphics.CustomTextView
+        android:layout_width="101dp"
+        android:layout_height="39dp"
+        custom:typeface="franklin_gothic_demi"
+        custom:letterSpacing="0"
+        android:id="@+id/discount_value_container"
+        android:layout_toRightOf="@id/discount_name_container"
+        android:textSize="18dp"
+        android:paddingRight="2dp"
+        android:textAlignment="textEnd"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:visibility="visible"/>
+
+    <com.example.blackbox.graphics.CustomButton
+        android:layout_width="match_parent"
+        android:layout_height="39dp"
+        android:visibility="gone"
+        android:text="@string/delete"
+        android:gravity="center"
+        android:id="@+id/custom_delete_discount_button"
+        android:background="@color/red"
+        android:textColor="@color/white"
+        custom:typeface="franklin_gothic_demi"
+        android:textAllCaps="true"
+        android:textSize="15dp"
+        />
+
+</RelativeLayout>

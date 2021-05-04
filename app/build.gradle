@@ -1,0 +1,72 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion '28.0.2'
+    defaultConfig {
+        applicationId "com.example.blackbox"
+        minSdkVersion 18
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0.4"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled = true
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+    aaptOptions {
+        cruncherEnabled = true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+
+    }
+}
+
+repositories {
+    maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases/' }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    compile project(':ziplib-release')
+    //noinspection GradleCompatible
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    testCompile 'junit:junit:4.12'
+    implementation 'com.android.support.constraint:constraint-layout:+'
+    implementation 'com.android.support:multidex:1.0.2'
+
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.loopj.android:android-async-http:1.4.9'
+    implementation files('libs/activation.jar')
+    implementation files('libs/additionnal.jar')
+    implementation files('libs/mail.jar')
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation files('libs/printf.jar')
+    implementation files('libs/xerces.jar')
+    implementation files('libs/postest.jar')
+    implementation files('libs/jpos.jar')
+    implementation files('libs/Android_SDK_ESC_V1.01.09.01PRO.jar')
+    implementation 'ch.acra:acra:4.9.2'
+    implementation 'com.google.code.ksoap2-android:ksoap2-android:3.6.2'
+}

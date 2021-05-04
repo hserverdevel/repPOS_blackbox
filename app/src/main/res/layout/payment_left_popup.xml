@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.blackbox.activities.PinpadActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/payment_left_container"
+    >
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="689dp"
+        android:id="@+id/mainspace"
+        android:background="@color/blackTransparent">
+
+
+        <RelativeLayout
+            android:layout_width="487dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/view_base_background"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:id="@+id/pf_popup_container"
+            >
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="@string/how_do_you_want_to_pay"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:typeface="franklin_gothic_demi"
+                android:gravity="center"
+                android:id="@+id/pf_popup_text"
+                android:layout_marginTop="5dp"
+                />
+
+            <LinearLayout
+                android:layout_marginLeft="5dp"
+                android:layout_width="477dp"
+                android:layout_height="301dp"
+                android:background="@color/white"
+                android:layout_below="@+id/pf_popup_text"
+                android:orientation="vertical"
+                android:id="@+id/linearLayout">
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="416dp"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/popup_button_green"
+                    android:text="@string/cash"
+                    android:textAllCaps="true"
+                    android:textSize="14dp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textColor="@color/white"
+                    android:id="@+id/pf_cash"/>
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="416dp"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/popup_button_green"
+                    android:text="@string/credit_card"
+                    android:textAllCaps="true"
+                    android:textSize="14dp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textColor="@color/white"
+                    android:id="@+id/pf_creditCard"/>
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="416dp"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/popup_button_green"
+                    android:text="@string/bank_card"
+                    android:textAllCaps="true"
+                    android:textSize="14dp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textColor="@color/white"
+                    android:id="@+id/pf_bankCard"/>
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="416dp"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/popup_button_green"
+                    android:text="@string/alternative_payment"
+                    android:textAllCaps="true"
+                    android:textSize="14dp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textColor="@color/white"
+                    android:id="@+id/pf_alternative"/>
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="416dp"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/popup_button_green"
+                    android:text="@string/client_credit"
+                    android:textAllCaps="true"
+                    android:textSize="14dp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textColor="@color/white"
+                    android:id="@+id/pf_clientCredit"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mainspace"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1002403824817",
+    "firebase_url": "https://burgheria-86ade.firebaseio.com",
+    "project_id": "burgheria-86ade",
+    "storage_bucket": "burgheria-86ade.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1002403824817:android:883d9154984a144b",
+        "android_client_info": {
+          "package_name": "com.example.blackbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1002403824817-vbpobcl9e7n1lqo9ko2njh0bmgpv59cn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.blackbox",
+            "certificate_hash": "f4a4063a98f972477bc8f3483780040aaed3b952"
+          }
+        },
+        {
+          "client_id": "1002403824817-a1pm904297408gs4f5rf57dbacf83osl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBN9IqcU0Nc1FkaWrI-6gBRf6G52Ek9xo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1002403824817-a1pm904297408gs4f5rf57dbacf83osl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

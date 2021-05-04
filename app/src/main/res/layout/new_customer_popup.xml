@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="689dp"
+        android:id="@+id/mainspace"
+        android:background="@color/blackTransparent">
+
+
+        <RelativeLayout
+            android:layout_width="487dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/view_border_white_in_5dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/customer_popup_container"
+            >
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="477dp"
+                android:layout_height="52dp"
+                android:text="@string/set_clients"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:typeface="franklin_gothic_demi"
+                android:gravity="center"
+                android:id="@+id/customer_popup_text"
+                android:background="@color/black"/>
+
+            <LinearLayout
+                android:layout_width="487dp"
+                android:layout_height="72dp"
+                android:layout_marginLeft="5dp"
+                android:layout_below="@+id/customer_popup_text"
+                android:id="@+id/customer_input_container">
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:hint="@string/name"
+                    android:inputType="textCapWords|textAutoCorrect"
+                    android:id="@+id/customer_text_input"
+                    android:selectAllOnFocus="true"
+                    android:gravity="center"
+                    android:textColorHighlight="@color/gray"
+                    android:background="@drawable/view_border"
+                    android:textCursorDrawable="@null"
+                    android:textColor="@color/blackTransparent"
+                    custom:typeface="franklin_gothic_demi"
+
+                    />
+                <RelativeLayout
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/customer_check_container"
+                    >
+
+                    <ImageButton
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="6dp"
+                        android:id="@+id/customer_notesInputCheckBox"
+                        android:background="@drawable/view_border"
+                        android:src="@drawable/checkbox_selector"
+                        />
+
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toRightOf="@id/customer_notesInputCheckBox"
+                        android:id="@+id/customer_notesInput_tv"
+                        android:gravity="start|center_vertical"
+                        android:text="@string/group_of_people"
+                        custom:letterSpacing="0.0"
+                        android:textColor="@color/black"
+                        custom:typeface="franklin_gothic_book"
+                        android:textSize="15sp"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="447dp"
+                android:layout_height="2dp"
+                android:background="@drawable/divider_line_horizontal"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/customer_input_container"
+                android:id="@+id/customer_hline"
+                />
+
+            <RelativeLayout
+                android:layout_width="477dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="20dp"
+                android:id="@+id/buttons_container"
+                android:layout_below="@id/customer_hline"
+                >
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:text="@string/new_client"
+                    android:background="@drawable/button_lightblue_3dp_grey_press"
+                    android:textSize="15dp"
+                    android:textAllCaps="false"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textColor="@color/white"
+                    android:id="@+id/customer_firstButton"
+                    custom:letterSpacing="0.0"
+                    />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_toRightOf="@id/customer_firstButton"
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textAllCaps="false"
+                    android:background="@drawable/button_lightblue_3dp_grey_press"
+                    android:text="@string/existing_client"
+                    android:textSize="15dp"
+                    custom:typeface="franklin_gothic_demi"
+                    android:textColor="@color/white"
+                    android:id="@+id/customer_secondButton"
+                    custom:letterSpacing="0.0"
+                    />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mainspace"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

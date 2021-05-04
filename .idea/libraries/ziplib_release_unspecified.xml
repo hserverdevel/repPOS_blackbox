@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="ziplib-release-unspecified">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/ziplib-release.aar/15cf252b36a8f2b2616a31c2c4463497/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/ziplib-release.aar/15cf252b36a8f2b2616a31c2c4463497/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

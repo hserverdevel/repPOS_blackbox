@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true">
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="689dp"
+        android:id="@+id/mainspace"
+        android:background="@color/blackTransparent">
+
+        <!--
+            MODIFIER GROUP WINDOW
+                                    -->
+        <RelativeLayout
+            android:layout_width="487dp"
+            android:layout_height="265dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/ModifierGroupSetup"
+            android:background="@drawable/view_base_background"
+            android:visibility="gone">
+
+            <!-- Dummy item to prevent EditText from receiving focus -->
+
+            <LinearLayout
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:layout_width="0px"
+                android:layout_height="0px"/>
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:text="@string/info_tv_new_modifier"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:typeface="franklin_gothic_demi"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:id="@+id/modifier_group_tv"
+                android:layout_centerHorizontal="true"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="203dp"
+                android:layout_below="@id/modifier_group_tv"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/modifierGroup_base_settings_window"
+                android:background="@color/white">
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center"
+                    android:hint="@string/group_title"
+                    android:inputType="textCapWords|textAutoCorrect"
+                    android:id="@+id/groupTitleInsert"
+                    android:selectAllOnFocus="true"
+                    android:textColorHighlight="@color/gray"
+                    android:background="@drawable/view_border"
+                    android:textCursorDrawable="@null"
+                    android:textColor="@color/blackTransparent"
+                    custom:typeface="roboto_black"/>
+
+                <ImageButton
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="21dp"
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/notesInputCheckBox"
+                    android:background="@drawable/view_border"
+                    android:src="@drawable/checkbox_selector"
+                    android:layout_toRightOf="@id/groupTitleInsert"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toRightOf="@id/notesInputCheckBox"
+                    android:id="@+id/notesInput_tv"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/add_notes_input"
+                    android:textColor="@color/black"
+                    custom:typeface="franklin_gothic_book"
+                    android:textSize="15sp"
+                    custom:letterSpacing="0.0"/>
+
+                <View
+                    android:layout_width="447dp"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/divider_line_horizontal"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/groupTitleInsert"
+                    android:id="@+id/modifiers_group_hline"
+                    />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_below="@id/modifiers_group_hline"
+                    android:text="@string/open_modifiers"
+                    android:textAllCaps="false"
+                    android:id="@+id/openModifiers"
+                    android:background="@drawable/popup_button_green"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi"/>
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_below="@id/openModifiers"
+                    android:text="@string/delete_group"
+                    android:textAllCaps="false"
+                    android:id="@+id/deleteGroup"
+                    android:background="@drawable/popup_button_red"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <!--   MODIFIER WINDOW   -->
+
+        <RelativeLayout
+            android:layout_width="487dp"
+            android:layout_height="208dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/ModifierSetup"
+            android:background="@drawable/view_base_background"
+            android:visibility="gone">
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:text="@string/set_modifier"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:typeface="franklin_gothic_demi"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:id="@+id/modifier_tv"
+                android:layout_centerHorizontal="true"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="196dp"
+                android:layout_below="@id/modifier_tv"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/product_base_settings_window"
+                android:background="@color/white">
+
+                <!-- Dummy item to prevent EditText from receiving focus -->
+
+                <LinearLayout
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:layout_width="0px"
+                    android:layout_height="0px"/>
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center"
+                    android:hint="@string/title"
+                    android:inputType="textCapWords|textAutoCorrect"
+                    android:id="@+id/modTitleInsert"
+                    android:selectAllOnFocus="true"
+                    android:nextFocusDown="@+id/modPriceInsert"
+                    android:nextFocusForward="@+id/modPriceInsert"
+                    android:nextFocusRight="@+id/modPriceInsert"
+                    android:textColorHighlight="@color/gray"
+                    android:background="@drawable/view_border"
+                    android:textCursorDrawable="@null"
+                    android:textColor="@color/blackTransparent"
+                    custom:typeface="roboto_black"/>
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="101dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:hint="@string/price"
+                    android:inputType="numberDecimal"
+                    android:layout_toRightOf="@id/modTitleInsert"
+                    android:selectAllOnFocus="true"
+                    android:textColorHighlight="@color/gray"
+                    android:id="@+id/modPriceInsert"
+                    android:background="@drawable/view_border"
+                    android:textCursorDrawable="@null"
+                    android:textColor="@color/blackTransparent"/>
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:hint="@string/vat"
+                    android:layout_width="101dp"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center"
+                    android:id="@+id/modVatInsert"
+                    android:textAllCaps="false"
+                    android:layout_toRightOf="@id/modPriceInsert"
+                    android:background="@drawable/view_border"
+                    android:textColor="@color/blackTransparent"
+                    android:textSize="18dp"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <View
+                    android:layout_width="447dp"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/divider_line_horizontal"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/modTitleInsert"
+                    android:id="@+id/modifier_hline"
+                    />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_below="@id/modifier_hline"
+                    android:text="@string/delete_modifier"
+                    android:textAllCaps="false"
+                    android:id="@+id/deleteModifier"
+                    android:background="@drawable/popup_button_red"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <!--   POPUP VAT WINDOW  -->
+
+
+        <RelativeLayout
+            android:layout_width="487dp"
+            android:layout_height="330dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/new_Popup_Vat_Insert"
+            android:visibility="gone"
+            android:background="@drawable/view_base_background">
+
+            <LinearLayout
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:layout_width="0px"
+                android:layout_height="0px"/>
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:text="@string/preset_vat"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:typeface="franklin_gothic_demi"
+                android:background="@color/blackTransparent"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:id="@+id/vat_title"
+                android:layout_centerHorizontal="true"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="310dp"
+                android:layout_below="@id/vat_title"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/vat_window"
+                android:background="@color/white">
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/vat_group_insert"
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
+                    android:hint="@string/vat__value"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:textColor="@color/blackTransparent"
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null"
+                    />
+                <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/vat_perc_insert"
+                    android:layout_width="216dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
+                    android:hint="@string/vat_percent"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/blackTransparent"
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null"
+                    custom:typeface="franklin_gothic_demi"
+                    android:layout_toRightOf="@+id/vat_group_insert"/>
+
+
+                <View
+                    android:id="@+id/vat_add_hline"
+                    android:layout_width="447dp"
+                    android:layout_height="2dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/vat_group_insert"
+                    android:background="@drawable/divider_line_horizontal"
+                    />
+
+                <LinearLayout
+                    android:layout_width="447dp"
+                    android:layout_height="165dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/vat_add_hline"
+                    android:background="@drawable/view_border"
+                    >
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/vat_value_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@color/white">
+
+                    </android.support.v7.widget.RecyclerView>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mainspace"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

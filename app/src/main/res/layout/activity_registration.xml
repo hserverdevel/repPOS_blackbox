@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.RelaivetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Registration">
+
+    <RelativeLayout
+        android:layout_width="487dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/firstRegistrationWindow"
+        android:background="@drawable/view_base_background"
+        android:visibility="gone"
+        >
+
+        <com.example.blackbox.graphics.CustomTextView
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/admin_registration"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            custom:typeface="franklin_gothic_demi"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:id="@+id/firstRegistration_tv"
+            android:layout_centerHorizontal="true"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/firstRegistration_tv"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/firstRegistration_window"
+            android:background="@color/white">
+
+            <com.example.blackbox.graphics.CustomEditText
+                android:layout_width="216dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:hint="@string/business_name"
+                android:background="@drawable/view_border"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                custom:typeface="franklin_gothic_demi"
+                custom:letterSpacing="0.0"
+                android:id="@+id/store_name_et"/>
+
+            <com.example.blackbox.graphics.CustomEditText
+                android:layout_width="216dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:hint="@string/vat_id"
+                android:layout_toRightOf="@id/store_name_et"
+                android:background="@drawable/view_border"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                custom:typeface="franklin_gothic_demi"
+                custom:letterSpacing="0.0"
+                android:id="@+id/store_IVA"/>
+
+            <com.example.blackbox.graphics.CustomEditText
+                android:layout_width="447dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/store_name_et"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:hint="@string/address"
+                android:background="@drawable/view_border"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                custom:typeface="franklin_gothic_demi"
+                custom:letterSpacing="0.0"
+                android:id="@+id/address_et"/>
+
+            <com.example.blackbox.graphics.CustomEditText
+                android:layout_width="216dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:hint="CAP"
+                android:background="@drawable/view_border"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                custom:typeface="franklin_gothic_demi"
+                custom:letterSpacing="0.0"
+                android:id="@+id/cap_et"
+                android:layout_below="@id/address_et"/>
+
+            <com.example.blackbox.graphics.CustomEditText
+                android:layout_width="216dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:hint="Comune"
+                android:background="@drawable/view_border"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                custom:typeface="franklin_gothic_demi"
+                custom:letterSpacing="0.0"
+                android:id="@+id/comune_et"
+                android:layout_below="@id/address_et"
+                android:layout_toRightOf="@id/cap_et"/>
+            <com.example.blackbox.graphics.CustomEditText
+                android:layout_width="216dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:hint="Provincia (es. TO)"
+                android:background="@drawable/view_border"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                custom:typeface="franklin_gothic_demi"
+                custom:letterSpacing="0.0"
+                android:id="@+id/provincia_et"
+                android:layout_below="@id/cap_et"/>
+
+
+            <com.example.blackbox.graphics.CustomEditText
+                android:layout_width="447dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/provincia_et"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:hint="Business E-mail"
+                android:background="@drawable/view_border"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                custom:typeface="franklin_gothic_demi"
+                custom:letterSpacing="0.0"
+                android:id="@+id/first_r_email_et"/>
+
+            <View
+                android:layout_width="447dp"
+                android:layout_height="2dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/divider_line_horizontal"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/first_r_email_et"
+                android:id="@+id/first_registration_hline"
+                />
+
+            <com.example.blackbox.graphics.CustomEditText
+                android:layout_width="216dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="15dp"
+                android:layout_below="@id/first_registration_hline"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:hint="@string/name"
+                android:background="@drawable/view_border"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                custom:typeface="franklin_gothic_demi"
+                custom:letterSpacing="0.0"
+                android:id="@+id/first_admin_name_et"/>
+
+            <com.example.blackbox.graphics.CustomEditText
+                android:layout_width="216dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="15dp"
+                android:layout_below="@id/first_registration_hline"
+                android:layout_toRightOf="@id/first_admin_name_et"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:hint="@string/surname"
+                android:background="@drawable/view_border"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                custom:typeface="franklin_gothic_demi"
+                custom:letterSpacing="0.0"
+                android:id="@+id/first_admin_surname_et"/>
+
+            <com.example.blackbox.graphics.CustomEditText
+                android:layout_width="447dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/first_admin_name_et"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:hint="@string/admin_email"
+                android:background="@drawable/view_border"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                custom:typeface="franklin_gothic_demi"
+                custom:letterSpacing="0.0"
+                android:id="@+id/first_admin_email_et"/>
+
+            <com.example.blackbox.graphics.CustomEditText
+                android:layout_width="216dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:hint="@string/passcode"
+                android:selectAllOnFocus="true"
+                android:inputType="numberPassword"
+                android:imeOptions="actionDone"
+                android:layout_below="@id/first_admin_email_et"
+                android:background="@drawable/view_border"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                custom:typeface="franklin_gothic_demi"
+                custom:letterSpacing="0.0"
+                android:id="@+id/first_admin_passcode_et"
+                android:maxLength="6"
+                android:digits="0123456789"/>
+
+            <com.example.blackbox.graphics.CustomButton
+                android:layout_width="216dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:selectAllOnFocus="true"
+                android:layout_toRightOf="@id/first_admin_passcode_et"
+                android:imeOptions="actionDone"
+                android:layout_below="@id/first_admin_email_et"
+                android:background="@drawable/popup_button_green"
+                android:text="@string/software_license"
+                android:textColor="@color/white"
+                android:textColorHint="@color/gray"
+                custom:typeface="franklin_gothic_demi"
+                custom:letterSpacing="0.0"
+                android:id="@+id/licensing"
+                android:digits="0123456789"
+                android:layout_marginBottom="15dp"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <!--    BASELINE OK and X buttons -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mainspace"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</android.support.constraint.RelaivetLayout>

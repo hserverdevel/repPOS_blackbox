@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE JposEntries PUBLIC "-//JavaPOS//DTD//EN"
+                             "jpos/res/jcl.dtd">
+<JposEntries>
+<!--Saved by JavaPOS jpos.config/loader (JCL) version 2.1.0-RC3 on 10/26/04 8:17 AM-->
+   <JposEntry logicalName="printf">
+        <creation factoryClass="com.rch.printf.RCHJposServiceInstanceFactory" serviceClass="com.rch.printf.RCHFiscalPrinterService"/>
+        <vendor name="RCH Group" url="http://www.rch-group.com"/>
+        <jpos category="FiscalPrinter" version="1.13"/>
+        <product description="RCH Print!F fiscal printer JavaPOS Service" name="RCH Print!F Service for JavaPOS(TM) Standard" url="http://www.rch-group.com"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+        <prop name="ipAddress" type="String" value="192.168.1.10"/>
+        <prop name="ipPort" type="Integer" value="23"/>
+        <prop name="ConnType" type="String" value="LAN"/>
+        <prop name="ComPort" type="String" value="COM1"/>
+        <prop name="BaudRate" type="String" value="9600"/>
+        <prop name="Log" type="String" value="logfile.txt"/>
+    </JposEntry>
+
+     <JposEntry logicalName="EthernetFiscalPrinter">
+          <creation factoryClass="com.custom.jpos.services.CustomJposServiceInstanceFactory" serviceClass="com.custom.jpos.services.FiscalPrinterService"/>
+          <vendor name="Custom, SPA" url="http://www.custom.it"/>
+          <jpos category="FiscalPrinter" version="1.12"/>
+          <product description="Custom FiscalPrinter from Custom Corporation" name="Custom FiscalPrinter Service for JavaPOS(TM) Standard" url="http://www.custom.it"/>
+          <prop name="deviceBus" type="String" value="Ethernet"/>
+          <prop name="portName" type="String" value="192.168.0.205"/>
+     </JposEntry>
+
+     <JposEntry logicalName="EthernetLineDisplay">
+          <creation factoryClass="com.custom.jpos.services.CustomJposServiceInstanceFactory" serviceClass="com.custom.jpos.services.LineDisplayService"/>
+          <vendor name="Custom, SPA" url="http://www.custom.it"/>
+          <jpos category="LineDisplay" version="1.12"/>
+          <product description="Custom LineDisplay from Custom Corporation" name="Custom LineDisplay Service for JavaPOS(TM) Standard" url="http://www.custom.it"/>
+
+          <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+          <prop name="deviceBus" type="String" value="Ethernet"/>
+          <prop name="portName" type="String" value="192.168.10.121"/>
+     </JposEntry>
+
+     <JposEntry logicalName="EthernetCashDrawer">
+          <creation factoryClass="com.custom.jpos.services.CustomJposServiceInstanceFactory" serviceClass="com.custom.jpos.services.CashDrawerService"/>
+          <vendor name="Custom, SPA" url="http://www.custom.it"/>
+          <jpos category="CashDrawer" version="1.12"/>
+          <product description="Custom CashDrawer from Custom Corporation" name="Custom CashDrawer Service for JavaPOS(TM) Standard" url="http://www.custom.it"/>
+
+          <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+          <prop name="deviceBus" type="String" value="Ethernet"/>
+          <prop name="portName" type="String" value="10.10.56.142"/>
+     </JposEntry>
+
+
+</JposEntries>

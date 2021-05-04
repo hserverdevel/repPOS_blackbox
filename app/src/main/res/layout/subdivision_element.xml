@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="154dp"
+    android:layout_height="95dp"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/subdivision_element_background"
+    android:id="@+id/subdivision_total_contiainer">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginTop="3dp"
+        android:id="@+id/split_id_container">
+
+        <com.example.blackbox.graphics.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            custom:typeface="franklin_gothic_book"
+            custom:letterSpacing="0.0"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/split_id" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="137dp"
+        android:layout_height="1dp"
+        android:background="@drawable/divider_line_horizontal1dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/divider_line"
+        android:layout_below="@id/split_id_container"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="3dp"
+        android:id="@+id/below_container"
+        android:layout_below="@id/divider_line" >
+
+        <com.example.blackbox.graphics.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            custom:typeface="franklin_gothic_demi"
+            custom:letterSpacing="0.0"
+            android:textSize="24sp"
+            android:textColor="@color/white"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/amount_tv"/>
+
+        <com.example.blackbox.graphics.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textAllCaps="true"
+            custom:typeface="franklin_gothic_book"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/mode"
+            android:layout_below="@id/amount_tv" />
+    </RelativeLayout>
+
+</RelativeLayout>

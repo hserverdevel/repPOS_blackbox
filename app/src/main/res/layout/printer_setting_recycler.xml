@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:id="@+id/printer_setting_main"
+
+    android:layout_width="447dp"
+    android:layout_height="wrap_content"
+
+    >
+
+    <com.example.blackbox.graphics.CustomTextView
+        android:layout_width="447dp"
+        android:layout_height="39dp"
+        android:background="@color/white"
+        android:id="@+id/printer_value_container"
+        custom:typeface="franklin_gothic_demi"
+        custom:letterSpacing="0"
+        android:textSize="18dp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:visibility="visible"
+        />
+
+    <com.example.blackbox.graphics.CustomButton
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        android:text="@string/delete"
+        android:gravity="center"
+        android:id="@+id/delete_printer_button"
+        android:background="@color/red"
+        android:textColor="@color/white"
+        custom:typeface="franklin_gothic_demi"
+        android:textAllCaps="true"
+        android:textSize="15dp"
+        />
+    <com.example.blackbox.graphics.CustomButton
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        android:gravity="center"
+        android:id="@+id/select_printer_button"
+        android:background="@color/green_2"
+        android:textColor="@color/white"
+        custom:typeface="franklin_gothic_demi"
+        custom:letterSpacing="0.0"
+        android:textSize="18dp"/>
+    <View
+        android:layout_width="427dp"
+        android:layout_height="1dp"
+
+        android:background="@drawable/divider_line_horizontal1dp"
+        android:id="@+id/printer_hline_sep"
+        android:layout_below="@id/printer_value_container"
+
+        />
+
+
+</RelativeLayout>

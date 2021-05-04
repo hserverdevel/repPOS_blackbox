@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="681dp"
+    android:layout_height="match_parent"
+    android:id="@+id/modifier_fragment_visibility"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="650dp"
+        android:orientation="horizontal"
+        android:id="@+id/modifier_linear"
+        android:background="@color/white"
+
+        >
+        <!-- Start of left-side panel -->
+        <RelativeLayout
+            android:layout_width="679dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@drawable/backgroundtexturepattern"
+            android:paddingStart="15dp"
+            android:paddingEnd="6dp"
+            android:layout_marginEnd="2dp"
+            >
+
+            <!-- Top Panel, includes back button and product name -->
+            <RelativeLayout
+                android:layout_width="679dp"
+                android:layout_height="109dp"
+                android:paddingTop="15dp"
+                android:id="@+id/above_modifier_recyclerView" >
+                <ImageButton
+                    android:layout_width="154dp"
+                    android:layout_height="86dp"
+                    android:id="@+id/modifier_backButton"
+                    android:background="@color/gray"
+                    android:src="@drawable/backarrowsymbol"/>
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="88dp"
+                    android:layout_toRightOf="@id/modifier_backButton"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/divider_line"
+                    android:id="@+id/modifier_backButton_vline"/>
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/modifier_backButton_vline"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginTop="1dp"
+                    android:id="@+id/modifier_infoTextView"
+                    custom:typeface="roboto_light_italic"
+                    custom:letterSpacing="0.0"
+                    android:textColor="@color/black"
+                    android:text="@string/info_tv_main_modifiers"/>
+                <View
+                    android:layout_width="493dp"
+                    android:layout_height="2dp"
+                    android:layout_toRightOf="@id/modifier_backButton_vline"
+                    android:layout_below="@id/modifier_infoTextView"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginLeft="6dp"
+                    android:background="@drawable/divider_line_horizontal"
+                    android:id="@+id/modifier_infoTextView_hline"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="3dp"
+                    android:layout_toRightOf="@id/modifier_backButton_vline"
+                    android:layout_below="@id/modifier_infoTextView_hline"
+                    android:id="@+id/modifier_categoryTitleBox">
+                    <com.example.blackbox.graphics.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:textSize="23sp"
+                        custom:letterSpacing="0.1"
+                        android:textAllCaps="true"
+                        android:textColor="@color/black"
+                        custom:typeface="franklin_gothic_demi"
+                        android:layout_centerVertical="true"
+                        android:id="@+id/currentProductTitle"/>
+                </RelativeLayout>
+                <View
+                    android:layout_width="658dp"
+                    android:layout_height="2dp"
+                    android:layout_below="@id/modifier_backButton"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/divider_line_horizontal"
+                    android:id="@+id/modifier_backButton_hline"/>
+            </RelativeLayout>
+            <!-- Start of Modifiers containers -->
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:text="@string/select_modifier_group"
+                android:textSize="17sp"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                custom:typeface="franklin_gothic_book"
+                custom:letterSpacing="0.08"
+                android:layout_marginTop="22dp"
+                android:layout_marginBottom="10dp"
+                android:layout_below="@id/above_modifier_recyclerView"
+                android:id="@+id/modifiers_group_tv"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/divider_line_horizontal"
+                android:layout_marginTop="2dp"
+                android:layout_below="@id/modifiers_group_tv"
+                android:id="@+id/modifiers_group_tv_hline"/>
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="-14dp"
+                android:layout_below="@id/modifiers_group_tv_hline"
+                android:id="@+id/omodifiersGroupRecyclerView"
+                android:scrollbars="none"
+              />
+            <com.example.blackbox.graphics.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="17dp"
+                android:textSize="17sp"
+                android:textAllCaps="true"
+                android:visibility="invisible"
+                android:layout_marginTop="13dp"
+                android:layout_marginBottom="7dp"
+                custom:typeface="franklin_gothic_book"
+                custom:letterSpacing="0.08"
+                android:textColor="@color/black"
+                android:layout_below="@id/omodifiersGroupRecyclerView"
+                android:id="@+id/modifiers_tv"
+                android:text="@string/select_modifiers"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="5dp"
+                android:visibility="invisible"
+                android:background="@drawable/divider_line_horizontal"
+                android:layout_below="@id/modifiers_tv"
+                android:id="@+id/modifiers_tv_hline"/>
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="677dp"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="-14dp"
+                android:clipToPadding="false"
+                android:scrollbars="none"
+                android:layout_below="@id/modifiers_tv_hline"
+                android:id="@+id/modifiersRecyclerView"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@id/modifiersRecyclerView"
+                android:id="@+id/modifier_notes_container"
+                android:background="@drawable/view_border_white_in"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
+
+                    <com.example.blackbox.graphics.CustomEditText
+                        android:layout_width="570dp"
+                        android:layout_height="44dp"
+                        android:paddingLeft="15dp"
+                        android:layout_marginLeft="3dp"
+                        android:gravity="center|left"
+                        android:hint="@string/kitchen_note_"
+                        android:layout_marginTop="3dp"
+                        android:inputType="textCapWords|textAutoCorrect"
+                        android:id="@+id/modifier_notes_input"
+                        android:selectAllOnFocus="true"
+                        android:textColorHighlight="@color/gray"
+                        android:background="@color/white"
+                        android:textCursorDrawable="@null"
+                        android:textColor="@color/blackTransparent"
+                        custom:typeface="franklin_gothic_book"
+                        android:singleLine="true"
+                        android:textSize="18dp"
+                        />
+                    <ImageButton
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="3dp"
+                        android:gravity="center"
+                        android:id="@+id/modifier_notes_input_add"
+                        android:background="@drawable/view_border_3_gray_in"
+                        android:src="@drawable/plusbuttonsmall"
+                        />
+                <ImageButton
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="6dp"
+                    android:gravity="center"
+                    android:id="@+id/modifier_notes_input_delete"
+                    android:background="@drawable/view_border_3_gray_in"
+                    android:src="@drawable/minusbuttonsmall"
+                    />
+
+
+            </LinearLayout>
+
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+
+
+
+
+</LinearLayout>

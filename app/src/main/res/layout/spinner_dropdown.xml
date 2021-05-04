@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.blackbox.graphics.CustomTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="42dp"
+    android:textSize="16sp"
+    android:gravity="center"
+    custom:typeface="franklin_gothic_demi"
+    custom:letterSpacing="0.0"
+    android:textColor="@color/black"
+    android:id="@+id/element_name"
+    />
