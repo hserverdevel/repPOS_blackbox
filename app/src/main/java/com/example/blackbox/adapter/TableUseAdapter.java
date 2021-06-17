@@ -1,6 +1,7 @@
 package com.example.blackbox.adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -25,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.blackbox.DialogCreator;
 import com.example.blackbox.R;
 import com.example.blackbox.activities.TableActivity;
 import com.example.blackbox.graphics.CustomButton;
@@ -50,7 +52,8 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
  * Used on operative function, if you want to see configurational for table look at TableAdapter
  */
 
-public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements ItemTouchHelperAdapter {
+public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements ItemTouchHelperAdapter
+{
     private final AdapterTableUseCallback adapterCallback;
     private float density;
     private float dpHeight;
@@ -62,17 +65,31 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
     private boolean keyboard_next_flag = false;
     private Resources resources;
 
+    // used in the modify table use function,
+    // to select another table when used
+    private boolean MODE_MODIFY_TABLE_USE = false;
+    private TableUse tableModifyUse;
+
+    // used to modify the amount of seats used for a table
+    private boolean MODE_CHANGE_SEATS_USE = false;
+
     private int billId;
     private boolean isMergeSet = false;
-    public void setIsMerge(Boolean b){isMergeSet=b;}
-    public boolean getIsMergeSet(){return isMergeSet;}
+
+    public void setIsMerge(Boolean b) {isMergeSet = b;}
+
+    public boolean getIsMergeSet() {return isMergeSet;}
 
     private long mainMergeId = -11;
-    public void setMainMergeId(long id){mainMergeId=id;}
-    public long getMainMergeId(){return mainMergeId;}
+
+    public void setMainMergeId(long id) {mainMergeId = id;}
+
+    public long getMainMergeId() {return mainMergeId;}
 
     private int tableNumber = -11;
+
     public int getTableNumber() {return tableNumber;}
+
     public void setTableNumber(int tableNumber) {this.tableNumber = tableNumber;}
 
     /*private int mainTableNumber = -1;
@@ -80,113 +97,142 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
     private int getMainTableNumber(){return mainTableNumber;}*/
 
     private int roomId = -11;
+
     public int getRoomId() {return roomId;}
-    public void setRoomId(int roomId) {this.roomId= roomId;}
+
+    public void setRoomId(int roomId) {this.roomId = roomId;}
 
     public PopupWindow myPopupWindow;
     public ButtonHolder myButton;
-    public void setMyButton() {
+
+    public void setMyButton()
+    {
         Typeface typeItalic = Typeface.createFromAsset(context.getAssets(), "fonts/FRANGBI_.TTF");
         myButton.tableNumber.setTypeface(typeItalic);
     }
 
 
-    public TableUseAdapter(Context c, DatabaseAdapter database, ArrayList<TableUse> tables, int billId){
+    public TableUseAdapter(Context c, DatabaseAdapter database, ArrayList<TableUse> tables, int billId)
+    {
         context = c;
         this.dbA = database;
         this.tables = tables;
         this.billId = billId;
-        inflater = (LayoutInflater) context
-                .getSystemService(LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.activity_table, null);
         resources = context.getResources();
         /**DISPLAY METRICS:  used to center the window in the screen**/
-        Display display = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics ();
+        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
-        density  = context.getResources().getDisplayMetrics().density;
+        density = context.getResources().getDisplayMetrics().density;
         dpHeight = outMetrics.heightPixels;// / density;
-        dpWidth  = outMetrics.widthPixels;// / density;
+        dpWidth = outMetrics.widthPixels;// / density;
 
         this.adapterCallback = ((AdapterTableUseCallback) context);
     }
 
 
-
     /**
      * interface to communicate with activity (TableActivity)
      */
-    public interface AdapterTableUseCallback {
+    public interface AdapterTableUseCallback
+    {
         void setIsMergeActivated(TableUse table);
 
     }
 
     @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
+    public boolean onItemMove(int fromPosition, int toPosition)
+    {
         return false;
     }
 
     @Override
-    public void onItemDismiss(int position) {
+    public void onItemDismiss(int position)
+    {
 
     }
 
     @Override
-    public int getItemViewType(int position){
+    public int getItemViewType(int position)
+    {
         return tables.get(position).getId();
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
         View v;
         ViewHolder vh;
         v = inflater.inflate(R.layout.table_gridview, null);
         vh = new ButtonHolder(v);
         return vh;
     }
+
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position)
+    {
         TableUse table = tables.get(position);
         ButtonHolder button = (ButtonHolder) holder;
         //selected table color
-        int color2 = Color.parseColor("#05a8c0");
+        int colorLightBlue = Color.parseColor("#05a8c0");
+        int colorRed = Color.parseColor("#cd0046");
+        int colorBlack = Color.parseColor("#222222");
 
-        /** Rounded corners for internal image **/
+        /* Rounded corners for internal image */
 
         //different typeface for main and secondary table when merged tables
         Typeface typeItalic = Typeface.createFromAsset(context.getAssets(), "fonts/FRANGBI_.TTF");
         Typeface typeDemi = Typeface.createFromAsset(context.getAssets(), "fonts/FRANGD__.ttf");
-        //cd0046
 
-        if(table.getStartTime()!=null){
-            if(table.getEndTime()!=null){
-                button.view.setBackgroundColor(Color.parseColor("#75ba51"));
-            }
-            else {
-                //selected table
-                if (table.getBillId() == billId){
-                    button.view.setBackgroundColor(color2);
-                    if(table.getMainTable() == 0)
-                        button.tableNumber.setTypeface(typeItalic);
+
+        // 1. Set the table colors //
+        // ----------------------- //
+
+        // if the current table is in any form being used (reservation or people at the table)
+        if (table.getStartTime() != null)
+        {
+            // TODO
+            // does this refer to a reservation time?
+            if (table.getEndTime() != null)
+                { button.view.setBackgroundColor(Color.parseColor("#75ba51")); }
+
+            else
+            {
+                // this table is the current bill (in Operative) table
+                if (table.getBillId() == billId)
+                {
+                    button.view.setBackgroundColor(colorLightBlue);
+                    if (table.getMainTable() == 0)
+                        { button.tableNumber.setTypeface(typeItalic); }
                 }
+
                 //table already in use
-                else button.view.setBackgroundColor(Color.parseColor("#cd0046"));
+                else
+                    { button.view.setBackgroundColor(colorRed); }
             }
+
             button.actualSeat.setText(String.format("%01d", table.getTotalSeats()));
             button.tableNumber.setText(String.format("%02d", table.getMainTableNumber()));
-        }else {
-            if (table.isShareTable() == 1) {
+        }
+
+        // this table is not in use,
+        // nothing special to do
+        else
+        {
+            if (table.isShareTable() == 1)
+            {
                 GradientDrawable border = new GradientDrawable();
-                int color3 = Color.parseColor("#222222");
-                border.setColor(color3);
-                border.setStroke((int) (3 * density), color3); //gray border with full opacity
-                /** Rounded corners for the buttons **/
+                border.setColor(colorBlack);
+                border.setStroke((int) (3 * density), colorBlack); //gray border with full opacity
                 border.setCornerRadius(8 * density);
-                /** Rounded corners for the buttons **/
                 button.view.setBackground(border);
                 button.actualSeat.setText(String.valueOf(table.getTotalSeats()));
                 button.tableNumber.setTypeface(typeItalic);
-            } else{
+            }
+            else
+            {
                 //default color
                 button.view.setBackgroundColor(Color.parseColor("#444444"));
                 button.actualSeat.setText("0");
@@ -200,69 +246,361 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
 
         button.seatNumber.setText(String.valueOf(table.getTableSeat()));
 
-        //if table is not assigned
-        if(table.getStartTime()==null) {
-            button.tableTextContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (getIsMergeSet()) {
+
+
+
+
+        // 2. handle table onClick //
+        // ----------------------- //
+
+
+        button.tableTextContainer.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // if this mode is set, any click on another table will move the people from this table to another one
+                if (MODE_MODIFY_TABLE_USE)
+                {
+                    // if the table that has been clicked is not empty
+                    if (table.getStartTime() != null)
+                        { DialogCreator.error(context, "Please select an empty table"); }
+
+                    else if (StaticValue.blackbox)
+                    {
+                        // first, delete the current table usage
+
+                        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+
+                        params.add(new BasicNameValuePair("billId", String.valueOf(tableModifyUse.getBillId())));
+                        params.add(new BasicNameValuePair("tableId", String.valueOf(tableModifyUse.getTableId())));
+
+                        ((TableActivity) context).callHttpHandler("/deleteTableUse", params);
+
+
+                        // then activate the other table
+                        List<NameValuePair> params2 = new ArrayList<NameValuePair>(2);
+
+                        params2.add(new BasicNameValuePair("seats", String.valueOf(tableModifyUse.getTotalSeats())));
+                        params2.add(new BasicNameValuePair("billId", String.valueOf(tableModifyUse.getBillId())));
+                        params2.add(new BasicNameValuePair("tableId", String.valueOf(table.getTableId())));
+                        params2.add(new BasicNameValuePair("androidId", StaticValue.androidId));
+
+                        ((TableActivity) context).callHttpHandler("/insertTableUse", params2);
+
+                    }
+
+                    MODE_MODIFY_TABLE_USE = false;
+                    tableModifyUse = null;
+                }
+
+
+                // if this table is in use
+                else if (table.getStartTime() != null)
+                {
+                    // Handle table merge process
+                    if (getIsMergeSet())
+                    {
                         //click to add merge table
-                        if (StaticValue.blackbox) {
+                        if (table.isMergeTable() == 1)
+                        {
+                            if (!dbA.checkIfTableIsInUseInMerging(table.getTableId()) && table.getMainTable() == 0)
+                            {
+                                TableUse tu = dbA.fetchTableUseById(getMainMergeId());
+                                dbA.insertTableUse(table.getTableId(), tu.getTotalSeats(), billId, 0, tu.getMainTableNumber());
+                                tables = dbA.fetchTableUses(roomId);
+                                button.tableNumber.setTypeface(typeItalic);
+                                notifyDataSetChanged();
+                            }
+                            //click to delete this table from merging
+                            else if (dbA.checkIfTableIsInUseInMerging(table.getTableId()))
+                            {
+                                dbA.deleteFromTableUse(table.getTableId());
+                                tables = dbA.fetchTableUses(roomId);
+                                button.tableNumber.setTypeface(typeDemi);
+                                notifyDataSetChanged();
+                            }
+
+                            else
+                                { DialogCreator.message(context, R.string.thats_the_main_table); }
+                        }
+
+                        else
+                        {
+                            DialogCreator.error(context, R.string.this_table_cannot_be_merged);
+                            openNoMergableTable();
+                        }
+                    }
+
+                    else
+                    {
+                        // check if this table is used in some merging,
+                        // this if it's in use but it's not a main table
+                        if (!dbA.checkIfTableIsInUseInMerging(table.getTableId()))
+// TODO why??? ->                            { /* openTableUse(table); */ }
+                            { openModifyTableUse(table); }
+
+
+                        // this table is merged, and is not a main table
+                        // thus deselect it and reset the merge Id
+                        else
+                        {
+                            //first save id, then delete from db
+                            long id = dbA.getTableUseIdFromTableNumber(table.getTableId());
+                            if (id != -1)
+                            {
+                                dbA.deleteFromTableUse(table.getTableId());
+
+                                tables = dbA.fetchTableUses(roomId);
+                                button.tableNumber.setTypeface(typeDemi);
+
+                                notifyDataSetChanged();
+
+                                isMergeSet = true;
+                                adapterCallback.setIsMergeActivated(table);
+
+                                TableUse tu = dbA.fetchTableUseById(id);
+                                setMainMergeId(id);
+                                setTableNumber(tu.getMainTableNumber());
+                                setRoomId(tu.getRoomId());
+                            }
+                        }
+                    }
+                }
+
+
+                // this is a brand new, not in use, table
+                else
+                {
+                    // if we want to use this table to be merged with another one
+                    if (getIsMergeSet())
+                    {
+                        //click to add merge table
+                        if (StaticValue.blackbox)
+                        {
                             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                            long id =getMainMergeId();
-                           // params.add(new BasicNameValuePair("mainTableId", String.valueOf(id)));
+                            long id = getMainMergeId();
+
+                            params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
+                            params.add(new BasicNameValuePair("tableId", String.valueOf(table.getTableId())));
+
+                            myButton = button;
+                            ((TableActivity) context).callHttpHandler("/insertTableUseMerge", params);
+                        }
+
+                        else
+                        {
+                            if (table.isMergeTable() == 1)
+                            {
+                                TableUse tu = dbA.fetchTableUseById(getMainMergeId());
+                                button.tableNumber.setTypeface(typeItalic);
+                                dbA.insertTableUse(table.getTableId(), tu.getTotalSeats(), billId, 0, tu.getMainTableNumber());
+                                tables = dbA.fetchTableUses(roomId);
+                                notifyDataSetChanged();
+                            }
+
+                            else
+                                { openNoMergableTable(); }
+                        }
+                    }
+
+                    // otherwise, open the popup to add some people to this table,
+                    // and thus to make this table in use
+                    // TODO
+                    else
+                        { openTableUse(table); }
+                }
+            }
+        });
+
+
+        // TODO should this be still present?
+        /*
+        button.tableTextContainer.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick (View view)
+            {
+                if (table.getStartTime() != null)
+                {
+                    //if it's a merge table, then deselect it and go in mergeMode
+                    if (StaticValue.blackbox)
+                    {
+                        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                        long id = getMainMergeId();
+                        // params.add(new BasicNameValuePair("mainTableId", String.valueOf(id)));
+                        params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
+                        params.add(new BasicNameValuePair("tableId", String.valueOf(table.getTableId())));
+                        myButton = button;
+                        ((TableActivity) context).callHttpHandler("/deleteTableUse", params);
+                    }
+
+                    else
+                    {
+                        if (dbA.checkIfTableIsInUseInMerging(table.getTableId()))
+                        {
+                            long id = dbA.getTableUseIdFromSecondaryTableNumber(table.getTableId());
+                            dbA.deleteFromTableUse(table.getTableId());
+                            tables = dbA.fetchTableUses(roomId);
+                            button.tableNumber.setTypeface(typeDemi);
+                            notifyDataSetChanged();
+                            isMergeSet = true;
+                            adapterCallback.setIsMergeActivated(table);
+                            TableUse tu = dbA.fetchTableUseById(id);
+                            setMainMergeId(id);
+                            setTableNumber(tu.getMainTableNumber());
+                        }
+
+                        else
+                        {
+                            if (table.getMainTable() == 1)
+                                { dbA.execOnDb("DELETE FROM table_use WHERE total_bill_id=" + table.getBillId()); }
+                            else
+                                { dbA.execOnDb("DELETE FROM table_use WHERE id=" + table.getId()); }
+
+                            tables = dbA.fetchTableUses(roomId);
+                            notifyDataSetChanged();
+                            setTableNumber(-11);
+                            setRoomId(-11);
+                        }
+                    }
+
+                    return true;
+
+                }
+
+                else
+                {
+                    if (StaticValue.blackbox)
+                    {
+                        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                        long id = getMainMergeId();
+
+                        params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
+                        params.add(new BasicNameValuePair("tableId", String.valueOf(table.getTableId())));
+                        myButton = button;
+                        ((TableActivity) context).callHttpHandler("/deleteTableUse", params);
+                    }
+
+                    else
+                    {
+                        if (table.isMergeTable() == 1)
+                        {
+                            //to deselect one merged table, that is not the main table
+                            if (dbA.checkIfTableIsInUseInMerging(table.getTableId()))
+                            {
+                                dbA.execOnDb("DELETE FROM table_use WHERE id=" + table.getId());
+                                tables = dbA.fetchTableUses(roomId);
+                                notifyDataSetChanged();
+                                setTableNumber(-11);
+                                setRoomId(-11);
+                            }
+
+                            else
+                            {
+                                dbA.execOnDb("DELETE FROM table_use WHERE id=" + table.getId());
+                                tables = dbA.fetchTableUses(roomId);
+                                notifyDataSetChanged();
+                                setTableNumber(-11);
+                                setRoomId(-11);
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+            }
+        });
+         */
+
+
+
+        /*
+
+        // this table is not in use
+        if (table.getStartTime() == null)
+        {
+            button.tableTextContainer.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    if (getIsMergeSet())
+                    {
+                        //click to add merge table
+                        if (StaticValue.blackbox)
+                        {
+                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                            long id = getMainMergeId();
+                            // params.add(new BasicNameValuePair("mainTableId", String.valueOf(id)));
                             params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
                             params.add(new BasicNameValuePair("tableId", String.valueOf(table.getTableId())));
                             myButton = button;
                             ((TableActivity) context).callHttpHandler("/insertTableUseMerge", params);
-                        } else {
-                            if (table.isMergeTable() == 1) {
+                        }
+                        else
+                        {
+                            if (table.isMergeTable() == 1)
+                            {
 
                                 TableUse tu = dbA.fetchTableUseById(getMainMergeId());
                                 button.tableNumber.setTypeface(typeItalic);
                                 dbA.insertTableUse(table.getTableId(), tu.getTotalSeats(), billId, 0, tu.getMainTableNumber());
                                 tables = dbA.fetchTableUses(roomId);
                                 notifyDataSetChanged();
-                            } else {
+                            }
+                            else
+                            {
                                 openNoMergableTable();
                             }
                         }
 
-                    } else {
+                    }
+                    else
+                    {
                         //open popup to set table use
                         openTableUse(table);
                     }
                 }
             });
 
-            button.tableTextContainer.setOnLongClickListener(new View.OnLongClickListener() {
+            button.tableTextContainer.setOnLongClickListener(new View.OnLongClickListener()
+            {
                 @Override
-                public boolean onLongClick(View view) {
-                    if (StaticValue.blackbox) {
+                public boolean onLongClick(View view)
+                {
+                    if (StaticValue.blackbox)
+                    {
                         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                        long id =getMainMergeId();
+                        long id = getMainMergeId();
                         // params.add(new BasicNameValuePair("mainTableId", String.valueOf(id)));
                         params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
                         params.add(new BasicNameValuePair("tableId", String.valueOf(table.getTableId())));
                         myButton = button;
                         ((TableActivity) context).callHttpHandler("/deleteTableUse", params);
-                    } else {
-                        if (table.isMergeTable() == 1) {
+                    }
+
+                    else
+                    {
+                        if (table.isMergeTable() == 1)
+                        {
                             //to deselect one merged table, that is not the main table
-                            if (dbA.checkIfTableIsInUseInMerging(table.getTableId())) {
-
+                            if (dbA.checkIfTableIsInUseInMerging(table.getTableId()))
+                            {
                                 dbA.execOnDb("DELETE FROM table_use WHERE id=" + table.getId());
                                 tables = dbA.fetchTableUses(roomId);
                                 notifyDataSetChanged();
                                 setTableNumber(-11);
                                 setRoomId(-11);
-                            } else {
+                            }
+
+                            else
+                            {
                                 dbA.execOnDb("DELETE FROM table_use WHERE id=" + table.getId());
                                 tables = dbA.fetchTableUses(roomId);
                                 notifyDataSetChanged();
                                 setTableNumber(-11);
                                 setRoomId(-11);
-
                             }
                         }
                     }
@@ -271,17 +609,27 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
                 }
             });
         }
-        else{
-            if(table.getBillId()==billId){
-                button.tableTextContainer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (getIsMergeSet()) {
-                            //click to add merge table
-                            if (table.isMergeTable() == 1) {
-                                if(!dbA.checkIfTableIsInUseInMerging(table.getTableId())
-                                        && table.getMainTable() == 0){
 
+        // the selected table is already in use,
+        // and is linked to some order
+        else
+        {
+            // if the table selected has the same bill ID
+            // as the current bill.
+            if (table.getBillId() == billId)
+            {
+                button.tableTextContainer.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        if (getIsMergeSet())
+                        {
+                            //click to add merge table
+                            if (table.isMergeTable() == 1)
+                            {
+                                if (!dbA.checkIfTableIsInUseInMerging(table.getTableId()) && table.getMainTable() == 0)
+                                {
                                     TableUse tu = dbA.fetchTableUseById(getMainMergeId());
                                     dbA.insertTableUse(table.getTableId(), tu.getTotalSeats(), billId, 0, tu.getMainTableNumber());
                                     tables = dbA.fetchTableUses(roomId);
@@ -289,30 +637,39 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
                                     notifyDataSetChanged();
                                 }
                                 //click to delete this table from merging
-                                else if(dbA.checkIfTableIsInUseInMerging(table.getTableId())){
+                                else if (dbA.checkIfTableIsInUseInMerging(table.getTableId()))
+                                {
                                     dbA.deleteFromTableUse(table.getTableId());
                                     tables = dbA.fetchTableUses(roomId);
                                     button.tableNumber.setTypeface(typeDemi);
                                     notifyDataSetChanged();
                                 }
+
                                 else
-                                    Toast.makeText(context, R.string.thats_the_main_table, Toast.LENGTH_SHORT).show();
+                                { Toast.makeText(context, R.string.thats_the_main_table, Toast.LENGTH_SHORT).show(); }
                             }
-                            else {
+
+                            else
+                            {
                                 Toast.makeText(context, R.string.this_table_cannot_be_merged, Toast.LENGTH_SHORT).show();
                                 openNoMergableTable();
                             }
                         }
-                        else {
+
+                        else
+                        {
                             //open popup to set table use
-                            if(!dbA.checkIfTableIsInUseInMerging(table.getTableId()))
-                                openTableUse(table);
+                            if (!dbA.checkIfTableIsInUseInMerging(table.getTableId()))
+                            { openTableUse(table); }
                             //deselect table and set mainMergeId
-                            else{
+
+                            else
+                            {
                                 //first save id, then delete from db
 
                                 long id = dbA.getTableUseIdFromTableNumber(table.getTableId());
-                                if(id!=-1) {
+                                if (id != -1)
+                                {
                                     dbA.deleteFromTableUse(table.getTableId());
                                     tables = dbA.fetchTableUses(roomId);
                                     button.tableNumber.setTypeface(typeDemi);
@@ -330,20 +687,27 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
                 });
 
                 //that's for deselect the table
-                button.tableTextContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                button.tableTextContainer.setOnLongClickListener(new View.OnLongClickListener()
+                {
                     @Override
-                    public boolean onLongClick(View view) {
+                    public boolean onLongClick(View view)
+                    {
                         //if it's a merge table, then deselect it and go in mergeMode
-                        if (StaticValue.blackbox) {
+                        if (StaticValue.blackbox)
+                        {
                             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                            long id =getMainMergeId();
+                            long id = getMainMergeId();
                             // params.add(new BasicNameValuePair("mainTableId", String.valueOf(id)));
                             params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
                             params.add(new BasicNameValuePair("tableId", String.valueOf(table.getTableId())));
                             myButton = button;
                             ((TableActivity) context).callHttpHandler("/deleteTableUse", params);
-                        } else {
-                            if (dbA.checkIfTableIsInUseInMerging(table.getTableId())) {
+                        }
+
+                        else
+                        {
+                            if (dbA.checkIfTableIsInUseInMerging(table.getTableId()))
+                            {
                                 long id = dbA.getTableUseIdFromSecondaryTableNumber(table.getTableId());
                                 dbA.deleteFromTableUse(table.getTableId());
                                 tables = dbA.fetchTableUses(roomId);
@@ -354,11 +718,14 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
                                 TableUse tu = dbA.fetchTableUseById(id);
                                 setMainMergeId(id);
                                 setTableNumber(tu.getMainTableNumber());
-                            } else {
+                            }
+
+                            else
+                            {
                                 if (table.getMainTable() == 1)
-                                    dbA.execOnDb("DELETE FROM table_use WHERE total_bill_id=" + table.getBillId());
+                                { dbA.execOnDb("DELETE FROM table_use WHERE total_bill_id=" + table.getBillId()); }
                                 else
-                                    dbA.execOnDb("DELETE FROM table_use WHERE id=" + table.getId());
+                                { dbA.execOnDb("DELETE FROM table_use WHERE id=" + table.getId()); }
 
                                 tables = dbA.fetchTableUses(roomId);
                                 notifyDataSetChanged();
@@ -372,9 +739,14 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
                 });
             }
         }
+
+         */
+
+
     }
 
-    public void setTables(ArrayList<TableUse> t, int roomId){
+    public void setTables(ArrayList<TableUse> t, int roomId)
+    {
         tables.clear();
         this.roomId = roomId;
         tables = t;
@@ -382,101 +754,149 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
         notifyDataSetChanged();
     }
 
+
+
     @Override
-    public int getItemCount() {
-        if(tables!=null)
-        return tables.size();
-        else return 0;
+    public int getItemCount()
+    {
+        if (tables != null)
+        { return tables.size(); }
+        else
+        { return 0; }
     }
 
-    public static class ButtonHolder extends ViewHolder{
+
+
+    public static class ButtonHolder extends ViewHolder
+    {
         public View view;
         public RelativeLayout tableTextContainer;
         public CustomTextView tableLabel;
         public CustomTextView tableNumber;
         public CustomTextView seatNumber;
         public CustomTextView actualSeat;
-        public ButtonHolder(View itemView) {
+
+        public ButtonHolder(View itemView)
+        {
             super(itemView);
             view = itemView;
-            tableTextContainer  = (RelativeLayout) view.findViewById(R.id.table_text_container);
-            tableLabel = (CustomTextView) view.findViewById(R.id.table_text);
-            tableNumber = (CustomTextView) view.findViewById(R.id.table_text_position);
-            seatNumber = (CustomTextView) view.findViewById(R.id.table_seat);
-            actualSeat = (CustomTextView) view.findViewById(R.id.table_actual_seat);
+            tableTextContainer = view.findViewById(R.id.table_text_container);
+            tableLabel =  view.findViewById(R.id.table_text);
+            tableNumber =  view.findViewById(R.id.table_text_position);
+            seatNumber = view.findViewById(R.id.table_seat);
+            actualSeat =  view.findViewById(R.id.table_actual_seat);
         }
+
         @Override
-        public String toString(){ return "ButtonHolder, Title: "+tableLabel.getText().toString();}
+        public String toString() { return "ButtonHolder, Title: " + tableLabel.getText().toString();}
     }
 
 
+
     /**
-     * TODO open popup to select quantity of seat at table
+     * open popup to select quantity of seat at table
+     *
      * @param table
      */
-    public void openTableUse(TableUse table){
-        LayoutInflater layoutInflater = (LayoutInflater) context
-                .getSystemService(LAYOUT_INFLATER_SERVICE);
+    public void openTableUse(TableUse table)
+    {
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
         final View popupView = layoutInflater.inflate(R.layout.use_table_popup, null);
-        final PopupWindow popupWindow = new PopupWindow(
-                popupView,
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
-        popupView.post(new Runnable() {
+        final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        popupView.post(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 CustomTextView header = (CustomTextView) popupView.findViewById(R.id.table_header_use_text);
                 header.setText(resources.getString(R.string.table_capacity_type, table.getTableNumber(), table.getTableSeat(), 1));
             }
         });
 
-        final CustomEditText quantitySeats = (CustomEditText) popupView.findViewById(R.id.customer_seat_input);
-        //to show automatically soft keyboard
-        /*InputMethodManager imm = (InputMethodManager)context.getSystemService(INPUT_METHOD_SERVICE);
-        if(imm != null)
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);*/
-        final ImageButton btnDismiss = (ImageButton)popupView.findViewById(R.id.kill);
-        btnDismiss.setOnClickListener(new Button.OnClickListener(){
+        final CustomEditText quantitySeats = popupView.findViewById(R.id.customer_seat_input);
 
+        final ImageButton btnDismiss = popupView.findViewById(R.id.kill);
+        btnDismiss.setOnClickListener(new Button.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupWindow.dismiss();
+
+                // just in case
+                MODE_CHANGE_SEATS_USE = false;
             }
         });
 
-        final ImageButton buttonOk = (ImageButton)popupView.findViewById(R.id.ok);
-        buttonOk.setOnClickListener(new Button.OnClickListener(){
+
+        final ImageButton buttonOk = popupView.findViewById(R.id.ok);
+        buttonOk.setOnClickListener(new Button.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                if(quantitySeats.getText().toString().equals("") || Integer.valueOf(quantitySeats.getText().toString())==0){
-                    Toast.makeText(context, "hey....come on....", Toast.LENGTH_SHORT).show();
-                }
-                else{
+            public void onClick(View v)
+            {
+                if (quantitySeats.getText().toString().equals("") || Integer.valueOf(quantitySeats.getText().toString()) == 0)
+                    { DialogCreator.error(context, "Please insert a valid number of seats"); }
+
+                else
+                {
                     int seats = Integer.valueOf(quantitySeats.getText().toString());
-                    if(StaticValue.blackbox){
+                    if (StaticValue.blackbox)
+                    {
+
+                        // if this function was called by modify table use,
+                        // in order to change the amount of seats being used by another table,
+                        // delete the previous table, and regenerate it with the amount of seats now given
+                        if (MODE_CHANGE_SEATS_USE)
+                        {
+                            List<NameValuePair> paramsX = new ArrayList<NameValuePair>(2);
+
+                            paramsX.add(new BasicNameValuePair("billId", String.valueOf(tableModifyUse.getBillId())));
+                            paramsX.add(new BasicNameValuePair("tableId", String.valueOf(tableModifyUse.getTableId())));
+
+                            ((TableActivity) context).callHttpHandler("/deleteTableUse", paramsX);
+
+                            MODE_CHANGE_SEATS_USE = false;
+                            tableModifyUse = null;
+                        }
+
+
                         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
                         params.add(new BasicNameValuePair("seats", String.valueOf(seats)));
                         params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
                         params.add(new BasicNameValuePair("tableId", String.valueOf(table.getTableId())));
-                        myPopupWindow = popupWindow;
+                        params.add(new BasicNameValuePair("androidId", StaticValue.androidId));
+
                         ((TableActivity) context).callHttpHandler("/insertTableUse", params);
-                    }else {
-                        if (seats <= table.getTableSeat()) {
-                            if (table.isShareTable() == 1) {
+
+                        popupWindow.dismiss();
+                    }
+
+                    else
+                    {
+                        if (seats <= table.getTableSeat())
+                        {
+                            if (table.isShareTable() == 1)
+                            {
                                 dbA.execOnDb("delete from table_use where total_bill_id=" + billId);
                                 dbA.insertTableUse(table.getTableId(), seats, billId, 1, table.getTableNumber());
-                            } else {
+                            }
+                            else
+                            {
                                 int oldId = dbA.checkIfExists("Select id from table_use where total_bill_id=" + billId);
-                                if (oldId == -11) {
+                                if (oldId == -11)
+                                {
                                     dbA.insertTableUse(table.getTableId(), seats, billId, 1, table.getTableNumber());
-                                } else {
+                                }
+                                else
+                                {
                                     dbA.execOnDb("delete from table_use where total_bill_id=" + billId);
                                     dbA.insertTableUse(table.getTableId(), seats, billId, 1, table.getTableNumber());
 
                                     dbA.showData("table_use");
 
                                     if (table.getStartTime() == null)
-                                        table.setStartTime(new Date());
+                                    { table.setStartTime(new Date()); }
 
                                 }
                             }
@@ -486,8 +906,12 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
                             tables = dbA.fetchTableUses(roomId);
                             notifyDataSetChanged();
                             popupWindow.dismiss();
-                        } else {
-                            if (table.isMergeTable() == 1) {
+                        }
+
+                        else
+                        {
+                            if (table.isMergeTable() == 1)
+                            {
                                 dbA.execOnDb("delete from table_use where total_bill_id=" + billId);
                                 isMergeSet = true;
                                 long id = dbA.insertTableUse(table.getTableId(), seats, billId, 1, table.getTableNumber());
@@ -499,7 +923,9 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
                                 tables = dbA.fetchTableUses(roomId);
                                 notifyDataSetChanged();
                                 popupWindow.dismiss();
-                            } else {
+                            }
+                            else
+                            {
                                 Toast.makeText(context, R.string.this_table_cannot_be_merged, Toast.LENGTH_SHORT).show();
                                 openNoMergableTable();
                             }
@@ -512,20 +938,128 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
 
         setupDismissKeyboard(popupView);
         popupWindow.setFocusable(true);
-        popupWindow.showAtLocation(((Activity)context).findViewById(R.id.table_main), 0, 0, 0);
+        popupWindow.showAtLocation(((Activity) context).findViewById(R.id.table_main), 0, 0, 0);
     }
 
-    public void openNoMergableTable(){
-        LayoutInflater layoutInflater = (LayoutInflater) context
-                .getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.one_button_popup, null);
-        final PopupWindow popupWindow = new PopupWindow(
-                popupView,
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
-        popupView.post(new Runnable() {
+
+
+    /**
+     *
+     * @param table
+     */
+    private void openModifyTableUse(TableUse table)
+    {
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View popupView = layoutInflater.inflate(R.layout.popup_modify_table_use, null);
+        final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+
+
+        CustomButton buttonFreeTable = popupView.findViewById(R.id.modify_table_use_button_free);
+        CustomButton buttonChangeSeats = popupView.findViewById(R.id.modify_table_use_button_change_seats);
+        CustomButton buttonChangeTable = popupView.findViewById(R.id.modify_table_use_button_change_table);
+
+
+        // free this table, thus remove it from the table use
+        buttonFreeTable.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void run() {
+            public void onClick(View v)
+            {
+                if (StaticValue.blackbox)
+                {
+                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                    long id = getMainMergeId();
+                    // params.add(new BasicNameValuePair("mainTableId", String.valueOf(id)));
+                    params.add(new BasicNameValuePair("billId", String.valueOf(table.getBillId())));
+                    params.add(new BasicNameValuePair("tableId", String.valueOf(table.getTableId())));
+
+                    ((TableActivity) context).callHttpHandler("/deleteTableUse", params);
+                }
+
+                popupWindow.dismiss();
+            }
+        });
+
+
+        // open the table use popup,
+        // to allow the user to change the number of people that are present
+        // at this table
+        buttonChangeSeats.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                popupWindow.dismiss();
+
+                MODE_CHANGE_SEATS_USE = true;
+                tableModifyUse = table;
+
+                openTableUse(table);
+            }
+        });
+
+
+
+        // open the modify table use selection, which allow the user to click on any other table,
+        // to transfer the amount of people present at this table to another one
+        buttonChangeTable.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                MODE_MODIFY_TABLE_USE = true;
+                tableModifyUse = table;
+
+                popupWindow.dismiss();
+            }
+        });
+
+
+
+
+
+
+
+        final ImageButton btnDismiss = (ImageButton) popupView.findViewById(R.id.kill);
+        btnDismiss.setOnClickListener(new Button.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                popupWindow.dismiss();
+            }
+        });
+
+
+
+        final ImageButton buttonOk = popupView.findViewById(R.id.ok);
+        buttonOk.setOnClickListener(new Button.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                popupWindow.dismiss();
+            }
+        });
+
+        setupDismissKeyboard(popupView);
+        popupWindow.setFocusable(true);
+        popupWindow.showAtLocation(((Activity) context).findViewById(R.id.table_main), 0, 0, 0);
+    }
+
+
+
+
+    public void openNoMergableTable()
+    {
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View popupView = layoutInflater.inflate(R.layout.one_button_popup, null);
+        final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        popupView.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
               /*  @SuppressLint("WrongViewCast") RelativeLayout.LayoutParams rlp1 =
                         (RelativeLayout.LayoutParams) popupView.findViewById(R.id.popup_container).getLayoutParams();
                 int top1 = (int) (dpHeight - 52*density) / 2 - rlp1.height / 2;
@@ -535,38 +1069,49 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
             }
         });
 
-        final CustomButton okButton = (CustomButton)popupView.findViewById(R.id.okButton);
-        okButton.setOnClickListener(new Button.OnClickListener(){
+        final CustomButton okButton = (CustomButton) popupView.findViewById(R.id.okButton);
+        okButton.setOnClickListener(new Button.OnClickListener()
+        {
 
             @Override
-            public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager)context.getSystemService(INPUT_METHOD_SERVICE);
-                if(imm != null)
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            public void onClick(View v)
+            {
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
+                if (imm != null)
+                { imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0); }
                 popupWindow.dismiss();
             }
         });
 
         popupWindow.setFocusable(true);
-        popupWindow.showAtLocation(((Activity)context).findViewById(R.id.table_main), 0, 0, 0);
+        popupWindow.showAtLocation(((Activity) context).findViewById(R.id.table_main), 0, 0, 0);
 
     }
 
-    public void setupDismissKeyboard(View view) {
+    public void setupDismissKeyboard(View view)
+    {
         //Set up touch listener for non-text box views to hide keyboard.
-        if((view instanceof EditText)) {
-            ((EditText)view).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        if ((view instanceof EditText))
+        {
+            ((EditText) view).setOnEditorActionListener(new TextView.OnEditorActionListener()
+            {
                 @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if(actionId == EditorInfo.IME_ACTION_NEXT) keyboard_next_flag = true;
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+                {
+                    if (actionId == EditorInfo.IME_ACTION_NEXT)
+                    { keyboard_next_flag = true; }
                     return false;
                 }
             });
-            view.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            view.setOnFocusChangeListener(new View.OnFocusChangeListener()
+            {
                 @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
-                        if(!(((Activity)context).getCurrentFocus() instanceof EditText) && !keyboard_next_flag){
+                public void onFocusChange(View v, boolean hasFocus)
+                {
+                    if (!hasFocus)
+                    {
+                        if (!(((Activity) context).getCurrentFocus() instanceof EditText) && !keyboard_next_flag)
+                        {
                             InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                         }
@@ -576,8 +1121,10 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
             });
         }
         //If a layout container, iterate over children and seed recursion.
-        if (view instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+        if (view instanceof ViewGroup)
+        {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
+            {
                 View innerView = ((ViewGroup) view).getChildAt(i);
                 setupDismissKeyboard(innerView);
             }

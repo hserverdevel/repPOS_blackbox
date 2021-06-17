@@ -91,33 +91,25 @@ public class FidelityPackageAdapter extends Adapter<ViewHolder> implements ItemT
         });
 
 
-        itemHolder.view.setOnTouchListener(new OnSwipeTouchListener(context)
-       {
+
+        itemHolder.itemContainer.setOnLongClickListener(new View.OnLongClickListener()
+        {
            // on swipe left, show the delete button
            // on swipe right, show the normal button
-           public void onSwipeLeft()
-           {
-               if (itemHolder.deleteButton.getVisibility() == View.GONE)
-               {
-                   itemHolder.itemContainer.setVisibility(View.GONE);
-                   itemHolder.deleteButton.setVisibility(View.VISIBLE);
-               }
-           }
-       });
-
-        itemHolder.deleteButton.setOnTouchListener(new OnSwipeTouchListener(context)
-        {
-
-            public void onSwipeRight()
+            @Override
+            public boolean onLongClick(View v)
             {
-                if (itemHolder.deleteButton.getVisibility() == View.VISIBLE)
+                if (itemHolder.deleteButton.getVisibility() == View.GONE)
                 {
-                    itemHolder.itemContainer.setVisibility(View.VISIBLE);
-                    itemHolder.deleteButton.setVisibility(View.GONE);
+                    itemHolder.itemContainer.setVisibility(View.GONE);
+                    itemHolder.deleteButton.setVisibility(View.VISIBLE);
+
+                    return true;
                 }
+
+                return false;
             }
         });
-
 
 
         itemHolder.deleteButton.setOnClickListener(new View.OnClickListener()
@@ -128,6 +120,23 @@ public class FidelityPackageAdapter extends Adapter<ViewHolder> implements ItemT
                 dbA.deleteFidelityPackageById(fidelityPackage.getButtonId());
 
                 refreshFidelityPackageList();
+            }
+        });
+
+        itemHolder.deleteButton.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                if (itemHolder.deleteButton.getVisibility() == View.VISIBLE)
+                {
+                    itemHolder.deleteButton.setVisibility(View.GONE);
+                    itemHolder.itemContainer.setVisibility(View.VISIBLE);
+
+                    return true;
+                }
+
+                return false;
             }
         });
     }

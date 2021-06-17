@@ -48,26 +48,33 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
  * Created by tiziano on 8/29/17.
  */
 
-public class TableActivity extends AppCompatActivity  implements
-        RoomAdapter.AdapterRoomCallback ,
+public class TableActivity extends AppCompatActivity implements
+        RoomAdapter.AdapterRoomCallback,
         TableUseAdapter.AdapterTableUseCallback,
-        HttpHandler.AsyncResponse {
+        HttpHandler.AsyncResponse
+{
 
     private static final String TAG = "<TableActivity>";
 
-    public TableActivity(){}
+    public TableActivity() {}
 
     private GridLayoutManager grid_manager;
     private DatabaseAdapter dbA;
-    private int tableNumber=-1;
-    private int roomId=-1;
+    private int tableNumber = -1;
+    private int roomId = -1;
+    private int billId = -1;
+
     public int getRoomId() {return roomId;}
 
     public void setRoomId(int roomId) {this.roomId = roomId;}
-    public void setTableNumber(int number){
+
+    public void setTableNumber(int number)
+    {
         tableNumber = number;
     }
-    private int getTableNumber(){
+
+    private int getTableNumber()
+    {
         return tableNumber;
     }
 
@@ -78,7 +85,7 @@ public class TableActivity extends AppCompatActivity  implements
     private TableAdapter tableAdapter;
     private TableUseAdapter tableUseAdapter;
     private ArrayList<Room> rooms = new ArrayList<Room>();
-    private  Intent intent;
+    private Intent intent;
     private Intent intentPasscode;
 
     private Reservation currentReservation;
@@ -99,15 +106,17 @@ public class TableActivity extends AppCompatActivity  implements
         // a bool indicating if the connection was succesful
         boolean success = false;
 
-        try {
+        try
+        {
             jsonObject = new JSONObject(output);
             route = jsonObject.getString("route");
             success = jsonObject.getBoolean("success");
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
 
-        Log.i(TAG, "[processFinish] " + route + "response: " + success);
 
         if (success)
         {
@@ -120,95 +129,138 @@ public class TableActivity extends AppCompatActivity  implements
                 {
                     case "insertRoom":
                         check = jsonObject.getBoolean("check");
-                        if(check){
-                            JSONObject jObject= new JSONObject(output).getJSONObject("room");
+                        if (check)
+                        {
+                            JSONObject jObject = new JSONObject(output).getJSONObject("room");
                             Room room = Room.fromJson(jObject);
                             dbA.insertRoomFromServer(room);
                             roomAdapter.closePopupWindow();
                             roomAdapter.notifyDataSetChanged();
                             rooms = dbA.fetchRooms();
                             showLastRoom(rooms.size() - 1);
-                        }else{
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
+
+
                     case "deleteRoom":
                         check = jsonObject.getBoolean("check");
-                        if(check){
+                        if (check)
+                        {
                             int roomId = jsonObject.getInt("id");
                             dbA.execOnDb("DELETE FROM room WHERE id=" + roomId);
                             dbA.execOnDb("DELETE FROM table_configuration WHERE room_id=" + roomId + ";");
                             roomAdapter.closePopupWindow();
                             restartRoom();
-                        }else{
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
                         }
-                        break;
-                    case "updateRoom":
-                        check = jsonObject.getBoolean("check");
-                        if(check){
-                            JSONObject jObject= new JSONObject(output).getJSONObject("room");
-                            Room room = Room.fromJson(jObject);
-                            dbA.execOnDb("UPDATE room SET name= '" + room.getName() + "' WHERE id = " + room.getId() + "");
-                            roomAdapter.closePopupWindow();
-                            showLastRoom(roomAdapter.getRoomePosition());
-                        }else{
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case "insertTable":
-                        check = jsonObject.getBoolean("check");
-                        if(check){
-                            JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
-                            ArrayList<Table> tables = Table.fromJsonArray(usersObject);
-                            tableAdapter.addTableFromServer(tables);
-                        }else{
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case "insertAndUpdateTable":
-                        check = jsonObject.getBoolean("check");
-                        if(check){
-                            JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
-                            ArrayList<Table> tables = Table.fromJsonArray(usersObject);
-                            JSONObject jObject= new JSONObject(output).getJSONObject("table");
-                            Table table = Table.fromJson(jObject);
-                            dbA.updateTable(table.getTableNumber(), table.getPeopleNumber(), table.getRoomId(), table.getTableName(), table.getMergeTable(), table.getShareTable(), table.getId());
-                            tableAdapter.addTableFromServer(tables);
-                        }else{
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
+
+                    case "updateRoom":
+                        check = jsonObject.getBoolean("check");
+                        if (check)
+                        {
+                            JSONObject jObject = new JSONObject(output).getJSONObject("room");
+                            Room room = Room.fromJson(jObject);
+                            dbA.execOnDb("UPDATE room SET name= '" + room.getName() + "' WHERE id = " + room
+                                    .getId() + "");
+                            roomAdapter.closePopupWindow();
+                            showLastRoom(roomAdapter.getRoomePosition());
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        break;
+
+
+                    case "insertTable":
+                        check = jsonObject.getBoolean("check");
+                        if (check)
+                        {
+                            JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
+                            ArrayList<Table> tables = Table.fromJsonArray(usersObject);
+                            tableAdapter.addTableFromServer(tables);
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        break;
+
+
+                    case "insertAndUpdateTable":
+                        check = jsonObject.getBoolean("check");
+                        if (check)
+                        {
+                            JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
+                            ArrayList<Table> tables = Table.fromJsonArray(usersObject);
+                            JSONObject jObject = new JSONObject(output).getJSONObject("table");
+                            Table table = Table.fromJson(jObject);
+                            dbA.updateTable(table.getTableNumber(), table.getPeopleNumber(), table.getRoomId(), table
+                                    .getTableName(), table.getMergeTable(), table.getShareTable(), table
+                                    .getId());
+                            tableAdapter.addTableFromServer(tables);
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        break;
+
+
                     case "deleteTable":
                         check = jsonObject.getBoolean("check");
-                        if(check){
+                        if (check)
+                        {
                             int roomId = jsonObject.getInt("roomId");
                             int tableNumber = jsonObject.getInt("tableNumber");
                             dbA.updateTableConfiguration(roomId, tableNumber);
                             tableAdapter.functionAddTableFromServer();
-                        }else{
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
+
+
                     case "getTableUse":
                         check = jsonObject.getBoolean("check");
-                        if(check){
+                        if (check)
+                        {
                             JSONArray usersObject = new JSONObject(output).getJSONArray("tableUse");
                             ArrayList<TableUse> tables = TableUse.fromJsonArray(usersObject);
                             int rId = jsonObject.getInt("roomId");
-                            roomId =rId;
+                            roomId = rId;
                             int tableNumber = jsonObject.getInt("tableNumber");
                             int billId = jsonObject.getInt("billId");
                             CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
-                            if (rooms.size() > 0) {
-                                if (tableNumber == -1 ) {
+                            if (rooms.size() > 0)
+                            {
+                                if (tableNumber == -1)
+                                {
                                     roomName.setText(rooms.get(0).getName());
                                     tableUseAdapter = new TableUseAdapter(this, dbA, tables, billId);
                                     tableRecycler.setAdapter(tableUseAdapter);
                                     tableUseAdapter.setRoomId(rooms.get(0).getId());
 
-                                } else {
+                                }
+                                else
+                                {
                                     Room setRoom = dbA.fetchRoomById(roomId);
                                     roomName.setText(setRoom.getName());
                                     tableUseAdapter = new TableUseAdapter(this, dbA, tables, billId);
@@ -217,36 +269,52 @@ public class TableActivity extends AppCompatActivity  implements
                                     roomAdapter.setRooms(rooms, roomId);
                                     tableUseAdapter.setTableNumber(getTableNumber());
                                 }
-                            } else {
+                            }
+                            else
+                            {
                                 roomName.setText("");
                                 tables = new ArrayList<>();
                                 tableUseAdapter = new TableUseAdapter(this, dbA, tables, billId);
                                 tableRecycler.setAdapter(tableUseAdapter);
                             }
-                        }else{
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
+
+
                     case "insertTableUse":
                         check = jsonObject.getBoolean("check");
-                        if(check){
+                        if (check)
+                        {
+                            billId = jsonObject.getInt("billId");
+
                             JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
                             ArrayList<TableUse> mytables = TableUse.fromJsonArray(usersObject);
-                            JSONObject jObject= new JSONObject(output).getJSONObject("tableUse");
-                            TableUse tableUse = TableUse.fromJson(jObject);
-                            int type = jsonObject.getInt("type");
-                            if (type==1) {
 
+                            JSONObject jObject = new JSONObject(output).getJSONObject("tableUse");
+                            TableUse tableUse = TableUse.fromJson(jObject);
+
+                            int type = jsonObject.getInt("type");
+
+                            if (type == 1)
+                            {
                                 setTableNumber(tableUse.getTableNumber());
                                 setRoomId(tableUse.getRoomId());
 
                                 tableUseAdapter.setTableNumber(tableUse.getTableNumber());
                                 tableUseAdapter.setRoomId(tableUse.getRoomId());
-                                tableUseAdapter.tables =mytables;
+                                tableUseAdapter.tables = mytables;
                                 tableUseAdapter.notifyDataSetChanged();
-                                tableUseAdapter.myPopupWindow.dismiss();
-                            } else {
-                                if (type==2) {
+                            }
+
+                            else
+                            {
+                                if (type == 2)
+                                {
                                     tableUseAdapter.setIsMerge(true);
                                     tableUseAdapter.setTableNumber(tableUse.getTableNumber());
                                     tableUseAdapter.setRoomId(tableUse.getRoomId());
@@ -255,81 +323,112 @@ public class TableActivity extends AppCompatActivity  implements
                                     tableUseAdapter.tables = mytables;
                                     tableUseAdapter.notifyDataSetChanged();
                                     tableUseAdapter.myPopupWindow.dismiss();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), R.string.this_table_cannot_be_merged, Toast.LENGTH_SHORT).show();
+                                }
+                                else
+                                {
+                                    Toast.makeText(getApplicationContext(), R.string.this_table_cannot_be_merged, Toast.LENGTH_SHORT)
+                                         .show();
                                     tableUseAdapter.openNoMergableTable();
                                 }
 
                             }
-                        }else{
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
+                        }
+
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
+
+
                     case "insertTableUseMerge":
                         check = jsonObject.getBoolean("check");
-                        if(check){
+                        if (check)
+                        {
+                            billId = jsonObject.getInt("billId");
+
                             int type = jsonObject.getInt("type");
-                            if (type==1) {
+                            if (type == 1)
+                            {
                                 JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
                                 ArrayList<TableUse> mytables = TableUse.fromJsonArray(usersObject);
                                 tableUseAdapter.setMyButton();
                                 tableUseAdapter.tables = mytables;
                                 tableUseAdapter.notifyDataSetChanged();
-                            } else {
+                            }
+                            else
+                            {
                                 tableUseAdapter.openNoMergableTable();
                             }
-                        }else{
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
+
+
                     case "deleteTableUse":
                         check = jsonObject.getBoolean("check");
-                        if(check){
+                        if (check)
+                        {
+                            JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
+                            ArrayList<TableUse> mytables = TableUse.fromJsonArray(usersObject);
+
                             int type = jsonObject.getInt("type");
-                            if (type==1) {
-                                JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
-                                ArrayList<TableUse> mytables = TableUse.fromJsonArray(usersObject);
-                                tableUseAdapter.tables = mytables;
-                                tableUseAdapter.notifyDataSetChanged();
+                            if (type == 1)
+                            {
                                 tableUseAdapter.setIsMerge(false);
                                 tableUseAdapter.setTableNumber(-11);
                                 tableUseAdapter.setRoomId(-11);
+                                tableUseAdapter.tables = mytables;
+                                tableUseAdapter.notifyDataSetChanged();
+
                                 CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
                                 Room room = dbA.fetchRoomById(roomId);
                                 roomName.setText(room.getName());
-                            } else if(type==2) {
-                                JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
-                                ArrayList<TableUse> mytables = TableUse.fromJsonArray(usersObject);
-                                tableUseAdapter.tables = mytables;
-                                tableUseAdapter.notifyDataSetChanged();
+                            }
+
+                            else if (type == 2)
+                            {
                                 tableUseAdapter.setTableNumber(-11);
                                 tableUseAdapter.setRoomId(-11);
-                            }else{
-
+                                tableUseAdapter.tables = mytables;
+                                tableUseAdapter.notifyDataSetChanged();
                             }
-                        }else{
+                        }
+
+                        else
+                        {
                             Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
                         }
                         break;
 
-                    default :
+                    default:
                         break;
                 }
             }
 
             catch (JSONException e)
-                { e.printStackTrace(); }
+            {
+                e.printStackTrace();
+            }
         }
 
         else
         {
             Toast.makeText(this,
-                    getString(R.string.error_blackbox_comm, StaticValue.blackboxInfo.getName(), StaticValue.blackboxInfo.getAddress()),
+                    getString(R.string.error_blackbox_comm, StaticValue.blackboxInfo.getName(), StaticValue.blackboxInfo
+                            .getAddress()),
                     Toast.LENGTH_LONG).show();
         }
     }
 
-    public void callHttpHandler(String route,  List<NameValuePair> params ){
+
+    public void callHttpHandler(String route, List<NameValuePair> params)
+    {
         httpHandler = new HttpHandler();
         httpHandler.delegate = this;
         httpHandler.UpdateInfoAsyncTask(route, params);
@@ -338,20 +437,22 @@ public class TableActivity extends AppCompatActivity  implements
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_table);
+
         dbA = new DatabaseAdapter(this);
         intent = this.getIntent();
-        username= intent.getStringExtra("username");
+        username = intent.getStringExtra("username");
         isAdmin = intent.getIntExtra("isAdmin", -1);
 
         this.rooms = dbA.fetchRooms();
         int tNumber = intent.getIntExtra("tableNumber", -1);
-        if(tNumber!=-1) setTableNumber(intent.getIntExtra("tableNumber", -1));
+        if (tNumber != -1) { setTableNumber(intent.getIntExtra("tableNumber", -1)); }
 
-        /**LAYOUT GRID FOR ROOMS*/
+        /* LAYOUT GRID FOR ROOMS*/
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
@@ -360,41 +461,44 @@ public class TableActivity extends AppCompatActivity  implements
         roomRecycler = (RecyclerView) findViewById(R.id.room_grid);
         roomRecycler.setLayoutManager(layoutManager);
 
-        /**LAYOUT FOR TABLES*/
+        /* LAYOUT FOR TABLES*/
         tableRecycler = (RecyclerView) findViewById(R.id.table_grid);
         grid_manager = new GridLayoutManager(this, 6);
-        grid_manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup(){
+        grid_manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup()
+        {
             @Override
-            public int getSpanSize(int position) {
+            public int getSpanSize(int position)
+            {
                 return 1;
             }
         });
         tableRecycler.setLayoutManager(grid_manager);
+
         DividerItemDecoration divider = new
                 DividerItemDecoration(this,
                 DividerItemDecoration.VERTICAL);
-        divider.setDrawable(ContextCompat.getDrawable(getBaseContext(),
-                R.drawable.divider_black_for_table_v));
+        divider.setDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.divider_black_for_table_v));
         tableRecycler.addItemDecoration(divider);
+
         DividerItemDecoration dividerH = new
                 DividerItemDecoration(this,
                 DividerItemDecoration.HORIZONTAL);
-        dividerH.setDrawable(ContextCompat.getDrawable(getBaseContext(),
-                R.drawable.divider_black_for_table_h));
+        dividerH.setDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.divider_black_for_table_h));
         tableRecycler.addItemDecoration(dividerH);
 
-        if(intent.getAction().equals("configuration")){
-           //configure
+        if (intent.getAction().equals("configuration"))
+        {
+            //configure
             //SET ROOMS
             setSwipeForRoom();
             //if room isn't empty set tables adapter using first room
-            if(rooms.size()>0) {
+            if (rooms.size() > 0)
+            {
                 Room addRoom = new Room();
                 addRoom.setId(-15);
                 rooms.add(addRoom);
 
-
-                roomAdapter = new RoomAdapter(this, dbA, rooms, false,  rooms.get(0).getId());
+                roomAdapter = new RoomAdapter(this, dbA, rooms, false, rooms.get(0).getId());
                 roomRecycler.setAdapter(roomAdapter);
                 rooms.get(0).getName();
 
@@ -407,12 +511,15 @@ public class TableActivity extends AppCompatActivity  implements
                 tableRecycler.setAdapter(tableAdapter);
 
                 openTableView(rooms.get(0).getId());
-            }else{
+            }
+
+            else
+            {
                 //room is empty, table adapter is not set
                 Room addRoom = new Room();
                 addRoom.setId(-15);
                 rooms.add(addRoom);
-                roomAdapter = new RoomAdapter(this, dbA, rooms, false,  rooms.get(0).getId());
+                roomAdapter = new RoomAdapter(this, dbA, rooms, false, rooms.get(0).getId());
                 roomRecycler.setAdapter(roomAdapter);
 
                 CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
@@ -426,23 +533,26 @@ public class TableActivity extends AppCompatActivity  implements
             }
 
             //set ok and x button
-            findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+            findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View view) {
-
+                public void onClick(View view)
+                {
                     //get back to
                     Intent newIntent = new Intent(getApplicationContext(), MainActivity.class);
                     int billId = intent.getIntExtra("billId", -1);
                     int orderNumber = intent.getIntExtra("orderNumber", 1);
-                    String username= intent.getStringExtra("username");
+                    String username = intent.getStringExtra("username");
                     int isAdmin = intent.getIntExtra("isAdmin", -1);
-                    if(billId!=-1){
+
+                    if (billId != -1)
+                    {
                         int tnumb = dbA.getTableNumberId(billId);
                         setTableNumber(tnumb);
                         int roomId = dbA.getRoomId(billId);
                         setRoomId(roomId);
-
                     }
+
                     newIntent.putExtra("tableNumber", getTableNumber());
                     newIntent.putExtra("roomId", getRoomId());
                     newIntent.putExtra("username", username);
@@ -455,16 +565,19 @@ public class TableActivity extends AppCompatActivity  implements
                 }
             });
 
-            findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+            findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View view)
+                {
 
                     Intent newIntent = new Intent(getApplicationContext(), MainActivity.class);
                     int billId = intent.getIntExtra("billId", -1);
                     int orderNumber = intent.getIntExtra("orderNumber", 1);
-                    String username= intent.getStringExtra("username");
+                    String username = intent.getStringExtra("username");
                     int isAdmin = intent.getIntExtra("isAdmin", -1);
-                    if(billId!=-1){
+                    if (billId != -1)
+                    {
                         int tnumb = dbA.getTableNumberId(billId);
                         setTableNumber(tnumb);
                         int roomId = dbA.getRoomId(billId);
@@ -485,32 +598,34 @@ public class TableActivity extends AppCompatActivity  implements
             });
 
         }
-        else{
+
+        else
+        {
             //operative
-            int billId = intent.getIntExtra("billId", -1);
             tableNumber = intent.getIntExtra("tableNumber", -1);
             roomId = intent.getIntExtra("roomId", -1);
             int id = intent.getIntExtra("reservation", -1);
-            if(id != -1)
-                currentReservation = dbA.getReservation(id);
-            if(rooms.size()>0)
-                roomAdapter = new RoomAdapter(this, dbA, rooms, false,  rooms.get(0).getId());
+            if (id != -1)
+            { currentReservation = dbA.getReservation(id); }
+            if (rooms.size() > 0)
+            { roomAdapter = new RoomAdapter(this, dbA, rooms, false, rooms.get(0).getId()); }
             else
-                roomAdapter = new RoomAdapter(this, dbA, rooms, false,  -15);
+            { roomAdapter = new RoomAdapter(this, dbA, rooms, false, -15); }
 
             roomRecycler.setAdapter(roomAdapter);
-
-            Log.d("SIAMO ANDATI QUI", "OPERATIVO, billid: " + billId);
 
             CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
             roomName.setVisibility(View.VISIBLE);
             RelativeLayout addRoomButton = (RelativeLayout) findViewById(R.id.room_plus_edittext);
             addRoomButton.setVisibility(View.GONE);
 
-            if(StaticValue.blackbox){
+            if (StaticValue.blackbox)
+            {
                 List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                if(tableNumber == -1 || tableNumber == -11) {
-                    if (rooms.size() > 0) {
+                if (tableNumber == -1 || tableNumber == -11)
+                {
+                    if (rooms.size() > 0)
+                    {
                         roomId = rooms.get(0).getId();
                     }
                 }
@@ -518,20 +633,26 @@ public class TableActivity extends AppCompatActivity  implements
                 params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
                 params.add(new BasicNameValuePair("tableNumber", String.valueOf(tableNumber)));
                 callHttpHandler("/getTableUse", params);
-            }else {
+            }
+            else
+            {
                 ArrayList<TableUse> tables = new ArrayList<TableUse>();
-                if (rooms.size() > 0) {
-                    if (tableNumber == -1 || tableNumber == -11) {
+                if (rooms.size() > 0)
+                {
+                    if (tableNumber == -1 || tableNumber == -11)
+                    {
                         tables = dbA.fetchTableUses(rooms.get(0).getId());
                         roomName.setText(rooms.get(0).getName());
                         tableUseAdapter = new TableUseAdapter(this, dbA, tables, billId);
                         tableRecycler.setAdapter(tableUseAdapter);
                         tableUseAdapter.setRoomId(rooms.get(0).getId());
 
-                    } else {
+                    }
+                    else
+                    {
                         int prova = dbA.getRoomIdAgain(billId);
-                        if (roomId == -1) roomId = dbA.getRoomIdAgain(billId);
-                        if (roomId == -1) roomId = rooms.get(0).getId();
+                        if (roomId == -1) { roomId = dbA.getRoomIdAgain(billId); }
+                        if (roomId == -1) { roomId = rooms.get(0).getId(); }
                         Room setRoom = dbA.fetchRoomById(roomId);
                         tables = dbA.fetchTableUses(roomId);
                         roomName.setText(setRoom.getName());
@@ -541,7 +662,9 @@ public class TableActivity extends AppCompatActivity  implements
                         roomAdapter.setRooms(rooms, roomId);
                         tableUseAdapter.setTableNumber(getTableNumber());
                     }
-                } else {
+                }
+                else
+                {
                     roomName.setText("");
                     tableUseAdapter = new TableUseAdapter(this, dbA, tables, billId);
                     tableRecycler.setAdapter(tableUseAdapter);
@@ -550,32 +673,35 @@ public class TableActivity extends AppCompatActivity  implements
 
             setSwipeForRoomOperative();
 
-            findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+            findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+            {
 
                 @Override
-                public void onClick(View view) {
+                public void onClick(View view)
+                {
 
                     Intent newIntent = new Intent(getApplicationContext(), Operative.class);
                     int billId = intent.getIntExtra("billId", -1);
                     int orderNumber = intent.getIntExtra("orderNumber", 1);
-                    String username= intent.getStringExtra("username");
+                    String username = intent.getStringExtra("username");
                     int isAdmin = intent.getIntExtra("isAdmin", -1);
-                    if(billId!=-1){
+                    if (billId != -1)
+                    {
                         int tnumb = dbA.getTableNumberId(billId);
                         setTableNumber(tnumb);
                         int roomId = dbA.getRoomId(billId);
                         setRoomId(roomId);
                     }
                     int tableNumber = tableUseAdapter.getTableNumber();
-                    if(tableNumber == -11)
-                        newIntent.putExtra("tableNumber", -1);
+                    if (tableNumber == -11)
+                    { newIntent.putExtra("tableNumber", -1); }
                     else
-                        newIntent.putExtra("tableNumber", tableNumber);
+                    { newIntent.putExtra("tableNumber", tableNumber); }
                     int roomId = tableUseAdapter.getRoomId();
-                    if(roomId == -11)
-                        newIntent.putExtra("roomId", -1);
+                    if (roomId == -11)
+                    { newIntent.putExtra("roomId", -1); }
                     else
-                        newIntent.putExtra("roomId", roomId);
+                    { newIntent.putExtra("roomId", roomId); }
 
                     newIntent.putExtra("username", username);
                     newIntent.putExtra("isAdmin", isAdmin);
@@ -588,34 +714,43 @@ public class TableActivity extends AppCompatActivity  implements
                 }
             });
 
-            findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+            findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View view) {
-
+                public void onClick(View view)
+                {
                     //go to normal use
                     Intent newIntent = new Intent(getApplicationContext(), Operative.class);
-                    int billId = intent.getIntExtra("billId", -1);
+
                     int orderNumber = intent.getIntExtra("orderNumber", 1);
-                    String username= intent.getStringExtra("username");
+                    String username = intent.getStringExtra("username");
                     int isAdmin = intent.getIntExtra("isAdmin", -1);
-                    if(billId!=-1){
+
+                    if (billId != -1)
+                    {
                         int tnumb = dbA.getTableNumberId(billId);
                         setTableNumber(tnumb);
                     }
+
                     int tableNumber = tableUseAdapter.getTableNumber();
-                    if(currentReservation != null) {
-                        currentReservation.setTable_use_id(tableNumber);
+                    if (currentReservation != null)
+                    {
+                        //currentReservation.setTable_use_id(tableNumber);
                         dbA.modifyReservation(currentReservation);
                     }
-                    if(tableNumber == -11)
-                        newIntent.putExtra("tableNumber", -1);
+
+                    if (tableNumber == -11)
+                        { newIntent.putExtra("tableNumber", -1); }
                     else
-                        newIntent.putExtra("tableNumber", tableNumber);
+                        { newIntent.putExtra("tableNumber", tableNumber); }
+
+
                     int roomId = tableUseAdapter.getRoomId();
-                    if(roomId == -11)
-                        newIntent.putExtra("roomId", -1);
+                    if (roomId == -11)
+                        { newIntent.putExtra("roomId", -1); }
                     else
-                        newIntent.putExtra("roomId", roomId);
+                        { newIntent.putExtra("roomId", roomId); }
+
 
                     newIntent.putExtra("username", username);
                     newIntent.putExtra("isAdmin", isAdmin);
@@ -629,27 +764,35 @@ public class TableActivity extends AppCompatActivity  implements
         }
     }
 
+
     /**
      * set swipe for configuration to swipe between rooms
      */
-    public void setSwipeForRoom(){
+    public void setSwipeForRoom()
+    {
 
         RelativeLayout addRoomButton = (RelativeLayout) findViewById(R.id.room_plus_edittext);
-        addRoomButton.setOnClickListener(new View.OnClickListener() {
+        addRoomButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 roomAdapter.openNewRoomPopup();
             }
         });
 
         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
 
-        roomName.setOnTouchListener(new OnSwipeTouchListener(getApplicationContext()) {
-            public void onSwipeLeft(){
+        roomName.setOnTouchListener(new OnSwipeTouchListener(getApplicationContext())
+        {
+            public void onSwipeLeft()
+            {
 
                 int nextPosition = roomAdapter.nextRoomPosition();
-                if(nextPosition!=-15){
-                    if(nextPosition==rooms.size()-1){
+                if (nextPosition != -15)
+                {
+                    if (nextPosition == rooms.size() - 1)
+                    {
                         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
                         roomName.setVisibility(View.GONE);
                         RelativeLayout addRoom = (RelativeLayout) findViewById(R.id.room_plus_edittext);
@@ -658,7 +801,9 @@ public class TableActivity extends AppCompatActivity  implements
                         ArrayList<Table> tables = new ArrayList<Table>();
                         tableAdapter.setTables(tables, -15);
                         roomAdapter.openNewRoomPopup();
-                    }else {
+                    }
+                    else
+                    {
                         RelativeLayout addRoom = (RelativeLayout) findViewById(R.id.room_plus_edittext);
                         addRoom.setVisibility(View.GONE);
                         roomAdapter.setRooms(rooms, rooms.get(nextPosition).getId());
@@ -671,10 +816,12 @@ public class TableActivity extends AppCompatActivity  implements
                 }
             }
 
-            public void onSwipeRight(){
+            public void onSwipeRight()
+            {
 
                 int prevPosition = roomAdapter.prevRoomPosition();
-                if(prevPosition!=-15){
+                if (prevPosition != -15)
+                {
                     RelativeLayout addRoom = (RelativeLayout) findViewById(R.id.room_plus_edittext);
                     addRoom.setVisibility(View.GONE);
                     roomAdapter.setRooms(rooms, rooms.get(prevPosition).getId());
@@ -687,7 +834,8 @@ public class TableActivity extends AppCompatActivity  implements
 
             }
 
-            public void onClick() {
+            public void onClick()
+            {
 
 
                 roomAdapter.openModifyRoomPopup();
@@ -695,12 +843,16 @@ public class TableActivity extends AppCompatActivity  implements
         });
 
 
-        findViewById(R.id.room_grid).setOnTouchListener(new OnSwipeTouchListener(getApplicationContext()) {
-            public void onSwipeLeft(){
+        findViewById(R.id.room_grid).setOnTouchListener(new OnSwipeTouchListener(getApplicationContext())
+        {
+            public void onSwipeLeft()
+            {
 
                 int nextPosition = roomAdapter.nextRoomPosition();
-                if(nextPosition!=-15){
-                    if(nextPosition==rooms.size()-1){
+                if (nextPosition != -15)
+                {
+                    if (nextPosition == rooms.size() - 1)
+                    {
                         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
                         roomName.setVisibility(View.GONE);
                         RelativeLayout addRoom = (RelativeLayout) findViewById(R.id.room_plus_edittext);
@@ -708,7 +860,9 @@ public class TableActivity extends AppCompatActivity  implements
                         roomAdapter.setRooms(rooms, -15);
                         ArrayList<Table> tables = new ArrayList<Table>();
                         tableAdapter.setTables(tables, -15);
-                    }else {
+                    }
+                    else
+                    {
                         RelativeLayout addRoom = (RelativeLayout) findViewById(R.id.room_plus_edittext);
                         addRoom.setVisibility(View.GONE);
                         roomAdapter.setRooms(rooms, rooms.get(nextPosition).getId());
@@ -721,10 +875,12 @@ public class TableActivity extends AppCompatActivity  implements
                 }
             }
 
-            public void onSwipeRight(){
+            public void onSwipeRight()
+            {
 
                 int prevPosition = roomAdapter.prevRoomPosition();
-                if(prevPosition!=-15){
+                if (prevPosition != -15)
+                {
                     RelativeLayout addRoom = (RelativeLayout) findViewById(R.id.room_plus_edittext);
                     addRoom.setVisibility(View.GONE);
                     roomAdapter.setRooms(rooms, rooms.get(prevPosition).getId());
@@ -739,12 +895,16 @@ public class TableActivity extends AppCompatActivity  implements
         });
 
 
-        findViewById(R.id.room_container_rec).setOnTouchListener(new OnSwipeTouchListener(getApplicationContext()) {
-            public void onSwipeLeft(){
+        findViewById(R.id.room_container_rec).setOnTouchListener(new OnSwipeTouchListener(getApplicationContext())
+        {
+            public void onSwipeLeft()
+            {
 
                 int nextPosition = roomAdapter.nextRoomPosition();
-                if(nextPosition!=-15){
-                    if(nextPosition==rooms.size()-1){
+                if (nextPosition != -15)
+                {
+                    if (nextPosition == rooms.size() - 1)
+                    {
                         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
                         roomName.setVisibility(View.GONE);
                         RelativeLayout addRoom = (RelativeLayout) findViewById(R.id.room_plus_edittext);
@@ -752,7 +912,9 @@ public class TableActivity extends AppCompatActivity  implements
                         roomAdapter.setRooms(rooms, -15);
                         ArrayList<Table> tables = new ArrayList<Table>();
                         tableAdapter.setTables(tables, -15);
-                    }else {
+                    }
+                    else
+                    {
                         RelativeLayout addRoom = (RelativeLayout) findViewById(R.id.room_plus_edittext);
                         addRoom.setVisibility(View.GONE);
                         roomAdapter.setRooms(rooms, rooms.get(nextPosition).getId());
@@ -765,10 +927,12 @@ public class TableActivity extends AppCompatActivity  implements
                 }
             }
 
-            public void onSwipeRight(){
+            public void onSwipeRight()
+            {
 
                 int prevPosition = roomAdapter.prevRoomPosition();
-                if(prevPosition!=-15){
+                if (prevPosition != -15)
+                {
                     RelativeLayout addRoom = (RelativeLayout) findViewById(R.id.room_plus_edittext);
                     addRoom.setVisibility(View.GONE);
                     roomAdapter.setRooms(rooms, rooms.get(prevPosition).getId());
@@ -782,12 +946,16 @@ public class TableActivity extends AppCompatActivity  implements
             }
         });
 
-        findViewById(R.id.room_container).setOnTouchListener(new OnSwipeTouchListener(getApplicationContext()) {
-            public void onSwipeLeft(){
+        findViewById(R.id.room_container).setOnTouchListener(new OnSwipeTouchListener(getApplicationContext())
+        {
+            public void onSwipeLeft()
+            {
 
                 int nextPosition = roomAdapter.nextRoomPosition();
-                if(nextPosition!=-15){
-                    if(nextPosition==rooms.size()-1){
+                if (nextPosition != -15)
+                {
+                    if (nextPosition == rooms.size() - 1)
+                    {
                         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
                         roomName.setVisibility(View.GONE);
                         RelativeLayout addRoom = (RelativeLayout) findViewById(R.id.room_plus_edittext);
@@ -795,7 +963,9 @@ public class TableActivity extends AppCompatActivity  implements
                         roomAdapter.setRooms(rooms, -15);
                         ArrayList<Table> tables = new ArrayList<Table>();
                         tableAdapter.setTables(tables, -15);
-                    }else {
+                    }
+                    else
+                    {
                         RelativeLayout addRoom = (RelativeLayout) findViewById(R.id.room_plus_edittext);
                         addRoom.setVisibility(View.GONE);
                         roomAdapter.setRooms(rooms, rooms.get(nextPosition).getId());
@@ -808,10 +978,12 @@ public class TableActivity extends AppCompatActivity  implements
                 }
             }
 
-            public void onSwipeRight(){
+            public void onSwipeRight()
+            {
 
                 int prevPosition = roomAdapter.prevRoomPosition();
-                if(prevPosition!=-15){
+                if (prevPosition != -15)
+                {
                     RelativeLayout addRoom = (RelativeLayout) findViewById(R.id.room_plus_edittext);
                     addRoom.setVisibility(View.GONE);
                     roomAdapter.setRooms(rooms, rooms.get(prevPosition).getId());
@@ -825,21 +997,27 @@ public class TableActivity extends AppCompatActivity  implements
             }
         });
     }
+
 
     /**
      * set swipe for operative to swipe between rooms
      */
-    public void setSwipeForRoomOperative(){
+    public void setSwipeForRoomOperative()
+    {
 
 
         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
 
-        roomName.setOnTouchListener(new OnSwipeTouchListener(getApplicationContext()) {
-            public void onSwipeLeft(){
+        roomName.setOnTouchListener(new OnSwipeTouchListener(getApplicationContext())
+        {
+            public void onSwipeLeft()
+            {
 
-                if(!tableUseAdapter.getIsMergeSet()) {
+                if (!tableUseAdapter.getIsMergeSet())
+                {
                     int nextPosition = roomAdapter.nextRoomPosition();
-                    if (nextPosition != -15) {
+                    if (nextPosition != -15)
+                    {
                         roomAdapter.setRooms(rooms, rooms.get(nextPosition).getId());
                         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
                         roomName.setText(rooms.get(nextPosition).getName());
@@ -851,11 +1029,14 @@ public class TableActivity extends AppCompatActivity  implements
                 }
             }
 
-            public void onSwipeRight(){
+            public void onSwipeRight()
+            {
 
-                if(!tableUseAdapter.getIsMergeSet()) {
+                if (!tableUseAdapter.getIsMergeSet())
+                {
                     int prevPosition = roomAdapter.prevRoomPosition();
-                    if (prevPosition != -15) {
+                    if (prevPosition != -15)
+                    {
                         roomAdapter.setRooms(rooms, rooms.get(prevPosition).getId());
                         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
                         roomName.setText(rooms.get(prevPosition).getName());
@@ -871,12 +1052,16 @@ public class TableActivity extends AppCompatActivity  implements
         });
 
 
-        findViewById(R.id.room_grid).setOnTouchListener(new OnSwipeTouchListener(getApplicationContext()) {
-            public void onSwipeLeft(){
+        findViewById(R.id.room_grid).setOnTouchListener(new OnSwipeTouchListener(getApplicationContext())
+        {
+            public void onSwipeLeft()
+            {
 
-                if(!tableUseAdapter.getIsMergeSet()) {
+                if (!tableUseAdapter.getIsMergeSet())
+                {
                     int nextPosition = roomAdapter.nextRoomPosition();
-                    if (nextPosition != -15) {
+                    if (nextPosition != -15)
+                    {
                         roomAdapter.setRooms(rooms, rooms.get(nextPosition).getId());
                         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
                         roomName.setText(rooms.get(nextPosition).getName());
@@ -888,11 +1073,14 @@ public class TableActivity extends AppCompatActivity  implements
                 }
             }
 
-            public void onSwipeRight(){
+            public void onSwipeRight()
+            {
 
-                if(!tableUseAdapter.getIsMergeSet()) {
+                if (!tableUseAdapter.getIsMergeSet())
+                {
                     int prevPosition = roomAdapter.prevRoomPosition();
-                    if (prevPosition != -15) {
+                    if (prevPosition != -15)
+                    {
                         roomAdapter.setRooms(rooms, rooms.get(prevPosition).getId());
                         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
                         roomName.setText(rooms.get(prevPosition).getName());
@@ -906,12 +1094,16 @@ public class TableActivity extends AppCompatActivity  implements
         });
 
 
-        findViewById(R.id.room_container_rec).setOnTouchListener(new OnSwipeTouchListener(getApplicationContext()) {
-            public void onSwipeLeft(){
+        findViewById(R.id.room_container_rec).setOnTouchListener(new OnSwipeTouchListener(getApplicationContext())
+        {
+            public void onSwipeLeft()
+            {
 
-                if(!tableUseAdapter.getIsMergeSet()) {
+                if (!tableUseAdapter.getIsMergeSet())
+                {
                     int nextPosition = roomAdapter.nextRoomPosition();
-                    if (nextPosition != -15) {
+                    if (nextPosition != -15)
+                    {
                         roomAdapter.setRooms(rooms, rooms.get(nextPosition).getId());
                         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
                         roomName.setText(rooms.get(nextPosition).getName());
@@ -923,11 +1115,14 @@ public class TableActivity extends AppCompatActivity  implements
                 }
             }
 
-            public void onSwipeRight(){
+            public void onSwipeRight()
+            {
 
-                if(!tableUseAdapter.getIsMergeSet()) {
+                if (!tableUseAdapter.getIsMergeSet())
+                {
                     int prevPosition = roomAdapter.prevRoomPosition();
-                    if (prevPosition != -15) {
+                    if (prevPosition != -15)
+                    {
                         roomAdapter.setRooms(rooms, rooms.get(prevPosition).getId());
                         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
                         roomName.setText(rooms.get(prevPosition).getName());
@@ -940,12 +1135,16 @@ public class TableActivity extends AppCompatActivity  implements
             }
         });
 
-        findViewById(R.id.room_container).setOnTouchListener(new OnSwipeTouchListener(getApplicationContext()) {
-            public void onSwipeLeft(){
+        findViewById(R.id.room_container).setOnTouchListener(new OnSwipeTouchListener(getApplicationContext())
+        {
+            public void onSwipeLeft()
+            {
 
-                if(!tableUseAdapter.getIsMergeSet()) {
+                if (!tableUseAdapter.getIsMergeSet())
+                {
                     int nextPosition = roomAdapter.nextRoomPosition();
-                    if (nextPosition != -15) {
+                    if (nextPosition != -15)
+                    {
                         roomAdapter.setRooms(rooms, rooms.get(nextPosition).getId());
                         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
                         roomName.setText(rooms.get(nextPosition).getName());
@@ -957,11 +1156,14 @@ public class TableActivity extends AppCompatActivity  implements
                 }
             }
 
-            public void onSwipeRight(){
+            public void onSwipeRight()
+            {
 
-                if(!tableUseAdapter.getIsMergeSet()) {
+                if (!tableUseAdapter.getIsMergeSet())
+                {
                     int prevPosition = roomAdapter.prevRoomPosition();
-                    if (prevPosition != -15) {
+                    if (prevPosition != -15)
+                    {
                         roomAdapter.setRooms(rooms, rooms.get(prevPosition).getId());
                         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
                         roomName.setText(rooms.get(prevPosition).getName());
@@ -975,7 +1177,9 @@ public class TableActivity extends AppCompatActivity  implements
         });
     }
 
-    public void resetPinpadTimer(int type){
+
+    public void resetPinpadTimer(int type)
+    {
         TimerManager.stopPinpadAlert();
         TimerManager.setContext(getApplicationContext());
         intentPasscode = new Intent(getApplicationContext(), PinpadBroadcastReciver.class);
@@ -987,33 +1191,38 @@ public class TableActivity extends AppCompatActivity  implements
         TimerManager.startPinpadAlert(type);
     }
 
+
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+    public boolean dispatchTouchEvent(MotionEvent event)
+    {
+        if (event.getAction() == MotionEvent.ACTION_DOWN)
+        {
             resetPinpadTimer(1);
             View v = getCurrentFocus();
-            if ( v instanceof CustomEditText) {
+            if (v instanceof CustomEditText)
+            {
                 Rect outRect = new Rect();
                 v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY()))
+                {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }
         }
-        return super.dispatchTouchEvent( event );
+        return super.dispatchTouchEvent(event);
     }
-
-
 
 
     /**
      * from click on room in roomadapter, show tables for that room
+     *
      * @param roomId
      */
     @Override
-    public void openTableView(int roomId) {
+    public void openTableView(int roomId)
+    {
         dbA = new DatabaseAdapter(this);
         dbA.showData("table_configuration");
         dbA.showData("table_use");
@@ -1024,26 +1233,31 @@ public class TableActivity extends AppCompatActivity  implements
         tableAdapter.setTables(tables, roomId);
     }
 
+
     /**
      * in operative show table for one rooms
+     *
      * @param roomId
      */
     @Override
-    public void openTableUseView(int roomId) {
+    public void openTableUseView(int roomId)
+    {
         dbA = new DatabaseAdapter(this);
         ArrayList<TableUse> tables = new ArrayList<TableUse>();
         tables = dbA.fetchTableUses(roomId);
         tableUseAdapter.setTables(tables, roomId);
-
     }
+
 
     /**
      * show all rooms again, used when you delete one room
      */
     @Override
-    public void restartRoom() {
+    public void restartRoom()
+    {
         rooms = dbA.fetchRooms();
-        if(rooms.size()>0){
+        if (rooms.size() > 0)
+        {
             CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
             roomName.setVisibility(View.VISIBLE);
             RelativeLayout addRoomButton = (RelativeLayout) findViewById(R.id.room_plus_edittext);
@@ -1055,7 +1269,9 @@ public class TableActivity extends AppCompatActivity  implements
             tables.add(addTable);
             tableAdapter.setTables(tables, rooms.get(0).getId());
 
-        }else{
+        }
+        else
+        {
             CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
             roomName.setVisibility(View.GONE);
             RelativeLayout addRoomButton = (RelativeLayout) findViewById(R.id.room_plus_edittext);
@@ -1072,12 +1288,15 @@ public class TableActivity extends AppCompatActivity  implements
 
     }
 
+
     /**
      * show last inserted room
+     *
      * @param roomPosition
      */
     @Override
-    public void showLastRoom(int roomPosition) {
+    public void showLastRoom(int roomPosition)
+    {
         rooms = dbA.fetchRooms();
         int roomId = rooms.get(roomPosition).getId();
         RelativeLayout addRoomButton = (RelativeLayout) findViewById(R.id.room_plus_edittext);
@@ -1093,18 +1312,23 @@ public class TableActivity extends AppCompatActivity  implements
 
     }
 
+
     /**
      * adapter table use implementation
      */
     @Override
-    public void setIsMergeActivated(TableUse table) {
-        if(tableUseAdapter.getIsMergeSet()) {
+    public void setIsMergeActivated(TableUse table)
+    {
+        if (tableUseAdapter.getIsMergeSet())
+        {
             //cambio nome
             CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
             roomName.setText(R.string.select_tables_to_merge);
-            findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+            findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View view)
+                {
 
                     //open popup to update table use
                     tableUseAdapter.setIsMerge(false);
@@ -1117,9 +1341,11 @@ public class TableActivity extends AppCompatActivity  implements
                 }
             });
 
-            findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+            findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View view)
+                {
 
                     //go to normal use
                     tableUseAdapter.setIsMerge(false);
@@ -1131,33 +1357,38 @@ public class TableActivity extends AppCompatActivity  implements
                 }
             });
 
-        }else{
+        }
+        else
+        {
             //rimetto nome stanza
         }
     }
 
 
-
-    public void setOkKillButton(){
-        findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+    public void setOkKillButton()
+    {
+        findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
 
                 Intent newIntent = new Intent(getApplicationContext(), Operative.class);
                 int billId = intent.getIntExtra("billId", -1);
                 int orderNumber = intent.getIntExtra("orderNumber", 1);
-                String username= intent.getStringExtra("username");
+                String username = intent.getStringExtra("username");
                 int isAdmin = intent.getIntExtra("isAdmin", -1);
-                if(billId!=-1){
+                if (billId != -1)
+                {
                     int tnumb = dbA.getTableNumberId(billId);
                     setTableNumber(tnumb);
                 }
                 int tableNumber = tableUseAdapter.getTableNumber();
-                if(tableNumber==-11) newIntent.putExtra("tableNumber", -1);
-                else newIntent.putExtra("tableNumber", tableNumber);
+                if (tableNumber == -11) { newIntent.putExtra("tableNumber", -1); }
+                else { newIntent.putExtra("tableNumber", tableNumber); }
                 int roomId = tableUseAdapter.getRoomId();
-                if(roomId==-11) newIntent.putExtra("roomId", -1);
-                else newIntent.putExtra("roomId", roomId);
+                if (roomId == -11) { newIntent.putExtra("roomId", -1); }
+                else { newIntent.putExtra("roomId", roomId); }
 
                 newIntent.putExtra("username", username);
                 newIntent.putExtra("isAdmin", isAdmin);
@@ -1170,26 +1401,30 @@ public class TableActivity extends AppCompatActivity  implements
             }
         });
 
-        findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
 
                 //go to normal use
                 Intent newIntent = new Intent(getApplicationContext(), Operative.class);
                 int billId = intent.getIntExtra("billId", -1);
                 int orderNumber = intent.getIntExtra("orderNumber", 1);
-                String username= intent.getStringExtra("username");
+                String username = intent.getStringExtra("username");
                 int isAdmin = intent.getIntExtra("isAdmin", -1);
-                if(billId!=-1){
+
+                if (billId != -1)
+                {
                     int tnumb = dbA.getTableNumberId(billId);
                     setTableNumber(tnumb);
                 }
                 int tableNumber = tableUseAdapter.getTableNumber();
-                if(tableNumber==-11) newIntent.putExtra("tableNumber", -1);
-                else newIntent.putExtra("tableNumber", tableNumber);
+                if (tableNumber == -11) { newIntent.putExtra("tableNumber", -1); }
+                else { newIntent.putExtra("tableNumber", tableNumber); }
                 int roomId = tableUseAdapter.getRoomId();
-                if(roomId==-11) newIntent.putExtra("roomId", -1);
-                else newIntent.putExtra("roomId", roomId);
+                if (roomId == -11) { newIntent.putExtra("roomId", -1); }
+                else { newIntent.putExtra("roomId", roomId); }
 
                 newIntent.putExtra("username", username);
                 newIntent.putExtra("isAdmin", isAdmin);
@@ -1202,10 +1437,11 @@ public class TableActivity extends AppCompatActivity  implements
         });
     }
 
-    public void setTableInfoInPopup(Table table, View popupView){
+
+    public void setTableInfoInPopup(Table table, View popupView)
+    {
         tableAdapter.setTableValues(table, popupView);
     }
-
 
 
 }

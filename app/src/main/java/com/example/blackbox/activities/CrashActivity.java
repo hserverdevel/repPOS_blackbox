@@ -46,7 +46,7 @@ public class CrashActivity extends Application {
         super.onCreate();
 
 
-        ACRA.init(this);
+        //ACRA.init(this);
 
     }
 }

@@ -64,12 +64,18 @@ public class TakeAwayAdapter extends Adapter<ViewHolder> implements ItemTouchHel
         dbA = database;
         inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
 
-        if(StaticValue.blackbox){
+        if (StaticValue.blackbox)
+        {
             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
             String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
             params.add(new BasicNameValuePair("androidId", android_id));
+            // params.add(new BasicNameValuePair("billTotalChecksum", dbA.getChecksumForTable("bill_total")));
+
             ((OrderActivity) context).callHttpHandler("/getTakeAwayOrders", params);
-        } else {
+        }
+
+        else
+        {
             long sessionTime = dbA.getLastClosing();
             Date date = new Date(sessionTime);
             SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

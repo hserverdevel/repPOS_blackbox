@@ -45,12 +45,14 @@ import com.example.blackbox.model.FiscalPrinter;
 import com.example.blackbox.model.KitchenPrinter;
 import com.example.blackbox.model.ModifierAssigned;
 import com.example.blackbox.model.ModifierGroupAssigned;
+import com.example.blackbox.model.Reservation;
 import com.example.blackbox.model.Room;
 import com.example.blackbox.model.StaticValue;
 import com.example.blackbox.model.Table;
 import com.example.blackbox.model.TimerManager;
 import com.example.blackbox.model.User;
 import com.example.blackbox.model.Vat;
+import com.example.blackbox.model.WaitingListModel;
 import com.example.blackbox.revicer.PinpadBroadcastReciver;
 import com.example.blackbox.server.HttpHandler;
 import com.example.blackbox.server.LocalNotification;
@@ -271,7 +273,10 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             progressBar.setProgress(progressStatus);
 
                             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                            params = new ArrayList<NameValuePair>(2);
+
+                            params.add(new BasicNameValuePair("buttonChecksum", dbA.getChecksumForTable("button")));
+                            params.add(new BasicNameValuePair("vatChecksum", dbA.getChecksumForTable("vat")));
+
                             callHttpHandler("/updateButtons", params);
                         }
 
@@ -281,174 +286,276 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             progressStatus += 100;
                             Toast.makeText(getApplicationContext(), getString(R.string.route_check_false, route, reason), Toast.LENGTH_SHORT).show();
                         }
+
                         break;
 
 
                     case "updateButtons" :
                         check = jsonObject.getBoolean("check");
-                        if(check){
-                            JSONArray jVats = new JSONObject(output).getJSONArray("vats");
-                            JSONArray jButtons= new JSONObject(output).getJSONArray("buttons");
+                        if (check)
+                        {
+                            if (!jsonObject.getBoolean("updated"))
+                            {
+                                JSONArray jVats = new JSONObject(output).getJSONArray("vats");
+                                JSONArray jButtons = new JSONObject(output).getJSONArray("buttons");
 
-                            ArrayList<Vat> vats = Vat.fromJsonArray(jVats);
-                            ArrayList<ButtonLayout> buttons = ButtonLayout.fromJsonArray(jButtons);
+                                ArrayList<Vat> vats = Vat.fromJsonArray(jVats);
+                                ArrayList<ButtonLayout> buttons = ButtonLayout.fromJsonArray(jButtons);
 
-                            dbA.execOnDb("delete from button");
-                            dbA.execOnDb("delete from vat");
-                            dbA.insertVatsSync(vats);
-                            dbA.insertButtonsSync(buttons);
+                                dbA.execOnDb("delete from button");
+                                dbA.execOnDb("delete from vat");
+                                dbA.insertVatsSync(vats);
+                                dbA.insertButtonsSync(buttons);
 
+                                dbA.updateChecksumForTable("button", jsonObject.getString("buttonChecksum"));
+                                dbA.updateChecksumForTable("vat", jsonObject.getString("vatChecksum"));
+                            }
 
                             progressStatus += 20;
                             progressBar.setProgress(progressStatus);
                             progressBar.setProgress(progressStatus);
+
                             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                            params = new ArrayList<NameValuePair>(2);
-                            callHttpHandler("/updateModifierButtons",params );
+
+                            params.add(new BasicNameValuePair("modifierChecksum", dbA.getChecksumForTable("modifier")));
+                            params.add(new BasicNameValuePair("modifierGroupChecksum", dbA.getChecksumForTable("modifiers_group")));
+
+                            callHttpHandler("/updateModifierButtons", params);
                         }
-                        else{
-                            Toast.makeText(getApplicationContext(), "Errore buttons", Toast.LENGTH_SHORT).show();
-                        }
+
+                        else
+                            { Toast.makeText(getApplicationContext(), "Errore buttons", Toast.LENGTH_SHORT).show(); }
+
                         break;
 
 
                     case "updateModifierButtons" :
                         check = jsonObject.getBoolean("check");
-                        if(check){
-                            JSONArray jModifierGroups= new JSONObject(output).getJSONArray("modifierGroups");
-                            JSONArray jModifiers= new JSONObject(output).getJSONArray("modifiers");
+                        if (check)
+                        {
+                            if (!jsonObject.getBoolean("updated"))
+                            {
+                                JSONArray jModifierGroups = new JSONObject(output).getJSONArray("modifierGroups");
+                                JSONArray jModifiers = new JSONObject(output).getJSONArray("modifiers");
 
-                            ArrayList<ModifiersGroupAdapter.ModifiersGroup> modifierGroups = ModifiersGroupAdapter.ModifiersGroup.fromJsonArray(jModifierGroups);
-                            ArrayList<ModifierAdapter.Modifier> modifiers = ModifierAdapter.Modifier.fromJsonArray(jModifiers);
+                                ArrayList<ModifiersGroupAdapter.ModifiersGroup> modifierGroups = ModifiersGroupAdapter.ModifiersGroup.fromJsonArray(jModifierGroups);
+                                ArrayList<ModifierAdapter.Modifier> modifiers = ModifierAdapter.Modifier.fromJsonArray(jModifiers);
 
-                            dbA.execOnDb("delete from modifiers_group");
-                            dbA.execOnDb("delete from modifier");
-                            dbA.insertModifierGroupsSync(modifierGroups);
-                            dbA.insertModifiersSync(modifiers);
+                                dbA.execOnDb("delete from modifiers_group");
+                                dbA.execOnDb("delete from modifier");
+                                dbA.insertModifierGroupsSync(modifierGroups);
+                                dbA.insertModifiersSync(modifiers);
+
+                                dbA.updateChecksumForTable("modifier", jsonObject.getString("modifierChecksum"));
+                                dbA.updateChecksumForTable("modifiers_group", jsonObject.getString("modifierGroupChecksum"));
+                            }
 
                             progressStatus += 10;
                             progressBar.setProgress(progressStatus);
+
                             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                            params = new ArrayList<NameValuePair>(2);
-                            callHttpHandler("/updateModifierAssigned",params );
+
+                            params.add(new BasicNameValuePair("modifierAssignedChecksum", dbA.getChecksumForTable("modifiers_assigned")));
+                            params.add(new BasicNameValuePair("modifierGroupAssignedChecksum", dbA.getChecksumForTable("modifiers_group_assigned")));
+
+                            callHttpHandler("/updateModifierAssigned", params);
                         }
-                        else{
-                            Toast.makeText(getApplicationContext(), "Errore buttons", Toast.LENGTH_SHORT).show();
-                        }
+
+                        else
+                            { Toast.makeText(getApplicationContext(), "Errore buttons", Toast.LENGTH_SHORT).show(); }
+
                         break;
+
 
                     case "updateModifierAssigned" :
                         check = jsonObject.getBoolean("check");
-                        if(check){
-                            JSONArray jmgA= new JSONObject(output).getJSONArray("modifierGroupAssigned");
-                            JSONArray jmA= new JSONObject(output).getJSONArray("modifierAssigned");
+                        if (check)
+                        {
+                            if (!jsonObject.getBoolean("updated"))
+                            {
+                                JSONArray jmgA = new JSONObject(output).getJSONArray("modifierGroupAssigned");
+                                JSONArray jmA = new JSONObject(output).getJSONArray("modifierAssigned");
 
-                            ArrayList<ModifierGroupAssigned> modifierGroupAssigned = ModifierGroupAssigned.fromJsonArray(jmgA);
-                            ArrayList<ModifierAssigned> modifierAssigned = ModifierAssigned.fromJsonArray(jmA);
+                                ArrayList<ModifierGroupAssigned> modifierGroupAssigned = ModifierGroupAssigned
+                                        .fromJsonArray(jmgA);
+                                ArrayList<ModifierAssigned> modifierAssigned = ModifierAssigned.fromJsonArray(jmA);
 
+                                dbA.execOnDb("delete from modifiers_group_assigned");
+                                dbA.execOnDb("delete from modifiers_assigned");
+                                dbA.insertModifierGroupAssignedSync(modifierGroupAssigned);
+                                dbA.insertModifierAssignedSync(modifierAssigned);
 
-                            dbA.execOnDb("delete from modifiers_group_assigned");
-                            dbA.execOnDb("delete from modifiers_assigned");
-                            dbA.insertModifierGroupAssignedSync(modifierGroupAssigned);
-                            dbA.insertModifierAssignedSync(modifierAssigned);
+                                dbA.updateChecksumForTable("modifiers_assigned", jsonObject.getString("modifierAssignedChecksum"));
+                                dbA.updateChecksumForTable("modifiers_group_assigned", jsonObject.getString("modifierGroupAssignedChecksum"));
+                            }
 
                             progressStatus += 10;
                             progressBar.setProgress(progressStatus);
+
                             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                            params = new ArrayList<NameValuePair>(2);
+
+                            params.add(new BasicNameValuePair("clientChecksum", dbA.getChecksumForTable("client")));
+                            params.add(new BasicNameValuePair("companyChecksum", dbA.getChecksumForTable("company")));
+                            params.add(new BasicNameValuePair("clientInCompanyChecksum", dbA.getChecksumForTable("client_in_company")));
+                            params.add(new BasicNameValuePair("fidelityChecksum", dbA.getChecksumForTable("fidelity")));
+
                             callHttpHandler("/updateClients",params );
                         }
-                        else{
-                            Toast.makeText(getApplicationContext(), "Errore buttons", Toast.LENGTH_SHORT).show();
-                        }
+
+                        else
+                            { Toast.makeText(getApplicationContext(), "Errore buttons", Toast.LENGTH_SHORT).show(); }
                         break;
+
 
                     case "updateClients":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            JSONArray jClients = new JSONObject(output).getJSONArray("clients");
-                            JSONArray jCompanies = new JSONObject(output).getJSONArray("companies");
-                            JSONArray jCics = new JSONObject(output).getJSONArray("cics");
-                            JSONArray jFielities = new JSONObject(output).getJSONArray("fidelities");
-                            ArrayList<Client> clients = Client.fromJsonArray(jClients);
-                            ArrayList<Company> companies = Company.fromJsonArray(jCompanies);
-                            ArrayList<ClientInCompany> cics = ClientInCompany.fromJsonArray(jCics);
-                            ArrayList<Fidelity> fidelities = Fidelity.fromJsonArray(jFielities);
+                        if (check)
+                        {
+                            if (!jsonObject.getBoolean("updated"))
+                            {
+                                JSONArray jClients = new JSONObject(output).getJSONArray("clients");
+                                JSONArray jCompanies = new JSONObject(output).getJSONArray("companies");
+                                JSONArray jCics = new JSONObject(output).getJSONArray("cics");
+                                JSONArray jFielities = new JSONObject(output).getJSONArray("fidelities");
+                                ArrayList<Client> clients = Client.fromJsonArray(jClients);
+                                ArrayList<Company> companies = Company.fromJsonArray(jCompanies);
+                                ArrayList<ClientInCompany> cics = ClientInCompany.fromJsonArray(jCics);
+                                ArrayList<Fidelity> fidelities = Fidelity.fromJsonArray(jFielities);
 
-                            dbA.execOnDb("delete from client");
-                            dbA.execOnDb("delete from company");
-                            dbA.execOnDb("delete from client_in_company");
-                            dbA.execOnDb("delete from fidelity");
-                            dbA.insertClientSync(clients);
-                            dbA.insertCompanySync(companies);
-                            dbA.insertCiCSync(cics);
-                            dbA.insertFidelitySync(fidelities);
+                                dbA.execOnDb("delete from client");
+                                dbA.execOnDb("delete from company");
+                                dbA.execOnDb("delete from client_in_company");
+                                dbA.execOnDb("delete from fidelity");
+                                dbA.insertClientSync(clients);
+                                dbA.insertCompanySync(companies);
+                                dbA.insertCiCSync(cics);
+                                dbA.insertFidelitySync(fidelities);
 
-                            dbA.showData("fidelity");
+                                dbA.updateChecksumForTable("client", jsonObject.getString("clientChecksum"));
+                                dbA.updateChecksumForTable("company", jsonObject.getString("companyChecksum"));
+                                dbA.updateChecksumForTable("client_in_company", jsonObject.getString("clientInCompanyChecksum"));
+                                dbA.updateChecksumForTable("fidelity", jsonObject.getString("fidelityChecksum"));
+                            }
 
                             progressStatus += 10;
                             progressBar.setProgress(progressStatus);
+
                             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                            params = new ArrayList<NameValuePair>(2);
+                            dbA.showData("checksum_registry");
+                            params.add(new BasicNameValuePair("roomChecksum", dbA.getChecksumForTable("room")));
+                            params.add(new BasicNameValuePair("tableConfigurationChecksum", dbA.getChecksumForTable("table_configuration")));
+                            params.add(new BasicNameValuePair("reservationChecksum", dbA.getChecksumForTable("reservation")));
+                            params.add(new BasicNameValuePair("waitingListChecksum", dbA.getChecksumForTable("waiting_list")));
+
+
                             callHttpHandler("/updateRooms",params );
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
                         }
+
+                        else
+                            { Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show(); }
                         break;
+
 
                     case "updateRooms":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            JSONArray jRooms = new JSONObject(output).getJSONArray("rooms");
-                            JSONArray jTables = new JSONObject(output).getJSONArray("tables");
-                            ArrayList<Room> rooms = Room.fromJsonArray(jRooms);
-                            ArrayList<Table> tables = Table.fromJsonArray(jTables);
+                        if (check)
+                        {
+                            if (!jsonObject.getBoolean("updated"))
+                            {
+                                JSONArray jRooms  = new JSONObject(output).getJSONArray("rooms");
+                                JSONArray jTables = new JSONObject(output).getJSONArray("tables");
+                                JSONArray jRes    = new JSONObject(output).getJSONArray("reservations");
+                                JSONArray jWt     = new JSONObject(output).getJSONArray("waitingLists");
 
-                            dbA.execOnDb("delete from room");
-                            dbA.execOnDb("delete from table_configuration");
-                            dbA.insertRoomSync(rooms);
-                            dbA.insertTableSync(tables);
-                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                            params = new ArrayList<NameValuePair>(2);
-                            callHttpHandler("/updateUsers",params );
+                                ArrayList<Room> rooms = Room.fromJsonArray(jRooms);
+                                ArrayList<Table> tables = Table.fromJsonArray(jTables);
+                                ArrayList<Reservation> reservations = Reservation.fromJsonArray(jRes);
+                                ArrayList<WaitingListModel> wls = WaitingListModel.fromJsonArray(jWt);
+
+                                dbA.execOnDb("delete from room");
+                                dbA.execOnDb("delete from table_configuration");
+                                dbA.execOnDb("delete from reservation");
+                                dbA.execOnDb("delete from waiting_list");
+
+                                dbA.insertRoomSync(rooms);
+                                dbA.insertTableSync(tables);
+                                dbA.insertReservationSync(reservations);
+                                dbA.insertWaitingListSync(wls);
+
+                                dbA.updateChecksumForTable("room", jsonObject.getString("roomChecksum"));
+                                dbA.updateChecksumForTable("table_configuration", jsonObject.getString("tableConfigurationChecksum"));
+                                dbA.updateChecksumForTable("reservation", jsonObject.getString("reservationChecksum"));
+                                dbA.updateChecksumForTable("waiting_list", jsonObject.getString("waitingListChecksum"));
+                            }
+
                             progressStatus += 10;
                             progressBar.setProgress(progressStatus);
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
+
+                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                            params.add(new BasicNameValuePair("userChecksum", dbA.getChecksumForTable("user")));
+
+                            callHttpHandler("/updateUsers", params);
+
                         }
+
+                        else
+                            { Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show(); }
                         break;
+
 
                     case "updateUsers":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            JSONArray usersObject = new JSONObject(output).getJSONArray("users");
-                            ArrayList<User> userList = User.fromJsonArray(usersObject);
-                            dbA.execOnDb("delete from user");
-                            dbA.updateUserList(userList);
+                        if (check)
+                        {
+                            if (!jsonObject.getBoolean("updated"))
+                            {
+                                JSONArray usersObject = new JSONObject(output).getJSONArray("users");
+                                ArrayList<User> userList = User.fromJsonArray(usersObject);
+                                dbA.execOnDb("delete from user");
+                                dbA.updateUserList(userList);
+
+                                dbA.updateChecksumForTable("user", jsonObject.getString("userChecksum"));
+                            }
+
                             progressStatus += 10;
                             progressBar.setProgress(progressStatus);
+
                             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                            params = new ArrayList<NameValuePair>(2);
+                            params.add(new BasicNameValuePair("fiscalPrinterChecksum", dbA.getChecksumForTable("fiscal_printer")));
+                            params.add(new BasicNameValuePair("kitchenPrinterChecksum", dbA.getChecksumForTable("kitchen_printer")));
+
                             callHttpHandler("/updatePrinters",params );
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
                         }
+
+                        else
+                            { Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show(); }
                         break;
+
 
                     case "updatePrinters":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            boolean fiscalExist = jsonObject.getBoolean("fiscalExist");
-                            dbA.execOnDb("delete from fiscal_printer");
-                            dbA.execOnDb("delete from kitchen_printer");
-                            if (fiscalExist) {
-                                JSONObject fiscalPrinter = new JSONObject(output).getJSONObject("fiscalPrinter");
-                                FiscalPrinter fPrinter = FiscalPrinter.fromJson(fiscalPrinter);
-                                dbA.insertFiscalPrinterSync(fPrinter);
+                        if (check)
+                        {
+                            if (!jsonObject.getBoolean("updated"))
+                            {
+
+                                boolean fiscalExist = jsonObject.getBoolean("fiscalExist");
+                                dbA.execOnDb("delete from fiscal_printer");
+                                dbA.execOnDb("delete from kitchen_printer");
+                                if (fiscalExist)
+                                {
+                                    JSONObject fiscalPrinter = new JSONObject(output).getJSONObject("fiscalPrinter");
+                                    FiscalPrinter fPrinter = FiscalPrinter.fromJson(fiscalPrinter);
+                                    dbA.insertFiscalPrinterSync(fPrinter);
+                                }
+                                JSONArray kitchenPrinter = new JSONObject(output).getJSONArray("kitchenPrinter");
+                                ArrayList<KitchenPrinter> kPrinters = KitchenPrinter.fromJsonArray(kitchenPrinter);
+                                dbA.insertKitchenPrinterSync(kPrinters);
+
+                                dbA.updateChecksumForTable("fiscal_printer", jsonObject.getString("fiscalPrinterChecksum"));
+                                dbA.updateChecksumForTable("kitchen_printer", jsonObject.getString("kitchenPrinterChecksum"));
                             }
-                            JSONArray kitchenPrinter = new JSONObject(output).getJSONArray("kitchenPrinter");
-                            ArrayList<KitchenPrinter> kPrinters = KitchenPrinter.fromJsonArray(kitchenPrinter);
-                            dbA.insertKitchenPrinterSync(kPrinters);
+
                             progressStatus += 10;
                             progressBar.setProgress(progressStatus);
 
@@ -459,10 +566,12 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             startActivity(i);
                             finish();
 
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
                         }
+
+                        else
+                            { Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show(); }
                         break;
+
 
                     default:
                         Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
@@ -520,6 +629,8 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
         LayoutInflater inflater = this.getLayoutInflater();
 
         // create the popup, which can't be cancelled until a valid ip address is given
+        // In this case a dialog was used, instead of a normal popupView, due to the inability of the inflater
+        // to inflate a view during this activity
         Dialog dialog = new Dialog(SplashScreen1.this);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
@@ -530,6 +641,9 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
         CustomButton okButton = dialog.findViewById(R.id.ok_button_blackbox_ip);
         CustomButton refresh = dialog.findViewById(R.id.refresh_button_blackbox_ip);
 
+        // on press of the OK button,
+        // try to connect to the blackbbox,
+        // which name and ip are given by the user in the relative edit text views
         okButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -539,14 +653,14 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                 String nameText = blackboxNameEditText.getText().toString().trim();
 
                 // check first if the given name and address are correctly formatted
-                if (!Pattern.matches("[A-Za-z]+[A-Za-z0-9_\\-\\.]", nameText))
+                if (!Pattern.matches("[A-Za-z]+[A-Za-z0-9_\\-\\.]*", nameText))
                 {
                     Toast.makeText(SplashScreen1.this,
                             "Malformed name of blackbox. Names must start with a letter and accept only [A-Z0-9_-.]",
                             Toast.LENGTH_LONG).show();
                 }
 
-                // if the pattern of the address is of an accetable format
+                // if the pattern of the address is well-formed
                 else if (Pattern.matches("([0-9]{1,3}\\.){3}[0-9]{1,3}(:[0-9]{2,4})?$", ipText))
                 {
                     // create a new blackbox and test it
@@ -578,16 +692,21 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
             }
         });
 
-
+        // refresh button
+        // on click, try to reconnect to the list of known blackbox
         refresh.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                dialog.dismiss();
+                // TODO
+                // the imputmethodmanager crash on android >= 9.0
 
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                // since the loading could take some seconds, dismiss both the keyboard and the dialog that was opened
+                //InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                //imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+
+                dialog.dismiss();
 
                 BlackboxInfo bb = testBlackboxes(dbA.selectAllBlackbox());
                 if (bb == null)
@@ -777,15 +896,17 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!license_input.getText().toString().trim().equals("")){
+                if (!license_input.getText().toString().trim().equals(""))
+                {
                     licenseString = license_input.getText().toString();
                     license_input.setText("");
                     // TODO add a verification on the license code
                     licenseButton.setText(licenseString);
-
                     popupWindow.dismiss();
                 }
-                else{
+
+                else
+                {
                     license_input.setText("");
                     Toast.makeText(context, R.string.insert_a_valid_license_key, Toast.LENGTH_SHORT).show();
                 }
@@ -815,9 +936,11 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
      * */
     public BlackboxInfo testBlackboxes(List<BlackboxInfo> allbb)
     {
-        String androidId = Secure.getString(this.getContentResolver(), Secure.ANDROID_ID);
         for (BlackboxInfo bb : allbb)
         {
+            String androidId = Secure.getString(this.getContentResolver(), Secure.ANDROID_ID);
+
+
             // create a new temporary http connection
             HttpHandler httpHandler = new HttpHandler();
             httpHandler.testIp = bb.getAddress();

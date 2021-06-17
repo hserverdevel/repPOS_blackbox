@@ -31,6 +31,7 @@
             android:textSize="16dp"
             android:textColor="@color/black"
             android:layout_toRightOf="@id/tab_n_container"/>
+
         <com.example.blackbox.graphics.CustomButton
             android:visibility="gone"
             android:layout_marginLeft="10dp"

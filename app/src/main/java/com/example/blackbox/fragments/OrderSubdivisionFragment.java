@@ -45,7 +45,8 @@ public class OrderSubdivisionFragment extends Fragment {
     private DatabaseAdapter dbA;
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         myself = inflater.inflate(R.layout.order_subdivision_fragment, null);
         dbA = new DatabaseAdapter(this.getContext());
         // che orribile riga di codice
@@ -127,10 +128,12 @@ public class OrderSubdivisionFragment extends Fragment {
         return myself;
     }
 
+
     public void setMode(int mode){
         this.mode = mode;
         subdivisionAdapter.setMode(mode);
     }
+
 
     public void addElement(Object o, Float cost){
         switch(mode){

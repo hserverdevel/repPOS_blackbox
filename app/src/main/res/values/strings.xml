@@ -257,6 +257,7 @@
     <string name="modify">Modify</string>
     <string name="modify_element">Modify Element</string>
     <string name="modify_reservation">Modify Reservation</string>
+
     <string name="monthly">Monthly</string>
     <string name="municipality">Municipality</string>
     <string name="min_cash">Min Cash</string>
@@ -354,7 +355,7 @@
     <string name="please_insert_your_supervisor_passcode">Please, insert your supervisor passcode</string>
     <string name="please_pay_other_split_bill_first">Please Pay Other Split Bill First</string>
     <string name="please_perform_this_operation_from_operative">Please perform this operation from Operative</string>
-    <string name="please_reserve_the_table">Please Reserve The Table!</string>
+    <string name="please_reserve_the_table">Reservation reminder for the next hour</string>
     <string name="please_select_a_client_with_vat_number">Please select a client with VAT number</string>
     <string name="please_select_a_registered_client">Please select a registered client</string>
     <string name="please_split_before_giving_discount">Please, split before giving discount</string>
@@ -564,9 +565,23 @@
     </string-array>
     <string name="user_">USER:</string>
     <string name="export_in_blackbox">Export in Blackbox</string>
-    <string name="hint_blackbox_ip">10.10.10.116:8888</string>
-    <string name="insert_blackbox_ip_header">Insert BlackBox IP</string>
+    <string name="hint_blackbox_ip" translatable="false">10.10.10.116:8888</string>
+    <string name="insert_blackbox_ip_header">Insert BlackBox IP address</string>
     <string name="price_not_zero">Product price can\'t be zero or lower</string>
+    <string name="monthJanuary">January</string>
+    <string name="monthFebruary">February</string>
+    <string name="monthMarch">March</string>
+    <string name="monthApril">April</string>
+    <string name="monthMay">May</string>
+    <string name="monthJune">June</string>
+    <string name="monthJuly">July</string>
+    <string name="monthAugust">August</string>
+    <string name="monthSeptember">September</string>
+    <string name="monthOctober">October</string>
+    <string name="monthNovember">November</string>
+    <string name="monthDecember">December</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
 
 
 </resources>

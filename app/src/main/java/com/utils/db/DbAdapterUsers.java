@@ -30,6 +30,7 @@ public class DbAdapterUsers extends DbAdapterInit
             { database = dbHelper.getWritableDatabase(); }
             //int f = (admin?1:0);
             //database.execSQL("INSERT INTO device_info(store_name, address, email,android_id, online_check) VALUES('" + storeName + "','" + address + "','" + storeEmail + "','" + androidId + "'," + 0 + ")");
+
             database.execSQL("INSERT INTO device_info(ragione_sociale, partita_iva,address,provincia, comune, cap,  email,android_id, online_check) VALUES('" +
                     ragioneSociale +
                     "','" + partitaIva +
@@ -46,7 +47,7 @@ public class DbAdapterUsers extends DbAdapterInit
         }
         catch (Exception e)
         {
-            Log.d("Insert Device Error", e.getMessage());
+            Log.e(TAG, String.format("Error on Database method " + Thread.currentThread().getStackTrace()[2].getMethodName()));
         }
     }
 
@@ -104,9 +105,10 @@ public class DbAdapterUsers extends DbAdapterInit
             // database.close();
             return deviceInfo;
         }
+
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e(TAG, String.format("Error on Database method " + Thread.currentThread().getStackTrace()[2].getMethodName()));
             return null;
         }
     }
@@ -124,9 +126,10 @@ public class DbAdapterUsers extends DbAdapterInit
                     + storeName + "','" + address + "','" + storeEmail + "','" + androidId + "','" + tokenId + "','" + ip + "','" + multicastIp + "', " + master + ", " + onlineCheck + ",'" + ragioneSociale + "','" + partitaIva + "','" + comune + "','" + provincia + "','" + cap + "')");
             database.close();
         }
+
         catch (Exception e)
         {
-            Log.d("Insert Device Error", e.getMessage());
+            Log.e(TAG, String.format("Error on Database method " + Thread.currentThread().getStackTrace()[2].getMethodName()));
         }
     }
 
@@ -137,8 +140,8 @@ public class DbAdapterUsers extends DbAdapterInit
         {
             //if (database.isOpen()) database.close();
             if (!database.isOpen())
-            { database = dbHelper.getWritableDatabase(); }
-            //int f = (admin?1:0);
+                { database = dbHelper.getWritableDatabase(); }
+
             database.execSQL("INSERT INTO device_info(id,  address, email,android_id,token_id, ip, multicast_ip, master, online_check, ragione_sociale, partita_iva, comune, provincia, cap, store_name) VALUES(" + deviceInfo
                     .getId() + ",'"
                     + deviceInfo.getAddress() + "','" + deviceInfo.getEmail() + "','" + deviceInfo.getAndroidId() + "','" + deviceInfo
@@ -148,9 +151,10 @@ public class DbAdapterUsers extends DbAdapterInit
                     .getCap() + "','" + deviceInfo.getStoreName() + "')");
             database.close();
         }
+
         catch (Exception e)
         {
-            Log.d("Insert Device Error", e.getMessage());
+            Log.e(TAG, String.format("Error on Database method " + Thread.currentThread().getStackTrace()[2].getMethodName()));
         }
     }
 
@@ -174,9 +178,10 @@ public class DbAdapterUsers extends DbAdapterInit
             return database.rawQuery("SELECT * FROM user WHERE password = '" + passcode + "'", null);
 
         }
+
         catch (Exception e)
         {
-            Log.d("Fetch User Data Error", e.getMessage());
+            Log.e(TAG, String.format("Error on Database method " + Thread.currentThread().getStackTrace()[2].getMethodName()));
             return null;
         }
     }
@@ -192,9 +197,10 @@ public class DbAdapterUsers extends DbAdapterInit
             database.execSQL("DELETE FROM user WHERE id=" + id + ";");
             database.close();
         }
+
         catch (Exception e)
         {
-            Log.e("DELETE total_credit", e.getMessage());
+            Log.e(TAG, String.format("Error on Database method " + Thread.currentThread().getStackTrace()[2].getMethodName()));
         }
 
     }

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import com.example.blackbox.model.BlackboxInfo;
@@ -70,7 +71,7 @@ public class DbAdapterInit
 
 
     public void restartDb()
-    { dbHelper.onUpgrade(dbHelper.getWritableDatabase(), 1, 1); }
+        { dbHelper.onUpgrade(dbHelper.getWritableDatabase(), 1, 1); }
 
 
     public long getTablesRowCount(String tableName)
@@ -126,7 +127,8 @@ public class DbAdapterInit
         try
         {
             //if (database.isOpen()) database.close();
-            if (!database.isOpen()) { database = dbHelper.getWritableDatabase(); }
+            if (!database.isOpen())
+                { database = dbHelper.getWritableDatabase(); }
 
             Cursor c = database.rawQuery(query, null);
             c.moveToFirst();
@@ -151,7 +153,7 @@ public class DbAdapterInit
         {
             //if (database.isOpen()) database.close();
             if (!database.isOpen())
-            { database = dbHelper.getWritableDatabase(); }
+                { database = dbHelper.getWritableDatabase(); }
             database.execSQL(query);
             //  database.close();
             database.close();
@@ -195,20 +197,111 @@ public class DbAdapterInit
     {
         try
         {
-            int i = 0;
             //if (database.isOpen()) database.close();
             if (!database.isOpen())
-            { database = dbHelper.getWritableDatabase(); }
+                { database = dbHelper.getWritableDatabase(); }
+
             Cursor c = database.rawQuery("SELECT * FROM " + table /*+ " ORDER BY id DESC"*/, null);
-            Log.i(TAG, "Cursor:\n\t" + DatabaseUtils.dumpCursorToString(c));
+
+            StringBuilder sb = new StringBuilder();
+
+            String[] cols = c.getColumnNames();
+
+            c.moveToPosition(-1);
+
+            // for each row
+            while (c.moveToNext())
+            {
+                sb.append(String.format("%s : ", c.getPosition()));
+
+                // for each col
+                for (int i = 0; i < cols.length; i++)
+                {
+                    String value;
+                    try
+                        { value = c.getString(i); }
+                    catch (SQLiteException e)
+                        { value = "<unprintable>"; }
+
+                    if (i > 0)
+                        { sb.append(","); }
+
+                    sb.append(String.format(" %s=%s", cols[i], value));
+                }
+
+                sb.append(";\n");
+            }
+
+            Log.i(TAG, String.format("Dump SQL table `%s`:\n%s", table, sb));
+
             c.close();
             database.close();
         }
+
         catch (Exception e)
-        {
-            Log.d("execSQLError", e.getMessage());
-        }
+            { Log.e("execSQLError", e.getMessage()); }
     }
+
+
+
+    /**
+     * execute the SQL command, and return the result
+     * @param cmd
+     * */
+    public void showDataExec(String cmd)
+    {
+        try
+        {
+            //if (database.isOpen()) database.close();
+            if (!database.isOpen())
+                { database = dbHelper.getWritableDatabase(); }
+
+            Cursor c = database.rawQuery(cmd, null);
+
+            StringBuilder sb = new StringBuilder();
+
+            String[] cols = c.getColumnNames();
+
+            c.moveToPosition(-1);
+
+            int lenField = 10;
+            int lenValue = 10;
+            // for each row
+            while (c.moveToNext())
+            {
+                sb.append(String.format("%s : ", c.getPosition()));
+
+                // for each col
+                for (int i = 0; i < cols.length; i++)
+                {
+                    String value;
+                    try
+                        { value = c.getString(i); }
+                    catch (SQLiteException e)
+                        { value = "<unprintable>"; }
+
+                    if (i > 0)
+                        { sb.append(","); }
+
+                    if (i == 0)
+                        { lenField = cols[i].length() + 2; lenValue = value.length() + 2; }
+
+                    sb.append(String.format(" %" + lenField + "s=%" + lenValue + "s", cols[i], value));
+                }
+
+                sb.append(";\n");
+            }
+
+            Log.i(TAG, String.format("SQL command result [%s]:\n%s", cmd, sb));
+
+            c.close();
+            database.close();
+        }
+
+        catch (Exception e)
+        { Log.e("execSQLError", e.getMessage()); }
+    }
+
 
 
     /**
@@ -273,6 +366,63 @@ public class DbAdapterInit
     }
 
 
+    // =============================================== //
+    // [ TIMESTAMP ]
+    // =============================================== //
+
+    /**
+     * get the checksum (last modified table)
+     * for the input table
+     * */
+    public String getChecksumForTable(String tableName)
+    {
+        String result = "";
+
+        try
+        {
+            if (!database.isOpen())
+                { database = dbHelper.getReadableDatabase(); }
+
+            Cursor cursor = database.rawQuery(String.format("SELECT * FROM checksum_registry WHERE name = '%s'", tableName), null);
+
+            if (cursor != null) while (cursor.moveToNext())
+                { result = cursor.getString(cursor.getColumnIndex("Checksum")); }
+
+            cursor.close();
+        }
+
+        catch (Exception e)
+            { Log.e("DatabaseFailure", "Exception: " + e);  e.printStackTrace(); }
+
+        return result;
+
+    }
+
+
+    /**
+     * update the checksum for the specified table
+     * */
+    public void updateChecksumForTable(String tableName, String checksum)
+    {
+
+        try
+        {
+            //if (database.isOpen()) database.close();
+            if (!database.isOpen())
+                { database = dbHelper.getWritableDatabase(); }
+
+            execOnDb(String.format("UPDATE checksum_registry SET Checksum = '%s' WHERE name = '%s'", checksum, tableName));
+
+            database.close();
+        }
+
+        catch (Exception e)
+            { Log.e("DatabaseFailure", "Exception: " + e);  e.printStackTrace(); }
+    }
+
+
+
+
 
 
 
@@ -307,7 +457,7 @@ public class DbAdapterInit
         {
             //if (database.isOpen()) database.close();
             if (!database.isOpen())
-            { database = dbHelper.getReadableDatabase(); }
+                { database = dbHelper.getReadableDatabase(); }
             Cursor mCursor = database.rawQuery("SELECT * FROM blackbox_info LIMIT 1", null);
 
             if (mCursor != null)
@@ -374,7 +524,7 @@ public class DbAdapterInit
         try
         {
             if (!database.isOpen())
-            { database = dbHelper.getWritableDatabase(); }
+                { database = dbHelper.getWritableDatabase(); }
 
             database.execSQL("DELETE FROM blackbox_info WHERE id='" + blackbox.getId() + "'");
             database.close();
@@ -485,6 +635,7 @@ public class DbAdapterInit
 
     }
 
+
     public int selectNumeroFattura()
     {
         int numeroFattura = 0;
@@ -520,7 +671,7 @@ public class DbAdapterInit
         {
             //if (database.isOpen()) database.close();
             if (!database.isOpen())
-            { database = dbHelper.getWritableDatabase(); }
+                { database = dbHelper.getWritableDatabase(); }
             execOnDb("UPDATE fattura SET numero_fattura=" + numeroFattura);
             database.close();
         }

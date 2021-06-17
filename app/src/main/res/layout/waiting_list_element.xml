@@ -45,26 +45,42 @@
             custom:letterSpacing="0.0"
             android:layout_toRightOf="@id/wait_list_layout"/>
 
-        <ImageView
-            android:layout_width="19dp"
-            android:layout_height="20dp"
-            android:layout_toRightOf="@id/waiting_time_tv"
-            android:layout_marginTop="22dp"
-            android:layout_marginLeft="14dp"
-            android:src="@drawable/res_arrow"
-            android:id="@+id/reservation_arrow"/>
+<!--        <ImageView-->
+<!--            android:layout_width="19dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:layout_toRightOf="@id/waiting_time_tv"-->
+<!--            android:layout_marginTop="22dp"-->
+<!--            android:layout_marginLeft="14dp"-->
+<!--            android:src="@drawable/res_arrow"-->
+<!--            android:id="@+id/reservation_arrow"/>-->
 
         <com.example.blackbox.graphics.CustomTextView
-            android:layout_width="82dp"
+            android:layout_width="70dp"
             android:layout_height="51dp"
             android:layout_marginTop="6dp"
-            android:layout_marginRight="18dp"
+            android:layout_marginRight="0dp"
             android:gravity="center"
-            android:layout_toRightOf="@id/reservation_arrow"
+            android:layout_toRightOf="@id/waiting_time_tv"
             android:textAlignment="center"
             android:textSize="20sp"
             android:text="000"
             android:id="@+id/waiting_time"
+            android:textColor="@color/white"
+            custom:typeface="franklin_gothic_book"
+            custom:letterSpacing="0.0"
+            />
+
+        <com.example.blackbox.graphics.CustomTextView
+            android:id="@+id/waiting_minutes_text"
+            android:layout_width="82dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginRight="6dp"
+            android:gravity="center"
+            android:layout_toRightOf="@id/waiting_time"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:text="Min"
             android:textColor="@color/white"
             custom:typeface="franklin_gothic_book"
             custom:letterSpacing="0.0"

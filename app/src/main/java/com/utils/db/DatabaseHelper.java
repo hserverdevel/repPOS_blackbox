@@ -19,11 +19,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "mydatabase.db";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String[] TABLE_NAMES = {"button", "modifier", "modifiers_group",
-            "modifiers_assigned", "modifiers_group_assigned", "vat", "user", "bill_total",
-            "product_bill", "modifier_bill", "payment_option_button","client", "company", "client_in_company", "temp_table", "last_session",
-            "bill_subdivision_paid", "item_subdivisions", "sessions", "customer_bill", "product_unspec_bill", "modifiers_bill_notes",
-            "bill_total_credit", "bill_total_extra", "room", "table_configuration", "table_use", "table_use_extension", "discount", "discount_mode"};
+    private static final String[] TABLE_NAMES =
+            {
+                "button", "modifier", "modifiers_group", "modifiers_assigned", "modifiers_group_assigned", "vat",
+                "bill_total", "product_bill", "modifier_bill", "payment_option_button", "bill_subdivision_paid",
+                "item_subdivisions", "sessions", "customer_bill", "product_unspec_bill", "modifiers_bill_notes", "bill_total_credit", "bill_total_extra",
+                "client", "company", "client_in_company", "user",
+                "temp_table", "last_session",
+                "room", "table_configuration", "table_use", "table_use_extension", "discount", "discount_mode", "reservation", "waiting_list",
+                "fidelity", "fiscal_printer", "kitchen_printer"
+            };
+
 
     private static final String FISCAL_PRINTER_CREATE = "CREATE TABLE fiscal_printer(id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "name TEXT, " +
@@ -390,25 +396,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String RESERVATION_TABLE_CREATE = "CREATE TABLE reservation (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "name TEXT, " +
             "surname TEXT, " +
-            "adult INTEGER, " +
+            "adults INTEGER, " +
             "children INTEGER, " +
             "disabled INTEGER, " +
-            "reservation_date TIMESTRING, " +
-            "reservation_time TIMESTRING, " +
-            "start_time TIMESTRING DEFAULT NULL, " +
-            "table_use_id INTEGER, " +
-            "status INTEGER DEFAULT 0, " +
-            "telephone INTEGER, " +
-            "FOREIGN KEY (table_use_id) REFERENCES table_use(id));";
+            "date TIMESTRING, " +
+            "time TIMESTRING, " +
+            "telephone INTEGER);";
 
     private static final String WAITING_LIST_TABLE_CREATE = "CREATE TABLE waiting_list (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "name TEXT, " +
             "surname TEXT, " +
-            "arrival_time TIMESTAMP, " +
-            "adult INTEGER, " +
+            "time TIMESTAMP, " +
+            "adults INTEGER, " +
             "children INTEGER, " +
-            "disabled INTEGER, " +
-            "status INTEGER DEFAULT 0);";
+            "disabled INTEGER);";
 
 
     private static final String CASH_MANAGEMENT_SET_CREATE = "CREATE TABLE cash_management_set(min_cash FLOAT, " +
@@ -680,11 +681,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
+
+
+    // create a table to store the checksum of each.
+    // This table will be updated on every update with the blackbox,
+    // in order to know if a table is synced with the blackbox DB
+    private static final String CHECKSUM_CREATE = "CREATE TABLE checksum_registry (name TEXT, Checksum TEXT);";
+
+
+
+
+
+
+
     // Constructor
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
     }
+
+
 
     public static synchronized DatabaseHelper getInstance(Context context){
         if(dbhInstance == null){
@@ -735,6 +751,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         database.execSQL(DISCOUNT_TABLE_CREATE);
         database.execSQL(DISCOUNT_MODE_TABLE_CREATE);
         database.execSQL(RESERVATION_TABLE_CREATE);
+        database.execSQL(WAITING_LIST_TABLE_CREATE);
 
         database.execSQL(WORK_STATION_TABLE_CREATE);
         database.execSQL(INVENTORY_INGRIDIENTS_TABLE_CREATE);
@@ -780,7 +797,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
+        // create the checksum table
+        database.execSQL(CHECKSUM_CREATE);
+
+        // and insert a placeholder value for each table present in the database
+        for (String name : TABLE_NAMES)
+            { database.execSQL(String.format("\nINSERT INTO checksum_registry (name, checksum) VALUES ('%s', '%s');", name, "00")); }
+
+
+
     }
+
 
     // Method called on db update
     @Override
@@ -789,6 +816,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         onCreate(database);
     }
+
+
+
 
 
 

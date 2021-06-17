@@ -33,14 +33,16 @@ import java.util.Objects;
  * Created by tiziano on 2/25/19.
  */
 
-public class ActivityLicense extends AppCompatActivity {
-
+public class ActivityLicense extends AppCompatActivity
+{
     public float density;
     public float dpHeight;
     public float dpWidth;
     private DatabaseAdapter dbA;
     private String licenseString;
     private CustomButton codeButton;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -78,7 +80,7 @@ public class ActivityLicense extends AppCompatActivity {
             cal3.add(Calendar.MONTH, duration);
             //cal3.add(Calendar.DATE, -15);
 
-            long difference = Math.abs(cal.getTimeInMillis()- cal3.getTimeInMillis());
+            long difference = Math.abs(cal.getTimeInMillis() - cal3.getTimeInMillis());
             long differenceDates = difference / (24 * 60 * 60 * 1000);
             if(differenceDates<0) difference=0;
 

@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.os.StrictMode;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentActivity;
@@ -135,27 +136,423 @@ public class Operative extends FragmentActivity implements
     private View myPopupView;
     private PopupWindow myPopupWindow;
 
-    public void resetPinpadTimer(int type){
-        TimerManager.stopPinpadAlert();
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_operative);
+//        TimerManager.startPinpadAlert();
+//        TimerManager.startLogoutAlert();
+        Intent intent = getIntent();
+        me = this;
+
+        dbA = new DatabaseAdapter(me);
+
+        /* Sets current user on top right button**/
+        username = intent.getStringExtra("username");
+        userId = intent.getIntExtra("userId", -1);
+        userType = intent.getIntExtra("userType", -1);
+
+        isAdmin = intent.getIntExtra("isAdmin", -1);
+        billId = intent.getIntExtra("billId", -1);
+        customer = intent.getIntExtra("customer", -1);
+        orderNumber = intent.getIntExtra("orderNumber", -1);
+        email = intent.getStringExtra("email");
+
+        forClient = this;
+
+        // TODO
+        // why this? It's dangerous
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+
+        // Control the three dots on the operative activity, that display the status of {printer, blackbox, wifi}
+
+        findViewById(R.id.check_printer).setActivated(StaticValue.printerOn);
+
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        findViewById(R.id.check_wi_fi).setActivated(mWifi.isConnected());
+
+        findViewById(R.id.check_blackbox).setActivated(StaticValue.blackbox);
+
+
+
+
+        ((CustomTextView)findViewById(R.id.admin_button_tv)).setText(R.string.user);
+        User myUser = dbA.getUserByUsername(username);
+        if(myUser.getName()!=null) {
+            if(myUser.getName().length()>=1) {
+                if (myUser.getSurname() != null) {
+                    if (myUser.getSurname().length() >= 1) {
+                        String surname = myUser.getSurname().substring(0, 1).toUpperCase() + ".";
+                        String name = myUser.getName().substring(0, 1).toUpperCase() + myUser.getName().substring(1);
+
+                        ((CustomTextView) findViewById(R.id.admin_username_button_tv)).setText(name + " " + surname);
+                    } else {
+                        String name = myUser.getName().substring(0, 1).toUpperCase() + myUser.getName().substring(1);
+                        ((CustomTextView) findViewById(R.id.admin_username_button_tv)).setText(name);
+                    }
+                } else {
+                    String name = myUser.getName().substring(0, 1).toUpperCase() + myUser.getName().substring(1);
+                    ((CustomTextView) findViewById(R.id.admin_username_button_tv)).setText(name);
+                }
+            }else
+                ((CustomTextView) findViewById(R.id.admin_username_button_tv)).setText(R.string.user);
+
+        }
+
+
+        findViewById(R.id.cashier).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                cashFragment.deleteBill();
+                return false;
+            }
+        });
+
+
+        findViewById(R.id.admin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
+                    Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
+                }else {
+                    if (cashFragment.getListDataHeader() == 0) {
+                        fireUserWindow();
+                    } else {
+                        openSaveBillPopup(1);
+                    }
+                }
+            }
+        });
+
+
+        findViewById(R.id.cashier).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(cashFragment.getListDataHeader() == 0 && (dbA.getPaidBill(billId) != 1 || billId == -1) ){
+                    Intent intent = new Intent(Operative.this, OverviewActivity.class);
+                    intent.putExtra("username", username);
+                    intent.putExtra("isAdmin", isAdmin);
+                    // intent.putExtra("billId", billId);
+                    intent.putExtra("userId", userId);
+                    intent.putExtra("userType", userType);
+                    intent.putExtra("tableNumber", tableNumber);
+                    intent.putExtra("orderNumber", orderNumber);
+                    startActivity(intent);
+                    finish();
+                }
+                else{
+                    if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
+                        Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
+                    } else {
+                        openSaveBillPopup(4);
+                    }
+                }
+            }
+        });
+
+        findViewById(R.id.clients).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(cashFragment.getListDataHeader() == 0 && (dbA.getPaidBill(billId) != 1 || billId == -1)) {
+                    if(cashFragment.getListDataHeader()==0  && billId>0){
+                        dbA.deleteBillData1(billId, getApplicationContext());
+                    }
+
+                    Intent intent = new Intent(Operative.this, ClientsActivity.class);
+                    intent.putExtra("username", username);
+                    intent.putExtra("isAdmin", isAdmin);
+                    intent.putExtra("billId", billId);
+                    intent.putExtra("userId", userId);
+                    intent.putExtra("userType", userType);
+                    intent.putExtra("tableNumber", tableNumber);
+                    intent.putExtra("orderNumber", orderNumber);
+                    intent.setAction("clientsFromOperative");
+                    startActivity(intent);
+                    finish();
+                } else {
+                    if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
+                        Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
+                    } else {
+                        openSaveBillPopup(2);
+                    }
+                }
+            }
+        });
+
+        findViewById(R.id.orders).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cashFragment.getListDataHeader()==0 && (dbA.getPaidBill(billId) != 1 || billId == -1)) {
+                    //go directly to orders
+                    dbA.showData("bill_total");
+                    if(cashFragment.getListDataHeader()==0  && billId>0){
+                        dbA.deleteBillData1(billId, getApplicationContext());
+                    }
+                    Intent intent = new Intent(Operative.this, OrderActivity.class);
+                    intent.putExtra("username", username);
+                    intent.putExtra("isAdmin", isAdmin);
+                    intent.putExtra("userId", userId);
+                    intent.putExtra("userType", userType);
+                    intent.putExtra("tableNumber", tableNumber);
+                    intent.putExtra("orderNumber", orderNumber);
+                    intent.setAction("ordersFromOperative");
+                    startActivity(intent);
+                    finish();
+                }else{
+                    if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
+                        Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
+                    }
+                    else { openSaveBillPopup(3); }
+                }
+            }
+        });
+
+        findViewById(R.id.reservations).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cashFragment.getListDataHeader()==0 && (dbA.getPaidBill(billId) != 1 || billId == -1)) {
+
+                    dbA.showData("bill_total");
+                    if(cashFragment.getListDataHeader()==0  && billId>0){
+                        dbA.deleteBillData1(billId, getApplicationContext());
+                    }
+                    Intent intent = new Intent(Operative.this, ReservationsActivity.class);
+                    intent.putExtra("username", username);
+                    intent.putExtra("isAdmin", isAdmin);
+                    intent.putExtra("userId", userId);
+                    intent.putExtra("userType", userType);
+                    intent.putExtra("tableNumber", tableNumber);
+                    intent.putExtra("orderNumber", orderNumber);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
+                        Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
+                    }
+                    else { openSaveBillPopup(5); }
+                }
+            }
+        });
+
+
+        findViewById(R.id.open_cash_drawer).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(StaticValue.blackbox){
+                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                    callHttpHandler("/openCashDrawer", params);
+                }else {
+                    if (StaticValue.printerName.equals("ditron")) {
+                        PrinterDitronThread ditron = PrinterDitronThread.getInstance();
+                        ditron.closeAll();
+                        ditron.startSocket();
+                    }
+
+                    ClientThread myThread = ClientThread.getInstance();
+                    myThread.delegate = forClient;
+                    myThread.setPrintType(14);
+                    myThread.setIP(IP);
+
+                    myThread.setClientThread();
+                    myThread.setRunBaby(true);
+                }
+
+                openPinpad();
+            }
+        });
+
+
+        if(StaticValue.showProducts){
+            findViewById(R.id.showMainMenu).setBackgroundResource(R.drawable.open_drawer);
+            findViewById(R.id.showProducts).setBackgroundResource(R.drawable.selected_button_footer);
+            findViewById(R.id.showFavourites).setBackgroundResource(R.drawable.open_drawer);
+        } else if (StaticValue.showFavourites) {
+            findViewById(R.id.showMainMenu).setBackgroundResource(R.drawable.open_drawer);
+            findViewById(R.id.showProducts).setBackgroundResource(R.drawable.open_drawer);
+            findViewById(R.id.showFavourites).setBackgroundResource(R.drawable.selected_button_footer);
+        } else {
+            findViewById(R.id.showMainMenu).setBackgroundResource(R.drawable.selected_button_footer);
+            findViewById(R.id.showProducts).setBackgroundResource(R.drawable.open_drawer);
+            findViewById(R.id.showFavourites).setBackgroundResource(R.drawable.open_drawer);
+        }
+
+
+
+        findViewById(R.id.showMainMenu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
+                    Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
+                }else {
+                    exitModify();
+                    goToMainPage();
+                    findViewById(R.id.showMainMenu).setBackgroundResource(R.drawable.selected_button_footer);
+                    findViewById(R.id.showProducts).setBackgroundResource(R.drawable.open_drawer);
+                    findViewById(R.id.showFavourites).setBackgroundResource(R.drawable.open_drawer);
+                    StaticValue.setShowMainMenu();
+
+                    operativeFragment.setTypeOfFavourites();
+                }
+
+            }
+        });
+
+        findViewById(R.id.showProducts).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
+                    Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
+                }else {
+                    exitModify();
+                    goToMainPage();
+                    findViewById(R.id.showMainMenu).setBackgroundResource(R.drawable.open_drawer);
+                    findViewById(R.id.showProducts).setBackgroundResource(R.drawable.selected_button_footer);
+                    findViewById(R.id.showFavourites).setBackgroundResource(R.drawable.open_drawer);
+                    StaticValue.setShowProducts();
+
+                    operativeFragment.setTypeOfFavourites();
+                }
+            }
+        });
+
+        findViewById(R.id.showFavourites).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
+                    Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
+                }else {
+                    exitModify();
+                    goToMainPage();
+                    ((View) findViewById(R.id.showMainMenu)).setBackgroundResource(R.drawable.open_drawer);
+                    ((View) findViewById(R.id.showProducts)).setBackgroundResource(R.drawable.open_drawer);
+                    ((View) findViewById(R.id.showFavourites)).setBackgroundResource(R.drawable.selected_button_footer);
+
+                    StaticValue.setShowFavourites();
+                    operativeFragment.setTypeOfFavourites();
+                }
+
+            }
+        });
+
+
+
+        operativeFragment = new OperativeFragment();
+        cashFragment = new CashFragment();
+        modifierFragment = new ModifierFragment();
+        FragmentTransaction transaction =
+                getSupportFragmentManager().beginTransaction();
+        if(!operativeFragment.isAdded()) {
+            transaction.add(R.id.operative_fragment, operativeFragment);
+        }
+
+        operativeFragment.setIsModify(false);
+
+        transaction.add(R.id.cash_fragment, cashFragment);
+        transaction.commit();
+
+        Display display = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics ();
+        display.getMetrics(outMetrics);
+        density  = getResources().getDisplayMetrics().density;
+        dpHeight = outMetrics.heightPixels;// / density;
+        dpWidth  = outMetrics.widthPixels;// / density;
+
+        if(email != null)
+            cashFragment.setEmail(email);
+
+        if(timer == null){
+            timer = new TimerClass(dbA, me, forClient);
+            timer.launchTimer();
+        }
+        else{
+            if(!timer.getIsRunning()){
+                timer = new TimerClass(dbA, me, forClient);
+                timer.launchTimer();
+            }
+        }
+
         TimerManager.setContext(getApplicationContext());
         intentPasscode = new Intent(getApplicationContext(), PinpadBroadcastReciver.class);
-
         intentPasscode.putExtra("isAdmin", isAdmin);
         intentPasscode.putExtra("username", username);
 
         TimerManager.setIntentPinpad(intentPasscode);
-        TimerManager.startPinpadAlert(type);
+        TimerManager.startPinpadAlert(1);
+
+        final Handler ha=new Handler();
+        ha.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                //call function
+                //Server server = Server.getInstance();
+
+                if(StaticValue.printerOn){
+                    findViewById(R.id.check_printer).setActivated(true);
+                }else{
+                    findViewById(R.id.check_printer).setActivated(false);
+                }
+                ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+                if (mWifi.isConnected()) {
+                    // Do whatever
+                    findViewById(R.id.check_wi_fi).setActivated(true);
+
+                }else{
+                    findViewById(R.id.check_wi_fi).setActivated(false);
+                }
+                ha.postDelayed(this, 100);
+            }
+        }, 100);
+
+        resetPinpadTimer(1);
+
+
     }
 
+
     @Override
-    protected void onRestart() {
-        // TODO Auto-generated method stub
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (customer!=-1)
+        {
+            //if customer id != -1 i am coming back from clients activity so I open customer popup
+            Intent intent = getIntent();
+            boolean customerModify = intent.getBooleanExtra("customerModify", false);
+            int modifyPosition = intent.getIntExtra("modifyPosition", -1);
+            ClientInfo clientInfo = dbA.fetchSingleClient(customer);
+
+            openCustomerPopup(clientInfo.getName()+" " + clientInfo.getSurname(), clientInfo.getClient_id(),
+                    orderNumber, customerModify, modifyPosition, tableNumber);
+
+            cashFragment.setCashListIndex(intent.getIntExtra("cashListIndex", -1));
+        }
+    }
+
+
+
+    @Override
+    protected void onRestart()
+    {
         super.onRestart();
 
+        // TODO
+        // should this be changes?
+        // this code will re-open the slapsh screen when the app goes on pause (lock screen mainly)
         Intent intent = new Intent(getApplicationContext(), SplashScreen1.class);
         startActivity(intent);
         finish();
     }
+
+
 
     @Override
     public void onUserInteraction() {
@@ -163,14 +560,33 @@ public class Operative extends FragmentActivity implements
         super.onUserInteraction();
         //TimerManager.startPinpadAlert();
         //TimerManager.startLogoutAlert();
-     }
+    }
+
 
     @Override
-    public void onDestroy() {
+    public void onPause()
+    {
+        // if the onPause is called due to lock screen,
+        // save the current bill
 
-         super.onDestroy();
+        // check if the screen is on or not,
+        // when on pause is called.
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
-     }
+        boolean screenOn;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH)
+            { screenOn = pm.isInteractive(); }
+        else
+            { screenOn = pm.isScreenOn(); }
+
+        // if the screen is off, save the bill
+        if (!screenOn)
+            { cashFragment.saveBillOnServer("lockScreen", 0); }
+
+        super.onPause();
+    }
+
+
 
 
     @Override
@@ -247,7 +663,9 @@ public class Operative extends FragmentActivity implements
                         int billId = jsonObject.getInt("billId");
                         RelativeLayout saveButton = (RelativeLayout) findViewById(R.id.layout_3);
                         saveButton.setEnabled(true);
-                        if (check) {
+
+                        if (check)
+                        {
                             String fromWhere = jsonObject.getString("from");
                             switch (fromWhere) {
                                 case "saveButton":
@@ -256,14 +674,16 @@ public class Operative extends FragmentActivity implements
                                         maxNumber = 0;
                                     cashFragment.resetListForSaveFromServer(maxNumber);
                                     break;
+
                                 case "paymentButton":
                                     cashFragment.goToPaymentFromServer(numberBill, billId);
                                     break;
+
                                 case "tableButton":
                                     cashFragment.goToTableFromServer(numberBill, billId);
                                     break;
-                                case "customerPopup":
 
+                                case "customerPopup":
                                     Intent intent = new Intent(Operative.this, ClientsActivity.class);
                                     intent.putExtra("username", username);
                                     intent.putExtra("isAdmin", isAdmin);
@@ -515,6 +935,8 @@ public class Operative extends FragmentActivity implements
         }
     }
 
+
+
     public void callHttpHandler(String route, List<NameValuePair> params) {
         httpHandler = new HttpHandler();
         httpHandler.delegate = this;
@@ -532,376 +954,6 @@ public class Operative extends FragmentActivity implements
     }
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_operative);
-//        TimerManager.startPinpadAlert();
-//        TimerManager.startLogoutAlert();
-        Intent intent = getIntent();
-        me = this;
-
-        dbA = new DatabaseAdapter(me);
-
-        /** Sets current user on top right button**/
-        username = intent.getStringExtra("username");
-        userId = intent.getIntExtra("userId", -1);
-        userType = intent.getIntExtra("userType", -1);
-
-        isAdmin = intent.getIntExtra("isAdmin", -1);
-        billId = intent.getIntExtra("billId", -1);
-        customer = intent.getIntExtra("customer", -1);
-        orderNumber = intent.getIntExtra("orderNumber", -1);
-        email = intent.getStringExtra("email");
-
-        forClient = this;
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-
-        /** Control the three dots on the operative activity, that display the status of {printer, blackbox, wifi} **/
-
-        findViewById(R.id.check_printer).setActivated(StaticValue.printerOn);
-
-        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        findViewById(R.id.check_wi_fi).setActivated(mWifi.isConnected());
-
-        findViewById(R.id.check_blackbox).setActivated(StaticValue.blackbox);
-
-
-        ((CustomTextView)findViewById(R.id.admin_button_tv)).setText(R.string.user);
-        User myUser = dbA.getUserByUsername(username);
-        if(myUser.getName()!=null) {
-            if(myUser.getName().length()>=1) {
-                if (myUser.getSurname() != null) {
-                    if (myUser.getSurname().length() >= 1) {
-                        String surname = myUser.getSurname().substring(0, 1).toUpperCase() + ".";
-                        String name = myUser.getName().substring(0, 1).toUpperCase() + myUser.getName().substring(1);
-
-                        ((CustomTextView) findViewById(R.id.admin_username_button_tv)).setText(name + " " + surname);
-                    } else {
-                        String name = myUser.getName().substring(0, 1).toUpperCase() + myUser.getName().substring(1);
-                        ((CustomTextView) findViewById(R.id.admin_username_button_tv)).setText(name);
-                    }
-                } else {
-                    String name = myUser.getName().substring(0, 1).toUpperCase() + myUser.getName().substring(1);
-                    ((CustomTextView) findViewById(R.id.admin_username_button_tv)).setText(name);
-                }
-            }else
-                ((CustomTextView) findViewById(R.id.admin_username_button_tv)).setText(R.string.user);
-
-        }
-
-
-        findViewById(R.id.cashier).setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-
-                cashFragment.deleteBill();
-                return false;
-            }
-        });
-
-
-        findViewById(R.id.admin).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
-                    Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
-                }else {
-                    if (cashFragment.getListDataHeader() == 0) {
-                        fireUserWindow();
-                    } else {
-                        openSaveBillPopup(1);
-                    }
-                }
-            }
-        });
-
-
-        findViewById(R.id.cashier).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(cashFragment.getListDataHeader() == 0 && (dbA.getPaidBill(billId) != 1 || billId == -1) ){
-                    Intent intent = new Intent(Operative.this, OverviewActivity.class);
-                    intent.putExtra("username", username);
-                    intent.putExtra("isAdmin", isAdmin);
-                    // intent.putExtra("billId", billId);
-                    intent.putExtra("userId", userId);
-                    intent.putExtra("userType", userType);
-                    intent.putExtra("tableNumber", tableNumber);
-                    intent.putExtra("orderNumber", orderNumber);
-                    startActivity(intent);
-                    finish();
-                }
-                else{
-                    if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
-                        Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
-                    } else {
-                        openSaveBillPopup(4);
-                    }
-                }
-            }
-        });
-
-        findViewById(R.id.clients).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(cashFragment.getListDataHeader() == 0 && (dbA.getPaidBill(billId) != 1 || billId == -1)) {
-                    if(cashFragment.getListDataHeader()==0  && billId>0){
-                        dbA.deleteBillData1(billId, getApplicationContext());
-                    }
-
-                    Intent intent = new Intent(Operative.this, ClientsActivity.class);
-                    intent.putExtra("username", username);
-                    intent.putExtra("isAdmin", isAdmin);
-                    intent.putExtra("billId", billId);
-                    intent.putExtra("userId", userId);
-                    intent.putExtra("userType", userType);
-                    intent.putExtra("tableNumber", tableNumber);
-                    intent.putExtra("orderNumber", orderNumber);
-                    intent.setAction("clientsFromOperative");
-                    startActivity(intent);
-                    finish();
-                } else {
-                    if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
-                        Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
-                    } else {
-                        openSaveBillPopup(2);
-                    }
-                }
-            }
-        });
-
-        findViewById(R.id.orders).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cashFragment.getListDataHeader()==0 && (dbA.getPaidBill(billId) != 1 || billId == -1)) {
-                    //go directly to orders
-                    dbA.showData("bill_total");
-                    if(cashFragment.getListDataHeader()==0  && billId>0){
-                        dbA.deleteBillData1(billId, getApplicationContext());
-                    }
-                    Intent intent = new Intent(Operative.this, OrderActivity.class);
-                    intent.putExtra("username", username);
-                    intent.putExtra("isAdmin", isAdmin);
-                    intent.putExtra("userId", userId);
-                    intent.putExtra("userType", userType);
-                    intent.putExtra("tableNumber", tableNumber);
-                    intent.putExtra("orderNumber", orderNumber);
-                    intent.setAction("ordersFromOperative");
-                    startActivity(intent);
-                    finish();
-                }else{
-                    if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
-                        Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
-                    }
-                    else { openSaveBillPopup(3); }
-                }
-             }
-        });
-
-        findViewById(R.id.reservations).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cashFragment.getListDataHeader()==0 && (dbA.getPaidBill(billId) != 1 || billId == -1)) {
-
-                    dbA.showData("bill_total");
-                    if(cashFragment.getListDataHeader()==0  && billId>0){
-                        dbA.deleteBillData1(billId, getApplicationContext());
-                    }
-                    Intent intent = new Intent(Operative.this, ReservationsActivity.class);
-                    intent.putExtra("username", username);
-                    intent.putExtra("isAdmin", isAdmin);
-                    intent.putExtra("userId", userId);
-                    intent.putExtra("userType", userType);
-                    intent.putExtra("tableNumber", tableNumber);
-                    intent.putExtra("orderNumber", orderNumber);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
-                        Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
-                    }
-                    else { openSaveBillPopup(5); }
-                }
-            }
-        });
-
-
-        findViewById(R.id.open_cash_drawer).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(StaticValue.blackbox){
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                    callHttpHandler("/openCashDrawer", params);
-                }else {
-                    if (StaticValue.printerName.equals("ditron")) {
-                        PrinterDitronThread ditron = PrinterDitronThread.getInstance();
-                        ditron.closeAll();
-                        ditron.startSocket();
-                    }
-
-                    ClientThread myThread = ClientThread.getInstance();
-                    myThread.delegate = forClient;
-                    myThread.setPrintType(14);
-                    myThread.setIP(IP);
-
-                    myThread.setClientThread();
-                    myThread.setRunBaby(true);
-                }
-
-                openPinpad();
-            }
-        });
-
-
-        if(StaticValue.showProducts){
-            findViewById(R.id.showMainMenu).setBackgroundResource(R.drawable.open_drawer);
-            findViewById(R.id.showProducts).setBackgroundResource(R.drawable.selected_button_footer);
-            findViewById(R.id.showFavourites).setBackgroundResource(R.drawable.open_drawer);
-        } else if (StaticValue.showFavourites) {
-            findViewById(R.id.showMainMenu).setBackgroundResource(R.drawable.open_drawer);
-            findViewById(R.id.showProducts).setBackgroundResource(R.drawable.open_drawer);
-            findViewById(R.id.showFavourites).setBackgroundResource(R.drawable.selected_button_footer);
-        } else {
-            findViewById(R.id.showMainMenu).setBackgroundResource(R.drawable.selected_button_footer);
-            findViewById(R.id.showProducts).setBackgroundResource(R.drawable.open_drawer);
-            findViewById(R.id.showFavourites).setBackgroundResource(R.drawable.open_drawer);
-        }
-
-        findViewById(R.id.showMainMenu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
-                    Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
-                }else {
-                    exitModify();
-                    goToMainPage();
-                    findViewById(R.id.showMainMenu).setBackgroundResource(R.drawable.selected_button_footer);
-                    findViewById(R.id.showProducts).setBackgroundResource(R.drawable.open_drawer);
-                    findViewById(R.id.showFavourites).setBackgroundResource(R.drawable.open_drawer);
-                    StaticValue.setShowMainMenu();
-
-                    operativeFragment.setTypeOfFavourites();
-                }
-
-            }
-        });
-
-        findViewById(R.id.showProducts).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
-                    Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
-                }else {
-                    exitModify();
-                    goToMainPage();
-                    findViewById(R.id.showMainMenu).setBackgroundResource(R.drawable.open_drawer);
-                    findViewById(R.id.showProducts).setBackgroundResource(R.drawable.selected_button_footer);
-                    findViewById(R.id.showFavourites).setBackgroundResource(R.drawable.open_drawer);
-                    StaticValue.setShowProducts();
-
-                    operativeFragment.setTypeOfFavourites();
-                }
-            }
-        });
-
-        findViewById(R.id.showFavourites).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cashFragment.getModifyProduct() || ModifierFragment.getModify() || cashFragment.deleteProduct) {
-                    Toast.makeText(me, "Please finish to modify", Toast.LENGTH_SHORT).show();
-                }else {
-                    exitModify();
-                    goToMainPage();
-                    ((View) findViewById(R.id.showMainMenu)).setBackgroundResource(R.drawable.open_drawer);
-                    ((View) findViewById(R.id.showProducts)).setBackgroundResource(R.drawable.open_drawer);
-                    ((View) findViewById(R.id.showFavourites)).setBackgroundResource(R.drawable.selected_button_footer);
-
-                    StaticValue.setShowFavourites();
-                    operativeFragment.setTypeOfFavourites();
-                }
-
-            }
-        });
-
-        operativeFragment = new OperativeFragment();
-        cashFragment = new CashFragment();
-        modifierFragment = new ModifierFragment();
-        FragmentTransaction transaction =
-                getSupportFragmentManager().beginTransaction();
-        if(!operativeFragment.isAdded()) {
-            transaction.add(R.id.operative_fragment, operativeFragment);
-        }
-
-        operativeFragment.setIsModify(false);
-
-        transaction.add(R.id.cash_fragment, cashFragment);
-        transaction.commit();
-
-        Display display = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics ();
-        display.getMetrics(outMetrics);
-        density  = getResources().getDisplayMetrics().density;
-        dpHeight = outMetrics.heightPixels;// / density;
-        dpWidth  = outMetrics.widthPixels;// / density;
-
-        if(email != null)
-            cashFragment.setEmail(email);
-
-        if(timer == null){
-            timer = new TimerClass(dbA, me, forClient);
-            timer.launchTimer();
-        }
-        else{
-            if(!timer.getIsRunning()){
-                timer = new TimerClass(dbA, me, forClient);
-                timer.launchTimer();
-            }
-        }
-
-        TimerManager.setContext(getApplicationContext());
-        intentPasscode = new Intent(getApplicationContext(), PinpadBroadcastReciver.class);
-        intentPasscode.putExtra("isAdmin", isAdmin);
-        intentPasscode.putExtra("username", username);
-
-        TimerManager.setIntentPinpad(intentPasscode);
-        TimerManager.startPinpadAlert(1);
-
-        final Handler ha=new Handler();
-        ha.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                //call function
-                //Server server = Server.getInstance();
-
-                if(StaticValue.printerOn){
-                    findViewById(R.id.check_printer).setActivated(true);
-                }else{
-                    findViewById(R.id.check_printer).setActivated(false);
-                }
-                ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-                if (mWifi.isConnected()) {
-                    // Do whatever
-                    findViewById(R.id.check_wi_fi).setActivated(true);
-
-                }else{
-                    findViewById(R.id.check_wi_fi).setActivated(false);
-                }
-                ha.postDelayed(this, 100);
-            }
-        }, 100);
-
-        resetPinpadTimer(1);
-
-
-    }
 
 
     public void setTypeOfFavourites(){
@@ -929,7 +981,8 @@ public class Operative extends FragmentActivity implements
         }
     }
 
-    public void openSaveBillPopup(int code){
+    public void openSaveBillPopup(int code)
+    {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
         final View popupView = layoutInflater.inflate(R.layout.save_bill_popup, null);
         final PopupWindow popupWindow = new PopupWindow(
@@ -949,7 +1002,8 @@ public class Operative extends FragmentActivity implements
         popupWindow.showAtLocation(findViewById(R.id.operative), 0, 0, 0);
     }
 
-    public void setUpSaveBillPopup(final View popupView, final PopupWindow popupWindow, int code){
+    public void setUpSaveBillPopup(final View popupView, final PopupWindow popupWindow, int code)
+    {
         //create a new existing client, same as existing client
         popupView.findViewById(R.id.no_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1116,8 +1170,6 @@ public class Operative extends FragmentActivity implements
                 }
             }
         });
-
-
     }
 
     public void throwTimerPopup(ArrayList<Integer> array){
@@ -1181,20 +1233,19 @@ public class Operative extends FragmentActivity implements
         finish();
     }
 
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        if(customer!=-1){
-            //if customer id != -1 i am coming back from clients activity so I open customer popup
-            Intent intent = getIntent();
-            boolean customerModify = intent.getBooleanExtra("customerModify", false);
-            int modifyPosition = intent.getIntExtra("modifyPosition", -1);
-            ClientInfo clientInfo = dbA.fetchSingleClient(customer);
-            openCustomerPopup(clientInfo.getName()+" " + clientInfo.getSurname(), clientInfo.getClient_id(),
-                    orderNumber, customerModify, modifyPosition, tableNumber);
-            cashFragment.setCashListIndex(intent.getIntExtra("cashListIndex", -1));
-        }
+    public void resetPinpadTimer(int type){
+        TimerManager.stopPinpadAlert();
+        TimerManager.setContext(getApplicationContext());
+        intentPasscode = new Intent(getApplicationContext(), PinpadBroadcastReciver.class);
+
+        intentPasscode.putExtra("isAdmin", isAdmin);
+        intentPasscode.putExtra("username", username);
+
+        TimerManager.setIntentPinpad(intentPasscode);
+        TimerManager.startPinpadAlert(type);
     }
+
+
 
     //sets CashFragment's values returning from ClientsActivity
     public void setCashFragmentValues(int id, int number){
@@ -2855,8 +2906,7 @@ public class Operative extends FragmentActivity implements
 
     public void goToMainPageMethod() {
         if(!operativeFragment.isAdded()) {
-            FragmentTransaction transaction =
-                    getSupportFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.remove(modifierFragment);
             transaction.add(R.id.operative_fragment, operativeFragment);
             transaction.commit();

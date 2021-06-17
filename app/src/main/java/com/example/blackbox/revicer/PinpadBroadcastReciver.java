@@ -19,7 +19,7 @@ public class PinpadBroadcastReciver extends BroadcastReceiver
     public void onReceive(Context context, Intent intent)
     {
         TimerManager.stopPinpadAlert();
-        StaticValue.printerOn = false;
+        // StaticValue.printerOn = false;
 
         String username = intent.getStringExtra("username");
         int isAdmin = intent.getIntExtra("isAdmin", -1);
@@ -29,6 +29,7 @@ public class PinpadBroadcastReciver extends BroadcastReceiver
         i.putExtra("isAdmin", isAdmin);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
+
         System.exit(0);
     }
 }

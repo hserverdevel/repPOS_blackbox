@@ -81,7 +81,7 @@
             <com.example.blackbox.graphics.CustomButton
                 android:layout_width="216dp"
                 android:layout_height="42dp"
-                android:text="@string/clients_didnt_arrived"
+                android:text="@string/modify_reservation"
                 android:id="@+id/clients_not_arrived_button"
                 android:layout_below="@id/add_hline"
                 android:layout_marginStart="15dp"

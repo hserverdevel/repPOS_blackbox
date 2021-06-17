@@ -67,7 +67,7 @@ public class DbAdapterProducts extends DbAdapterUsers
 
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e(TAG, "[fetchButtonsByQuery] Fail: " + e.getMessage());
             return null;
         }
     }
@@ -81,8 +81,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         try
         {
             //if (database.isOpen()) database.close();
-            if (!database.isOpen())
-            { database = dbHelper.getReadableDatabase(); }
+            if (!database.isOpen()) { database = dbHelper.getReadableDatabase(); }
             Cursor mCursor = database.rawQuery(query, null);
             ButtonLayout c = new ButtonLayout(context);
             if (mCursor != null)
@@ -115,7 +114,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e(TAG, "[fetchButtonByQuery] Fail: " + e.getMessage());
             return null;
         }
     }
@@ -132,7 +131,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("DELETE ERROR", e.getMessage());
+            Log.e("DELETE ERROR", e.getMessage());
         }
     }
 
@@ -154,7 +153,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("Delete Error", e.getMessage());
+            Log.e("Delete Error", e.getMessage());
         }
     }
 
@@ -254,7 +253,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("Insert Buttons Error", e.getMessage());
+            Log.e("Insert Buttons Error", e.getMessage());
         }
     }
 
@@ -280,7 +279,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("Insert Buttons Error", e.getMessage());
+            Log.e("Insert Buttons Error", e.getMessage());
         }
     }
 
@@ -295,7 +294,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("DELETE ERROR", e.getMessage());
+            Log.e("DELETE ERROR", e.getMessage());
         }
     }
 
@@ -316,7 +315,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("Delete Error", e.getMessage());
+            Log.e("Delete Error", e.getMessage());
         }
     }
 
@@ -356,7 +355,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         catch (Exception e)
         {
             ArrayList<ModifiersGroupAdapter.ModifiersGroup> array = new ArrayList<>();
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             return array;
         }
     }
@@ -396,7 +395,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             c.setPosition(1000000);
             return c;
         }
@@ -431,7 +430,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             return returnId;
         }
     }
@@ -466,7 +465,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             return null;
         }
     }
@@ -501,7 +500,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             m.setPosition(10000000);
             return m;
         }
@@ -538,7 +537,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             return null;
         }
     }
@@ -570,7 +569,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             return false;
         }
     }
@@ -611,7 +610,7 @@ public class DbAdapterProducts extends DbAdapterUsers
 
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             return -1;
         }
     }
@@ -656,7 +655,7 @@ public class DbAdapterProducts extends DbAdapterUsers
 
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             return -1;
         }
     }
@@ -694,7 +693,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             return null;
         }
     }
@@ -733,7 +732,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             return null;
         }
     }
@@ -767,7 +766,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("DELETE ERROR", e.getMessage());
+            Log.e("DELETE ERROR", e.getMessage());
         }
     }
 
@@ -795,7 +794,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
 
             return false;
         }
@@ -811,7 +810,7 @@ public class DbAdapterProducts extends DbAdapterUsers
             { database = dbHelper.getReadableDatabase(); }
             Cursor mCursor = database.rawQuery(query, null);
             ArrayList<OModifierGroupAdapter.OModifiersGroup> array = new ArrayList<>();
-            //Log.d("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
+            //Log.e("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
             if (mCursor != null)
             {
                 while (mCursor.moveToNext())
@@ -837,7 +836,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         catch (Exception e)
         {
             ArrayList<OModifierGroupAdapter.OModifiersGroup> array = new ArrayList<>();
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
 
             ArrayList<OModifierGroupAdapter.OModifiersGroup> newarray = new ArrayList<>();
             return newarray;
@@ -859,7 +858,7 @@ public class DbAdapterProducts extends DbAdapterUsers
                     "WHERE modifiers_group_assigned.prod_id=" + categoryId + " ORDER BY modifiers_group.position";
             Cursor mCursor = database.rawQuery(query, null);
             ArrayList<OModifierGroupAdapter.OModifiersGroup> array = new ArrayList<>();
-            //Log.d("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
+            //Log.e("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
             if (mCursor != null)
             {
                 while (mCursor.moveToNext())
@@ -886,7 +885,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         catch (Exception e)
         {
             ArrayList<OModifierGroupAdapter.OModifiersGroup> array = new ArrayList<>();
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
 
             ArrayList<OModifierGroupAdapter.OModifiersGroup> newarray = new ArrayList<>();
             return newarray;
@@ -912,7 +911,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d(TAG, e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -935,7 +934,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("Insert modifiers Error", e.getMessage());
+            Log.e("Insert modifiers Error", e.getMessage());
         }
     }
 
@@ -957,7 +956,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("Insert mgA Error", e.getMessage());
+            Log.e("Insert mgA Error", e.getMessage());
         }
     }
 
@@ -979,7 +978,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("Insert mA Error", e.getMessage());
+            Log.e("Insert mA Error", e.getMessage());
         }
     }
 
@@ -999,7 +998,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d(TAG, e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -1018,7 +1017,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d(TAG, e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -1038,7 +1037,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d(TAG, e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -1058,7 +1057,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("Insert modifiers Error", e.getMessage());
+            Log.e("Insert modifiers Error", e.getMessage());
         }
     }
 
@@ -1077,7 +1076,7 @@ public class DbAdapterProducts extends DbAdapterUsers
         }
         catch (Exception e)
         {
-            Log.d("Insert modifiers Error", e.getMessage());
+            Log.e("Insert modifiers Error", e.getMessage());
         }
     }
 

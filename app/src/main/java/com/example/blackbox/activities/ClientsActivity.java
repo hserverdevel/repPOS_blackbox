@@ -397,15 +397,45 @@ public class ClientsActivity extends AppCompatActivity implements HttpHandler.As
 
                 switch (route) {
                     case "fetchClients":
+                        check = jsonObject.getBoolean("check");
+                        if (check)
+                        {
+                            if (!jsonObject.getBoolean("updated"))
+                            {
+                                JSONArray clientsList = new JSONObject(output).getJSONArray("clients");
+                                ArrayList<ClientInfo> prova = ClientInfo.fromJsonArray(clientsList);
+                                clientsAdapter.updateClientsList(ClientInfo.fromJsonArray(clientsList));
+
+                                dbA.updateChecksumForTable("client", jsonObject.getString("clientChecksum"));
+                            }
+
+                            else
+                                { clientsAdapter.setClientsDefault(); }
+                        }
+
+                        else
+                            { clientsAdapter.updateClientsList(null); }
+                        break;
+
                     case "fetchExclusiveClients":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            JSONArray clientsList = new JSONObject(output).getJSONArray("clients");
-                            ArrayList<ClientInfo> prova = ClientInfo.fromJsonArray(clientsList);
-                            clientsAdapter.updateClientsList(ClientInfo.fromJsonArray(clientsList));
-                        } else {
-                            clientsAdapter.updateClientsList(null);
+                        if (check)
+                        {
+                            if (!jsonObject.getBoolean("updated"))
+                            {
+                                JSONArray clientsList = new JSONObject(output).getJSONArray("clients");
+                                ArrayList<ClientInfo> prova = ClientInfo.fromJsonArray(clientsList);
+                                clientsAdapter.updateClientsList(ClientInfo.fromJsonArray(clientsList));
+
+                                dbA.updateChecksumForTable("client", jsonObject.getString("clientChecksum"));
+                            }
+
+                            else
+                                { clientsAdapter.setExclusiveClientsDefault(); }
                         }
+
+                        else
+                            { clientsAdapter.updateClientsList(null); }
                         break;
 
                     case "updateClient":

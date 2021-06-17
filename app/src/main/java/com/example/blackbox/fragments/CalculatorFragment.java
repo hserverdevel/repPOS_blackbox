@@ -828,7 +828,7 @@ public class CalculatorFragment extends Fragment
                                     if(paymentType==4){
                                         ((PaymentActivity)getContext()).openProcessCardPopup();
                                     }else {
-                                        communicator.printBill(paidVar, cost, actualCredit, 1);
+                                        communicator.printBill(paidVar, cost, actualCredit, 1); // XXX
                                         ((PaymentActivity) getContext()).setNormalKillOkButton();
                                         ((CalculatorFragment) ((FragmentActivity) getContext()).getSupportFragmentManager().findFragmentByTag("calc"))
                                                 .setMode(4);

@@ -34,8 +34,10 @@ public class BlackboxSettingAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private final DatabaseAdapter dbA;
     private final LayoutInflater inflater;
     private final Context context;
-    ArrayList<BlackboxInfo> blackboxes;
+    private ArrayList<BlackboxInfo> blackboxes;
     private final View popupview;
+
+    public BlackboxInfo blackbox;
 
 
     public BlackboxSettingAdapter(Context c , DatabaseAdapter database, View popupview, PopupWindow popupWindow)
@@ -69,25 +71,64 @@ public class BlackboxSettingAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position)
     {
-            BlackboxInfo blackbox = blackboxes.get(position);
+            blackbox = blackboxes.get(position);
 
             ButtonHolder button = (ButtonHolder) holder;
             button.printerContainer.setText(String.format("%s (%s)", blackbox.getName(), blackbox.getAddress()));
 
-            button.view.setOnTouchListener(new OnSwipeTouchListener(context)
-            {
-                public void onClick(){
-                    ((MainActivity) context).setSelectedBlackbox(popupview, blackbox);
-                }
+            button.printerContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v)
+                    { ((MainActivity) context).setSelectedBlackbox(popupview, blackbox); }
+            });
 
-                public void onLongClick()
+
+            button.printerContainer.setOnLongClickListener(new View.OnLongClickListener()
+            {
+                @Override
+                public boolean onLongClick(View v)
                 {
-                    Toast.makeText(context, "Deleting blackbox ...", Toast.LENGTH_SHORT).show();
+                    if (button.deleteButton.getVisibility() == View.GONE)
+                    {
+                        button.printerContainer.setVisibility(View.GONE);
+                        button.deleteButton.setVisibility(View.VISIBLE);
+
+                        return true;
+                    }
+
+                    return false;
+                }
+            });
+
+
+            button.deleteButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
                     dbA.deleteBlackbox(blackbox);
 
-                    setPrinters();
+                    notifyDataSetChanged();
                 }
-            } );
+            });
+
+
+            button.deleteButton.setOnLongClickListener(new View.OnLongClickListener()
+            {
+                @Override
+                public boolean onLongClick(View v)
+                {
+                    if (button.deleteButton.getVisibility() == View.VISIBLE)
+                    {
+                        button.printerContainer.setVisibility(View.VISIBLE);
+                        button.deleteButton.setVisibility(View.GONE);
+
+                        return true;
+                    }
+
+                    return false;
+                }
+            });
     }
 
 

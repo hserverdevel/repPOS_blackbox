@@ -1,12 +1,14 @@
 package com.example.blackbox.adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -26,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.blackbox.DialogCreator;
 import com.example.blackbox.R;
 import com.example.blackbox.activities.TableActivity;
 import com.example.blackbox.graphics.CustomButton;
@@ -50,7 +53,8 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
  * this is used whe you configure the tables, for operative table look at TableUseAdapter
  */
 
-public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements ItemTouchHelperAdapter {
+public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements ItemTouchHelperAdapter
+{
     private float density;
     private float dpHeight;
     private float dpWidth;
@@ -63,98 +67,121 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
     public PopupWindow myPopupWindow;
     public View myPopupView;
     public PopupWindow myPopupDialog;
-    public void closePopupWindow(){
-        if(myPopupWindow!=null) myPopupWindow.dismiss();
-    }
-    public void closeTwoPopupWindow(){
-        if(myPopupDialog!=null) myPopupDialog.dismiss();
-        if(myPopupWindow!=null) myPopupWindow.dismiss();
+
+    public void closePopupWindow()
+    {
+        if (myPopupWindow != null)
+        { myPopupWindow.dismiss(); }
     }
 
-    public TableAdapter(Context c,DatabaseAdapter database, ArrayList<Table> tables){
+    public void closeTwoPopupWindow()
+    {
+        if (myPopupDialog != null)
+        { myPopupDialog.dismiss(); }
+        if (myPopupWindow != null)
+        { myPopupWindow.dismiss(); }
+    }
+
+    public TableAdapter(Context c, DatabaseAdapter database, ArrayList<Table> tables)
+    {
         context = c;
         this.dbA = database;
         this.tables = tables;
-        inflater = (LayoutInflater) context
-                .getSystemService(LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.activity_table, null);
         /**DISPLAY METRICS:  used to center the window in the screen**/
-        Display display = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics ();
+        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
-        density  = context.getResources().getDisplayMetrics().density;
+        density = context.getResources().getDisplayMetrics().density;
         dpHeight = outMetrics.heightPixels;// / density;
-        dpWidth  = outMetrics.widthPixels;// / density;
+        dpWidth = outMetrics.widthPixels;// / density;
 
 
     }
 
     @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
+    public boolean onItemMove(int fromPosition, int toPosition)
+    {
         return false;
     }
 
     @Override
-    public void onItemDismiss(int position) {
+    public void onItemDismiss(int position)
+    {
 
     }
 
     @Override
-    public int getItemViewType(int position){
+    public int getItemViewType(int position)
+    {
         return tables.get(position).getId();
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
         View v;
         ViewHolder vh;
-        switch(viewType){
+        switch (viewType)
+        {
             case -11:
                 v = inflater.inflate(R.layout.table_plusbutton, null);
                 vh = new PlusButtonHolder(v);
                 break;
+
             default:
                 v = inflater.inflate(R.layout.table_gridview, null);
                 vh = new ButtonHolder(v);
                 break;
         }
+
         return vh;
     }
+
+
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position)
+    {
         Table table = tables.get(position);
-        switch(getItemViewType(position)) {
-            /**
+        switch (getItemViewType(position))
+        {
+            /*
              *  CASE: BUTTON
              *  DEPENDING ON THE BUTTON ID( ADD BUTTON OR OTHER BUTTON)
              *  THE LAYOUT PARAMS ARE SET TO THOSE SPECIFIED IN THE BUTTONLAYOUT OBJECT
              */
             case -11:
                 PlusButtonHolder plusbutton = (PlusButtonHolder) holder;
-                plusbutton.imageContainer.setOnClickListener(new View.OnClickListener() {
+                plusbutton.imageContainer.setOnClickListener(new View.OnClickListener()
+                {
                     @Override
-                    public void onClick(View view) {
-
+                    public void onClick(View view)
+                    {
                         openNewTablesPopup();
                     }
                 });
                 break;
+
             default:
                 ButtonHolder button = (ButtonHolder) holder;
                 int color2 = Color.parseColor("#05a8c0");
 
-                /** Rounded corners for internal image **/
-                if(table.getShareTable()==1){
-
+                /* Rounded corners for internal image */
+                if (table.getShareTable() == 1)
+                {
                     GradientDrawable border = new GradientDrawable();
                     int color3 = Color.parseColor("#222222");
                     border.setColor(color3);
-                    border.setCornerRadius(8*density);
+                    border.setCornerRadius(8 * density);
                     //border.setColor(0xFF000000); //black background
                     //border.setStroke((int) (3*density), 0xFFC6C5C6); //gray border with full opacity
-                    /** Rounded corners for the buttons **/
+                    /* Rounded corners for the buttons **/
                     button.view.setBackground(border);
-                }else {
+                }
+
+                else
+                {
 
                 }
 
@@ -165,9 +192,11 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
                 button.tableLabel.setText(R.string.table);
                 button.tableNumber.setText(String.format("%02d", table.getTableNumber()));
                 button.actualSeat.setText(String.valueOf(table.getPeopleNumber()));
-                button.tableTextContainer.setOnClickListener(new View.OnClickListener() {
+                button.tableTextContainer.setOnClickListener(new View.OnClickListener()
+                {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(View view)
+                    {
                         openModifyTablesPopup(table);
                     }
                 });
@@ -177,24 +206,31 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
 
     /**
      * set tables to display
+     *
      * @param t
      * @param roomId
      */
-    public void setTables(ArrayList<Table> t, int roomId){
+    public void setTables(ArrayList<Table> t, int roomId)
+    {
         tables.clear();
         this.roomId = roomId;
         tables = t;
         notifyDataSetChanged();
     }
 
+
     @Override
-    public int getItemCount() {
-        if(tables!=null)
-        return tables.size();
-        else return 0;
+    public int getItemCount()
+    {
+        if (tables != null)
+        { return tables.size(); }
+        else
+        { return 0; }
     }
 
-    public static class ButtonHolder extends ViewHolder{
+
+    public static class ButtonHolder extends ViewHolder
+    {
         public View view;
         public RelativeLayout tableTextContainer;
         public CustomTextView tableLabel;
@@ -203,43 +239,52 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
         public View tableLine;
         public LinearLayout conf;
         public LinearLayout op;
-        public ButtonHolder(View itemView) {
+
+        public ButtonHolder(View itemView)
+        {
             super(itemView);
             view = itemView;
-            tableTextContainer  = (RelativeLayout) view.findViewById(R.id.table_text_container);
-            tableLabel = (CustomTextView) view.findViewById(R.id.table_text);
-            tableNumber = (CustomTextView) view.findViewById(R.id.table_text_position);
-            actualSeat = (CustomTextView) view.findViewById(R.id.table_seat_conf);
+            tableTextContainer = view.findViewById(R.id.table_text_container);
+            tableLabel = view.findViewById(R.id.table_text);
+            tableNumber = view.findViewById(R.id.table_text_position);
+            actualSeat = view.findViewById(R.id.table_seat_conf);
             tableLine = view.findViewById(R.id.table_vertical_line);
-            conf  = (LinearLayout) view.findViewById(R.id.configure_container);
-            op = (LinearLayout) view.findViewById(R.id.operative_container);
+            conf = view.findViewById(R.id.configure_container);
+            op = view.findViewById(R.id.operative_container);
         }
+
         @Override
-        public String toString(){ return "ButtonHolder, Title: "+tableLabel.getText().toString();}
+        public String toString() { return "ButtonHolder, Title: " + tableLabel.getText().toString();}
     }
 
-    public static class PlusButtonHolder extends ViewHolder{
+
+    public static class PlusButtonHolder extends ViewHolder
+    {
         public View view;
         public RelativeLayout imageContainer;
         public ImageView image;
-        public PlusButtonHolder(View itemView) {
+
+        public PlusButtonHolder(View itemView)
+        {
             super(itemView);
             view = itemView;
-            imageContainer = (RelativeLayout) view.findViewById(R.id.table_plus_container);
-            image = (ImageView)view.findViewById(R.id.button_img);
+            imageContainer = view.findViewById(R.id.table_plus_container);
+            image = view.findViewById(R.id.button_img);
         }
+
         @Override
-        public String toString(){ return "PlusButton";}
+        public String toString() { return "PlusButton";}
     }
 
-    public void loadTablesName(View popupView, boolean modify){
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+
+    public void loadTablesName(View popupView, boolean modify)
+    {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
 
         //THIS MAKE LYNEAR LAYOUT MANAGER TO START FROM RIGHT AND NOT FROM LEFT
 
         //layoutManager.setReverseLayout(true);
-        RecyclerView nameRecycler = (RecyclerView) popupView.findViewById(R.id.table_name_recycler);
+        RecyclerView nameRecycler = popupView.findViewById(R.id.table_name_recycler);
         nameRecycler.setHasFixedSize(true);
         nameRecycler.setLayoutManager(layoutManager);
 
@@ -248,70 +293,90 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
 
     }
 
-    public void setTableValues(Table table, View popupView){
-        CustomEditText capacity = (CustomEditText) popupView.findViewById(R.id.table_capacity_input);
-        CustomEditText name = (CustomEditText) popupView.findViewById(R.id.table_name_input);
+
+    public void setTableValues(Table table, View popupView)
+    {
+        CustomEditText capacity = popupView.findViewById(R.id.table_capacity_input);
+        CustomEditText name = popupView.findViewById(R.id.table_name_input);
         capacity.setText(String.valueOf(table.getPeopleNumber()));
         name.setText(table.getTableName());
     }
 
+
     /**
      * open new table popup
      */
-    public void openNewTablesPopup(){
+    public void openNewTablesPopup()
+    {
 
-        LayoutInflater layoutInflater = (LayoutInflater) context
-                .getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
         final View popupView = layoutInflater.inflate(R.layout.new_table_popup, null);
-        final PopupWindow popupWindow = new PopupWindow(
-                popupView,
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
+        final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        popupView.post(new Runnable() {
+        popupView.post(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
             }
         });
 
-        final ImageButton merge = (ImageButton)popupView.findViewById(R.id.table_merge_check);
-        final ImageButton sharing = (ImageButton)popupView.findViewById(R.id.table_sharing_check);
-        final CustomEditText capacity = (CustomEditText) popupView.findViewById(R.id.table_capacity_input);
-        final CustomEditText name = (CustomEditText) popupView.findViewById(R.id.table_name_input);
-        final CustomEditText quantity = (CustomEditText) popupView.findViewById(R.id.table_quantity_input);
-        final ImageButton btnDismiss = (ImageButton)popupView.findViewById(R.id.kill);
-        btnDismiss.setOnClickListener(new Button.OnClickListener(){
+        final ImageButton merge = popupView.findViewById(R.id.table_merge_check);
+        final ImageButton sharing = popupView.findViewById(R.id.table_sharing_check);
+        final CustomEditText capacity = popupView.findViewById(R.id.table_capacity_input);
+        final CustomEditText name = popupView.findViewById(R.id.table_name_input);
+        final CustomEditText quantity = popupView.findViewById(R.id.table_quantity_input);
+        final ImageButton btnDismiss = popupView.findViewById(R.id.kill);
+        btnDismiss.setOnClickListener(new Button.OnClickListener()
+        {
 
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupWindow.dismiss();
             }
         });
-        final ImageButton buttonOk = (ImageButton)popupView.findViewById(R.id.ok);
-        buttonOk.setOnClickListener(new Button.OnClickListener(){
+        final ImageButton buttonOk = popupView.findViewById(R.id.ok);
+        buttonOk.setOnClickListener(new Button.OnClickListener()
+        {
 
             @Override
-            public void onClick(View v) {
-                if(capacity.getText().toString().equals("")){
+            public void onClick(View v)
+            {
+                if (capacity.getText().toString().equals(""))
+                {
                     Toast.makeText(context, R.string.please_fill_all_fields, Toast.LENGTH_SHORT).show();
-                }else if(Integer.parseInt(capacity.getText().toString())==0){
+                }
+                else if (Integer.parseInt(capacity.getText().toString()) == 0)
+                {
                     Toast.makeText(context, R.string.capacity_cant_be_0, Toast.LENGTH_SHORT).show();
-                }else if(quantity.getText().toString().equals("")){
+                }
+                else if (quantity.getText().toString().equals(""))
+                {
                     Toast.makeText(context, R.string.please_fill_all_fields, Toast.LENGTH_SHORT).show();
-                }else if(Integer.parseInt(quantity.getText().toString())==0){
+                }
+                else if (Integer.parseInt(quantity.getText().toString()) == 0)
+                {
                     Toast.makeText(context, R.string.quantity_cant_be_0, Toast.LENGTH_SHORT).show();
-                }else{
+                }
+                else
+                {
                     //save table(s) and close popup
                     int mergeValue = 0;
-                    if(merge.isActivated()) mergeValue = 1;
-                    int shareValue= 0;
-                    if(sharing.isActivated()) shareValue = 1;
+                    if (merge.isActivated())
+                    { mergeValue = 1; }
+                    int shareValue = 0;
+                    if (sharing.isActivated())
+                    { shareValue = 1; }
                     String tableName = "";
-                    int quantityOfTables = tables.size()-1;
-                    if(name.getText().toString().equals("")) tableName = "Table Type "+(dbA.selectDistinctValueTable()+1);
-                    else tableName = name.getText().toString();
+                    int quantityOfTables = tables.size() - 1;
+                    if (name.getText().toString().equals(""))
+                    { tableName = "Table Type " + (dbA.selectDistinctValueTable() + 1); }
+                    else
+                    { tableName = name.getText().toString(); }
 
-                    if(StaticValue.blackbox){
+                    if (StaticValue.blackbox)
+                    {
                         myPopupWindow = popupWindow;
                         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
                         params.add(new BasicNameValuePair("quantity", quantity.getText().toString()));
@@ -321,8 +386,11 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
                         params.add(new BasicNameValuePair("mergeValue", String.valueOf(mergeValue)));
                         params.add(new BasicNameValuePair("shareValue", String.valueOf(shareValue)));
                         ((TableActivity) context).callHttpHandler("/insertTable", params);
-                    }else {
-                        for (int i = 1; i <= Integer.parseInt(quantity.getText().toString()); i++) {
+                    }
+                    else
+                    {
+                        for (int i = 1; i <= Integer.parseInt(quantity.getText().toString()); i++)
+                        {
                             dbA.insertTableConfiguration((quantityOfTables + i), Integer.parseInt(capacity.getText().toString()), roomId, tableName, mergeValue, shareValue);
                         }
                         tables.clear();
@@ -338,22 +406,26 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
 
             }
         });
-        merge.setOnClickListener(new Button.OnClickListener(){
+        merge.setOnClickListener(new Button.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-            if(popupView.findViewById(R.id.table_sharing_check).isActivated())
-                popupView.findViewById(R.id.table_sharing_check).setActivated(!popupView.findViewById(R.id.table_sharing_check).isActivated());
+            public void onClick(View v)
+            {
+                if (popupView.findViewById(R.id.table_sharing_check).isActivated())
+                { popupView.findViewById(R.id.table_sharing_check).setActivated(!popupView.findViewById(R.id.table_sharing_check).isActivated()); }
 
 
                 popupView.findViewById(R.id.table_merge_check).setActivated(!popupView.findViewById(R.id.table_merge_check).isActivated());
             }
         });
 
-        sharing.setOnClickListener(new Button.OnClickListener(){
+        sharing.setOnClickListener(new Button.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                if(popupView.findViewById(R.id.table_merge_check).isActivated())
-                popupView.findViewById(R.id.table_merge_check).setActivated(!popupView.findViewById(R.id.table_merge_check).isActivated());
+            public void onClick(View v)
+            {
+                if (popupView.findViewById(R.id.table_merge_check).isActivated())
+                { popupView.findViewById(R.id.table_merge_check).setActivated(!popupView.findViewById(R.id.table_merge_check).isActivated()); }
 
 
                 popupView.findViewById(R.id.table_sharing_check).setActivated(!popupView.findViewById(R.id.table_sharing_check).isActivated());
@@ -361,20 +433,24 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
         });
         setupDismissKeyboard(popupView);
         popupWindow.setFocusable(true);
-        popupWindow.showAtLocation(((Activity)context).findViewById(R.id.table_main), 0, 0, 0);
+        popupWindow.showAtLocation(((Activity) context).findViewById(R.id.table_main), 0, 0, 0);
     }
 
 
-    public void addTableFromServer(ArrayList<Table> myTables ){
-        int quantityOfTables = tables.size()-1;
-        for (Table table : myTables) {
+    public void addTableFromServer(ArrayList<Table> myTables)
+    {
+        int quantityOfTables = tables.size() - 1;
+        for (Table table : myTables)
+        {
             dbA.insertTableConfigurationFromServer(table);
         }
         functionAddTableFromServer();
 
     }
 
-    public void functionAddTableFromServer(){
+
+    public void functionAddTableFromServer()
+    {
         tables.clear();
         tables = dbA.fetchTables(roomId);
         Table addTable = new Table();
@@ -384,69 +460,95 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
         myPopupWindow.dismiss();
     }
 
+
     /**
      * open popup to modify existing table
+     *
      * @param table
      */
-    public void openModifyTablesPopup(Table table){
+    public void openModifyTablesPopup(Table table)
+    {
 
-        LayoutInflater layoutInflater = (LayoutInflater) context
-                .getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
         final View popupView = layoutInflater.inflate(R.layout.modify_table_popup, null);
-        final PopupWindow popupWindow = new PopupWindow(
-                popupView,
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
-        popupView.post(new Runnable() {
+        final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+
+        popupView.post(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
 
             }
         });
 
-        final ImageButton merge = (ImageButton)popupView.findViewById(R.id.table_merge_check);
-        final ImageButton sharing = (ImageButton)popupView.findViewById(R.id.table_sharing_check);
-        final CustomEditText capacity = (CustomEditText) popupView.findViewById(R.id.table_capacity_input);
-        final CustomEditText name = (CustomEditText) popupView.findViewById(R.id.table_name_input);
-        final CustomEditText quantity = (CustomEditText) popupView.findViewById(R.id.table_quantity_input);
-        final CustomButton delete = (CustomButton) popupView.findViewById(R.id.table_delete_button);
+        final ImageButton merge = popupView.findViewById(R.id.table_merge_check);
+        final ImageButton sharing = popupView.findViewById(R.id.table_sharing_check);
+        final CustomEditText capacity = popupView.findViewById(R.id.table_capacity_input);
+        final CustomEditText name = popupView.findViewById(R.id.table_name_input);
+        final CustomEditText quantity = popupView.findViewById(R.id.table_quantity_input);
+        final CustomButton delete = popupView.findViewById(R.id.table_delete_button);
+
         boolean mergeb = (table.getMergeTable() != 0);
         merge.setActivated(mergeb);
-        boolean shareb= (table.getShareTable() != 0);
+        boolean shareb = (table.getShareTable() != 0);
         sharing.setActivated(shareb);
         capacity.setText(String.valueOf(table.getPeopleNumber()));
         name.setText(table.getTableName());
         quantity.setText(String.valueOf(1));
-        final ImageButton btnDismiss = (ImageButton)popupView.findViewById(R.id.kill);
-        btnDismiss.setOnClickListener(new Button.OnClickListener(){
+
+        final ImageButton btnDismiss = popupView.findViewById(R.id.kill);
+        btnDismiss.setOnClickListener(new Button.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupWindow.dismiss();
             }
         });
-        final ImageButton buttonOk = (ImageButton)popupView.findViewById(R.id.ok);
-        buttonOk.setOnClickListener(new Button.OnClickListener(){
+
+
+        final ImageButton buttonOk = popupView.findViewById(R.id.ok);
+        buttonOk.setOnClickListener(new Button.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                if(capacity.getText().toString().equals("")){
-                    Toast.makeText(context, R.string.please_fill_all_fields, Toast.LENGTH_SHORT).show();
-                }else if(Integer.parseInt(capacity.getText().toString())==0){
-                    Toast.makeText(context, R.string.capacity_cant_be_0, Toast.LENGTH_SHORT).show();
-                }else if(quantity.getText().toString().equals("")){
-                    Toast.makeText(context, R.string.please_fill_all_fields, Toast.LENGTH_SHORT).show();
-                }else if(Integer.parseInt(quantity.getText().toString())==0){
-                    Toast.makeText(context, R.string.quantity_cant_be_0, Toast.LENGTH_SHORT).show();
-                }else{
+            public void onClick(View v)
+            {
+                if (capacity.getText().toString().equals(""))
+                    { DialogCreator.error(context, R.string.please_fill_all_fields); }
+
+                else if (Integer.parseInt(capacity.getText().toString()) == 0)
+                    { DialogCreator.error(context, R.string.capacity_cant_be_0); }
+
+                else if (quantity.getText().toString().equals(""))
+                    { DialogCreator.error(context, R.string.please_fill_all_fields); }
+
+                else if (Integer.parseInt(quantity.getText().toString()) == 0)
+                    { DialogCreator.error(context, R.string.quantity_cant_be_0); }
+
+                else
+                {
                     //save table(s) and close popup
                     int mergeValue = 0;
-                    if(merge.isActivated()) mergeValue = 1;
-                    int shareValue= 0;
-                    if(sharing.isActivated()) mergeValue = 1;
+                    if (merge.isActivated())
+                        { mergeValue = 1; }
+
+                    int shareValue = 0;
+                    if (sharing.isActivated())
+                        { mergeValue = 1; }
+
                     String tableName = "";
-                    int quantityOfTables = tables.size()-1;
-                    if(name.getText().toString().equals("")) tableName = "Table Type "+(dbA.selectDistinctValueTable()+1);
-                    else tableName = name.getText().toString();
-                    if(StaticValue.blackbox){
+                    int quantityOfTables = tables.size() - 1;
+
+                    if (name.getText().toString().equals(""))
+                        { tableName = "Table Type " + (dbA.selectDistinctValueTable() + 1); }
+
+                    else
+                        { tableName = name.getText().toString(); }
+
+
+                    if (StaticValue.blackbox)
+                    {
                         myPopupWindow = popupWindow;
                         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
                         params.add(new BasicNameValuePair("quantity", quantity.getText().toString()));
@@ -457,18 +559,28 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
                         params.add(new BasicNameValuePair("shareValue", String.valueOf(shareValue)));
                         params.add(new BasicNameValuePair("tableId", String.valueOf(table.getId())));
                         ((TableActivity) context).callHttpHandler("/insertAndUpdateTable", params);
-                    }else {
-                        if (Integer.parseInt(quantity.getText().toString()) > 1) {
-                            for (int i = 1; i <= Integer.parseInt(quantity.getText().toString()); i++) {
-                                if (i == 1) {
+                    }
+                    
+                    else
+                    {
+                        if (Integer.parseInt(quantity.getText().toString()) > 1)
+                        {
+                            for (int i = 1; i <= Integer.parseInt(quantity.getText().toString()); i++)
+                            {
+                                if (i == 1)
+                                {
                                     dbA.updateTable(table.getTableNumber(), Integer.parseInt(quantity.getText().toString()), roomId, tableName, mergeValue, shareValue, table.getId());
-
-                                } else {
+                                }
+                                
+                                else
+                                {
                                     dbA.insertTableConfiguration((quantityOfTables), Integer.parseInt(quantity.getText().toString()), roomId, tableName, mergeValue, shareValue);
                                 }
 
                             }
-                        } else {
+                        }
+                        else
+                        {
                             dbA.updateTable(table.getTableNumber(), Integer.parseInt(capacity.getText().toString()), roomId, tableName, mergeValue, shareValue, table.getId());
 
                         }
@@ -484,31 +596,44 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
 
             }
         });
+        
 
-        merge.setOnClickListener(new Button.OnClickListener(){
+        merge.setOnClickListener(new Button.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupView.findViewById(R.id.table_merge_check).setActivated(!popupView.findViewById(R.id.table_merge_check).isActivated());
             }
         });
 
-        sharing.setOnClickListener(new Button.OnClickListener(){
+        
+        sharing.setOnClickListener(new Button.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupView.findViewById(R.id.table_sharing_check).setActivated(!popupView.findViewById(R.id.table_sharing_check).isActivated());
             }
         });
 
-        delete.setOnClickListener(new Button.OnClickListener(){
+        
+        delete.setOnClickListener(new Button.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                if(StaticValue.blackbox){
+            public void onClick(View v)
+            {
+                if (StaticValue.blackbox)
+                {
                     myPopupWindow = popupWindow;
                     List<NameValuePair> params = new ArrayList<NameValuePair>(2);
                     params.add(new BasicNameValuePair("roomId", String.valueOf(table.getRoomId())));
                     params.add(new BasicNameValuePair("tableNumber", String.valueOf(table.getTableNumber())));
                     ((TableActivity) context).callHttpHandler("/deleteTable", params);
-                }else {
+                }
+
+                else
+                {
                     dbA.updateTableConfiguration(table.getRoomId(), table.getTableNumber());
                     tables.clear();
                     tables = dbA.fetchTables(roomId);
@@ -522,26 +647,40 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
             }
         });
 
+        
         setupDismissKeyboard(popupView);
         popupWindow.setFocusable(true);
-        popupWindow.showAtLocation(((Activity)context).findViewById(R.id.table_main), 0, 0, 0);
+        popupWindow.showAtLocation(((Activity) context).findViewById(R.id.table_main), 0, 0, 0);
     }
+    
+    
 
-    public void setupDismissKeyboard(View view) {
+
+    public void setupDismissKeyboard(View view)
+    {
         //Set up touch listener for non-text box views to hide keyboard.
-        if((view instanceof EditText)) {
-            ((EditText)view).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        if ((view instanceof EditText))
+        {
+            ((EditText) view).setOnEditorActionListener(new TextView.OnEditorActionListener()
+            {
                 @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if(actionId == EditorInfo.IME_ACTION_NEXT) keyboard_next_flag = true;
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+                {
+                    if (actionId == EditorInfo.IME_ACTION_NEXT)
+                    { keyboard_next_flag = true; }
                     return false;
                 }
             });
-            view.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            view.setOnFocusChangeListener(new View.OnFocusChangeListener()
+            {
                 @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
-                        if(!(((Activity)context).getCurrentFocus() instanceof EditText) && !keyboard_next_flag){
+                public void onFocusChange(View v, boolean hasFocus)
+                {
+                    if (!hasFocus)
+                    {
+                        if (!(((Activity) context).getCurrentFocus() instanceof EditText) && !keyboard_next_flag)
+                        {
                             InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                         }
@@ -551,8 +690,10 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
             });
         }
         //If a layout container, iterate over children and seed recursion.
-        if (view instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+        if (view instanceof ViewGroup)
+        {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
+            {
                 View innerView = ((ViewGroup) view).getChildAt(i);
                 setupDismissKeyboard(innerView);
             }

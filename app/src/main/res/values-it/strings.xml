@@ -204,7 +204,7 @@
     <string name="per_item">Per Oggetto</string>
     <string name="per_number">Per Numero</string>
     <string name="per_person">Per Persona</string>
-    <string name="please_reserve_the_table">Prego Riservare Il Tavolo!</string>
+    <string name="please_reserve_the_table">Prenotazioni previste nella prossima ora</string>
     <string name="pos_registration">Registrazione POS</string>
     <string name="postal_code">Codice Postale</string>
     <string name="preset_vat">Valori REPARTI</string>
@@ -493,6 +493,21 @@
     <string name="export_in_blackbox">Export in Blackbox</string>
     <string name="error_blackbox_comm">Blackbox %1$s (%2$s) non risponde</string>
     <string name="price_not_zero">Product price can\'t be zero or lower</string>
+    <string name="monthJanuary">Gennaio</string>
+    <string name="insert_blackbox_ip_header">Inserire indirizzo IP blackbox</string>
+    <string name="monthApril">Aprile</string>
+    <string name="monthAugust">Agosto</string>
+    <string name="monthDecember">Dicember</string>
+    <string name="monthFebruary">Febbraio</string>
+    <string name="monthJuly">Luglio</string>
+    <string name="monthJune">Giugno</string>
+    <string name="monthMarch">Marzo</string>
+    <string name="monthMay">Maggio</string>
+    <string name="monthNovember">Novembre</string>
+    <string name="monthOctober">Ottobre</string>
+    <string name="monthSeptember">Settembre</string>
+    <string name="today">Oggi</string>
+    <string name="tomorrow">Domani</string>
     <!--X-->
     <!--Y-->
     <!--Z-->

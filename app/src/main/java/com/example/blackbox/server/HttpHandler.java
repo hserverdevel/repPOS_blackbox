@@ -22,6 +22,7 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.NameValuePair;
 import cz.msebera.android.httpclient.conn.ConnectTimeoutException;
+import cz.msebera.android.httpclient.message.BasicNameValuePair;
 
 public class HttpHandler extends AsyncTask<Void, Void, String> {
 

@@ -64,21 +64,30 @@ public class ClientsAdapter extends RecyclerView.Adapter {
     private ClientHolder myClientHolder;
     private PopupWindow myPopupWindow;
 
-    public ClientsAdapter(DatabaseAdapter dbA, Context context, int mode, int billId, boolean longClick){
+    public ClientsAdapter(DatabaseAdapter dbA, Context context, int mode, int billId, boolean longClick)
+    {
         this.dbA = dbA;
         this.context = context;
         this.mode = mode;
+
         clientsActivity = (ClientsActivity)context;
         clients = new ArrayList<>();
         clientLongClick = longClick;
         //to be fixed to work only with -1
         this.billId = billId;
+
         if((billId==-1 || billId==-11) || clientLongClick) {
 
-           if(StaticValue.blackbox){
-                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                clientsActivity.callHttpHandler("/fetchClients", params);
-            }else{
+           if (StaticValue.blackbox)
+           {
+               List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+               params.add(new BasicNameValuePair("clientChecksum", dbA.getChecksumForTable("client")));
+
+               clientsActivity.callHttpHandler("/fetchClients", params);
+           }
+
+           else
+           {
                 clients = dbA.fetchClients();
                 clientLongClick = false;
                 notInsertedClients = dbA.fetchExclusiveClients(billId);
@@ -89,14 +98,21 @@ public class ClientsAdapter extends RecyclerView.Adapter {
             notInsertedClients = dbA.fetchExclusiveClients(billId);
 
         }
-        else{
-            if(StaticValue.blackbox) {
+
+        else
+        {
+            if (StaticValue.blackbox)
+            {
                 List<NameValuePair> params = new ArrayList<NameValuePair>(2);
                 params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
+                params.add(new BasicNameValuePair("clientChecksum", dbA.getChecksumForTable("client")));
+
                 clientsActivity.callHttpHandler("/fetchExclusiveClients", params);
-            }else{
-                clients = dbA.fetchExclusiveClients(billId);
             }
+
+            else
+                { clients = dbA.fetchExclusiveClients(billId); }
+
             //clients = dbA.fetchExclusiveClients(billId);
 
         }
@@ -111,10 +127,12 @@ public class ClientsAdapter extends RecyclerView.Adapter {
         dpWidth  = outMetrics.widthPixels;// / density;
     }
 
+
     public void updateClientsList(ArrayList<ClientInfo> clients){
         this.clients = clients;
         notifyDataSetChanged();
     }
+
 
     public void fetchClients(){
         if(billId==-1 || billId==-11) {
@@ -124,6 +142,20 @@ public class ClientsAdapter extends RecyclerView.Adapter {
         }
     }
 
+    /**
+     * A simple function to set the clients list to the
+     * list present in the internal database.
+     * This function is used in conjunction with the checksum check
+     * in the Clients activity
+     */
+    public void setExclusiveClientsDefault()
+        { clients = dbA.fetchExclusiveClients(billId); }
+
+    public void setClientsDefault()
+        { clients = dbA.fetchClients(); }
+
+
+
     public void fetchClientsLast(){
         if(billId==-1 || billId==-11) {
             clients = dbA.fetchClients();
@@ -131,6 +163,7 @@ public class ClientsAdapter extends RecyclerView.Adapter {
             clients = dbA.fetchExclusiveClients(billId);
         }
     }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

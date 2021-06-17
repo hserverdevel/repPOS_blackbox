@@ -50,7 +50,8 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class OGridAdapter extends Adapter<ViewHolder> {
+public class OGridAdapter extends Adapter<ViewHolder>
+{
     private Context context;
     private ArrayList<ButtonLayout> buttons;
     private ArrayList<ButtonLayout> oldButtons;
@@ -79,27 +80,35 @@ public class OGridAdapter extends Adapter<ViewHolder> {
     private OModifierGroupAdapter oma;
 
     private Boolean lastIs;
-    String direction ="";
+    String direction = "";
 
 
-    public void setFavouritesButton(ArrayList<ButtonLayout> b) {
+    public void setFavouritesButton(ArrayList<ButtonLayout> b)
+    {
         this.buttons = b;
         notifyDataSetChanged();
     }
 
-    public void setButtons(){
-        if(StaticValue.showFavourites){
-            if(StaticValue.blackbox) {
+    public void setButtons()
+    {
+        if (StaticValue.showFavourites)
+        {
+            if (StaticValue.blackbox)
+            {
                 activityCommunicator = (ActivityCommunicator) context;
                 activityCommunicator.selectFavourites();
-            }else
-                this.buttons = dbA.selectFavoritesButton();
-        }else if(StaticValue.showProducts){
-            this.buttons = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE isCat=0  AND id!=-30 AND id!=-20 ORDER BY catId"); // home button set
+            }
 
-        }else {
-            this.buttons = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE catID = " +myCatId+" AND id!=-30 AND id!=-20 ORDER BY isCat "+direction+", position"); // home button set
+            else
+                { this.buttons = dbA.selectFavoritesButton(); }
         }
+
+        else if (StaticValue.showProducts)
+            { this.buttons = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE isCat=0 AND id!=-30 AND id!=-20 ORDER BY isCat ASC, position"); }
+
+        else
+            { this.buttons = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE catID = " + myCatId + " AND id!=-30 AND id!=-20 ORDER BY isCat ASC, position"); }
+
         notifyDataSetChanged();
 
     }
@@ -107,59 +116,67 @@ public class OGridAdapter extends Adapter<ViewHolder> {
 
     public int myCatId;
 
-    public OGridAdapter(Context c, DatabaseAdapter dbA, Integer catId) {
+    public OGridAdapter(Context c, DatabaseAdapter dbA, Integer catId)
+    {
         this.context = c;
         this.dbA = dbA;
         this.myCatId = catId;
         ButtonLayout b = dbA.fetchButtonByQuery("SELECT * FROM button WHERE catID = " + catId + " AND position=1 LIMIT 1");
 
-            if (b.getCat() == 0) {
-                direction = "ASC";
-            } else {
-                direction = "DESC";
+        if (b.getCat() == 1)
+            { direction = "ASC"; }
+
+        else
+            { direction = "DESC"; }
+
+        if (StaticValue.showFavourites)
+        {
+            if (StaticValue.blackbox)
+            {
+                activityCommunicator = (ActivityCommunicator) context;
+                activityCommunicator.selectFavourites();
             }
+            else
+                { this.buttons = dbA.selectFavoritesButton(); }
+        }
 
-            if (StaticValue.showFavourites) {
-                if(StaticValue.blackbox) {
-                    activityCommunicator = (ActivityCommunicator) context;
-                    activityCommunicator.selectFavourites();
-                }else
-                    this.buttons = dbA.selectFavoritesButton();
-            } else if (StaticValue.showProducts) {
-                this.buttons = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE isCat=0  AND id!=-30 AND id!=-20 ORDER BY catId"); // home button set
+        else if (StaticValue.showProducts)
+            { buttons = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE isCat=0 AND id!=-30 AND id!=-20 ORDER BY isCat ASC, position"); }
 
-            } else {
-                this.buttons = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE catID = " + catId + " AND id!=-30 AND id!=-20 ORDER BY isCat " + direction + ", position"); // home button set
-            }
+        else
+            { this.buttons = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE catID = " + catId + " AND id!=-30 AND id!=-20 ORDER BY isCat ASC, position"); }
 
-            ButtonLayout buttonLayout = dbA.fetchButtonByQuery("SELECT * FROM button WHERE id = " + catId);
+        ButtonLayout buttonLayout = dbA.fetchButtonByQuery("SELECT * FROM button WHERE id = " + catId);
 
-            if (catId != 0) {
-                functionSetBackButton(catId, catId);
-                setGetBackFuncion(catId, catId, buttonLayout.getTitle());
+        if (catId != 0)
+        {
+            functionSetBackButton(catId, catId);
+            setGetBackFuncion(catId, catId, buttonLayout.getTitle());
+        }
 
-            }
-            notifyDataSetChanged();
+        notifyDataSetChanged();
 
-            inflater = (LayoutInflater) context
-                    .getSystemService(LAYOUT_INFLATER_SERVICE);
-            /**DISPLAY METRICS USED TO CENTER POPUP WINDOW **/
-            Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-            DisplayMetrics outMetrics = new DisplayMetrics();
-            display.getMetrics(outMetrics);
+        inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
 
-            density = context.getResources().getDisplayMetrics().density;
-            dpHeight = outMetrics.heightPixels;// / density;
-            dpWidth = outMetrics.widthPixels;// / density;
+        /*DISPLAY METRICS USED TO CENTER POPUP WINDOW **/
+        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
 
-
+        density = context.getResources().getDisplayMetrics().density;
+        dpHeight = outMetrics.heightPixels;// / density;
+        dpWidth = outMetrics.widthPixels;// / density;
     }
 
+
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
         View v;
         ViewHolder vh;
-        switch (viewType) {
+
+        switch (viewType)
+        {
             case -1:
                 v = inflater.inflate(R.layout.gridview_subelement, null);
                 vh = new SubButtonHolder(v);
@@ -172,16 +189,18 @@ public class OGridAdapter extends Adapter<ViewHolder> {
         return vh;
     }
 
-    @Override
-    public int getItemViewType(int position){
-        final ButtonLayout b = buttons.get(position);
-       if(b.getCat()==0 || b.getCat()==2 ){
-           return -1;
-       }else{
 
-           return 0;
-       }
-       /**
+    @Override
+    public int getItemViewType(int position)
+    {
+        final ButtonLayout b = buttons.get(position);
+
+        if (b.getCat() == 0 || b.getCat() == 2)
+            { return -1; }
+        else
+            { return 0; }
+
+       /*
         boolean prova =dbA.checkIfCategoryIsFullOfProduct2("Select * from button where catID=" + b.getCatID());
         if(b.getCatID()!=0) {
             if (dbA.checkIfCategoryIsFullOfProduct("Select * from button where catID=" + b.getCatID())) {
@@ -203,20 +222,22 @@ public class OGridAdapter extends Adapter<ViewHolder> {
 
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position)
+    {
         final ButtonLayout b = buttons.get(position);
         //use a GradientDrawable with only one color set, to make it a solid color
         GradientDrawable border = new GradientDrawable();
         border.setColor(b.getColor()); //black background
-        border.setStroke((int) (3*density), 0xFFC6C5C6); //gray border with full opacity
-        border.setCornerRadius(8*density);
+        border.setStroke((int) (3 * density), 0xFFC6C5C6); //gray border with full opacity
+        border.setCornerRadius(8 * density);
 
         GradientDrawable img_border = new GradientDrawable();
-        img_border.setStroke((int) (2*density), 0xFFC6C5C6);
-        img_border.setCornerRadius(5*density);
+        img_border.setStroke((int) (2 * density), 0xFFC6C5C6);
+        img_border.setCornerRadius(5 * density);
 
-        if(b.getCat()==1){
-            /**
+        if (b.getCat() == 1)
+        {
+            /*
             if(lastIs!=null){
                 //se last è false quello prima era un prodotto
                 if(!lastIs){
@@ -229,47 +250,59 @@ public class OGridAdapter extends Adapter<ViewHolder> {
              */
             ButtonHolder button = (ButtonHolder) holder;
             button.title.setText(b.getTitle());
-            if (!b.getSubTitle().equals("")) {
+            if (!b.getSubTitle().equals(""))
+            {
                 button.subtitle.setVisibility(VISIBLE);
                 button.subtitle.setText(b.getSubTitle());
                 RelativeLayout.LayoutParams rll = (RelativeLayout.LayoutParams) button.title.getLayoutParams();
-                rll.setMargins(0, (int) (-5*density), 0, 0);
+                rll.setMargins(0, (int) (-5 * density), 0, 0);
                 button.title.setLayoutParams(rll);
-            } else {
+            }
+            else
+            {
                 button.subtitle.setVisibility(View.GONE);
                 RelativeLayout.LayoutParams rll = (RelativeLayout.LayoutParams) button.title.getLayoutParams();
-                rll.setMargins(0, (int) (4*density), 0, 0);
+                rll.setMargins(0, (int) (4 * density), 0, 0);
                 button.title.setLayoutParams(rll);
             }
             //button.frame.setVisibility(VISIBLE);
             // button.image2.setImageResource(getImageId(context, b.getImg()));
             // button.frame.setBackground(img_border);
-            if (b.getImg().equals("")) {
+            if (b.getImg().equals(""))
+            {
                 button.image2.setVisibility(GONE);
                 button.bigText.setVisibility(VISIBLE);
-                if(b.getTitle().length()>3)
-                    button.bigText.setText(b.getTitle().substring(0, 3).toUpperCase());
-                else{
+                if (b.getTitle().length() > 3)
+                { button.bigText.setText(b.getTitle().substring(0, 3).toUpperCase()); }
+                else
+                {
                     button.bigText.setText(b.getTitle().toUpperCase());
                 }
-            } else {
+            }
+            else
+            {
                 button.image2.setVisibility(VISIBLE);
                 button.bigText.setVisibility(GONE);
                 // button.image2.setImageDrawable(rbd);
-                try {
-                    button.image2.setImageDrawable(Drawable.createFromStream(context.getAssets().open("drawable_icons/"+b.getImg()),null));
-                } catch (IOException e) {
+                try
+                {
+                    button.image2.setImageDrawable(Drawable.createFromStream(context.getAssets().open("drawable_icons/" + b.getImg()), null));
+                }
+                catch (IOException e)
+                {
                     e.printStackTrace();
                 }
                 button.bigText.setText(b.getTitle().substring(0, 3).toUpperCase());
             }
-            button.view.setLayoutParams(new RelativeLayout.LayoutParams((int) (154*density), (int) (145*density)));
+            button.view.setLayoutParams(new RelativeLayout.LayoutParams((int) (154 * density), (int) (145 * density)));
 
             button.view.setBackground(border);
             button.view.setTag(b);
-            button.view.setOnClickListener(new View.OnClickListener() {
+            button.view.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v)
+                {
                     v.setAlpha(0.5f);
                     VibrationClass.vibeOn(context);
                     goToCategory(currentCatID, b.getID(), b.getTitle(), 0);
@@ -278,75 +311,89 @@ public class OGridAdapter extends Adapter<ViewHolder> {
                 }
             });
 
-            if(b.getTitle()=="!!FAKE0701!!"){
+            if (b.getTitle() == "!!FAKE0701!!")
+            {
                 button.view.setVisibility(GONE);
-            }else{
+            }
+            else
+            {
                 button.view.setVisibility(VISIBLE);
             }
-            Log.d("POSITION", ""+position);
-            Log.d("BUTTON SIZE -1", ""+(buttons.size() - 1));
-            if (position < buttons.size() - 1) {
-                    if (buttons.get(position + 1).getCat() == 0) {
-                        int count = (position+1)%4;
-                        if(count!=0) {
+            Log.d("POSITION", "" + position);
+            Log.d("BUTTON SIZE -1", "" + (buttons.size() - 1));
+            if (position < buttons.size() - 1)
+            {
+                if (buttons.get(position + 1).getCat() == 0)
+                {
+                    int count = (position + 1) % 4;
+                    if (count != 0)
+                    {
 
-                            for (int i = 1; i <= 4 - count; i++) {
-                                ButtonLayout fakeButton = new ButtonLayout();
-                                fakeButton.setCat(0);
-                                fakeButton.setTitle("!!FAKE0701!!");
-                                fakeButton.setSubTitle("FAKE");
-                                fakeButton.setImg("");
-                                buttons.add(position + i, fakeButton);
+                        for (int i = 1; i <= 4 - count; i++)
+                        {
+                            ButtonLayout fakeButton = new ButtonLayout();
+                            fakeButton.setCat(0);
+                            fakeButton.setTitle("!!FAKE0701!!");
+                            fakeButton.setSubTitle("FAKE");
+                            fakeButton.setImg("");
+                            buttons.add(position + i, fakeButton);
 
-                            }
                         }
-
-                    }
-            }
-
-        }else{
-            /**
-            if(lastIs!=null){
-                //se last è false quello prima era un prodotto
-                if(lastIs){
-                    //aggiungo finti bottoni e e setto a trueù
-                    for(int i=0; i<position%4; i++) {
-                        ButtonLayout fakeButton = new ButtonLayout();
-                        fakeButton.setCat(true);
-                        fakeButton.setTitle("FAKE");
-                        fakeButton.setSubTitle("FAKE");
-                        fakeButton.setImg("");
-                        buttons.add(position+1, fakeButton);
-                        lastIs = false;
                     }
 
                 }
-            }else{
-                lastIs = false;
-            }*/
+            }
+
+        }
+        else
+        {
+            /**
+             if(lastIs!=null){
+             //se last è false quello prima era un prodotto
+             if(lastIs){
+             //aggiungo finti bottoni e e setto a trueù
+             for(int i=0; i<position%4; i++) {
+             ButtonLayout fakeButton = new ButtonLayout();
+             fakeButton.setCat(true);
+             fakeButton.setTitle("FAKE");
+             fakeButton.setSubTitle("FAKE");
+             fakeButton.setImg("");
+             buttons.add(position+1, fakeButton);
+             lastIs = false;
+             }
+
+             }
+             }else{
+             lastIs = false;
+             }*/
             SubButtonHolder subbutton = (SubButtonHolder) holder;
             subbutton.title.setText(b.getTitle());
-            if (!b.getSubTitle().equals("")) {
+            if (!b.getSubTitle().equals(""))
+            {
                 subbutton.subtitle.setVisibility(VISIBLE);
                 subbutton.subtitle.setText(b.getSubTitle());
                 RelativeLayout.LayoutParams rll = (RelativeLayout.LayoutParams) subbutton.title.getLayoutParams();
-                rll.setMargins(0, (int) (-1*density), 0, 0);
-                subbutton.title.setLayoutParams(rll);
-            } else {
-                subbutton.subtitle.setVisibility(View.GONE);
-                RelativeLayout.LayoutParams rll = (RelativeLayout.LayoutParams) subbutton.title.getLayoutParams();
-                rll.setMargins(0, (int) (6*density), 0, 0);
+                rll.setMargins(0, (int) (-1 * density), 0, 0);
                 subbutton.title.setLayoutParams(rll);
             }
-            subbutton.view.setLayoutParams(new LayoutParams((int) (154*density), (int) (46*density)));
-            border.setStroke((int) (3*density), context.getColor(R.color.yellow)); // yellow border
+            else
+            {
+                subbutton.subtitle.setVisibility(View.GONE);
+                RelativeLayout.LayoutParams rll = (RelativeLayout.LayoutParams) subbutton.title.getLayoutParams();
+                rll.setMargins(0, (int) (6 * density), 0, 0);
+                subbutton.title.setLayoutParams(rll);
+            }
+            subbutton.view.setLayoutParams(new LayoutParams((int) (154 * density), (int) (46 * density)));
+            border.setStroke((int) (3 * density), context.getColor(R.color.yellow)); // yellow border
             subbutton.view.setBackground(border);
             subbutton.view.setTag(b);
 
             activityCommunicator = (ActivityCommunicator) context;
-            subbutton.view.setOnClickListener(new View.OnClickListener() {
+            subbutton.view.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v)
+                {
                    /* subbutton.gridcontainer.setAlpha(0.5f);
                     AlphaAnimation alpha = new AlphaAnimation(0.5F, 1.0F);
                     alpha.setDuration(0); // Make animation instant
@@ -363,45 +410,49 @@ public class OGridAdapter extends Adapter<ViewHolder> {
                 }
             });
 
-            subbutton.view.setOnLongClickListener(new View.OnLongClickListener() {
+            subbutton.view.setOnLongClickListener(new View.OnLongClickListener()
+            {
                 @Override
-                public boolean onLongClick(View view) {
-                    LayoutInflater layoutInflater = (LayoutInflater)context
-                            .getSystemService(LAYOUT_INFLATER_SERVICE);
+                public boolean onLongClick(View view)
+                {
+                    LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
                     final View popupView = layoutInflater.inflate(R.layout.operative_quantity_popup, null);
 
-                    final PopupWindow popupWindow = new PopupWindow(
-                            popupView,
-                            RelativeLayout.LayoutParams.MATCH_PARENT,
-                            RelativeLayout.LayoutParams.MATCH_PARENT);
+                    final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                     popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
-                    RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams)
-                            popupView.findViewById(R.id.quantity_popup)
-                                    .getLayoutParams();
-                    int t = (int)(dpHeight-52)/2 - rlp.height/2;
+                    RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) popupView.findViewById(R.id.quantity_popup).getLayoutParams();
+                    int t = (int) (dpHeight - 52) / 2 - rlp.height / 2;
                     rlp.topMargin = t;
                     popupView.findViewById(R.id.quantity_popup).setLayoutParams(rlp);
-                    EditText qntyInsert = (EditText)popupView.findViewById(R.id.quantity_insert);
+                    EditText qntyInsert = (EditText) popupView.findViewById(R.id.quantity_insert);
                     setupDismissKeyboard(popupView);
 
-                    ImageButton btnOK = (ImageButton)popupView.findViewById(R.id.ok);
-                    btnOK.setOnClickListener(new View.OnClickListener() {
+                    ImageButton btnOK = (ImageButton) popupView.findViewById(R.id.ok);
+                    btnOK.setOnClickListener(new View.OnClickListener()
+                    {
                         @Override
-                        public void onClick(View view) {
-                            if(qntyInsert.getText().toString().equals("")){
+                        public void onClick(View view)
+                        {
+                            if (qntyInsert.getText().toString().equals(""))
+                            {
                                 Toast.makeText(context, R.string.insert_a_valid_quantity_value, Toast.LENGTH_SHORT).show();
                             }
-                            else if(Integer.valueOf(qntyInsert.getText().toString())>100){
+                            else if (Integer.valueOf(qntyInsert.getText().toString()) > 100)
+                            {
                                 Toast.makeText(context, R.string.max_100, Toast.LENGTH_SHORT).show();
 
-                            }else {
+                            }
+                            else
+                            {
                                 int qnty = Integer.parseInt(qntyInsert.getText().toString());
-                                if(qnty == 0){
+                                if (qnty == 0)
+                                {
                                     Toast.makeText(context, R.string.insert_a_valid_quantity_value, Toast.LENGTH_SHORT).show();
                                     qntyInsert.setText("");
                                 }
-                                else{
+                                else
+                                {
                                     //it must already add it to the total
                                     AlphaAnimation animation1 = new AlphaAnimation(0.2f, 1.0f);
                                     animation1.setDuration(10);
@@ -416,32 +467,41 @@ public class OGridAdapter extends Adapter<ViewHolder> {
                         }
                     });
 
-                    ImageButton btnDismiss = (ImageButton)popupView.findViewById(R.id.kill);
-                    btnDismiss.setOnClickListener(new View.OnClickListener() {
+                    ImageButton btnDismiss = (ImageButton) popupView.findViewById(R.id.kill);
+                    btnDismiss.setOnClickListener(new View.OnClickListener()
+                    {
                         @Override
-                        public void onClick(View view) {
+                        public void onClick(View view)
+                        {
                             popupWindow.dismiss();
                         }
                     });
 
                     popupWindow.setFocusable(true);
-                    popupWindow.showAtLocation(((Activity)context).findViewById(R.id.operative),0,0,0);
+                    popupWindow.showAtLocation(((Activity) context).findViewById(R.id.operative), 0, 0, 0);
 
                     return false;
                 }
             });
 
-            if(b.getTitle()=="!!FAKE0701!!"){
+            if (b.getTitle() == "!!FAKE0701!!")
+            {
                 subbutton.view.setVisibility(GONE);
-            }else{
+            }
+            else
+            {
                 subbutton.view.setVisibility(VISIBLE);
             }
-            if (position < buttons.size()-1 ) {
-                if (buttons.get(position + 1).getCat() == 1) {
-                    int count = (position+1)%4;
-                    if(count!=0) {
+            if (position < buttons.size() - 1)
+            {
+                if (buttons.get(position + 1).getCat() == 1)
+                {
+                    int count = (position + 1) % 4;
+                    if (count != 0)
+                    {
 
-                        for (int i = 1; i <= 4 - count; i++) {
+                        for (int i = 1; i <= 4 - count; i++)
+                        {
                             ButtonLayout fakeButton = new ButtonLayout();
                             fakeButton.setCat(0);
                             fakeButton.setTitle("!!FAKE0701!!");
@@ -458,11 +518,11 @@ public class OGridAdapter extends Adapter<ViewHolder> {
     }
 
 
-
     /**
      * HOLDERS
      **/
-    public static class ButtonHolder extends ViewHolder {
+    public static class ButtonHolder extends ViewHolder
+    {
         public View view;
         public CustomTextView title;
         public CustomTextView subtitle;
@@ -471,31 +531,36 @@ public class OGridAdapter extends Adapter<ViewHolder> {
         public ImageView image2;
         public CustomTextView bigText;
 
-        public ButtonHolder(View itemView) {
+        public ButtonHolder(View itemView)
+        {
             super(itemView);
             view = itemView;
             txtcontainer = (RelativeLayout) view.findViewById(R.id.text_container);
             title = (CustomTextView) view.findViewById(R.id.title);
             subtitle = (CustomTextView) view.findViewById(R.id.subtitle);
             image2 = (ImageView) view.findViewById(R.id.button_frame_img);
-            bigText = (CustomTextView)view.findViewById(R.id.bigText_tv);
+            bigText = (CustomTextView) view.findViewById(R.id.bigText_tv);
             //frame = (FrameLayout) view.findViewById(R.id.button_frame_img_border);
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return "ButtonHolder, Title: " + title.getText().toString();
         }
     }
 
-    public static class SubButtonHolder extends ViewHolder {
+
+    public static class SubButtonHolder extends ViewHolder
+    {
         public View view;
         public CustomTextView title;
         public CustomTextView subtitle;
         public RelativeLayout txtcontainer;
         public RelativeLayout gridcontainer;
 
-        public SubButtonHolder(View itemView) {
+        public SubButtonHolder(View itemView)
+        {
             super(itemView);
             view = itemView;
             gridcontainer = (RelativeLayout) view.findViewById(R.id.grid_container);
@@ -506,21 +571,25 @@ public class OGridAdapter extends Adapter<ViewHolder> {
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return "ButtonHolder, Title: " + title.getText().toString();
         }
     }
 
 
     @Override
-    public int getItemCount() {
-        if(buttons!=null)
-        return buttons.size();
-        else return 0;
+    public int getItemCount()
+    {
+        if (buttons != null)
+        { return buttons.size(); }
+        else
+        { return 0; }
     }
 
 
-    public void goToCategory(final int currCatID, int newCatID, String categoryTitle, int direction) {
+    public void goToCategory(final int currCatID, int newCatID, String categoryTitle, int direction)
+    {
         RelativeLayout above_rv = (RelativeLayout) ((Activity) context).findViewById(R.id.above_recyclerView);
         GradientDrawable border = new GradientDrawable();
         border.setColor(0xFFd3d3d3); //light-gray background
@@ -530,105 +599,126 @@ public class OGridAdapter extends Adapter<ViewHolder> {
         this.currentCatID = newCatID;
 
 
-            if (newCatID == 0) {
-                //going back to first page
-                myCatId = newCatID;
-                getCurrentCatButtonSet(newCatID, categoryTitle);
-                deepnessLevel = 0;
+        if (newCatID == 0)
+        {
+            //going back to first page
+            myCatId = newCatID;
+            getCurrentCatButtonSet(newCatID, categoryTitle);
+            deepnessLevel = 0;
 
-            } else {
-                //gettin' dooooown :)
+        }
+        else
+        {
+            //gettin' dooooown :)
 
-                goForwardToButton(newCatID, categoryTitle);
+            goForwardToButton(newCatID, categoryTitle);
 
-                functionSetBackButton(newCatID, currentCatID);
+            functionSetBackButton(newCatID, currentCatID);
 
-                switch (direction) {
-                    case 0:
-                        //vado avanti
+            switch (direction)
+            {
+                case 0:
+                    //vado avanti
 
-                        deepnessLevel += 1;
-                        break;
-                    case 1:
-                        //vado indietro
-                        deepnessLevel -= 1;
-                        break;
-                    case 2:
-                        //torno indietro dai modifiers
-                        break;
-                }
+                    deepnessLevel += 1;
+                    break;
+                case 1:
+                    //vado indietro
+                    deepnessLevel -= 1;
+                    break;
+                case 2:
+                    //torno indietro dai modifiers
+                    break;
             }
         }
-
-
-
-    public void setGetBackFuncion(Integer newCatId, Integer currentId, String title){
-        functionSetBackButton(newCatId, currentId);
-        OperativeFragment.setButtonSet( currentId, title);
     }
 
-    public void functionSetBackButton(Integer newCatId, Integer currentId){
+
+    public void setGetBackFuncion(Integer newCatId, Integer currentId, String title)
+    {
+        functionSetBackButton(newCatId, currentId);
+        OperativeFragment.setButtonSet(currentId, title);
+    }
+
+
+    public void functionSetBackButton(Integer newCatId, Integer currentId)
+    {
         Cursor c = dbA.fetchByQuery("SELECT * FROM button WHERE id=" + currentId);
         if (!c.moveToFirst())
-            c.moveToFirst();
+            { c.moveToFirst(); }
         previousCatID = c.getInt(c.getColumnIndex(DatabaseAdapter.KEY_CAT_ID));
-        if(previousCatID==0) previousCatTitle=null;
-        else {
+
+        if (previousCatID == 0)
+            { previousCatTitle = null; }
+
+        else
+        {
             c = dbA.fetchByQuery("SELECT * FROM button WHERE id=" + previousCatID);
             c.moveToFirst();
             previousCatTitle = c.getString(c.getColumnIndex(DatabaseAdapter.KEY_TITLE));
         }
         c.close();
-        OperativeFragment.setBackButton(newCatId, previousCatID , previousCatTitle);
+        OperativeFragment.setBackButton(newCatId, previousCatID, previousCatTitle);
     }
 
-    public void goForwardToButton(int catID, String categoryTitle) {
+
+    public void goForwardToButton(int catID, String categoryTitle)
+    {
         //buttons.clear();
         oldButtons = buttons;
         //per qualche motivo dento le categorie partiamo da 1.......
         /*int position = 1;
         if(catID==0)
            */
-        int position=1;
-        ButtonLayout b = dbA.fetchButtonByQuery("SELECT * FROM button WHERE catID = " + catID + " AND position="+position+" LIMIT 1");
-        if(b.getCat()==0 || b.getCat()==2){
-            direction = "ASC";
-        }else{
-            direction = "DESC";
-        }
-        buttons = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE catID = " + catID + " AND id!=-30 AND id!=-20 ORDER BY isCat "+direction+", position");
+        int position = 1;
+        ButtonLayout b = dbA.fetchButtonByQuery("SELECT * FROM button WHERE catID = " + catID + " AND position=" + position + " LIMIT 1");
+        if (b.getCat() == 0 || b.getCat() == 2)
+            { direction = "ASC"; }
+        else
+            { direction = "DESC"; }
+
+        buttons = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE catID = " + catID + " AND id!=-30 AND id!=-20 ORDER BY isCat " + direction + ", position");
         OperativeFragment.setButtonSet(catID, categoryTitle);
     }
 
-    public void getCurrentCatButtonSet(int catID, String categoryTitle) {
-      //  buttons.clear();
-        int position=1;
-        ButtonLayout b = dbA.fetchButtonByQuery("SELECT * FROM button WHERE catID = " + catID + " AND id!=-30 AND id!=-20 AND position="+position+" LIMIT 1");
-        if (b.getCat() == 0) {
-                direction = "ASC";
-        } else {
-                direction = "DESC";
-        }
 
-        buttons = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE catID = " + catID + " AND id!=-30 AND id!=-20 ORDER BY isCat "+direction+", position");
+
+
+    public void getCurrentCatButtonSet(int catID, String categoryTitle)
+    {
+        buttons = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE catID = " + catID + " AND id!=-30 AND id!=-20 ORDER BY isCat ASC, position");
         OperativeFragment.setButtonSet(catID, categoryTitle);
     }
 
-    public void setupDismissKeyboard(View view) {
+
+
+
+    public void setupDismissKeyboard(View view)
+    {
         //Set up touch listener for non-text box views to hide keyboard.
-        if((view instanceof EditText)) {
-            ((EditText)view).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        if ((view instanceof EditText))
+        {
+            ((EditText) view).setOnEditorActionListener(new TextView.OnEditorActionListener()
+            {
                 @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if(actionId == EditorInfo.IME_ACTION_NEXT) keyboard_next_flag = true;
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+                {
+                    if (actionId == EditorInfo.IME_ACTION_NEXT)
+                        { keyboard_next_flag = true; }
+
                     return false;
                 }
             });
-            view.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            view.setOnFocusChangeListener(new View.OnFocusChangeListener()
+            {
                 @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
-                        if(!(((Activity)context).getCurrentFocus() instanceof EditText) && !keyboard_next_flag){
+                public void onFocusChange(View v, boolean hasFocus)
+                {
+                    if (!hasFocus)
+                    {
+                        if (!(((Activity) context).getCurrentFocus() instanceof EditText) && !keyboard_next_flag)
+                        {
                             Log.d("OnFocusChange", "You clicked out of an Edit Text!");
                             InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -638,9 +728,12 @@ public class OGridAdapter extends Adapter<ViewHolder> {
                 }
             });
         }
+
         //If a layout container, iterate over children and seed recursion.
-        if (view instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+        if (view instanceof ViewGroup)
+        {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
+            {
                 View innerView = ((ViewGroup) view).getChildAt(i);
                 setupDismissKeyboard(innerView);
             }

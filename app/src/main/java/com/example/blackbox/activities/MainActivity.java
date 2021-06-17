@@ -2350,7 +2350,8 @@ public class MainActivity extends AppCompatActivity implements
         blackbox_recycler.setAdapter(bbSettingAdaper);
 
 
-        popupview.findViewById(R.id.pos_printer).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.pos_printer).setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
                 show = 1;
@@ -2502,39 +2503,53 @@ public class MainActivity extends AppCompatActivity implements
                         new StaticValue(getApplicationContext(), StaticValue.blackboxInfo);
                         break;
 
+
                     // blackbox settings window
                     case 3:
                         String blackboxName = ((CustomEditText) popupview.findViewById(R.id.blackbox_name)).getText().toString();
                         String blackboxAddress = ((CustomEditText) popupview.findViewById(R.id.blackbox_IP)).getText().toString();
 
-                        myPopupView = popupview;
-                        Log.i(TAG, "[onCreate] Testing blackbox: " + blackboxName + " @ " + blackboxAddress);
-
-                        HttpHandler httpHandler = new HttpHandler();
-                        httpHandler.testIp = blackboxAddress;
-                        httpHandler.delegate = MainActivity.this;
-                        httpHandler.UpdateInfoAsyncTask("/testBlackboxComm", new ArrayList<NameValuePair>(2));
-
-
-                        try
+                        if (blackboxAddress.isEmpty() && bbSettingAdaper.blackbox != null)
                         {
-                            String res = httpHandler.execute().get();
-                            JSONObject jsonObject = new JSONObject(res);
-
-                            if (jsonObject.getBoolean("success"))
-                            {
-                                BlackboxInfo b = new BlackboxInfo();
-                                b.setAddress(blackboxAddress);
-                                b.setName(blackboxName);
-                                dbA.insertBlackboxSync(b);
-                                new StaticValue(getApplicationContext(), b);
-                            }
-
+                            new StaticValue(getApplicationContext(), bbSettingAdaper.blackbox);
+                            popupWindow.dismiss();
                         }
 
-                        // should never happen
-                        catch (Exception e)
-                            { e.printStackTrace(); }
+                        else
+                        {
+                            myPopupView = popupview;
+                            Log.i(TAG, "[onCreate] Testing blackbox: " + blackboxName + " @ " + blackboxAddress);
+
+                            HttpHandler httpHandler = new HttpHandler();
+                            httpHandler.testIp = blackboxAddress;
+                            httpHandler.delegate = MainActivity.this;
+
+                            ArrayList<NameValuePair> params = new ArrayList<>();
+                            params.add(new BasicNameValuePair("androidId", StaticValue.androidId));
+                            httpHandler.UpdateInfoAsyncTask("/testBlackboxComm", params);
+
+                            try
+                            {
+                                String res = httpHandler.execute().get();
+                                JSONObject jsonObject = new JSONObject(res);
+
+                                if (jsonObject.getBoolean("success"))
+                                {
+                                    BlackboxInfo b = new BlackboxInfo();
+                                    b.setAddress(blackboxAddress);
+                                    b.setName(blackboxName);
+                                    dbA.insertBlackboxSync(b);
+
+                                    bbSettingAdaper.notifyDataSetChanged();
+
+                                    new StaticValue(getApplicationContext(), b);
+                                }
+                            }
+
+                            // should never happen
+                            catch (Exception e)
+                                { e.printStackTrace(); }
+                        }
 
                         break;
 

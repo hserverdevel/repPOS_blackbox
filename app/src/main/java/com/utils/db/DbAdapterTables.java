@@ -14,6 +14,7 @@ import com.example.blackbox.model.WaitingListModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class DbAdapterTables extends DbAdapterBillExtra
 {
@@ -47,7 +48,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             return false;
         }
     }
@@ -80,7 +81,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             return -1;
         }
     }
@@ -99,7 +100,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("DELETE ERROR", e.getMessage());
+            Log.e("DELETE ERROR", e.getMessage());
         }
     }
 
@@ -116,7 +117,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Insert User Error", e.getMessage());
+            Log.e("Insert User Error", e.getMessage());
         }
     }
 
@@ -152,7 +153,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
 
         }
     }
@@ -193,7 +194,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             return oldPosition;
         }
     }
@@ -225,7 +226,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             return -1;
         }
     }
@@ -263,7 +264,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Insert Cash List Error", e.getMessage());
+            Log.e("Insert Cash List Error", e.getMessage());
         }
     }
 
@@ -276,7 +277,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
             if (!database.isOpen())
             { database = dbHelper.getReadableDatabase(); }
             Cursor mCursor = database.rawQuery("SELECT * FROM table_configuration GROUP BY table_name", null);
-            ArrayList<Table> array = new ArrayList<>(); //Log.d("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
+            ArrayList<Table> array = new ArrayList<>(); //Log.e("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
             if (mCursor != null)
             {
                 while (mCursor.moveToNext())
@@ -315,7 +316,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         catch (Exception e)
         {
             ArrayList<OModifierGroupAdapter.OModifiersGroup> array = new ArrayList<>();
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
 
             ArrayList<Table> newarray = new ArrayList<Table>();
             return newarray;
@@ -332,7 +333,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
             if (!database.isOpen())
             { database = dbHelper.getReadableDatabase(); }
             Cursor mCursor = database.rawQuery("SELECT * FROM table_configuration where room_id=" + roomId, null);
-            ArrayList<Table> array = new ArrayList<>(); //Log.d("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
+            ArrayList<Table> array = new ArrayList<>(); //Log.e("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
             if (mCursor != null)
             {
                 while (mCursor.moveToNext())
@@ -357,7 +358,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         catch (Exception e)
         {
             ArrayList<OModifierGroupAdapter.OModifiersGroup> array = new ArrayList<>();
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
 
             ArrayList<Table> newarray = new ArrayList<Table>();
             return newarray;
@@ -397,7 +398,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
 
             Table newarray = new Table();
             return newarray;
@@ -420,7 +421,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Insert Device Error", e.getMessage());
+            Log.e("Insert Device Error", e.getMessage());
         }
     }
 
@@ -504,7 +505,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
                     " LEFT JOIN table_use ON table_configuration.id=table_use.table_id" +
                     " LEFT JOIN reservation ON table_configuration.id=reservation.table_use_id" +
                     " WHERE table_configuration.room_id=" + roomId, null);
-            ArrayList<TableUse> array = new ArrayList<TableUse>(); //Log.d("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
+            ArrayList<TableUse> array = new ArrayList<TableUse>(); //Log.e("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
             if (mCursor != null)
             {
                 while (mCursor.moveToNext())
@@ -575,7 +576,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
                     " FROM table_configuration " +
                     "WHERE table_configuration.room_id=" + roomId, null);
 
-            ArrayList<TableUse> array = new ArrayList<TableUse>(); //Log.d("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
+            ArrayList<TableUse> array = new ArrayList<TableUse>(); //Log.e("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
 
             if (mCursor != null)
             {
@@ -746,7 +747,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Insert Device Error", e.getMessage());
+            Log.e("Insert Device Error", e.getMessage());
             return -1;
         }
     }
@@ -866,23 +867,26 @@ public class DbAdapterTables extends DbAdapterBillExtra
         {
             //if (database.isOpen()) database.close();
             if (!database.isOpen())
-            { database = dbHelper.getReadableDatabase(); }
+                { database = dbHelper.getReadableDatabase(); }
+
             boolean value = false;
             Cursor c = database.rawQuery("SELECT * FROM table_use WHERE table_id=" + table_id +
                     " AND main_table=" + 0 + ";", null);
             if (c != null)
             {
                 while (c.moveToNext())
-                { value = true; }
+                    { value = true; }
             }
+
             c.close();
             database.close();
 
             return value;
         }
+
         catch (Exception e)
         {
-            Log.d("Check failure", e.getMessage());
+            Log.e("Check failure", e.getMessage());
             return false;
         }
     }
@@ -901,7 +905,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Delete error", e.getMessage());
+            Log.e("Delete error", e.getMessage());
         }
     }
 
@@ -934,7 +938,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Error", e.getMessage());
+            Log.e("Error", e.getMessage());
             return -1;
         }
     }
@@ -972,7 +976,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Error", e.getMessage());
+            Log.e("Error", e.getMessage());
             return -1;
         }
     }
@@ -1005,7 +1009,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("failure", e.getMessage());
+            Log.e("failure", e.getMessage());
             return id;
         }
     }
@@ -1059,7 +1063,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Insert failure", e.getMessage());
+            Log.e("Insert failure", e.getMessage());
             return id;
         }
     }
@@ -1084,7 +1088,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Insert mA Error", e.getMessage());
+            Log.e("Insert mA Error", e.getMessage());
         }
     }
 
@@ -1106,7 +1110,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Insert Device Error", e.getMessage());
+            Log.e("Insert Device Error", e.getMessage());
         }
     }
 
@@ -1134,7 +1138,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Error", e.getMessage());
+            Log.e("Error", e.getMessage());
         }
     }
 
@@ -1187,7 +1191,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             return -1;
         }
     }
@@ -1229,7 +1233,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
             return -1;
         }
     }
@@ -1244,7 +1248,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
             { database = dbHelper.getReadableDatabase(); }
             Cursor mCursor = database.rawQuery("SELECT * FROM room;", null);
             ArrayList<Room> array = new ArrayList<>();
-            //Log.d("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
+            //Log.e("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
             if (mCursor != null)
             {
                 while (mCursor.moveToNext())
@@ -1264,7 +1268,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         catch (Exception e)
         {
             ArrayList<OModifierGroupAdapter.OModifiersGroup> array = new ArrayList<>();
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
 
             ArrayList<Room> newarray = new ArrayList<Room>();
             return newarray;
@@ -1282,7 +1286,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
             { database = dbHelper.getReadableDatabase(); }
             Cursor mCursor = database.rawQuery("SELECT * FROM room WHERE id=" + id, null);
             Room c = new Room();
-            //Log.d("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
+            //Log.e("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
             if (mCursor != null)
             {
                 while (mCursor.moveToNext())
@@ -1302,7 +1306,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         catch (Exception e)
         {
             ArrayList<OModifierGroupAdapter.OModifiersGroup> array = new ArrayList<>();
-            Log.d("fetchFailure", e.getMessage());
+            Log.e("fetchFailure", e.getMessage());
 
             Room newarray = new Room();
             return newarray;
@@ -1326,7 +1330,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Insert mA Error", e.getMessage());
+            Log.e("Insert mA Error", e.getMessage());
         }
     }
 
@@ -1345,7 +1349,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Insert modifiers Error", e.getMessage());
+            Log.e("Insert modifiers Error", e.getMessage());
         }
     }
 
@@ -1359,83 +1363,107 @@ public class DbAdapterTables extends DbAdapterBillExtra
     // [ RESERVATIONS ]
     // =============================================== //
 
+
+    public void insertReservationSync(ArrayList<Reservation> reservations)
+    {
+        try
+        {
+            //if (database.isOpen()) database.close();
+            if (!database.isOpen())
+                { database = dbHelper.getWritableDatabase(); }
+
+            for (Reservation res : reservations)
+            {
+                execOnDb(String.format(
+                    "INSERT INTO reservation (id, name, surname, adults, children, disabled, time, telephone) " +
+                    "VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
+                    res.getReservation_id(), res.getName(), res.getSurname(), res.getAdults(), res.getChildren(), res.getDisabled(), res.getTime(), res.getTelephone()
+                ));
+            }
+
+            database.close();
+        }
+        catch (Exception e)
+        {
+            Log.e("Insert mA Error", e.getMessage());
+        }
+    }
+
+
+
+
     /**
      * DATE FORMAT: yyyy-mm-dd
      * HOUR FORMAT: HH:MM
      *
      * @param res
      */
-    public void addReservation(Reservation res, String today)
+    public void addReservation(Reservation res, Date today)
     {
         try
         {
             //if (database.isOpen()) database.close();
             if (!database.isOpen())
-            { database = dbHelper.getWritableDatabase(); }
-            //table check, -1 if table is not available
-            //just for today reservations
-            int table = -1;
-            if (res.getReservation_date().equals(today))
-            {
-                table = getTableUse(res.getAdults() + res.getChildren() + res.getDisabled());
-                if (table == -1)
-                { table = getMergeTableUse(res.getAdults() + res.getChildren() + res.getDisabled()); }
-            }
-            res.setTable_use_id(table);
-            execOnDb("INSERT INTO reservation (name, surname, adult, children, disabled, " +
-                    "reservation_date, reservation_time, table_use_id, telephone) " +
-                    "VALUES(\"" + res.getName() + "\", \"" + res.getSurname() + "\", " +
-                    res.getAdults() + ", " + res.getChildren() + ", " + res.getDisabled() + ", strftime('%Y-%m-%d','"
-                    + res.getReservation_date() + "'), strftime('%H:%M','" + res.getReservation_time() + "'), "
-                    + table + ", " + res.getTelephone() + ");");
+                { database = dbHelper.getWritableDatabase(); }
+
+            showData("reservation");
+            
+            execOnDb(String.format(
+                "INSERT INTO reservation (id, name, surname, adults, children, disabled, time, telephone) VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
+                res.getReservation_id(), res.getName(), res.getSurname(), res.getAdults(), res.getChildren(), res.getDisabled(), res.getTime(), res.getTelephone()
+            ));
+
+            showData("reservation");
+
             database.close();
         }
         catch (Exception e)
         {
-            Log.d("Add failure", e.getMessage());
+            Log.e("Add failure", e.getMessage());
         }
     }
 
 
     //returns only today reservations not started
-    public ArrayList<Reservation> getReservationList(String today)
+    public ArrayList<Reservation> getReservationList()
     {
         try
         {
             //if (database.isOpen()) database.close();
             if (!database.isOpen())
-            { database = dbHelper.getReadableDatabase(); }
+                { database = dbHelper.getWritableDatabase(); }
+
+
             ArrayList<Reservation> myReservations = new ArrayList<>();
-            Cursor c = database.rawQuery("SELECT * FROM reservation WHERE strftime('%H-%m-%d',reservation_date)" +
-                    " = strftime('%H-%m-%d','" + today + "') AND (status=" + 0 +
-                    ") ORDER BY reservation_time", null);
-            if (c != null)
+            Cursor curs = database.rawQuery("SELECT * FROM reservation ORDER BY time;", null);
+
+            SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzzzzzzz yyyy", Locale.ROOT);
+
+            while (curs.moveToNext())
             {
-                while (c.moveToNext())
-                {
-                    Reservation r = new Reservation();
-                    r.setReservation_id(c.getInt(c.getColumnIndex("id")));
-                    r.setName(c.getString(c.getColumnIndex("name")));
-                    r.setSurname(c.getString(c.getColumnIndex("surname")));
-                    r.setAdults(c.getInt(c.getColumnIndex("adult")));
-                    r.setChildren(c.getInt(c.getColumnIndex("children")));
-                    r.setDisabled(c.getInt(c.getColumnIndex("disabled")));
-                    r.setReservation_date(c.getString(c.getColumnIndex("reservation_date")));
-                    r.setReservation_time(c.getString(c.getColumnIndex("reservation_time")));
-                    r.setTable_use_id(c.getInt(c.getColumnIndex("table_use_id")));
-                    r.setStatus(c.getInt(c.getColumnIndex("status")));
-                    r.setTelephone(c.getLong(c.getColumnIndex("telephone")));
-                    myReservations.add(r);
-                }
+                Reservation r = new Reservation();
+
+                r.setReservation_id(curs.getInt(curs.getColumnIndex("id")));
+                r.setName(curs.getString(curs.getColumnIndex("name")));
+                r.setSurname(curs.getString(curs.getColumnIndex("surname")));
+                r.setAdults(curs.getInt(curs.getColumnIndex("adults")));
+                r.setChildren(curs.getInt(curs.getColumnIndex("children")));
+                r.setDisabled(curs.getInt(curs.getColumnIndex("disabled")));
+                r.setTime(format.parse(curs.getString(curs.getColumnIndex("time"))));
+                r.setTelephone(curs.getString(curs.getColumnIndex("telephone")));
+
+                myReservations.add(r);
             }
-            c.close();
+
+            curs.close();
             database.close();
 
             return myReservations;
         }
+
         catch (Exception e)
         {
-            Log.d("Fetch failure", e.getMessage());
+            Log.e("Fetch failure", e.getMessage());
             return null;
         }
     }
@@ -1449,7 +1477,11 @@ public class DbAdapterTables extends DbAdapterBillExtra
         {
             //if (database.isOpen()) database.close();
             if (!database.isOpen())
-            { database = dbHelper.getReadableDatabase(); }
+                { database = dbHelper.getReadableDatabase(); }
+
+            SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzzzzzzz yyyy", Locale.ROOT);
+
+
             for (int i : array)
             {
                 Cursor c = database.rawQuery("SELECT * FROM reservation WHERE id=" + i + ";", null);
@@ -1461,14 +1493,11 @@ public class DbAdapterTables extends DbAdapterBillExtra
                         r.setReservation_id(c.getInt(c.getColumnIndex("id")));
                         r.setName(c.getString(c.getColumnIndex("name")));
                         r.setSurname(c.getString(c.getColumnIndex("surname")));
-                        r.setAdults(c.getInt(c.getColumnIndex("adult")));
+                        r.setAdults(c.getInt(c.getColumnIndex("adults")));
                         r.setChildren(c.getInt(c.getColumnIndex("children")));
                         r.setDisabled(c.getInt(c.getColumnIndex("disabled")));
-                        r.setReservation_date(c.getString(c.getColumnIndex("reservation_date")));
-                        r.setReservation_time(c.getString(c.getColumnIndex("reservation_time")));
-                        r.setTable_use_id(c.getInt(c.getColumnIndex("table_use_id")));
-                        r.setStatus(c.getInt(c.getColumnIndex("status")));
-                        r.setTelephone(c.getLong(c.getColumnIndex("telephone")));
+                        r.setTime(format.parse(c.getString(c.getColumnIndex("time"))));
+                        r.setTelephone(c.getString(c.getColumnIndex("telephone")));
                         reservations.add(r);
                     }
                 }
@@ -1480,7 +1509,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Fetch failure", e.getMessage());
+            Log.e("Fetch failure", e.getMessage());
             return reservations;
         }
     }
@@ -1506,11 +1535,8 @@ public class DbAdapterTables extends DbAdapterBillExtra
                     r.setAdults(c.getInt(c.getColumnIndex("adult")));
                     r.setChildren(c.getInt(c.getColumnIndex("children")));
                     r.setDisabled(c.getInt(c.getColumnIndex("disabled")));
-                    r.setReservation_date(c.getString(c.getColumnIndex("reservation_date")));
-                    r.setReservation_time(c.getString(c.getColumnIndex("reservation_time")));
-                    r.setTable_use_id(c.getInt(c.getColumnIndex("table_use_id")));
-                    r.setStatus(c.getInt(c.getColumnIndex("status")));
-                    r.setTelephone(c.getLong(c.getColumnIndex("telephone")));
+                    r.setTime(c.getString(c.getColumnIndex("time")));
+                    r.setTelephone(c.getString(c.getColumnIndex("telephone")));
                 }
             }
             c.close();
@@ -1520,44 +1546,14 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Fetch failure", e.getMessage());
+            Log.e("Fetch failure", e.getMessage());
             return r;
-        }
-    }
-
-
-    //it returns just the table_use_id, to set color
-    public int getTableUseId(int res_id)
-    {
-        try
-        {
-            //if (database.isOpen()) database.close();
-            if (!database.isOpen())
-            { database = dbHelper.getReadableDatabase(); }
-            Cursor c = database.rawQuery("SELECT * FROM reservation WHERE id=" + res_id + ";", null);
-            int value = -1;
-            if (c != null)
-            {
-                while (c.moveToNext())
-                {
-                    value = c.getInt(c.getColumnIndex("table_use_id"));
-                }
-            }
-            c.close();
-            database.close();
-
-            return value;
-        }
-        catch (Exception e)
-        {
-            Log.d("Fetch failure", e.getMessage());
-            return -1;
         }
     }
 
 
     //it deletes a "red" or "grey" reservation
-    public void deleteReservationWithoutTable(int res_id)
+    public void deleteReservation(int res_id)
     {
         try
         {
@@ -1569,7 +1565,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Delete Error", e.getMessage());
+            Log.e("Delete Error", e.getMessage());
         }
     }
 
@@ -1581,18 +1577,20 @@ public class DbAdapterTables extends DbAdapterBillExtra
         {
             //if (database.isOpen()) database.close();
             if (!database.isOpen())
-            { database = dbHelper.getWritableDatabase(); }
-            execOnDb("UPDATE reservation SET name=\"" + res.getName() + "\", surname=\"" + res.getSurname() +
-                    "\", adult=" + res.getAdults() + ", children=" + res.getChildren() + ", disabled=" +
-                    res.getDisabled() + ", reservation_date=strftime('%Y-%m-%d', '" + res.getReservation_date() + "'), " +
-                    "reservation_time=strftime('%H:%M', '" + res.getReservation_time() + "'), " +
-                    "table_use_id=" + res.getTable_use_id() + ", status=" + res.getStatus() +
-                    " telephone=" + res.getTelephone() + " WHERE id=" + res.getReservation_id() + ";");
+                { database = dbHelper.getWritableDatabase(); }
+
+            execOnDb(String.format(
+                    "UPDATE reservation " +
+                    "SET name = '%s', surname = '%s', adults = '%s', children = '%s', disabled = '%s', time = '%s', telephone = '%s'" +
+                    "WHERE id = '%s';",
+                    res.getName(), res.getSurname(), res.getAdults(), res.getChildren(), res.getDisabled(), res.getTime(), res.getTelephone(), res.getReservation_id()
+            ));
+
             database.close();
         }
         catch (Exception e)
         {
-            Log.d("Delete Error", e.getMessage());
+            Log.e("Delete Error", e.getMessage());
         }
     }
 
@@ -1620,7 +1618,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Error", e.getMessage());
+            Log.e("Error", e.getMessage());
             return id;
         }
     }
@@ -1634,10 +1632,13 @@ public class DbAdapterTables extends DbAdapterBillExtra
         {
             //if (database.isOpen()) database.close();
             if (!database.isOpen())
-            { database = dbHelper.getReadableDatabase(); }
-            Cursor c = database.rawQuery("SELECT * FROM reservation WHERE reservation_date=strftime('%Y-%m-%d','"
-                    + date + "') AND (strftime('%H', reservation_time) - strftime('%H','"
-                    + time + "'))<=1 AND table_use_id =" + -1 + " ORDER BY reservation_time;", null);
+                { database = dbHelper.getReadableDatabase(); }
+
+            Cursor c = database.rawQuery(String.format(
+                    "SELECT * FROM reservation WHERE (strftime('%H', '%1$s') - strftime('%H', '%1$s')) <= 1 ORDER BY time;",
+                    time
+            ), null);
+
             if (c != null)
             {
                 while (c.moveToNext())
@@ -1653,65 +1654,13 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Check Time Failure", e.getMessage());
+            Log.e("Check Time Failure", e.getMessage());
             return resIdArray;
         }
     }
 
 
-    public void setReservationArrivalTime(int res_id)
-    {
-        try
-        {
-            //if (database.isOpen()) database.close();
-            if (!database.isOpen())
-            { database = dbHelper.getWritableDatabase(); }
-            execOnDb("UPDATE reservation SET start_time=strftime('%H-%m-%d %H:%M', 'now'), status=" + 3 +
-                    " WHERE id=" + res_id);
-            database.close();
-        }
-        catch (Exception e)
-        {
-            Log.d("Modify failure", e.getMessage());
-        }
-    }
-
-
-    public void setNotArrivedStatus(int res_id)
-    {
-        try
-        {
-            //if (database.isOpen()) database.close();
-            if (!database.isOpen())
-            { database = dbHelper.getWritableDatabase(); }
-            execOnDb("UPDATE reservation SET status=" + 1 + " WHERE id=" + res_id);
-            database.close();
-        }
-        catch (Exception e)
-        {
-            Log.d("Modify failure", e.getMessage());
-        }
-    }
-
-
-    public void setCancelledStatus(int res_id)
-    {
-        try
-        {
-            //if (database.isOpen()) database.close();
-            if (!database.isOpen())
-            { database = dbHelper.getWritableDatabase(); }
-            execOnDb("UPDATE reservation SET status=" + 2 + " WHERE id=" + res_id);
-            database.close();
-        }
-        catch (Exception e)
-        {
-            Log.d("Modify failure", e.getMessage());
-        }
-    }
-
-
-    public void deleteOldReservations(String now)
+    public void deleteOldReservations(Date now)
     {
         try
         {
@@ -1719,12 +1668,12 @@ public class DbAdapterTables extends DbAdapterBillExtra
             if (!database.isOpen())
             { database = dbHelper.getWritableDatabase(); }
             execOnDb("UPDATE reservation SET status=" + 3 + " WHERE (strftime('%Y-%m-%d', '" + now + "') - " +
-                    "strftime('%Y-%m-%d', reservation.reservation_date))>=1;");
+                    "strftime('%Y-%m-%d', reservation.date))>=1;");
             database.close();
         }
         catch (Exception e)
         {
-            Log.d("Delete failure", e.getMessage());
+            Log.e("Delete failure", e.getMessage());
         }
     }
 
@@ -1740,10 +1689,12 @@ public class DbAdapterTables extends DbAdapterBillExtra
             String regexp = ".*" + key.toUpperCase() + ".*";
 
             ArrayList<Reservation> array = new ArrayList<>();
-            Cursor c = database.rawQuery("SELECT * FROM reservation WHERE status=" + 0 +
-                    " AND (UPPER(name) REGEXP '" + regexp +
-                    "' OR UPPER(surname) REGEXP '" + regexp + "')" +
-                    " ORDER BY reservation_date, reservation_time;", null);
+            Cursor c = database.rawQuery(
+                    String.format("SELECT * FROM reservation WHERE (UPPER(name) REGEXP '%1$s' OR UPPER(surname) REGEXP '%1$s') ORDER BY time;", regexp),
+                    null);
+
+            SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzzzzzzz yyyy", Locale.ROOT);
+
             if (c != null)
             {
                 while (c.moveToNext())
@@ -1752,14 +1703,11 @@ public class DbAdapterTables extends DbAdapterBillExtra
                     r.setReservation_id(c.getInt(c.getColumnIndex("id")));
                     r.setName(c.getString(c.getColumnIndex("name")));
                     r.setSurname(c.getString(c.getColumnIndex("surname")));
-                    r.setAdults(c.getInt(c.getColumnIndex("adult")));
+                    r.setAdults(c.getInt(c.getColumnIndex("adults")));
                     r.setChildren(c.getInt(c.getColumnIndex("children")));
                     r.setDisabled(c.getInt(c.getColumnIndex("disabled")));
-                    r.setReservation_date(c.getString(c.getColumnIndex("reservation_date")));
-                    r.setReservation_time(c.getString(c.getColumnIndex("reservation_time")));
-                    r.setTable_use_id(c.getInt(c.getColumnIndex("table_use_id")));
-                    r.setStatus(c.getInt(c.getColumnIndex("status")));
-                    r.setTelephone(c.getLong(c.getColumnIndex("telephone")));
+                    r.setTime(format.parse(c.getString(c.getColumnIndex("time"))));
+                    r.setTelephone(c.getString(c.getColumnIndex("telephone")));
                     array.add(r);
                 }
             }
@@ -1775,15 +1723,51 @@ public class DbAdapterTables extends DbAdapterBillExtra
     }
 
 
+
+
+
+
+    public void insertWaitingListSync(ArrayList<WaitingListModel> wls)
+    {
+        try
+        {
+            //if (database.isOpen()) database.close();
+            if (!database.isOpen())
+                { database = dbHelper.getWritableDatabase(); }
+
+            for (WaitingListModel res : wls)
+            {
+                execOnDb(String.format(
+                        "INSERT INTO waiting_list (id, name, surname, adults, children, disabled, time) " +
+                                "VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s');",
+                        res.getId(), res.getName(), res.getSurname(), res.getAdults(), res.getChildren(), res.getDisabled(), res.getTime()
+                ));
+            }
+
+            database.close();
+        }
+        catch (Exception e)
+        {
+            Log.e("Insert mA Error", e.getMessage());
+        }
+    }
+
+
+
+
     public ArrayList<WaitingListModel> fetchWaitingList()
     {
         try
         {
             //if (database.isOpen()) database.close();
             if (!database.isOpen())
-            { database = dbHelper.getReadableDatabase(); }
+                { database = dbHelper.getReadableDatabase(); }
+
             ArrayList<WaitingListModel> waitingList = new ArrayList<>();
-            Cursor c = database.rawQuery("SELECT * FROM waiting_list WHERE status=0 ORDER BY arrival_time", null);
+            Cursor c = database.rawQuery("SELECT * FROM waiting_list ORDER BY time", null);
+
+            SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzzzzzzz yyyy", Locale.ROOT);
+
             if (c != null)
             {
                 while (c.moveToNext())
@@ -1792,16 +1776,11 @@ public class DbAdapterTables extends DbAdapterBillExtra
                     r.setId(c.getInt(c.getColumnIndex("id")));
                     r.setName(c.getString(c.getColumnIndex("name")));
                     r.setSurname(c.getString(c.getColumnIndex("surname")));
-                    r.setAdults(c.getInt(c.getColumnIndex("adult")));
+                    r.setAdults(c.getInt(c.getColumnIndex("adults")));
                     r.setChildren(c.getInt(c.getColumnIndex("children")));
                     r.setDisabled(c.getInt(c.getColumnIndex("disabled")));
+                    r.setTime(format.parse(c.getString(c.getColumnIndex("time"))));
 
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String current = c.getString(c.getColumnIndex("arrival_time"));
-                    Date currentDate = format.parse(current);
-                    r.setArrivalTime(currentDate);
-
-                    r.setStatus(c.getInt(c.getColumnIndex("status")));
                     waitingList.add(r);
                 }
             }
@@ -1812,7 +1791,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Fetch failure", e.getMessage());
+            Log.e("Fetch failure", e.getMessage());
             return null;
         }
     }
@@ -1841,7 +1820,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("Error", e.getMessage());
+            Log.e("Error", e.getMessage());
             return id;
         }
     }
@@ -1856,55 +1835,18 @@ public class DbAdapterTables extends DbAdapterBillExtra
             { database = dbHelper.getWritableDatabase(); }
             //table check, -1 if table is not available
             //just for today reservations
-            execOnDb("INSERT INTO waiting_list (name, surname, arrival_time, adult, children, disabled) " +
-                    "VALUES(\"" + wlm.getName() + "\", \"" + wlm.getSurname() + "\", " +
-                    "datetime(CURRENT_TIMESTAMP, 'localtime'), " +
-                    wlm.getAdults() + ", " + wlm.getChildren() + ", " + wlm.getDisabled() + ");");
+            execOnDb(String.format(
+                    "INSERT INTO waiting_list (name, surname, adults, children, disabled, time) VALUES('%s', '%s', '%s', '%s', '%s', '%s');",
+                    wlm.getName(), wlm.getSurname(), wlm.getAdults(), wlm.getChildren(), wlm.getDisabled(), wlm.getTime()
+            ));
             database.close();
         }
         catch (Exception e)
         {
-            Log.d("Add failure", e.getMessage());
+            Log.e("Add failure", e.getMessage());
         }
     }
 
-
-    public void deleteOldWaitingList(String yesterday)
-    {
-        try
-        {
-            //if (database.isOpen()) database.close();
-            if (!database.isOpen())
-            { database = dbHelper.getWritableDatabase(); }
-            //execOnDb("UPDATE waiting_list SET status=" + 3 + " WHERE arrival_time<='" + now + "';");
-            Cursor c = database.rawQuery("SELECT * FROM waiting_list WHERE status=0;", null);
-
-            if (c != null)
-            {
-                while (c.moveToNext())
-                {
-                    int id = c.getInt(c.getColumnIndex("id"));
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String date = c.getString(c.getColumnIndex("arrival_time"));
-                    Date datePreFormat = format.parse(date);
-                    //mese
-                    if (Integer.parseInt(yesterday.substring(5, 7)) == Integer.parseInt(date.substring(5, 7)) &&
-                            //giorno
-                            Integer.parseInt(yesterday.substring(8, 10)) == Integer.parseInt(date.substring(8, 10)))
-                    {
-
-                        execOnDb("UPDATE waiting_list SET status=" + 3 + " WHERE id=" + id + ";");
-                    }
-                }
-            }
-            c.close();
-            database.close();
-        }
-        catch (Exception e)
-        {
-            Log.d("Delete failure", e.getMessage());
-        }
-    }
 
 
     //search through all reservations in database, just with status = 0
@@ -1918,10 +1860,15 @@ public class DbAdapterTables extends DbAdapterBillExtra
             String regexp = ".*" + key.toUpperCase() + ".*";
 
             ArrayList<WaitingListModel> array = new ArrayList<>();
-            Cursor c = database.rawQuery("SELECT * FROM waiting_list WHERE status=" + 0 +
-                    " AND (UPPER(name) REGEXP '" + regexp +
-                    "' OR UPPER(surname) REGEXP '" + regexp + "')" +
-                    " ORDER BY arrival_time;", null);
+
+            Cursor c = database.rawQuery(
+                    String.format(
+                        "SELECT * FROM waiting_list WHERE (UPPER(name) REGEXP '%1$s' OR UPPER(surname) REGEXP '%1$s') ORDER BY time;",
+                        regexp), null);
+
+            SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzzzzzzz yyyy", Locale.ROOT);
+
+
             if (c != null)
             {
                 while (c.moveToNext())
@@ -1930,16 +1877,10 @@ public class DbAdapterTables extends DbAdapterBillExtra
                     r.setId(c.getInt(c.getColumnIndex("id")));
                     r.setName(c.getString(c.getColumnIndex("name")));
                     r.setSurname(c.getString(c.getColumnIndex("surname")));
-                    r.setAdults(c.getInt(c.getColumnIndex("adult")));
+                    r.setAdults(c.getInt(c.getColumnIndex("adults")));
                     r.setChildren(c.getInt(c.getColumnIndex("children")));
                     r.setDisabled(c.getInt(c.getColumnIndex("disabled")));
-
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String current = c.getString(c.getColumnIndex("arrival_time"));
-                    Date currentDate = format.parse(current);
-                    r.setArrivalTime(currentDate);
-
-                    r.setStatus(c.getInt(c.getColumnIndex("status")));
+                    r.setTime(format.parse(c.getString(c.getColumnIndex("time"))));
                     array.add(r);
                 }
             }
@@ -1967,9 +1908,12 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("DELETING ERROR", e.getMessage());
+            Log.e("DELETING ERROR", e.getMessage());
         }
     }
+
+
+
 
 
     public void setReservationPopupTimer(int timer)
@@ -1978,12 +1922,12 @@ public class DbAdapterTables extends DbAdapterBillExtra
         {
             if (!database.isOpen())
             { database = dbHelper.getWritableDatabase(); }
-            database.execSQL("INSERT INTO general_settings (reservation_timer) VALUES(" + timer + ");");
+            database.execSQL("INSERT INTO general_settings (timer) VALUES(" + timer + ");");
             database.close();
         }
         catch (Exception e)
         {
-            Log.d("ERROR", e.getMessage());
+            Log.e("ERROR", e.getMessage());
         }
     }
 
@@ -1994,15 +1938,15 @@ public class DbAdapterTables extends DbAdapterBillExtra
         try
         {
             if (!database.isOpen())
-            { database = dbHelper.getReadableDatabase(); }
+                { database = dbHelper.getReadableDatabase(); }
+
             Cursor c = database.rawQuery("SELECT * FROM general_settings;", null);
             if (c != null)
             {
                 while (c.moveToNext())
-                {
-                    timer = c.getInt(c.getColumnIndex("reservation_timer"));
-                }
+                    { timer = c.getInt(c.getColumnIndex("reservation_timer")); }
             }
+
             c.close();
             database.close();
 
@@ -2010,7 +1954,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
         }
         catch (Exception e)
         {
-            Log.d("ERROR", e.getMessage());
+            Log.e("ERROR", e.getMessage());
             return timer;
         }
     }

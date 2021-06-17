@@ -19,6 +19,7 @@ import com.example.blackbox.fragments.CalculatorFragment;
 import com.example.blackbox.fragments.OrderFragment;
 import com.example.blackbox.fragments.PaymentActivityCommunicator;
 import com.example.blackbox.graphics.CustomButton;
+import com.example.blackbox.model.CashButtonLayout;
 import com.example.blackbox.model.Fidelity;
 import com.example.blackbox.model.LeftPayment;
 import com.example.blackbox.model.PaymentButton;
@@ -38,11 +39,12 @@ import static com.example.blackbox.adapter.OrderListAdapter.INSERT_FIDELITY_MODE
 import static com.example.blackbox.adapter.OrderListAdapter.PAY_PARTIAL_MODE;
 import static com.example.blackbox.adapter.OrderListAdapter.PAY_TICKET_MODE;
 import static com.example.blackbox.adapter.OrderListAdapter.PAY_TOTAL_MODE;
+
 /**
  * Created by DavideLiberato on 11/07/2017.
  */
 
-public class PaymentOptionsAdapter extends RecyclerView.Adapter 
+public class PaymentOptionsAdapter extends RecyclerView.Adapter
 {
 
     private final float density;
@@ -59,19 +61,23 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
     private boolean isCard;
     private boolean isPartial;
     private boolean isPartialSet = false;
-    public void setIsPartial(Boolean b){isPartial = b;}
 
-    public boolean getIsCar(){
+    public void setIsPartial(Boolean b) {isPartial = b;}
+
+    public boolean getIsCar()
+    {
         return isCard;
     }
 
-    public void setIsCar(boolean b){
+    public void setIsCar(boolean b)
+    {
         isCard = b;
     }
 
     public int setPaymentButtonTitle(String title)
     {
-        switch(title){
+        switch (title)
+        {
             case "CASH":
                 return R.string.cash;
             case "CREDIT CARD":
@@ -94,104 +100,118 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
     {
         this.dbA = dbA;
         this.context = context;
-        
-        communicator = (PaymentActivityCommunicator)context;
-        inflater = ((Activity)context).getLayoutInflater();
-        
-        Display display = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics ();
+
+        communicator = (PaymentActivityCommunicator) context;
+        inflater = ((Activity) context).getLayoutInflater();
+
+        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
 
-        density  = context.getResources().getDisplayMetrics().density;
+        density = context.getResources().getDisplayMetrics().density;
         buttons = new ArrayList<>();
-        
+
         loadButtons(0);
     }
 
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) 
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         View itemView = inflater.inflate(R.layout.payment_button, null);
         return new ButtonHolder(itemView);
     }
 
-    
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
         PaymentButton b = buttons.get(position);
-        ButtonHolder bh = (ButtonHolder)holder;
-        
-        bh.button.setLayoutParams(new ViewGroup.LayoutParams((int) (322*density), (int) (46*density)));
-        
-        if (setPaymentButtonTitle(b.getTitle())!=-1) {
+        ButtonHolder bh = (ButtonHolder) holder;
+
+        bh.button.setLayoutParams(new ViewGroup.LayoutParams((int) (322 * density), (int) (46 * density)));
+
+        if (setPaymentButtonTitle(b.getTitle()) != -1)
+        {
             bh.button.setText(setPaymentButtonTitle(b.getTitle()));
-        }else{
+        }
+        else
+        {
             bh.button.setText(b.getTitle());
         }
-        
+
         bh.button.setTag(position);
-        
-        if (isActive) {
+
+        if (isActive)
+        {
             bh.button.setAlpha(1.0f);
-            if (b.getFocused()) {
+            if (b.getFocused())
+            {
                 bh.button.setBackground(context.getDrawable(R.drawable.button_border_and_green));
-            } else {
+            }
+            else
+            {
                 bh.button.setBackground(context.getDrawable(R.color.green_2));
             }
 
-            bh.button.setOnClickListener(new View.OnClickListener() {
+            bh.button.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v)
+                {
                     doSomething(v);
                 }
             });
-            
-        }else{
+
+        }
+        else
+        {
             bh.button.setAlpha(0.15f);
         }
     }
 
     @Override
-    public int getItemViewType(int position) {
+    public int getItemViewType(int position)
+    {
         return buttons.get(position).getButton_type();
     }
 
     @Override
-    public int getItemCount() {
-        return buttons != null ? buttons.size() : 0;
+    public int getItemCount()
+    {
+        return buttons != null
+               ? buttons.size()
+               : 0;
     }
-
-
-
 
 
     public void doSomething(View v)
     {
-        int button_type = buttons.get((int)v.getTag()).getButton_type();
-        
+        int button_type = buttons.get((int) v.getTag()).getButton_type();
+
         PaymentButton processButton;
         PaymentButton totalButton;
         PaymentButton partialButton;
-        
-        OrderFragment of = ((OrderFragment)((FragmentActivity)context).getSupportFragmentManager().findFragmentByTag("order"));
-        
+
+        OrderFragment of = ((OrderFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                        .findFragmentByTag("order"));
+
         boolean greenButton = ((PaymentActivity) context).getGreenButton();
-        
+
         // If bill was split and orderList is currently showing the total_bill then payment must not be allowed unless all bill
         // splittings are removed.
-        if(((PaymentActivity) context).checkIfOtherSplitBillArePaid()) 
+        if (((PaymentActivity) context).checkIfOtherSplitBillArePaid())
         {
             if (isActive && !greenButton)
             {
-                switch (button_type) 
+                switch (button_type)
                 {
                     case 1:
-                        if (!isPartial) 
+                        if (!isPartial)
                         {
                             // buttons.get((int)v.getTag()).setFocused(true);
-                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                              .findFragmentByTag("calc"))
                                     .setMode(PAY_TOTAL_MODE);
                             communicator.activateFunction(CALCULATOR_ACTIVATION, null, 0.0f);
                             isActive = false;
@@ -199,80 +219,100 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
                             //VEDIAMO SE NON SERVE
                             //setActive(false);
                             ((PaymentActivity) context).setPaymentType(1);
-                            ((Activity) context).findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() 
+                            ((Activity) context).findViewById(R.id.kill)
+                                                .setOnClickListener(new View.OnClickListener()
+                                                {
+                                                    @Override
+                                                    public void onClick(View v)
+                                                    {
+                                                        ArrayList<LeftPayment> leftPayments = ((CalculatorFragment) ((FragmentActivity) context)
+                                                                .getSupportFragmentManager()
+                                                                .findFragmentByTag("calc")).getLeftPayment();
+                                                        if (leftPayments.size() > 0)
+                                                        {
+                                                            ((CalculatorFragment) ((FragmentActivity) context)
+                                                                    .getSupportFragmentManager()
+                                                                    .findFragmentByTag("calc")).setLastLeftPayment();
+                                                        }
+
+                                                        ((CalculatorFragment) ((FragmentActivity) context)
+                                                                .getSupportFragmentManager()
+                                                                .findFragmentByTag("calc")).turnOnOffCalculator();
+                                                        ((PaymentActivity) context).activatePaymentButtonsSpec();
+
+                                                        ((PaymentActivity) context).setNormalKillOkButton();
+
+                                                        isActive = true;
+                                                        paymentButton = null;
+
+                                                        ((PaymentActivity) context).setKillForSplitOnCalculator();
+                                                        ((PaymentActivity) context).showSubdivisionItem();
+                                                    }
+                                                });
+                        }
+                        else
+                        {
+                            for (PaymentButton b : buttons)
                             {
-                                @Override
-                                public void onClick(View v) 
-                                {
-                                    ArrayList<LeftPayment> leftPayments = ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
-                                            .getLeftPayment();
-                                    if(leftPayments.size()>0) {
-                                        ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
-                                                .setLastLeftPayment();
-                                    }
-
-                                    ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
-                                            .turnOnOffCalculator();
-                                    ((PaymentActivity) context).activatePaymentButtonsSpec();
-                                    
-                                    ((PaymentActivity) context).setNormalKillOkButton();
-
-                                    isActive = true;
-                                    paymentButton = null;
-
-                                    ((PaymentActivity)context).setKillForSplitOnCalculator();
-                                    ((PaymentActivity) context).showSubdivisionItem();
-                                }
-                            });
-                        } else {
-                            for (PaymentButton b : buttons) {
                                 b.setFocused(false);
                             }
                             buttons.get((int) v.getTag()).setFocused(true);
                             notifyDataSetChanged();
-                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                              .findFragmentByTag("calc"))
                                     .setMode(PAY_PARTIAL_MODE);
 
-                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                              .findFragmentByTag("calc"))
                                     .setPayementShortcut();
-                            if (!isPartialSet) {
-                                ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                            if (!isPartialSet)
+                            {
+                                ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                                  .findFragmentByTag("calc"))
                                         .turnOnOffCalculator();
                             }
                             isPartialSet = true;
                             isActive = false;
                             turnOnOffButtons((int) v.getTag(), false);
 
-                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc")).payFromPartialButton();
-                            ((Activity) context).findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
-                                @Override
+                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                              .findFragmentByTag("calc"))
+                                    .payFromPartialButton();
+                            ((Activity) context).findViewById(R.id.kill)
+                                                .setOnClickListener(new View.OnClickListener()
+                                                {
+                                                    @Override
 
-                                public void onClick(View v) {
+                                                    public void onClick(View v)
+                                                    {
 
 
-                                    ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
-                                            .turnOnOffCalculator();
-                                    ((PaymentActivity) context).activatePaymentButtonsSpec();
-                                    //((PaymentActivity) context).activatePaymentButtons();
-                                    //loadButtons(0);
-                                    ((PaymentActivity) context).resetOpacityForSlplittButton();
-                                    ((PaymentActivity) context).resetOpacityForSplit();
-                                    ((PaymentActivity) context).setNormalKillOkButton();
-                                    isPartial = false;
-                                    isActive = true;
-                                    isPartialSet = false;
-                                    paymentButton = null;
-                                }
-                            });
+                                                        ((CalculatorFragment) ((FragmentActivity) context)
+                                                                .getSupportFragmentManager()
+                                                                .findFragmentByTag("calc")).turnOnOffCalculator();
+                                                        ((PaymentActivity) context).activatePaymentButtonsSpec();
+                                                        //((PaymentActivity) context).activatePaymentButtons();
+                                                        //loadButtons(0);
+                                                        ((PaymentActivity) context).resetOpacityForSlplittButton();
+                                                        ((PaymentActivity) context).resetOpacityForSplit();
+                                                        ((PaymentActivity) context).setNormalKillOkButton();
+                                                        isPartial = false;
+                                                        isActive = true;
+                                                        isPartialSet = false;
+                                                        paymentButton = null;
+                                                    }
+                                                });
 
 
                         }
                         break;
-                    
+
                     case 2:
-                        if (!isPartial) {
+                        if (!isPartial)
+                        {
                             ((PaymentActivity) context).setPaymentType(4);
-                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                              .findFragmentByTag("calc"))
                                     .setMode(PAY_TOTAL_MODE);
                             communicator.activateFunction(CALCULATOR_ACTIVATION, null, 0.0f);
                             isActive = false;
@@ -296,20 +336,27 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
                                 ((PaymentActivity) context).setPay_mode(PAY_PARTIAL_BILL);
                                 ((PaymentActivity) context).openProcessCardPopup();
                             }*/
-                        } else {
+                        }
+                        else
+                        {
 
-                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                              .findFragmentByTag("calc"))
                                     .setPayementShortcut();
-                            for (PaymentButton b : buttons) {
+                            for (PaymentButton b : buttons)
+                            {
                                 b.setFocused(false);
                             }
                             buttons.get((int) v.getTag()).setFocused(true);
                             notifyDataSetChanged();
-                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                              .findFragmentByTag("calc"))
                                     .setMode(PAY_PARTIAL_MODE);
                             ((PaymentActivity) context).setPay_mode(PAY_PARTIAL_BILL);
-                            if (!isPartialSet) {
-                                ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                            if (!isPartialSet)
+                            {
+                                ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                                  .findFragmentByTag("calc"))
                                         .turnOnOffCalculator();
                             }
                             isPartialSet = true;
@@ -317,26 +364,30 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
                             setIsCar(true);
                             turnOnOffButtons((int) v.getTag(), false);
                             //isPartial = false;
-                            ((Activity) context).findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+                            ((Activity) context).findViewById(R.id.kill)
+                                                .setOnClickListener(new View.OnClickListener()
+                                                {
+                                                    @Override
+                                                    public void onClick(View v)
+                                                    {
 
 
-                                    ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
-                                            .turnOnOffCalculator();
-                                    ((PaymentActivity) context).activatePaymentButtonsSpec();
-                                    ((PaymentActivity) context).resetOpacityForSplit();
-                                    //loadButtons(0);
-                                    isPartial = false;
-                                    isActive = true;
-                                    setIsCar(false);
-                                    //((PaymentActivity) context).resetOpacityForSlplittButton();
-                                    isPartialSet = false;
-                                    ((PaymentActivity) context).setNormalKillOkButton();
-                                    paymentButton = null;
-                                    ((PaymentActivity) context).showSubdivisionItem();
-                                }
-                            });
+                                                        ((CalculatorFragment) ((FragmentActivity) context)
+                                                                .getSupportFragmentManager()
+                                                                .findFragmentByTag("calc")).turnOnOffCalculator();
+                                                        ((PaymentActivity) context).activatePaymentButtonsSpec();
+                                                        ((PaymentActivity) context).resetOpacityForSplit();
+                                                        //loadButtons(0);
+                                                        isPartial = false;
+                                                        isActive = true;
+                                                        setIsCar(false);
+                                                        //((PaymentActivity) context).resetOpacityForSlplittButton();
+                                                        isPartialSet = false;
+                                                        ((PaymentActivity) context).setNormalKillOkButton();
+                                                        paymentButton = null;
+                                                        ((PaymentActivity) context).showSubdivisionItem();
+                                                    }
+                                                });
                             //((PaymentActivity) context).openProcessCardPopup();
                             //isPartial = false;
 
@@ -347,9 +398,11 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
                     case 4:
                         // process bank card
                         // credit card container button - update button array with credit card type accepted (db)
-                        if (!isPartial) {
+                        if (!isPartial)
+                        {
                             ((PaymentActivity) context).setPaymentType(4);
-                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                              .findFragmentByTag("calc"))
                                     .setMode(PAY_TOTAL_MODE);
                             communicator.activateFunction(CALCULATOR_ACTIVATION, null, 0.0f);
                             isActive = false;
@@ -367,20 +420,27 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
                                 ((PaymentActivity) context).setPay_mode(PAY_PARTIAL_BILL);
                                 ((PaymentActivity) context).openProcessCardPopup();
                             }*/
-                        } else {
+                        }
+                        else
+                        {
 
-                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                              .findFragmentByTag("calc"))
                                     .setPayementShortcut();
-                            for (PaymentButton b : buttons) {
+                            for (PaymentButton b : buttons)
+                            {
                                 b.setFocused(false);
                             }
                             buttons.get((int) v.getTag()).setFocused(true);
                             notifyDataSetChanged();
-                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                              .findFragmentByTag("calc"))
                                     .setMode(PAY_PARTIAL_MODE);
                             ((PaymentActivity) context).setPay_mode(PAY_PARTIAL_BILL);
-                            if (!isPartialSet) {
-                                ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                            if (!isPartialSet)
+                            {
+                                ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                                  .findFragmentByTag("calc"))
                                         .turnOnOffCalculator();
                             }
                             isPartialSet = true;
@@ -388,26 +448,30 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
                             setIsCar(true);
                             turnOnOffButtons((int) v.getTag(), false);
                             //isPartial = false;
-                            ((Activity) context).findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+                            ((Activity) context).findViewById(R.id.kill)
+                                                .setOnClickListener(new View.OnClickListener()
+                                                {
+                                                    @Override
+                                                    public void onClick(View v)
+                                                    {
 
 
-                                    ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
-                                            .turnOnOffCalculator();
-                                    ((PaymentActivity) context).activatePaymentButtonsSpec();
-                                    //loadButtons(0);
-                                    isPartial = false;
-                                    isActive = true;
-                                    setIsCar(false);
-                                    ((PaymentActivity) context).resetOpacityForSplit();
-                                    //((PaymentActivity) context).resetOpacityForSlplittButton();
-                                    isPartialSet = false;
-                                    ((PaymentActivity) context).setNormalKillOkButton();
-                                    paymentButton = null;
-                                    ((PaymentActivity) context).showSubdivisionItem();
-                                }
-                            });
+                                                        ((CalculatorFragment) ((FragmentActivity) context)
+                                                                .getSupportFragmentManager()
+                                                                .findFragmentByTag("calc")).turnOnOffCalculator();
+                                                        ((PaymentActivity) context).activatePaymentButtonsSpec();
+                                                        //loadButtons(0);
+                                                        isPartial = false;
+                                                        isActive = true;
+                                                        setIsCar(false);
+                                                        ((PaymentActivity) context).resetOpacityForSplit();
+                                                        //((PaymentActivity) context).resetOpacityForSlplittButton();
+                                                        isPartialSet = false;
+                                                        ((PaymentActivity) context).setNormalKillOkButton();
+                                                        paymentButton = null;
+                                                        ((PaymentActivity) context).showSubdivisionItem();
+                                                    }
+                                                });
                             //((PaymentActivity) context).openProcessCardPopup();
                             //isPartial = false;
 
@@ -419,8 +483,9 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
                     case 3:
                         // actual credit card -> process card
                         processButton = new PaymentButton();
-                        processButton.setTitle("PROCESS " + buttons.get((int) v.getTag()).getTitle() + " CARD");
-//                        processButton.setButton_type(10);
+                        processButton.setTitle("PROCESS " + buttons.get((int) v.getTag())
+                                                                   .getTitle() + " CARD");
+                        //                        processButton.setButton_type(10);
                         processButton.setButton_type(13);
                         buttons.clear();
                         buttons.add(processButton);
@@ -449,76 +514,86 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
 
 
                         notifyDataSetChanged();
-                        ((Activity) context).findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                        ((Activity) context).findViewById(R.id.kill)
+                                            .setOnClickListener(new View.OnClickListener()
+                                            {
+                                                @Override
+                                                public void onClick(View v)
+                                                {
 
 
-                                ((PaymentActivity) context).activatePaymentButtonsSpec();
-                                //loadButtons(0);
-                                ((PaymentActivity) context).resetOpacityForSlplittButton();
-                                ((PaymentActivity) context).setNormalKillOkButton();
-                                ((PaymentActivity) context).showSplitButton();
-                                paymentButton = null;
-                                ((PaymentActivity) context).showSubdivisionItem();
-                            }
-                        });
+                                                    ((PaymentActivity) context).activatePaymentButtonsSpec();
+                                                    //loadButtons(0);
+                                                    ((PaymentActivity) context).resetOpacityForSlplittButton();
+                                                    ((PaymentActivity) context).setNormalKillOkButton();
+                                                    ((PaymentActivity) context).showSplitButton();
+                                                    paymentButton = null;
+                                                    ((PaymentActivity) context).showSubdivisionItem();
+                                                }
+                                            });
 
                         break;
-                        
+
                     case 6:
                         //CREDIT BUTTON ON PAYMENTS OPTION
-                        ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                        ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                          .findFragmentByTag("calc"))
                                 .setMode(INSERT_CREDIT_MODE);
                         communicator.activateFunction(CALCULATOR_ACTIVATION_FOR_CREDIT, null, 0.0f);
 
                         turnOnOffButtons((int) v.getTag(), false);
-                        
-                        ((Activity) context).findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() 
-                        {
-                            @Override
-                            public void onClick(View v) 
-                            {
-                                ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
-                                        .turnOnOffCalculator();
-                                ((PaymentActivity) context).activatePaymentButtonsSpec();
-                                // loadButtons(0);
-                                isPartial = false;
-                                //((PaymentActivity) context).resetOpacityForSlplittButton();
-                                isPartialSet = false;
-                                ((PaymentActivity) context).setNormalKillOkButton();
-                                paymentButton = null;
-                                ((PaymentActivity) context).showSubdivisionItem();
-                            }
-                        });
+
+                        ((Activity) context).findViewById(R.id.kill)
+                                            .setOnClickListener(new View.OnClickListener()
+                                            {
+                                                @Override
+                                                public void onClick(View v)
+                                                {
+                                                    ((CalculatorFragment) ((FragmentActivity) context)
+                                                            .getSupportFragmentManager()
+                                                            .findFragmentByTag("calc")).turnOnOffCalculator();
+                                                    ((PaymentActivity) context).activatePaymentButtonsSpec();
+                                                    // loadButtons(0);
+                                                    isPartial = false;
+                                                    //((PaymentActivity) context).resetOpacityForSlplittButton();
+                                                    isPartialSet = false;
+                                                    ((PaymentActivity) context).setNormalKillOkButton();
+                                                    paymentButton = null;
+                                                    ((PaymentActivity) context).showSubdivisionItem();
+                                                }
+                                            });
 
                         break;
 
                     case 7:
                         //PARTIAL PAYMENT
-                        if (!isPartial) {
+                        if (!isPartial)
+                        {
                             loadButtonsPartial();
                             ((PaymentActivity) context).setOpacityForSplitButton();
                             ((PaymentActivity) context).buttonOpacitySetting1();
                             isPartial = true;
                             isPartialSet = false;
 
-                            ((Activity) context).findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+                            ((Activity) context).findViewById(R.id.kill)
+                                                .setOnClickListener(new View.OnClickListener()
+                                                {
+                                                    @Override
+                                                    public void onClick(View v)
+                                                    {
 
 
-                                    ((PaymentActivity) context).activatePaymentButtonsSpec();
-                                    ((PaymentActivity) context).resetOtherButtons();
-                                    //loadButtons(0);
-                                    isPartial = false;
-                                    isActive = true;
-                                    //((PaymentActivity) context).resetOpacityForSlplittButton();
+                                                        ((PaymentActivity) context).activatePaymentButtonsSpec();
+                                                        ((PaymentActivity) context).resetOtherButtons();
+                                                        //loadButtons(0);
+                                                        isPartial = false;
+                                                        isActive = true;
+                                                        //((PaymentActivity) context).resetOpacityForSlplittButton();
 
-                                    ((PaymentActivity) context).setNormalKillOkButton();
-                                    paymentButton = null;
-                                }
-                            });
+                                                        ((PaymentActivity) context).setNormalKillOkButton();
+                                                        paymentButton = null;
+                                                    }
+                                                });
 
 
                         }
@@ -527,9 +602,8 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
                     // pay with fidelity credit option
                     case 8:
 
-                        ((CalculatorFragment) ((FragmentActivity) context)
-                                .getSupportFragmentManager()
-                                .findFragmentByTag("calc"))
+                        ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                          .findFragmentByTag("calc"))
                                 .setMode(INSERT_FIDELITY_MODE);
 
                         communicator.activateFunction(CALCULATOR_ACTIVATION_FIDELITY, null, 0.0f);
@@ -537,22 +611,25 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
                         // TODO
                         turnOnOffButtons((int) v.getTag(), false);
 
-                        ((Activity) context).findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc")).turnOnOffCalculator();
-                                ((PaymentActivity) context).activatePaymentButtonsSpec();
-                                ((PaymentActivity) context).setNormalKillOkButton();
-                                ((PaymentActivity) context).showSubdivisionItem();
-                                isPartial = false;
-                                isPartialSet = false;
-                                paymentButton = null;
-                            }
-                        });
+                        ((Activity) context).findViewById(R.id.kill)
+                                            .setOnClickListener(new View.OnClickListener()
+                                            {
+                                                @Override
+                                                public void onClick(View v)
+                                                {
+                                                    ((CalculatorFragment) ((FragmentActivity) context)
+                                                            .getSupportFragmentManager()
+                                                            .findFragmentByTag("calc")).turnOnOffCalculator();
+                                                    ((PaymentActivity) context).activatePaymentButtonsSpec();
+                                                    ((PaymentActivity) context).setNormalKillOkButton();
+                                                    ((PaymentActivity) context).showSubdivisionItem();
+                                                    isPartial = false;
+                                                    isPartialSet = false;
+                                                    paymentButton = null;
+                                                }
+                                            });
 
-                        
+
                     case 10: // process case
                         break;
 
@@ -568,11 +645,15 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
                      *      . pay partial: pays a certain amount, specified in calculator, which gets inserted as a new split
                      */
                     case 11: // 'pay total' case
-                        if (isCard) {
+                        if (isCard)
+                        {
                             ((PaymentActivity) context).setPay_mode(PAY_TOTAL_BILL);
                             ((PaymentActivity) context).openProcessCardPopup();
-                        } else {
-                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                        }
+                        else
+                        {
+                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                              .findFragmentByTag("calc"))
                                     .setMode(PAY_TOTAL_MODE);
                             communicator.activateFunction(CALCULATOR_ACTIVATION, null, 0.0f);
 
@@ -580,66 +661,83 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
                             turnOnOffButtons((int) v.getTag(), false);
                             //VEDIAMO SE NON SERVE
                             //setActive(false);
-                            ((Activity) context).findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+                            ((Activity) context).findViewById(R.id.kill)
+                                                .setOnClickListener(new View.OnClickListener()
+                                                {
+                                                    @Override
+                                                    public void onClick(View v)
+                                                    {
 
 
-                                    ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
-                                            .turnOnOffCalculator();
-                                    ((PaymentActivity) context).activatePaymentButtonsSpec();
-                                    //loadButtons(0);
-                                    ((PaymentActivity) context).resetOpacityForSlplittButton();
-                                    ((PaymentActivity) context).setNormalKillOkButton();
+                                                        ((CalculatorFragment) ((FragmentActivity) context)
+                                                                .getSupportFragmentManager()
+                                                                .findFragmentByTag("calc")).turnOnOffCalculator();
+                                                        ((PaymentActivity) context).activatePaymentButtonsSpec();
+                                                        //loadButtons(0);
+                                                        ((PaymentActivity) context).resetOpacityForSlplittButton();
+                                                        ((PaymentActivity) context).setNormalKillOkButton();
 
-                                    paymentButton = null;
-                                }
-                            });
+                                                        paymentButton = null;
+                                                    }
+                                                });
                         }
                         break;
-                        
+
                     case 12: // 'pay partial' case
-                        if (isCard) {
+                        if (isCard)
+                        {
                             communicator.activateFunction(CALCULATOR_INSERT_PARTIAL, null, 0.0f);
-                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                              .findFragmentByTag("calc"))
                                     .setMode(PAY_PARTIAL_MODE);
                             turnOnOffButtons((int) v.getTag(), false);
                             //setActive(false);
-                            ((Activity) context).findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+                            ((Activity) context).findViewById(R.id.kill)
+                                                .setOnClickListener(new View.OnClickListener()
+                                                {
+                                                    @Override
+                                                    public void onClick(View v)
+                                                    {
 
 
-                                    ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
-                                            .turnOnOffCalculator();
-                                    ((PaymentActivity) context).activatePaymentButtonsSpec();
-                                    //loadButtons(0);
-                                    ((PaymentActivity) context).resetOpacityForSlplittButton();
-                                    ((PaymentActivity) context).setNormalKillOkButton();
-                                    paymentButton = null;
-                                }
-                            });
-                        } else {
+                                                        ((CalculatorFragment) ((FragmentActivity) context)
+                                                                .getSupportFragmentManager()
+                                                                .findFragmentByTag("calc")).turnOnOffCalculator();
+                                                        ((PaymentActivity) context).activatePaymentButtonsSpec();
+                                                        //loadButtons(0);
+                                                        ((PaymentActivity) context).resetOpacityForSlplittButton();
+                                                        ((PaymentActivity) context).setNormalKillOkButton();
+                                                        paymentButton = null;
+                                                    }
+                                                });
+                        }
+                        else
+                        {
                             communicator.activateFunction(CALCULATOR_INSERT_PARTIAL, null, 0.0f);
-                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                              .findFragmentByTag("calc"))
                                     .setMode(PAY_PARTIAL_MODE);
                             turnOnOffButtons((int) v.getTag(), false);
                             //setActive(false);
-                            ((Activity) context).findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+                            ((Activity) context).findViewById(R.id.kill)
+                                                .setOnClickListener(new View.OnClickListener()
+                                                {
+                                                    @Override
+                                                    public void onClick(View v)
+                                                    {
 
 
-                                    ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
-                                            .turnOnOffCalculator();
-                                    ((PaymentActivity) context).activatePaymentButtonsSpec();
-                                    //loadButtons(0);
-                                    ((PaymentActivity) context).resetOpacityForSlplittButton();
-                                    ((PaymentActivity) context).setNormalKillOkButton();
-                                    paymentButton = null;
-                                    ((PaymentActivity) context).showSubdivisionItem();
-                                }
-                            });
+                                                        ((CalculatorFragment) ((FragmentActivity) context)
+                                                                .getSupportFragmentManager()
+                                                                .findFragmentByTag("calc")).turnOnOffCalculator();
+                                                        ((PaymentActivity) context).activatePaymentButtonsSpec();
+                                                        //loadButtons(0);
+                                                        ((PaymentActivity) context).resetOpacityForSlplittButton();
+                                                        ((PaymentActivity) context).setNormalKillOkButton();
+                                                        paymentButton = null;
+                                                        ((PaymentActivity) context).showSubdivisionItem();
+                                                    }
+                                                });
                         }
                         ((PaymentActivity) context).setOpacityForSplitButton();
                         break;
@@ -649,32 +747,38 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
                         break;
 
                     case 14:
-                        if(!paymentButton.getFocused()) {
+                        if (!paymentButton.getFocused())
+                        {
                             paymentButton.setFocused(true);
-                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
+                            ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager()
+                                                                              .findFragmentByTag("calc"))
                                     .setMode(PAY_TICKET_MODE);
                             communicator.activateFunction(CALCULATOR_ACTIVATION_TICKET, null, 0.0f);
 
                             turnOnOffButtons((int) v.getTag(), false);
                             //VEDIAMO SE NON SERVE
                             //setActive(false);
-                            ((Activity) context).findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
+                            ((Activity) context).findViewById(R.id.kill)
+                                                .setOnClickListener(new View.OnClickListener()
+                                                {
+                                                    @Override
+                                                    public void onClick(View view)
+                                                    {
 
 
-                                    ((CalculatorFragment) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("calc"))
-                                            .turnOnOffCalculator();
-                                    ((PaymentActivity) context).activatePaymentButtonsSpec();
-                                    //loadButtons(0);
-                                    ((PaymentActivity) context).resetOpacityForSlplittButton();
-                                    ((PaymentActivity) context).setNormalKillOkButton();
-                                    paymentButton = null;
-                                    ((PaymentActivity) context).resetPaymentLeft();
-                   //                 v.setActivated(false);
-                                    ((PaymentActivity) context).showSubdivisionItem();
-                                }
-                            });
+                                                        ((CalculatorFragment) ((FragmentActivity) context)
+                                                                .getSupportFragmentManager()
+                                                                .findFragmentByTag("calc")).turnOnOffCalculator();
+                                                        ((PaymentActivity) context).activatePaymentButtonsSpec();
+                                                        //loadButtons(0);
+                                                        ((PaymentActivity) context).resetOpacityForSlplittButton();
+                                                        ((PaymentActivity) context).setNormalKillOkButton();
+                                                        paymentButton = null;
+                                                        ((PaymentActivity) context).resetPaymentLeft();
+                                                        //                 v.setActivated(false);
+                                                        ((PaymentActivity) context).showSubdivisionItem();
+                                                    }
+                                                });
                         }
 
                         break;
@@ -688,37 +792,51 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
                 //}
                 //((PaymentActivity) context).setOpacityForSlplittButton();
             }
-        }else{
-            if(!greenButton){
-                ((PaymentActivity)context).openPayOtherPopup();
+        }
+        else
+        {
+            if (!greenButton)
+            {
+                ((PaymentActivity) context).openPayOtherPopup();
             }
             //Toast.makeText(context, "Please pay other split bill first", Toast.LENGTH_SHORT).show();
         }
     }
 
 
-
-    public void turnOnOffButtons(int exceptPosition, boolean on){
-        if (exceptPosition >= 0) {
+    public void turnOnOffButtons(int exceptPosition, boolean on)
+    {
+        if (exceptPosition >= 0)
+        {
             previous_buttons = new ArrayList<>(buttons);
             buttons.clear();
-            if(!on){
+            if (!on)
+            {
                 buttons.add(previous_buttons.get(exceptPosition));
                 buttons.get(0).setFocused(true);
             }
             else
-                for(int i = 0; i < previous_buttons.size(); i++)
+            {
+                for (int i = 0; i < previous_buttons.size(); i++)
                 {
-                    if(i!=exceptPosition) buttons.add(previous_buttons.get(i));
+                    if (i != exceptPosition)
+                    { buttons.add(previous_buttons.get(i)); }
                 }
+            }
         }
-        else if(on) {
-            if(previous_buttons==null)loadButtons(0);
-            else buttons = previous_buttons;
-            for(int i =0; i<buttons.size(); i++){
+        else if (on)
+        {
+            if (previous_buttons == null)
+            { loadButtons(0); }
+            else
+            { buttons = previous_buttons; }
+            for (int i = 0; i < buttons.size(); i++)
+            {
                 buttons.get(i).setFocused(false);
             }
-        }else{
+        }
+        else
+        {
             previous_buttons = new ArrayList<>(buttons);
             buttons.clear();
         }
@@ -726,18 +844,20 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
     }
 
 
-
-    public void setPaymentButtonOpacityOnOff(boolean on){
-        if(on) {
+    public void setPaymentButtonOpacityOnOff(boolean on)
+    {
+        if (on)
+        {
             isActive = true;
             notifyDataSetChanged();
-        }else{
+        }
+        else
+        {
             isActive = false;
             notifyDataSetChanged();
         }
 
     }
-
 
 
     public void loadButtons(int parent_id)
@@ -749,42 +869,53 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
         notifyDataSetChanged();
     }
 
-    
-    public void loadButtonsPartial(){
 
-        buttons = dbA.getPaymentButtonsForPartial( );
+    public void loadButtonsPartial()
+    {
+
+        buttons = dbA.getPaymentButtonsForPartial();
         notifyDataSetChanged();
         int a = 1;
     }
 
-    public void loadButtonsPaymentOnly(){
 
-        buttons = dbA.getOnlyPaymentButtons( );
+    public void loadButtonsPaymentOnly()
+    {
+
+        buttons = dbA.getOnlyPaymentButtons();
         notifyDataSetChanged();
         int a = 1;
     }
+
 
     public void loadButtonsBuyFidelity()
     {
         buttons = dbA.getPaymentButtonsBuyFidelity();
+
         notifyDataSetChanged();
-        int a = 1;
     }
 
-    public void setActive(boolean active){
+
+    public void setActive(boolean active)
+    {
         isActive = active;
     }
+
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(RecyclerView recyclerView)
+    {
         super.onAttachedToRecyclerView(recyclerView);
         parent = recyclerView;
     }
 
-    public static class ButtonHolder extends RecyclerView.ViewHolder{
+    public static class ButtonHolder extends RecyclerView.ViewHolder
+    {
         public CustomButton button;
-        public ButtonHolder(View itemView){
+
+        public ButtonHolder(View itemView)
+        {
             super(itemView);
-            button = (CustomButton)itemView;
+            button = (CustomButton) itemView;
         }
     }
 

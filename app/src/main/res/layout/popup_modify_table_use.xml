@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/popup_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
+    >
+
+    <!-- CASH Drawer Menu-->
+
+    <RelativeLayout
+        android:id="@+id/mainspace"
+        android:layout_width="match_parent"
+        android:layout_height="689dp"
+        android:background="@color/blackTransparent">
+
+
+        <RelativeLayout
+            android:id="@+id/modify_table_use_window"
+            android:layout_width="487dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/view_base_background"
+            android:visibility="visible"
+            >
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:id="@+id/modify_table_use_window_title"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="Change table usage"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:typeface="franklin_gothic_demi"
+                />
+
+            <RelativeLayout
+                android:id="@+id/u_window"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/modify_table_use_window_title"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/white">
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:id="@+id/modify_table_use_button_free"
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/popup_button_green"
+                    android:text="Free table"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:id="@+id/modify_table_use_button_change_seats"
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/modify_table_use_button_free"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@drawable/popup_button_green"
+                    android:text="Change seats number"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi" />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:id="@+id/modify_table_use_button_change_table"
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/modify_table_use_button_change_seats"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/popup_button_green"
+                    android:text="Chhange table"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <!-- CASH Deposit -->
+
+
+        <RelativeLayout
+            android:id="@+id/deposit_window"
+            android:layout_width="487dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/view_base_background"
+            android:visibility="gone"
+            >
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:id="@+id/deposit_window_title"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="@string/deposit"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:typeface="franklin_gothic_demi" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/deposit_window_title"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/firstRegistration_window"
+                android:background="@color/white">
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:hint="@string/total_deposit_amount"
+                    android:background="@drawable/view_border"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:id="@+id/total_deposit"
+                    android:inputType="numberDecimal"
+                    android:nextFocusDown="@id/amount_005"/>
+
+                <View
+                    android:id="@+id/cash_hline"
+                    android:layout_width="447dp"
+                    android:layout_height="2dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/total_deposit"
+                    android:background="@drawable/divider_line_horizontal" />
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:id="@+id/value_005"
+                    android:layout_width="62dp"
+                    android:layout_height="23dp"
+                    android:layout_below="@id/cash_hline"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/eletric_blue"
+                    android:gravity="center"
+                    android:text="0.05"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi" />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/amount_005"
+                    android:layout_width="62dp"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/value_005"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="-1dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/view_border3sides"
+                    android:gravity="center"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi"
+                    android:inputType="number"
+                    android:nextFocusDown="@id/amount_010" />
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="62dp"
+                    android:layout_height="23dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/eletric_blue"
+                    android:layout_below="@id/cash_hline"
+                    android:layout_toRightOf="@id/value_005"
+                    android:id="@+id/value_010"
+                    android:text="0.10"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="62dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:layout_below="@id/value_010"
+                    android:layout_toRightOf="@id/amount_005"
+                    android:background="@drawable/view_border3sides"
+                    android:textColor="@color/black"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:id="@+id/amount_010"
+                    android:inputType="number"
+                    android:nextFocusDown="@id/amount_020"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="62dp"
+                    android:layout_height="23dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/eletric_blue"
+                    android:layout_below="@id/cash_hline"
+                    android:layout_toRightOf="@id/value_010"
+                    android:id="@+id/value_020"
+                    android:text="0.20"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="62dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:layout_below="@id/value_020"
+                    android:layout_toRightOf="@id/amount_010"
+                    android:background="@drawable/view_border3sides"
+                    android:textColor="@color/black"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:id="@+id/amount_020"
+                    android:inputType="number"
+                    android:nextFocusDown="@id/amount_050"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="62dp"
+                    android:layout_height="23dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/eletric_blue"
+                    android:layout_below="@id/cash_hline"
+                    android:layout_toRightOf="@id/value_020"
+                    android:id="@+id/value_050"
+                    android:text="0.50"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="62dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:layout_below="@id/value_050"
+                    android:layout_toRightOf="@id/amount_020"
+                    android:background="@drawable/view_border3sides"
+                    android:textColor="@color/black"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:id="@+id/amount_050"
+                    android:inputType="number"
+                    android:nextFocusDown="@id/amount_100"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="62dp"
+                    android:layout_height="23dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/eletric_blue"
+                    android:layout_below="@id/cash_hline"
+                    android:layout_toRightOf="@id/value_050"
+                    android:id="@+id/value_100"
+                    android:text="1.00"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="62dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:layout_below="@id/value_100"
+                    android:layout_toRightOf="@id/amount_050"
+                    android:background="@drawable/view_border3sides"
+                    android:textColor="@color/black"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:id="@+id/amount_100"
+                    android:inputType="number"
+                    android:nextFocusDown="@id/amount_200"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="62dp"
+                    android:layout_height="23dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/eletric_blue"
+                    android:layout_below="@id/cash_hline"
+                    android:layout_toRightOf="@id/value_100"
+                    android:id="@+id/value_200"
+                    android:text="2.00"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="62dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:layout_below="@id/value_100"
+                    android:layout_toRightOf="@id/amount_100"
+                    android:background="@drawable/view_border3sides"
+                    android:textColor="@color/black"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:id="@+id/amount_200"
+                    android:inputType="number"
+                    android:nextFocusDown="@id/amount_500"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="62dp"
+                    android:layout_height="23dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/eletric_blue"
+                    android:layout_below="@id/amount_005"
+                    android:id="@+id/value_500"
+                    android:text="5"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="62dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:layout_below="@id/value_500"
+                    android:background="@drawable/view_border3sides"
+                    android:textColor="@color/black"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:id="@+id/amount_500"
+                    android:inputType="number"
+                    android:nextFocusDown="@id/amount_1000"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="62dp"
+                    android:layout_height="23dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/eletric_blue"
+                    android:layout_below="@id/amount_010"
+                    android:layout_toRightOf="@id/value_500"
+                    android:id="@+id/value_1000"
+                    android:text="10"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="62dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:layout_below="@id/value_1000"
+                    android:layout_toRightOf="@id/amount_500"
+                    android:background="@drawable/view_border3sides"
+                    android:textColor="@color/black"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:id="@+id/amount_1000"
+                    android:inputType="number"
+                    android:nextFocusDown="@id/amount_2000"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="62dp"
+                    android:layout_height="23dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/eletric_blue"
+                    android:layout_below="@id/amount_020"
+                    android:layout_toRightOf="@id/value_1000"
+                    android:id="@+id/value_2000"
+                    android:text="20"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="62dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:layout_below="@id/value_2000"
+                    android:layout_toRightOf="@id/amount_1000"
+                    android:background="@drawable/view_border3sides"
+                    android:textColor="@color/black"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:id="@+id/amount_2000"
+                    android:inputType="number"
+                    android:nextFocusDown="@id/amount_5000"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="62dp"
+                    android:layout_height="23dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/eletric_blue"
+                    android:layout_below="@id/amount_050"
+                    android:layout_toRightOf="@id/value_2000"
+                    android:id="@+id/value_5000"
+                    android:text="50"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="62dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:layout_below="@id/value_5000"
+                    android:layout_toRightOf="@id/amount_2000"
+                    android:background="@drawable/view_border3sides"
+                    android:textColor="@color/black"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:id="@+id/amount_5000"
+                    android:inputType="number"
+                    android:nextFocusDown="@id/amount_10000"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="62dp"
+                    android:layout_height="23dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/eletric_blue"
+                    android:layout_below="@id/amount_100"
+                    android:layout_toRightOf="@id/value_5000"
+                    android:id="@+id/value_10000"
+                    android:text="100"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="62dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:layout_below="@id/value_10000"
+                    android:layout_toRightOf="@id/amount_5000"
+                    android:background="@drawable/view_border3sides"
+                    android:textColor="@color/black"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:id="@+id/amount_10000"
+                    android:inputType="number"
+                    android:nextFocusDown="@id/amount_20000"/>
+
+                <com.example.blackbox.graphics.CustomTextView
+                    android:layout_width="62dp"
+                    android:layout_height="23dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/eletric_blue"
+                    android:layout_below="@id/amount_200"
+                    android:layout_toRightOf="@id/value_10000"
+                    android:id="@+id/value_20000"
+                    android:text="200"
+                    android:textColor="@color/white"
+                    custom:letterSpacing="0.0"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    custom:typeface="franklin_gothic_demi"
+                    />
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="62dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:layout_below="@id/value_10000"
+                    android:layout_toRightOf="@id/amount_10000"
+                    android:background="@drawable/view_border3sides"
+                    android:textColor="@color/black"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:id="@+id/amount_20000"
+                    android:inputType="number"/>
+
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+        <!-- CASH Withdrawal -->
+
+
+        <RelativeLayout
+            android:id="@+id/withdraw_window"
+            android:layout_width="487dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/view_base_background"
+            android:visibility="gone"
+            >
+
+            <com.example.blackbox.graphics.CustomTextView
+                android:id="@+id/withdraw_window_title"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="@string/withdraw"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                custom:typeface="franklin_gothic_demi" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/withdraw_window_title"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/withdrawamount_window"
+                android:background="@color/white">
+
+                <com.example.blackbox.graphics.CustomEditText
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:hint="@string/total_withdraw_amount"
+                    android:background="@drawable/view_border"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    custom:typeface="franklin_gothic_demi"
+                    custom:letterSpacing="0.0"
+                    android:id="@+id/total_withdraw"
+                    android:inputType="numberDecimal"/>
+
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+    <!-- BASELINE X AND OK BUTTONS -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mainspace"
+        android:id="@+id/footer"
+        android:background="@color/black">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent"
+            android:id="@+id/footerspace">
+
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_height="match_parent"
+                android:id="@+id/cancelspace">
+
+                <ImageButton
+                    android:id="@+id/kill"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:background="@drawable/dismiss_button_background"
+                    android:src="@drawable/cancelbutton" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="38dp"
+                android:layout_toRightOf="@+id/cancelspace"
+                android:background="@drawable/vertical_dashed_line"
+                android:layout_marginTop="8dp"
+                android:id="@+id/bottomline" />
+
+            <RelativeLayout
+                android:layout_width="511dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/bottomline"
+                android:id="@+id/okspace">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="55dp"
+                    android:id="@+id/ok"
+                    android:src="@drawable/okbutton"
+                    android:background="@drawable/ok_button_background"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

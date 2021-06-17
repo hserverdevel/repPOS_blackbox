@@ -185,20 +185,11 @@
 
                 </RelativeLayout>
 
-                <ImageView
-                    android:layout_width="19dp"
-                    android:layout_height="20dp"
-                    android:layout_toRightOf="@id/new_res_name_layout"
-                    android:layout_marginTop="22dp"
-                    android:layout_marginLeft="6dp"
-                    android:src="@drawable/reservation_time_arrow_black"
-                    android:id="@+id/new_res_arrow"/>
-
                 <com.example.blackbox.graphics.CustomTextView
                     android:layout_width="105dp"
                     android:layout_height="51dp"
                     android:layout_marginTop="6dp"
-                    android:layout_toRightOf="@id/new_res_arrow"
+                    android:layout_toRightOf="@id/new_res_name_layout"
                     android:layout_marginLeft="6dp"
                     android:gravity="center"
                     android:textAlignment="center"
