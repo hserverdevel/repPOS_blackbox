@@ -79,7 +79,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -4265,7 +4264,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     public void openProcessCardPopupForItem()
     {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.two_button_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_two_button, null);
         final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
@@ -4546,7 +4545,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     public void openProcessCardPopup()
     {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.two_button_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_two_button, null);
         final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
@@ -4982,7 +4981,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     public void openProcessLeftCreditCardPopup(SubdivisionItem item)
     {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.two_button_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_two_button, null);
         final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
@@ -5664,7 +5663,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     {
 
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.two_button_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_two_button, null);
         final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
@@ -6269,7 +6268,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     public void openPopupForPaymentLeft(ArrayList<LeftPayment> leftPayments)
     {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.payment_left_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_left_payment, null);
         final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
@@ -8061,7 +8060,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         if (!item.isPaid())
         {
             LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-            final View popupView = layoutInflater.inflate(R.layout.modify_discount_popup, null);
+            final View popupView = layoutInflater.inflate(R.layout.popup_modify_discount, null);
             final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             popupView.post(new Runnable()
             {
@@ -8158,7 +8157,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         {
 
             LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-            final View popupView = layoutInflater.inflate(R.layout.modify_discount_popup, null);
+            final View popupView = layoutInflater.inflate(R.layout.popup_modify_discount, null);
             final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             popupView.post(new Runnable()
             {
@@ -8240,7 +8239,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     {
 
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.two_button_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_two_button, null);
         final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
@@ -8326,7 +8325,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     {
 
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.one_button_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_one_button, null);
         final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {

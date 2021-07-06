@@ -18,7 +18,6 @@ import com.example.blackbox.graphics.CustomButton;
 import com.example.blackbox.graphics.CustomTextView;
 import com.example.blackbox.graphics.ItemTouchHelperAdapter;
 import com.example.blackbox.model.FidelityPackage;
-import com.example.blackbox.graphics.OnSwipeTouchListener;
 import com.utils.db.DatabaseAdapter;
 
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ public class FidelityPackageAdapter extends Adapter<ViewHolder> implements ItemT
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        View v = inflater.inflate(R.layout.fidelity_package_recycler, null);
+        View v = inflater.inflate(R.layout.recycler_fidelity_package, null);
         return new FidelityPackageAdapter.ButtonHolder(v);
     }
 
@@ -76,7 +75,7 @@ public class FidelityPackageAdapter extends Adapter<ViewHolder> implements ItemT
         ButtonHolder itemHolder = (ButtonHolder) holder;
 
         // Set the representation
-        itemHolder.itemContainer.setText(String.format("%d credits. price: %f", fidelityPackage.getCreditAmount(), fidelityPackage.getPrice()));
+        itemHolder.itemContainer.setText(String.format("%s: %d FC x %.2f EUR", fidelityPackage.getName(), fidelityPackage.getCreditAmount(), fidelityPackage.getPrice()));
 
         // on touch, move to payment activity
         itemHolder.itemContainer.setOnClickListener(new View.OnClickListener()

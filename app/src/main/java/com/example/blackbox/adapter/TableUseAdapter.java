@@ -1,7 +1,6 @@
 package com.example.blackbox.adapter;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -165,7 +164,7 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
     {
         View v;
         ViewHolder vh;
-        v = inflater.inflate(R.layout.table_gridview, null);
+        v = inflater.inflate(R.layout.element_table_gridview, null);
         vh = new ButtonHolder(v);
         return vh;
     }
@@ -801,7 +800,7 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
     public void openTableUse(TableUse table)
     {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.use_table_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_use_table, null);
         final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
@@ -1053,7 +1052,7 @@ public class TableUseAdapter extends RecyclerView.Adapter<ViewHolder> implements
     public void openNoMergableTable()
     {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.one_button_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_one_button, null);
         final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {

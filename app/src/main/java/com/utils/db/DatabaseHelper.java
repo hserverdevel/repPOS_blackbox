@@ -19,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "mydatabase.db";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String[] TABLE_NAMES =
+    public static final String[] TABLE_NAMES =
             {
                 "button", "modifier", "modifiers_group", "modifiers_assigned", "modifiers_group_assigned", "vat",
                 "bill_total", "product_bill", "modifier_bill", "payment_option_button", "bill_subdivision_paid",

@@ -3,8 +3,6 @@ package com.example.blackbox.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -395,7 +393,7 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.gridview_cash,
+            convertView = inflater.inflate(R.layout.element_gridview_cash,
                     null);
         }
 
@@ -925,14 +923,14 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
         LayoutInflater inflater = ((Activity)context).getLayoutInflater();
 
         if (product.isSelected())
-            { convertView = inflater.inflate(R.layout.gridview_cash_modifier_null, null); }
+            { convertView = inflater.inflate(R.layout.element_gridview_cash_modifier_null, null); }
 
         else
         {
             if (product.getPercentage() == 1)
             {
                 //if (convertView == null) {
-                convertView = inflater.inflate(R.layout.gridview_cash_modifier, null);
+                convertView = inflater.inflate(R.layout.element_gridview_cash_modifier, null);
                 // }
                 if (product.getPercentage() == 1)
                 {
@@ -1049,7 +1047,7 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
             }
 
             else // product.getPercentage() != 1
-                { convertView = inflater.inflate(R.layout.gridview_cash_modifier_null, null); }
+                { convertView = inflater.inflate(R.layout.element_gridview_cash_modifier_null, null); }
         }
 
         return convertView;

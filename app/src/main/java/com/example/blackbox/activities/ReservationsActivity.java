@@ -29,6 +29,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,6 +44,7 @@ import com.example.blackbox.graphics.CustomButton;
 import com.example.blackbox.graphics.CustomEditText;
 import com.example.blackbox.graphics.CustomTextView;
 import com.example.blackbox.graphics.OnSwipeTouchListener;
+import com.example.blackbox.model.RequestParam;
 import com.example.blackbox.model.Reservation;
 import com.example.blackbox.model.StaticValue;
 import com.example.blackbox.model.WaitingListModel;
@@ -102,16 +104,22 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
 
     public void setMode(int value) {mode = value;}
 
-    private CustomButton searchReservations;
     private CustomEditText search_et;
-    private CustomButton insertReservations;
+    private ImageView      searchReservations;
+    private CustomButton   insertReservations;
     private CustomButton setReservationDate;
     private CustomButton setReservationTime;
+    private CustomButton filterExpired;
+    private CustomButton filterToday;
+    private CustomButton filterUpcoming;
+
     private CustomTextView newReservationDate;
     private CustomTextView reservationsTV;
     private CustomTextView newReservationTV;
     private CustomEditText telephoneNumber;
+
     private View hline;
+
     private ReservationsAdapter reservationsAdapter;
     private WaitingListAdapter waitingListAdapter;
     private boolean keyboard_next_flag = false;
@@ -159,8 +167,8 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
         username = intent.getStringExtra("username");
         isAdmin = intent.getIntExtra("isAdmin", -1);
 
-        searchReservations = findViewById(R.id.search_reservations_button);
         search_et =  ReservationsActivity.this.findViewById(R.id.search_reservation_et);
+        searchReservations = findViewById(R.id.search_reservation_img);
         insertReservations =  findViewById(R.id.insert_reservation_button);
         setReservationTime =  findViewById(R.id.set_reservation_time_button);
         setReservationDate =  findViewById(R.id.set_reservation_date_button);
@@ -265,6 +273,7 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
                         reservationsAdapter.setSearchMode(false);
                     }
                 }
+
                 else if (mode == WAITING_LIST_MODE)
                 {
                     mode = SEARCH_WAITING_LIST_MODE;
@@ -367,6 +376,80 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
         });
 
 
+
+        // Filter buttons
+        filterExpired = findViewById(R.id.filter_expired_btn);
+        filterExpired.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (mode == RESERVATIONS_MODE || mode == SEARCH_RESERVATIONS_MODE)
+                {
+                    mode = SEARCH_RESERVATIONS_MODE;
+
+                    reservationsAdapter.setSearchMode(true);
+                    reservationsAdapter.filter(-1);
+                }
+
+                else if (mode == WAITING_LIST_MODE || mode == SEARCH_WAITING_LIST_MODE)
+                {
+                    mode = SEARCH_WAITING_LIST_MODE;
+
+                    waitingListAdapter.setSearchMode(true);
+                    waitingListAdapter.filter(-1);
+                }
+            }
+        });
+
+        filterToday = findViewById(R.id.filter_today_btn);
+        filterToday.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (mode == RESERVATIONS_MODE || mode == SEARCH_RESERVATIONS_MODE)
+                {
+                    mode = SEARCH_RESERVATIONS_MODE;
+
+                    reservationsAdapter.setSearchMode(true);
+                    reservationsAdapter.filter(0);
+                }
+
+                else if (mode == WAITING_LIST_MODE || mode == SEARCH_WAITING_LIST_MODE)
+                {
+                    mode = SEARCH_WAITING_LIST_MODE;
+
+                    waitingListAdapter.setSearchMode(true);
+                    waitingListAdapter.filter(0);
+                }
+            }
+        });
+
+        filterUpcoming = findViewById(R.id.filter_upcoming_btn);
+        filterUpcoming.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (mode == RESERVATIONS_MODE || mode == SEARCH_RESERVATIONS_MODE)
+                {
+                    mode = SEARCH_RESERVATIONS_MODE;
+
+                    reservationsAdapter.setSearchMode(true);
+                    reservationsAdapter.filter(1);
+                }
+
+                else if (mode == WAITING_LIST_MODE || mode == SEARCH_WAITING_LIST_MODE)
+                {
+                    mode = SEARCH_WAITING_LIST_MODE;
+
+                    waitingListAdapter.setSearchMode(true);
+                    waitingListAdapter.filter(1);
+                }
+            }
+        });
+
         setupNewReservationsButtons();
 
         setupKillOKButtons();
@@ -411,6 +494,22 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
 
                 switch (route)
                 {
+                    case "getReservationList":
+                        if (jsonObject.getBoolean("check"))
+                        {
+                            if (jsonObject.getBoolean("updated"))
+                            {
+                                reservationsAdapter.refreshReservationList();
+                            }
+
+                            else
+                            {
+                                ArrayList<Reservation> reser = Reservation.fromJsonArray(jsonObject.getJSONArray("reservations"));
+                                reservationsAdapter.refreshReservationList(reser);
+                                dbA.updateChecksumForTable("reservation", jsonObject.getString("reservationChecksum"));
+                            }
+                        }
+
                     case "insertReservation":
                     if (jsonObject.getBoolean("check"))
                     {
@@ -446,6 +545,22 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
 
 
                     // --------------- WAITING LIST -------------------- //
+
+                    case "getWaitingList":
+                        if (jsonObject.getBoolean("check"))
+                        {
+                            if (jsonObject.getBoolean("updated"))
+                            {
+                                waitingListAdapter.refreshWaitingList();
+                            }
+
+                            else
+                            {
+                                ArrayList<WaitingListModel> wtl = WaitingListModel.fromJsonArray(jsonObject.getJSONArray("waitingLists"));
+                                waitingListAdapter.refreshWaitingList(wtl);
+                                dbA.updateChecksumForTable("waiting_list", jsonObject.getString("waitingListChecksum"));
+                            }
+                        }
 
                     case "insertWaitingList":
                         if (jsonObject.getBoolean("check"))
@@ -506,10 +621,12 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
         ImageButton disabledPlus = findViewById(R.id.disabled_plus_button);
         ImageButton disabledMinus = findViewById(R.id.disabled_minus_button);
         CustomEditText newName = findViewById(R.id.new_res_input_name);
-        CustomEditText newSurname = findViewById(R.id.new_res_input_surname);
         CustomEditText telephoneNumber = findViewById(R.id.new_res_input_telephone);
         newReservationDate = findViewById(R.id.new_reservation_date);
         RelativeLayout newResLayout = findViewById(R.id.new_res_name_layout);
+
+        // use a simple variable to store if the date and time (pos 0 and 1) are set
+        boolean[] timeSet = { false, false };
 
 
         adultsPlus.setOnClickListener(new View.OnClickListener()
@@ -600,6 +717,8 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
                                 time.set(Calendar.YEAR, i);
                                 time.set(Calendar.MONTH, i1);
                                 time.set(Calendar.DAY_OF_MONTH, i2);
+
+                                timeSet[0] = true;
                             }
                         }, year, month, day);
 
@@ -624,6 +743,8 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
                         time.set(Calendar.HOUR_OF_DAY, selectedHour);
                         time.set(Calendar.MINUTE, selectedMinute);
                         ((CustomTextView) findViewById(R.id.new_reservation_time)).setText(String.format("%02d:%02d", selectedHour, selectedMinute));
+
+                        timeSet[1] = true;
                     }
                 }, hour, minute, true);//Yes 24 hour time
 
@@ -639,12 +760,11 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
             public void onClick(View view)
             {
                 name = newName.getText().toString().trim();
-                surname = newSurname.getText().toString().trim();
 
-                if (name.isEmpty() || surname.isEmpty())
+                if (name.isEmpty())
                     { DialogCreator.error(context, getString(R.string.insert_a_valid_client_name)); }
 
-                else if (time == null && mode == RESERVATIONS_MODE)
+                else if ((!timeSet[0] || !timeSet[1]) && mode == RESERVATIONS_MODE)
                     { DialogCreator.error(context, getString(R.string.insert_a_valid_reservation_time)); }
 
                 else if (adults <= 0)
@@ -654,6 +774,9 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
                 {
                     if (mode == RESERVATIONS_MODE)
                     {
+                        timeSet[0] = false;
+                        timeSet[1] = false;
+
                         if (StaticValue.blackbox)
                         {
                             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
@@ -674,7 +797,6 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
                             Reservation res = new Reservation();
 
                             res.setName(name);
-                            res.setSurname(surname);
                             res.setAdults(adults);
                             res.setChildren(children);
                             res.setDisabled(disabled);
@@ -717,7 +839,6 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
 
                             res.setId(dbA.getLatestWaitingListId() + 1);
                             res.setName(name);
-                            res.setSurname(surname);
                             res.setAdults(adults);
                             res.setChildren(children);
                             res.setDisabled(disabled);
@@ -755,14 +876,9 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
                     CustomEditText newName = (CustomEditText) findViewById(R.id.new_res_input_name);
-                    CustomEditText newSurname = (CustomEditText) findViewById(R.id.new_res_input_surname);
 
                     StringBuilder sb = new StringBuilder();
                     name = newName.getText().toString();
-                    if (!newSurname.getText().toString().equals(""))
-                    {
-                        surname = newSurname.getText().toString();
-                    }
 
                     if (!name.equals("") || !surname.equals(""))
                     { sb.append(name + " " + surname); }
@@ -770,7 +886,6 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
                     if (mode == MODIFY_RESERVATION_MODE && currentReservation != null)
                     {
                         currentReservation.setName(name);
-                        currentReservation.setSurname(surname);
                     }
                 }
             }
@@ -854,7 +969,6 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
 
                 reservationsTV.setText(R.string.reservations);
                 newReservationTV.setText(R.string.new_reservations);
-                searchReservations.setText(R.string.search_reservations);
                 insertReservations.setText(R.string.insert_reservation);
 
                 setReservationTime.setVisibility(View.VISIBLE);
@@ -884,7 +998,6 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
 
                 reservationsTV.setText(R.string.waiting_list);
                 newReservationTV.setText(R.string.new_waiting_list_element);
-                searchReservations.setText(R.string.search_waiting_list);
                 insertReservations.setText(R.string.insert_waiting_list_element);
 
                 setReservationTime.setVisibility(View.GONE);
@@ -903,7 +1016,6 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
     private void resetFields()
     {
         CustomEditText newName = (CustomEditText) findViewById(R.id.new_res_input_name);
-        CustomEditText newSurname = (CustomEditText) findViewById(R.id.new_res_input_surname);
         CustomEditText telephoneNumber = (CustomEditText) findViewById(R.id.new_res_input_telephone);
 
         ((CustomTextView) findViewById(R.id.new_reservation_name)).setText(R.string.new_reservation);
@@ -912,7 +1024,6 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
         ((CustomTextView) findViewById(R.id.new_reservation_time)).setText("00:00");
 
         newName.setText("");
-        newSurname.setText("");
         telephoneNumber.setText("");
 
         name = "";
@@ -967,7 +1078,6 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
     public void setupKillOKButtons()
     {
         CustomEditText newName = (CustomEditText) findViewById(R.id.new_res_input_name);
-        CustomEditText newSurname = (CustomEditText) findViewById(R.id.new_res_input_surname);
         CustomTextView resName = (CustomTextView) findViewById(R.id.new_reservation_name);
         newReservationDate = (CustomTextView) findViewById(R.id.new_reservation_date);
         CustomTextView resTime = (CustomTextView) findViewById(R.id.new_reservation_time);
@@ -1041,7 +1151,6 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
                     //3
                     case MODIFY_RESERVATION_MODE:
                         newName.setText("");
-                        newSurname.setText("");
                         resName.setText(R.string.new_reservation);
                         resTime.setText("00:00");
                         adults = 0;
@@ -1049,7 +1158,6 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
                         disabled = 0;
                         time = Calendar.getInstance();
                         name = "";
-                        surname = "";
                         ((CustomTextView) findViewById(R.id.new_reservation_type)).setText(
                                 resources.getString(R.string.adults_children_disabled, adults, children, disabled));
                         mode = RESERVATIONS_MODE;
@@ -1120,7 +1228,7 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
 
         ((CustomTextView) findViewById(R.id.title_right_tv)).setText(R.string.modify_reservation);
         ((CustomButton) findViewById(R.id.insert_reservation_button)).setText(R.string.reinsert_reservation);
-        ((CustomTextView) findViewById(R.id.new_reservation_name)).setText(res.getName() + " " + res.getSurname());
+        ((CustomTextView) findViewById(R.id.new_reservation_name)).setText(res.getName());
         ((CustomTextView) findViewById(R.id.new_reservation_time)).setText(res.getTime().toString());
 
         if (!res.getTelephone().isEmpty() && !res.getTelephone().equals("null"))
@@ -1140,9 +1248,7 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
         time.setTime(res.getTime());
 
         CustomEditText newName = (CustomEditText) findViewById(R.id.new_res_input_name);
-        CustomEditText newSurname = (CustomEditText) findViewById(R.id.new_res_input_surname);
         newName.setText(res.getName());
-        newSurname.setText(res.getSurname());
 
         ((CustomButton) findViewById(R.id.insert_reservation_button)).setOnClickListener(new View.OnClickListener()
         {
@@ -1159,11 +1265,14 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
 
                 if (StaticValue.blackbox)
                 {
-                    Gson gson = new Gson();
-
-                    ArrayList<NameValuePair> params = new ArrayList<>();
-                    params.add(new BasicNameValuePair("reservation", gson.toJson(res)));
-
+                    RequestParam params = new RequestParam();
+                    params.add("id", res.getReservation_id());
+                    params.add("name", res.getName());
+                    params.add("adults", res.getAdults());
+                    params.add("children", res.getChildren());
+                    params.add("disabled", res.getDisabled());
+                    params.add("time", res.getTime().getTime());
+                    params.add("telephone", res.getTelephone());
                     ((ReservationsActivity) context).callHttpHandler("/modifyReservation", params);
                 }
 
@@ -1186,6 +1295,15 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
         httpHandler.UpdateInfoAsyncTask(route, params);
         httpHandler.execute();
     }
+
+    public void callHttpHandler(String route, RequestParam params)
+    {
+        HttpHandler httpHandler = new HttpHandler();
+        httpHandler.delegate = this;
+        httpHandler.UpdateInfoAsyncTask(route, params);
+        httpHandler.execute();
+    }
+
 
 
     public void setupDismissKeyboard(View view)

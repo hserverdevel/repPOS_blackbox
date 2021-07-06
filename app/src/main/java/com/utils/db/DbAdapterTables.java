@@ -1375,9 +1375,9 @@ public class DbAdapterTables extends DbAdapterBillExtra
             for (Reservation res : reservations)
             {
                 execOnDb(String.format(
-                    "INSERT INTO reservation (id, name, surname, adults, children, disabled, time, telephone) " +
-                    "VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
-                    res.getReservation_id(), res.getName(), res.getSurname(), res.getAdults(), res.getChildren(), res.getDisabled(), res.getTime(), res.getTelephone()
+                    "INSERT INTO reservation (id, name, adults, children, disabled, time, telephone) " +
+                    "VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s');",
+                    res.getReservation_id(), res.getName(), res.getAdults(), res.getChildren(), res.getDisabled(), res.getTime(), res.getTelephone()
                 ));
             }
 
@@ -1409,8 +1409,8 @@ public class DbAdapterTables extends DbAdapterBillExtra
             showData("reservation");
             
             execOnDb(String.format(
-                "INSERT INTO reservation (id, name, surname, adults, children, disabled, time, telephone) VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
-                res.getReservation_id(), res.getName(), res.getSurname(), res.getAdults(), res.getChildren(), res.getDisabled(), res.getTime(), res.getTelephone()
+                "INSERT INTO reservation (id, name, adults, children, disabled, time, telephone) VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s');",
+                res.getReservation_id(), res.getName(), res.getAdults(), res.getChildren(), res.getDisabled(), res.getTime(), res.getTelephone()
             ));
 
             showData("reservation");
@@ -1445,7 +1445,6 @@ public class DbAdapterTables extends DbAdapterBillExtra
 
                 r.setReservation_id(curs.getInt(curs.getColumnIndex("id")));
                 r.setName(curs.getString(curs.getColumnIndex("name")));
-                r.setSurname(curs.getString(curs.getColumnIndex("surname")));
                 r.setAdults(curs.getInt(curs.getColumnIndex("adults")));
                 r.setChildren(curs.getInt(curs.getColumnIndex("children")));
                 r.setDisabled(curs.getInt(curs.getColumnIndex("disabled")));
@@ -1492,7 +1491,6 @@ public class DbAdapterTables extends DbAdapterBillExtra
                         Reservation r = new Reservation();
                         r.setReservation_id(c.getInt(c.getColumnIndex("id")));
                         r.setName(c.getString(c.getColumnIndex("name")));
-                        r.setSurname(c.getString(c.getColumnIndex("surname")));
                         r.setAdults(c.getInt(c.getColumnIndex("adults")));
                         r.setChildren(c.getInt(c.getColumnIndex("children")));
                         r.setDisabled(c.getInt(c.getColumnIndex("disabled")));
@@ -1531,7 +1529,6 @@ public class DbAdapterTables extends DbAdapterBillExtra
                 {
                     r.setReservation_id(c.getInt(c.getColumnIndex("id")));
                     r.setName(c.getString(c.getColumnIndex("name")));
-                    r.setSurname(c.getString(c.getColumnIndex("surname")));
                     r.setAdults(c.getInt(c.getColumnIndex("adult")));
                     r.setChildren(c.getInt(c.getColumnIndex("children")));
                     r.setDisabled(c.getInt(c.getColumnIndex("disabled")));
@@ -1581,9 +1578,9 @@ public class DbAdapterTables extends DbAdapterBillExtra
 
             execOnDb(String.format(
                     "UPDATE reservation " +
-                    "SET name = '%s', surname = '%s', adults = '%s', children = '%s', disabled = '%s', time = '%s', telephone = '%s'" +
+                    "SET name = '%s', adults = '%s', children = '%s', disabled = '%s', time = '%s', telephone = '%s'" +
                     "WHERE id = '%s';",
-                    res.getName(), res.getSurname(), res.getAdults(), res.getChildren(), res.getDisabled(), res.getTime(), res.getTelephone(), res.getReservation_id()
+                    res.getName(),  res.getAdults(), res.getChildren(), res.getDisabled(), res.getTime(), res.getTelephone(), res.getReservation_id()
             ));
 
             database.close();
@@ -1702,7 +1699,6 @@ public class DbAdapterTables extends DbAdapterBillExtra
                     Reservation r = new Reservation();
                     r.setReservation_id(c.getInt(c.getColumnIndex("id")));
                     r.setName(c.getString(c.getColumnIndex("name")));
-                    r.setSurname(c.getString(c.getColumnIndex("surname")));
                     r.setAdults(c.getInt(c.getColumnIndex("adults")));
                     r.setChildren(c.getInt(c.getColumnIndex("children")));
                     r.setDisabled(c.getInt(c.getColumnIndex("disabled")));
@@ -1738,9 +1734,9 @@ public class DbAdapterTables extends DbAdapterBillExtra
             for (WaitingListModel res : wls)
             {
                 execOnDb(String.format(
-                        "INSERT INTO waiting_list (id, name, surname, adults, children, disabled, time) " +
-                                "VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s');",
-                        res.getId(), res.getName(), res.getSurname(), res.getAdults(), res.getChildren(), res.getDisabled(), res.getTime()
+                        "INSERT INTO waiting_list (id, name, adults, children, disabled, time) " +
+                                "VALUES('%s', '%s', '%s', '%s', '%s', '%s');",
+                        res.getId(), res.getName(), res.getAdults(), res.getChildren(), res.getDisabled(), res.getTime()
                 ));
             }
 
@@ -1775,7 +1771,6 @@ public class DbAdapterTables extends DbAdapterBillExtra
                     WaitingListModel r = new WaitingListModel();
                     r.setId(c.getInt(c.getColumnIndex("id")));
                     r.setName(c.getString(c.getColumnIndex("name")));
-                    r.setSurname(c.getString(c.getColumnIndex("surname")));
                     r.setAdults(c.getInt(c.getColumnIndex("adults")));
                     r.setChildren(c.getInt(c.getColumnIndex("children")));
                     r.setDisabled(c.getInt(c.getColumnIndex("disabled")));
@@ -1836,8 +1831,8 @@ public class DbAdapterTables extends DbAdapterBillExtra
             //table check, -1 if table is not available
             //just for today reservations
             execOnDb(String.format(
-                    "INSERT INTO waiting_list (name, surname, adults, children, disabled, time) VALUES('%s', '%s', '%s', '%s', '%s', '%s');",
-                    wlm.getName(), wlm.getSurname(), wlm.getAdults(), wlm.getChildren(), wlm.getDisabled(), wlm.getTime()
+                    "INSERT INTO waiting_list (name, adults, children, disabled, time) VALUES('%s', '%s', '%s', '%s', '%s');",
+                    wlm.getName(), wlm.getAdults(), wlm.getChildren(), wlm.getDisabled(), wlm.getTime()
             ));
             database.close();
         }
@@ -1876,7 +1871,6 @@ public class DbAdapterTables extends DbAdapterBillExtra
                     WaitingListModel r = new WaitingListModel();
                     r.setId(c.getInt(c.getColumnIndex("id")));
                     r.setName(c.getString(c.getColumnIndex("name")));
-                    r.setSurname(c.getString(c.getColumnIndex("surname")));
                     r.setAdults(c.getInt(c.getColumnIndex("adults")));
                     r.setChildren(c.getInt(c.getColumnIndex("children")));
                     r.setDisabled(c.getInt(c.getColumnIndex("disabled")));

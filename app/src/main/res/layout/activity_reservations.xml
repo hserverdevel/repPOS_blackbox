@@ -46,6 +46,15 @@
                 android:textSize="18sp"
                 android:gravity="center"/>
 
+            <ImageView
+                android:id="@+id/search_reservation_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/title_tv"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                custom:srcCompat="@android:drawable/ic_menu_search" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
@@ -93,26 +102,72 @@
                 android:layout_below="@id/hline1"
                 android:layout_marginTop="85dp"/>
 
+<!--            <com.example.blackbox.graphics.CustomButton-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="46dp"-->
+<!--                android:id="@+id/search_reservations_button"-->
+<!--                android:layout_marginTop="6dp"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:background="@drawable/view_border"-->
+<!--                custom:typeface="franklin_gothic_demi"-->
+<!--                android:textSize="18sp"-->
+<!--                android:layout_alignParentBottom="true"-->
+<!--                android:text="@string/search_reservations"-->
+<!--                android:textAllCaps="true"/>-->
+
             <com.example.blackbox.graphics.CustomButton
-                android:layout_width="match_parent"
+                android:id="@+id/filter_expired_btn"
+                android:layout_width="160dp"
                 android:layout_height="46dp"
-                android:id="@+id/search_reservations_button"
                 android:layout_marginTop="6dp"
                 android:textColor="@color/white"
-                android:background="@drawable/view_border"
+                android:background="@drawable/popup_button_red"
                 custom:typeface="franklin_gothic_demi"
                 android:textSize="18sp"
                 android:layout_alignParentBottom="true"
-                android:text="@string/search_reservations"
+                android:text="Expired"
                 android:textAllCaps="true"/>
+
+            <com.example.blackbox.graphics.CustomButton
+                android:id="@+id/filter_today_btn"
+                android:layout_width="160dp"
+                android:layout_height="46dp"
+                android:layout_toEndOf="@id/filter_expired_btn"
+                android:layout_marginTop="6dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:textColor="@color/white"
+                android:background="@drawable/popup_button_green"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="18sp"
+                android:layout_alignParentBottom="true"
+                android:text="Today"
+                android:textAllCaps="true"/>
+
+            <com.example.blackbox.graphics.CustomButton
+                android:id="@+id/filter_upcoming_btn"
+                android:layout_width="160dp"
+                android:layout_height="46dp"
+                android:layout_marginTop="6dp"
+                android:layout_toEndOf="@id/filter_today_btn"
+                android:textColor="@color/white"
+                android:background="@drawable/popup_button_gray"
+                custom:typeface="franklin_gothic_demi"
+                android:textSize="18sp"
+                android:layout_alignParentBottom="true"
+                android:text="Upcoming"
+                android:textAllCaps="true"/>
+
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:id="@+id/hline3"
-                android:layout_above="@id/search_reservations_button"
+                android:layout_above="@id/filter_today_btn"
                 android:background="@drawable/divider_line_horizontal"
                 android:layout_marginTop="20dp"/>
+
+
 
         </RelativeLayout>
 
@@ -259,7 +314,7 @@
                 android:id="@+id/input_name_surname">
 
                 <com.example.blackbox.graphics.CustomEditText
-                    android:layout_width="238dp"
+                    android:layout_width="match_parent"
                     android:layout_height="42dp"
                     android:id="@+id/new_res_input_name"
                     android:hint="@string/name"
@@ -267,33 +322,14 @@
                     android:textSize="18sp"
                     android:paddingLeft="10dp"
                     android:inputType="textCapWords"
-                    android:nextFocusDown="@id/new_res_input_surname"/>
+                    android:nextFocusDown="@id/new_res_input_telephone"/>
 
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="42dp"
-                    android:id="@+id/vline1_right"
-                    android:background="@drawable/divider_line"
-                    android:layout_toRightOf="@id/new_res_input_name"
-                    android:layout_marginLeft="6dp"/>
-
-                <com.example.blackbox.graphics.CustomEditText
-                    android:layout_width="238dp"
-                    android:layout_height="42dp"
-                    android:id="@+id/new_res_input_surname"
-                    android:hint="@string/surname"
-                    android:background="@drawable/view_border_white_in"
-                    android:textSize="18sp"
-                    android:layout_marginLeft="6dp"
-                    android:paddingLeft="10dp"
-                    android:layout_toRightOf="@id/vline1_right"
-                    android:inputType="textCapWords"/>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:id="@+id/hline4_right"
-                    android:layout_below="@id/new_res_input_surname"
+                    android:layout_below="@id/new_res_input_name"
                     android:layout_marginTop="6dp"
                     android:background="@drawable/divider_line_horizontal"/>
 

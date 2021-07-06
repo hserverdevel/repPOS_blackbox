@@ -56,7 +56,7 @@ public class SessionAdapter extends Adapter<ViewHolder> implements ItemTouchHelp
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
         ViewHolder vh;
-        v = inflater.inflate(R.layout.sessions_time_recycler, null);
+        v = inflater.inflate(R.layout.recycler_sessions_time, null);
         vh = new ButtonHolder(v);
         return vh;
     }

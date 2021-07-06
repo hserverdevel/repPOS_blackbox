@@ -738,6 +738,51 @@ public class DbAdapterProducts extends DbAdapterUsers
     }
 
 
+    public ArrayList<Integer> fetchAssignmentDetailByProductAndModifierId(int prodId, int groupId, int modId)
+    {
+        ArrayList<Integer> result = new ArrayList<>();
+
+        try
+        {
+            if (!database.isOpen())
+                { database = dbHelper.getReadableDatabase(); }
+
+            // showDataExec("SELECT modifier_id, assignment_id FROM modifiers_assigned LEFT JOIN modifiers_group_assigned ON modifiers_group_assigned.id = modifiers_assigned.assignment_id");
+
+            Cursor mCursor = database.rawQuery(String.format(
+                    "SELECT modifier_id, assignment_id FROM modifiers_assigned " +
+                    " LEFT JOIN modifiers_group_assigned ON modifiers_group_assigned.id = modifiers_assigned.assignment_id " +
+                    " WHERE modifiers_group_assigned.prod_id = %s AND modifiers_group_assigned.group_id = %s AND modifiers_assigned.modifier_id = %s AND modifiers_assigned.fixed = 1",
+                    prodId, groupId, modId),
+                                               null);
+
+            if (mCursor != null)
+            {
+                while (mCursor.moveToNext())
+                {
+                    result.add(mCursor.getInt(mCursor.getColumnIndex("modifier_id")));
+                    result.add(mCursor.getInt(mCursor.getColumnIndex("assignment_id")));
+                }
+
+                mCursor.close();
+            }
+        }
+
+        catch (Exception e)
+        {
+            Log.e("fetchFailure", e.getMessage());
+        }
+
+        finally
+        {
+            database.close();
+            return result;
+        }
+    }
+
+
+
+
     public void deleteModifierFromTableByID(String table, int id)
     {
         try

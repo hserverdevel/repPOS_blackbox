@@ -74,7 +74,7 @@ public class ClientsPopupAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.client_list_element, null);
+        View itemView = inflater.inflate(R.layout.element_client_list, null);
         return new ClientHolder(itemView);
     }
 

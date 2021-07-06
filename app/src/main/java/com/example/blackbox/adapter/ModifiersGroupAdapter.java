@@ -151,11 +151,11 @@ public class ModifiersGroupAdapter extends Adapter<ViewHolder> implements ItemTo
         ViewHolder vh;
         switch (viewType) {
             case -11:
-                v = inflater.inflate(R.layout.gridview_plus_button, null);
+                v = inflater.inflate(R.layout.button_gridview_plus, null);
                 vh = new GridAdapter.PlusButtonHolder(v);
                 break;
             default:
-                v = inflater.inflate(R.layout.gridview_subelement, null);
+                v = inflater.inflate(R.layout.element_gridview_subelement, null);
                 v.findViewById(R.id.subtitle).setVisibility(GONE);
                 vh = new GroupHolder(v);
                 break;
@@ -622,7 +622,7 @@ public class ModifiersGroupAdapter extends Adapter<ViewHolder> implements ItemTo
             public void onClick(View v) {
                 if(isBeingAdded) Toast.makeText(context,R.string.group_has_not_been_created_yet,Toast.LENGTH_SHORT).show();
                 else{
-                    final View dialogView = inflater.inflate(R.layout.yes_no_dialog, null);
+                    final View dialogView = inflater.inflate(R.layout.popup_yes_no, null);
                     final PopupWindow popupDialog = new PopupWindow(
                             dialogView,
                             LayoutParams.MATCH_PARENT,

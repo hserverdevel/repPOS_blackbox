@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
@@ -278,13 +279,14 @@
         <!--  PRODUCT WINDOW  -->
 
         <RelativeLayout
+            android:id="@+id/ProductSetup"
             android:layout_width="487dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:id="@+id/ProductSetup"
             android:background="@drawable/view_base_background"
-            android:visibility="gone">
-<!--
+            android:visibility="gone"
+            tools:visibility="gone">
+            <!--
             <com.example.blackbox.graphics.CustomTextView
                 android:layout_width="wrap_content"
                 android:layout_height="52dp"
@@ -316,182 +318,175 @@
                 android:id="@+id/title_divider"
                 android:layout_width="3dp"
                 android:layout_height="48dp"
-                android:background="@drawable/vertical_divider_white_3dp"
-                android:layout_toRightOf="@+id/product_tv"
-                android:orientation="vertical"
                 android:layout_marginTop="6dp"
-                >
-            </LinearLayout>
+                android:layout_toRightOf="@+id/product_tv"
+                android:background="@drawable/vertical_divider_white_3dp"
+                android:orientation="vertical"></LinearLayout>
 
             <com.example.blackbox.graphics.CustomTextView
+                android:id="@+id/combo_tv"
                 android:layout_width="237dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginRight="4dp"
-                android:text="@string/combo"
                 android:layout_toRightOf="@+id/title_divider"
+                android:gravity="center"
+                android:text="@string/combo"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                custom:typeface="franklin_gothic_demi"
-                android:gravity="center"
-                android:id="@+id/combo_tv"
-                />
-
+                custom:typeface="franklin_gothic_demi" />
 
 
             <RelativeLayout
+                android:id="@+id/product_base_settings_window"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/product_tv"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="5dp"
-                android:id="@+id/product_base_settings_window"
                 android:background="@color/white">
 
                 <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/prodTitleInsert"
                     android:layout_width="216dp"
                     android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
                     android:hint="@string/title"
                     android:inputType="textCapWords|textAutoCorrect"
-                    android:id="@+id/prodTitleInsert"
-                    android:selectAllOnFocus="true"
-                    android:gravity="center"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="15dp"
                     android:nextFocusDown="@+id/prodSubTitleInsert"
-                    android:textColorHighlight="@color/gray"
-                    android:background="@drawable/view_border"
-                    android:textCursorDrawable="@null"
+                    android:selectAllOnFocus="true"
                     android:textColor="@color/blackTransparent"
-                    custom:typeface="franklin_gothic_demi"/>
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null"
+                    custom:typeface="franklin_gothic_demi" />
 
                 <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/prodSubTitleInsert"
                     android:layout_width="216dp"
                     android:layout_height="42dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toRightOf="@id/prodTitleInsert"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
                     android:hint="@string/subtitle"
                     android:inputType="textCapWords|textAutoCorrect"
-                    android:layout_toRightOf="@id/prodTitleInsert"
-                    android:gravity="center"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="15dp"
-                    android:selectAllOnFocus="true"
                     android:nextFocusDown="@+id/prodPriceInsert"
-                    android:id="@+id/prodSubTitleInsert"
-                    android:textColorHighlight="@color/gray"
-                    android:background="@drawable/view_border"
-                    android:textCursorDrawable="@null"
+                    android:selectAllOnFocus="true"
                     android:textColor="@color/blackTransparent"
-                    custom:typeface="franklin_gothic_demi"
-                    />
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null"
+                    custom:typeface="franklin_gothic_demi" />
 
                 <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/prodPriceInsert"
                     android:layout_width="216dp"
                     android:layout_height="42dp"
+                    android:layout_below="@id/prodTitleInsert"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/view_border"
+                    android:gravity="center"
                     android:hint="@string/price"
                     android:inputType="numberDecimal"
-                    android:id="@+id/prodPriceInsert"
-                    android:selectAllOnFocus="true"
-                    android:gravity="center"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_below="@id/prodTitleInsert"
+                    android:nextFocusRight="@+id/ivaInsert"
                     android:nextFocusDown="@+id/ivaInsert"
                     android:nextFocusForward="@+id/ivaInsert"
-                    android:nextFocusRight="@+id/ivaInsert"
-                    android:textColorHighlight="@color/gray"
-                    android:background="@drawable/view_border"
-                    android:textCursorDrawable="@null"
+                    android:selectAllOnFocus="true"
                     android:textColor="@color/blackTransparent"
-                    custom:typeface="franklin_gothic_demi"
-                    />
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null"
+                    custom:typeface="franklin_gothic_demi" />
 
                 <com.example.blackbox.graphics.CustomButton
+                    android:id="@+id/prodTaxInsert"
                     android:layout_width="216dp"
                     android:layout_height="42dp"
-                    android:hint="@string/vat"
-                    android:layout_toEndOf="@id/prodPriceInsert"
                     android:layout_below="@id/prodSubTitleInsert"
-                    android:gravity="center"
-                    android:id="@+id/prodTaxInsert"
-                    android:layout_marginTop="15dp"
                     android:layout_marginStart="15dp"
-                    android:elevation="0dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toEndOf="@id/prodPriceInsert"
                     android:background="@drawable/view_border"
+                    android:elevation="0dp"
+                    android:gravity="center"
+                    android:hint="@string/vat"
+                    android:textAllCaps="false"
                     android:textColor="@color/blackTransparent"
-                    custom:typeface="franklin_gothic_demi"
-                    custom:letterSpacing="0.0"
                     android:textSize="18sp"
-                    android:textAllCaps="false"/>
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi" />
 
                 <Spinner
+                    android:id="@+id/prodBarcode"
                     android:layout_width="216dp"
                     android:layout_height="42dp"
-                    android:text="@string/select_printer"
                     android:layout_below="@id/prodPriceInsert"
-                    android:id="@+id/prodBarcode"
-                    android:layout_marginTop="15dp"
                     android:layout_marginLeft="15dp"
-                    android:elevation="0dp"
+                    android:layout_marginTop="15dp"
                     android:background="@drawable/view_border"
-                    android:textColor="@color/white"
-                    custom:typeface="franklin_gothic_demi"
-                    custom:letterSpacing="0.0"
-                    android:textSize="15sp"
-                    android:textAllCaps="false"
+                    android:elevation="0dp"
                     android:gravity="center"
                     android:spinnerMode="dialog"
-                    />
+                    android:text="@string/select_printer"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi" />
 
                 <com.example.blackbox.graphics.CustomButton
+                    android:id="@+id/prodButtonColor"
                     android:layout_width="216dp"
                     android:layout_height="42dp"
-                    android:text="@string/buttonColor"
                     android:layout_below="@id/prodPriceInsert"
-                    android:layout_toRightOf="@id/prodBarcode"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="15dp"
-                    android:id="@+id/prodButtonColor"
-                    android:elevation="0dp"
+                    android:layout_toRightOf="@id/prodBarcode"
                     android:background="@drawable/popup_button_gray"
-                    android:textColor="@color/white"
-                    custom:typeface="franklin_gothic_demi"
-                    android:textSize="15sp"
+                    android:elevation="0dp"
+                    android:text="@string/buttonColor"
                     android:textAllCaps="false"
-                    custom:letterSpacing="0.0"/>
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi" />
 
                 <com.example.blackbox.graphics.CustomButton
                     android:id="@+id/read_barcode"
                     android:layout_width="447dp"
                     android:layout_height="42dp"
                     android:layout_below="@id/prodBarcode"
-                    android:layout_marginTop="15dp"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/button_lightblue_3dp_grey_press"
                     android:text="@string/barcode_scan"
-                    android:textSize="15sp"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:visibility="gone"
                     custom:letterSpacing="0.0"
-                    custom:typeface="franklin_gothic_demi"
-                    android:visibility="gone"/>
+                    custom:typeface="franklin_gothic_demi" />
 
                 <com.example.blackbox.graphics.CustomEditText
+                    android:id="@+id/credit_value_input"
                     android:layout_width="216dp"
                     android:layout_height="42dp"
-                    android:hint="@string/credit_value"
-                    android:inputType="numberDecimal"
-                    android:id="@+id/credit_value_input"
-                    android:selectAllOnFocus="true"
-                    android:gravity="center"
+                    android:layout_below="@id/read_barcode"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="15dp"
-                    android:layout_below="@id/read_barcode"
-                    android:textColorHighlight="@color/gray"
                     android:background="@drawable/view_border"
-                    android:textCursorDrawable="@null"
+                    android:gravity="center"
+                    android:hint="@string/credit_value"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
                     android:textColor="@color/blackTransparent"
+                    android:textColorHighlight="@color/gray"
+                    android:textCursorDrawable="@null"
                     custom:typeface="franklin_gothic_demi"
 
                     />
@@ -503,10 +498,9 @@
                     android:layout_below="@id/read_barcode"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="21dp"
-                    android:background="@drawable/view_border"
-                    android:src="@drawable/checkbox_selector"
                     android:layout_toRightOf="@id/credit_value_input"
-                    />
+                    android:background="@drawable/view_border"
+                    android:src="@drawable/checkbox_selector" />
 
 
                 <com.example.blackbox.graphics.CustomTextView
@@ -516,58 +510,56 @@
                     android:layout_below="@id/read_barcode"
                     android:layout_marginLeft="11dp"
                     android:layout_marginTop="15dp"
+                    android:layout_toRightOf="@id/fidelity_discount_checkbox_prod"
                     android:gravity="start|center_vertical"
                     android:text="@string/credit_discount"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     custom:letterSpacing="0.0"
-                    custom:typeface="franklin_gothic_book"
-                    android:layout_toRightOf="@id/fidelity_discount_checkbox_prod"
-                    />
+                    custom:typeface="franklin_gothic_book" />
 
 
                 <View
+                    android:id="@+id/product_add_hline"
                     android:layout_width="447dp"
                     android:layout_height="2dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/divider_line_horizontal"
-                    android:layout_centerHorizontal="true"
                     android:layout_below="@id/fidelity_discount_checkbox_prod"
-                    android:id="@+id/product_add_hline"
-                    />
-
-                <com.example.blackbox.graphics.CustomButton
-                    android:layout_width="447dp"
-                    android:layout_height="42dp"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="15dp"
-                    android:text="@string/productModifiers"
-                    android:layout_below="@id/product_add_hline"
-                    android:id="@+id/goToModifiers"
-                    android:background="@drawable/popup_button_green"
-                    android:textColor="@color/white"
-                    android:textAllCaps="false"
-                    android:textSize="15sp"
-                    custom:typeface="franklin_gothic_demi"
-                    custom:letterSpacing="0.0"/>
+                    android:background="@drawable/divider_line_horizontal" />
 
                 <com.example.blackbox.graphics.CustomButton
+                    android:id="@+id/goToModifiers"
                     android:layout_width="447dp"
                     android:layout_height="42dp"
-                    android:text="@string/deleteProduct"
+                    android:layout_below="@id/product_add_hline"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/popup_button_green"
+                    android:text="@string/productModifiers"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    custom:letterSpacing="0.0"
+                    custom:typeface="franklin_gothic_demi" />
+
+                <com.example.blackbox.graphics.CustomButton
+                    android:id="@+id/deleteProduct"
+                    android:layout_width="447dp"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/goToModifiers"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="15dp"
-                    android:id="@+id/deleteProduct"
-                    android:layout_centerHorizontal="true"
-                    android:layout_below="@id/goToModifiers"
                     android:background="@drawable/popup_button_red"
+                    android:text="@string/deleteProduct"
+                    android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="15sp"
-                    custom:typeface="franklin_gothic_demi"
                     custom:letterSpacing="0.0"
-                    android:textAllCaps="false"/>
+                    custom:typeface="franklin_gothic_demi" />
 
             </RelativeLayout>
 
@@ -583,7 +575,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@drawable/view_base_background"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <com.example.blackbox.graphics.CustomTextView
                 android:id="@+id/vat_title"

@@ -157,11 +157,11 @@ public class RoomAdapter extends RecyclerView.Adapter<ViewHolder> implements Ite
         ViewHolder vh;
         switch(viewType){
             case -15:
-                v = inflater.inflate(R.layout.room_gridview_plus, null);
+                v = inflater.inflate(R.layout.button_room_gridview_plus, null);
                 vh = new ButtonHolder(v);
                 break;
             default:
-                v = inflater.inflate(R.layout.room_gridview, null);
+                v = inflater.inflate(R.layout.element_room_gridview, null);
                 vh = new ButtonHolder(v);
                 break;
         }
@@ -227,7 +227,7 @@ public class RoomAdapter extends RecyclerView.Adapter<ViewHolder> implements Ite
         LayoutInflater layoutInflater = (LayoutInflater) context
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
 
-        final View popupView = layoutInflater.inflate(R.layout.single_input_dialog, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_single_input, null);
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -359,7 +359,7 @@ public class RoomAdapter extends RecyclerView.Adapter<ViewHolder> implements Ite
         Room room = getRoomSelected();
         LayoutInflater layoutInflater = (LayoutInflater) context
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.room_modify_dialog, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_room_modify, null);
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,

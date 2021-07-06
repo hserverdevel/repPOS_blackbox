@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -22,15 +21,17 @@ import com.example.blackbox.R;
 import com.example.blackbox.activities.ReservationsActivity;
 import com.example.blackbox.graphics.CustomButton;
 import com.example.blackbox.graphics.CustomTextView;
+import com.example.blackbox.model.DateUtils;
+import com.example.blackbox.model.RequestParam;
+import com.example.blackbox.model.Reservation;
 import com.example.blackbox.model.StaticValue;
 import com.example.blackbox.model.WaitingListModel;
 import com.utils.db.DatabaseAdapter;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
+import java.util.Date;
 
 import cz.msebera.android.httpclient.NameValuePair;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
@@ -68,7 +69,17 @@ public class WaitingListAdapter extends RecyclerView.Adapter
         cal.add(Calendar.DATE, -1);
         String yesterday = formatPre.format(cal.getTime());
 
-        waitingList = dbA.fetchWaitingList();
+
+        if (StaticValue.blackbox)
+        {
+            RequestParam params = new RequestParam();
+            params.add("waitingListChecksum", dbA.getChecksumForTable("waiting_list"));
+            reservationsActivity.callHttpHandler("/getWaitingList", params);
+        }
+
+        else
+            {  waitingList = dbA.fetchWaitingList(); }
+
 
         Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
@@ -84,7 +95,7 @@ public class WaitingListAdapter extends RecyclerView.Adapter
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        View itemView = inflater.inflate(R.layout.waiting_list_element, null);
+        View itemView = inflater.inflate(R.layout.element_waiting_list, null);
         return new WaitingListHolder(itemView);
     }
 
@@ -97,7 +108,7 @@ public class WaitingListAdapter extends RecyclerView.Adapter
         WaitingListHolder wlHolder = (WaitingListHolder) holder;
         WaitingListModel waiting = waitingList.get(position);
 
-        wlHolder.waitListName.setText(String.format("%s %s", waiting.getName(), waiting.getSurname()));
+        wlHolder.waitListName.setText(waiting.getName());
         wlHolder.waitListType.setText(resources.getString(R.string.adults_children_disabled, waiting.getAdults(), waiting.getChildren(), waiting.getDisabled()));
 
 
@@ -173,6 +184,14 @@ public class WaitingListAdapter extends RecyclerView.Adapter
         notifyDataSetChanged();
     }
 
+    public void refreshWaitingList(ArrayList<WaitingListModel> wlt)
+    {
+        waitingList = wlt;
+
+        notifyDataSetChanged();
+    }
+
+
 
 
     //it calls dbA method to search reservation
@@ -187,10 +206,51 @@ public class WaitingListAdapter extends RecyclerView.Adapter
 
 
 
+    public void filter(int kind)
+    {
+        waitingList = dbA.fetchWaitingList();
+        Date                   now = new Date();
+        ArrayList<WaitingListModel> res = new ArrayList<>();
+
+        switch (kind)
+        {
+            // expired reservations
+            case -1:
+                for (WaitingListModel r : waitingList)
+                    if (DateUtils.isBeforeDay(r.getTime(), now))
+                    { res.add(r); }
+                break;
+
+            // today res
+            case 0:
+                for (WaitingListModel r : waitingList)
+                    if (DateUtils.isSameDay(r.getTime(), now))
+                    { res.add(r); }
+                break;
+
+            // upcoming res
+            case 1:
+                for (WaitingListModel r : waitingList)
+                    if (DateUtils.isAfterDay(r.getTime(), now))
+                    { res.add(r); }
+                break;
+
+            default:
+                break;
+        }
+
+        waitingList = res;
+        notifyDataSetChanged();
+
+    }
+
+
+
+
     private void fireWaitingListPopup(WaitingListModel model)
     {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.yes_no_dialog, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_yes_no, null);
 
         final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 

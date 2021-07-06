@@ -1,14 +1,12 @@
 package com.example.blackbox.adapter;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -126,12 +124,12 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
         switch (viewType)
         {
             case -11:
-                v = inflater.inflate(R.layout.table_plusbutton, null);
+                v = inflater.inflate(R.layout.button_table_plus, null);
                 vh = new PlusButtonHolder(v);
                 break;
 
             default:
-                v = inflater.inflate(R.layout.table_gridview, null);
+                v = inflater.inflate(R.layout.element_table_gridview, null);
                 vh = new ButtonHolder(v);
                 break;
         }
@@ -310,7 +308,7 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
     {
 
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.new_table_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_new_table, null);
         final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         popupView.post(new Runnable()
@@ -470,7 +468,7 @@ public class TableAdapter extends RecyclerView.Adapter<ViewHolder> implements It
     {
 
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.modify_table_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_modify_table, null);
         final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 
         popupView.post(new Runnable()

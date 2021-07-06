@@ -5,7 +5,6 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Environment;
@@ -69,6 +68,7 @@ import com.example.blackbox.model.KitchenPrinter;
 import com.example.blackbox.model.ModifierAssigned;
 import com.example.blackbox.model.ModifierGroupAssigned;
 import com.example.blackbox.model.PrinterModel;
+import com.example.blackbox.model.RequestParam;
 import com.example.blackbox.model.StaticValue;
 import com.example.blackbox.model.StatusInfoHolder;
 import com.example.blackbox.model.TimerManager;
@@ -109,87 +109,96 @@ public class MainActivity extends AppCompatActivity implements
         UserAdapter.AdapterUserCallback,
         AdapterView.OnItemSelectedListener,
         ClientThread.TaskDelegate,
-        HttpHandler.AsyncResponse {
+        HttpHandler.AsyncResponse
+{
 
-    public static final int DEFAULT_VIEW = 0;
-    public static final int MODIFIERS_VIEW = 1;
-    public static ArrayList<ButtonLayout> buttons;
-    private static GridAdapter rv_adapter;
-    private static ModifiersGroupAdapter group_rv_adapter;
-    private static ModifierAdapter modifiers_rv_adapter;
-    public boolean wereModifiersOpen = false;
-    public float density;
-    public float dpHeight;
-    public float dpWidth;
-    public String IP = StaticValue.IP;
-    String barcode = "";
-    String printerModel;
+    public static final int                     DEFAULT_VIEW      = 0;
+    public static final int                     MODIFIERS_VIEW    = 1;
+    public static       ArrayList<ButtonLayout> buttons;
+    private static      GridAdapter             rv_adapter;
+    private static      ModifiersGroupAdapter   group_rv_adapter;
+    private static      ModifierAdapter         modifiers_rv_adapter;
+    private final       String                  TAG               = "<MainActivity>";
+    public              boolean                 wereModifiersOpen = false;
+    public              float                   density;
+    public              float                   dpHeight;
+    public              float                   dpWidth;
+    public              String                  IP                = StaticValue.IP;
+    String         barcode                = "";
+    String         printerModel;
     KitchenPrinter selectedKitchenPrinter = new KitchenPrinter();
-    int show = 1;
-
-    private final String TAG = "<MainActivity>";
-
-    private HttpHandler httpHandler;
-    private View myPopupView;
-    private PopupWindow myPopupWindow;
-    private User myUser = new User();
-    private ButtonLayout myButtonLayout;
-    private Vat myVat;
-    private Context me;
-    private Resources resources;
-    private StatusInfoHolder grid_status;
-    private ButtonLayout big_plus_button;
-    private DatabaseAdapter dbA;
-    private RecyclerView recyclerview;
-    private RecyclerView mod_group_recyclerview;
-    private RecyclerView modifiers_recyclerview;
-    private GridLayoutManager grid_manager;
-    private ModifierLineSeparator myLine;
-    private boolean isAdded = false;
-    private int isAdmin;
-    private String username;
-    private SessionAdapter sessionAdapter;
-    private Server server;
-    private UserAdapter userAdapter;
-    private int userType;
-    private int userId;
-    private Intent intentPasscode;
-    private PrinterSettingAdapter printerSettingAdapter;
+    int            show                   = 1;
+    private HttpHandler            httpHandler;
+    private View                   myPopupView;
+    private PopupWindow            myPopupWindow;
+    private User                   myUser             = new User();
+    private ButtonLayout           myButtonLayout;
+    private Vat                    myVat;
+    private Context                me;
+    private Resources              resources;
+    private StatusInfoHolder       grid_status;
+    private ButtonLayout           big_plus_button;
+    private DatabaseAdapter        dbA;
+    private RecyclerView           recyclerview;
+    private RecyclerView           mod_group_recyclerview;
+    private RecyclerView           modifiers_recyclerview;
+    private GridLayoutManager      grid_manager;
+    private ModifierLineSeparator  myLine;
+    private boolean                isAdded            = false;
+    private int                    isAdmin;
+    private String                 username;
+    private SessionAdapter         sessionAdapter;
+    private Server                 server;
+    private UserAdapter            userAdapter;
+    private int                    userType;
+    private int                    userId;
+    private Intent                 intentPasscode;
+    private PrinterSettingAdapter  printerSettingAdapter;
     private BlackboxSettingAdapter bbSettingAdaper;
-    private MainActivity myself;
-    private boolean keyboard_next_flag = false;
-    private boolean isBarcodeShow = false;
-    private String licenseString = "";
-    private CustomButton licenseButton;
+    private MainActivity           myself;
+    private boolean                keyboard_next_flag = false;
+    private boolean                isBarcodeShow      = false;
+    private String                 licenseString      = "";
+    private CustomButton           licenseButton;
 
+    /**
+     * UPDATES THE BUTTON SET AND NOTIFIES IT TO THE ADAPTER
+     **/
+    public static void setButtonSet(ArrayList<ButtonLayout> bs)
+    {
+        buttons.clear();
+        buttons = bs;
+        rv_adapter.notifyDataSetChanged();
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         // Hides app title
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
 
-        me = this;
-        myself = this;
+        me        = this;
+        myself    = this;
         resources = getResources();
-        dbA = new DatabaseAdapter(this);
+        dbA       = new DatabaseAdapter(this);
 
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
-        isAdmin = intent.getIntExtra("isAdmin", -1);
-        userId = intent.getIntExtra("userId", -1);
+        isAdmin  = intent.getIntExtra("isAdmin", -1);
+        userId   = intent.getIntExtra("userId", -1);
         userType = intent.getIntExtra("userType", -1);
 
         /**DISPLAY METRICS**/
-        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        Display        display    = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
 
-        density = getResources().getDisplayMetrics().density;
+        density  = getResources().getDisplayMetrics().density;
         dpHeight = outMetrics.heightPixels;// / density;
-        dpWidth = outMetrics.widthPixels;// / density;
+        dpWidth  = outMetrics.widthPixels;// / density;
         // dbA.restartDb();
         // dbA.ciccioPasticcio();
 
@@ -198,11 +207,11 @@ public class MainActivity extends AppCompatActivity implements
         myLine = new ModifierLineSeparator(me, 14);
     }
 
-
     /**
-     Handles the ouput of the HttpHandler async process
-     which send a POST request to the blackbox server
-     @param output: the JSON response from the blackbox after the POST request
+     * Handles the ouput of the HttpHandler async process
+     * which send a POST request to the blackbox server
+     *
+     * @param output: the JSON response from the blackbox after the POST request
      **/
     @Override
     public void processFinish(String output)
@@ -216,11 +225,14 @@ public class MainActivity extends AppCompatActivity implements
         // a bool indicating if the connection was succesful
         boolean success = false;
 
-        try {
+        try
+        {
             jsonObject = new JSONObject(output);
-            route = jsonObject.getString("route");
-            success = jsonObject.getBoolean("success");
-        } catch (Exception e) {
+            route      = jsonObject.getString("route");
+            success    = jsonObject.getBoolean("success");
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
 
@@ -240,17 +252,22 @@ public class MainActivity extends AppCompatActivity implements
                             // since this is a simple test of communication
                             jsonObject.getBoolean("check");
 
-                            Toast.makeText(this, "Blackbox connection succesful", Toast.LENGTH_LONG).show();
+                            Toast.makeText(this, "Blackbox connection succesful", Toast.LENGTH_LONG)
+                                 .show();
                         }
 
                         // the check is not present, thus the test failed
                         catch (Exception e)
-                            { Toast.makeText(this, "Blackbox connection unsuccessful", Toast.LENGTH_LONG).show(); }
+                        {
+                            Toast.makeText(this, "Blackbox connection unsuccessful", Toast.LENGTH_LONG)
+                                 .show();
+                        }
                         break;
 
                     case "insertUser":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             JSONObject jObject = new JSONObject(output).getJSONObject("user");
                             myUser = User.fromJson(jObject);
                             dbA.insertUserFromServer(myUser);
@@ -258,53 +275,70 @@ public class MainActivity extends AppCompatActivity implements
                             myPopupView.findViewById(R.id.AddUserWindow).setVisibility(GONE);
 
                             setupAdminWindow(myPopupView, myPopupWindow);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "insertButton":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             JSONObject jObject = new JSONObject(output).getJSONObject("button");
                             myButtonLayout = ButtonLayout.fromJson(jObject);
                             dbA.insertButtonFromServer(myButtonLayout);
                             dbA.showData("button");
                             //da cambiare -1
+
                             rv_adapter.getCurrentCatButtonSet(myButtonLayout.getCatID());
-                            rv_adapter.colorChosen = -1;
+
+                            rv_adapter.colorChosen     = -1;
                             rv_adapter.chosenColorView = null;
-                            rv_adapter.chosenIcon = "";
+                            rv_adapter.chosenIcon      = "";
                             rv_adapter.closePopupWindow();
                             rv_adapter.notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "insertButton2":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             JSONObject jObject = new JSONObject(output).getJSONObject("button");
                             myButtonLayout = ButtonLayout.fromJson(jObject);
                             dbA.insertButtonFromServer(myButtonLayout);
                             //da cambiare -1
-                            if (rv_adapter.deepnessLevel + 1 <= rv_adapter.MAX_DEEPNESS_LEVEL + 1) {
+                            if (rv_adapter.deepnessLevel + 1 <= rv_adapter.MAX_DEEPNESS_LEVEL + 1)
+                            {
                                 rv_adapter.deepnessLevel += 1;
                                 rv_adapter.getCurrentCatButtonSet(myButtonLayout.getCatID());
                                 int catID = rv_adapter.returnCatIdBlackbox();
-                                rv_adapter.goToCategory(myButtonLayout.getCatID(), catID, myButtonLayout.getTitle());
+                                rv_adapter.goToCategory(myButtonLayout.getCatID(), catID, myButtonLayout
+                                        .getTitle());
                             }
                             rv_adapter.closePopupWindow();
                             rv_adapter.notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "insertButton3":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             JSONObject jObject = new JSONObject(output).getJSONObject("button");
                             myButtonLayout = ButtonLayout.fromJson(jObject);
                             dbA.insertButtonFromServer(myButtonLayout);
@@ -322,22 +356,29 @@ public class MainActivity extends AppCompatActivity implements
                             switchView(MainActivity.MODIFIERS_VIEW, catID);
 
                             rv_adapter.closePopupWindow();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "insertButton4":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             JSONObject jObject = new JSONObject(output).getJSONObject("button");
                             myButtonLayout = ButtonLayout.fromJson(jObject);
                             dbA.insertButtonFromServer(myButtonLayout);
                             rv_adapter.getCurrentCatButtonSet(myButtonLayout.getCatID());
                             rv_adapter.closePopupWindow();
                             rv_adapter.notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
@@ -350,12 +391,17 @@ public class MainActivity extends AppCompatActivity implements
                             dbA.insertButtonFromServer(myButtonLayout);
                             dbA.showData("button");
                             rv_adapter.getCurrentCatButtonSet(myButtonLayout.getCatID());
-                            if (!rv_adapter.colorState) {
+                            if (!rv_adapter.colorState)
+                            {
 
-                            } else {
+                            }
+                            else
+                            {
 
-                                rv_adapter.myPopupView.findViewById(R.id.ProductSetup).setVisibility(VISIBLE);
-                                rv_adapter.myPopupView.findViewById(R.id.colors_container).setVisibility(GONE);
+                                rv_adapter.myPopupView.findViewById(R.id.ProductSetup)
+                                                      .setVisibility(VISIBLE);
+                                rv_adapter.myPopupView.findViewById(R.id.colors_container)
+                                                      .setVisibility(GONE);
                                 rv_adapter.colorState = false;
                             }
 
@@ -365,78 +411,124 @@ public class MainActivity extends AppCompatActivity implements
 
                         else
                         {
-                            Toast.makeText(getApplicationContext(), getString(R.string.route_check_false, jsonObject.getString("reason")), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.route_check_false, jsonObject
+                                    .getString("reason")), Toast.LENGTH_SHORT).show();
                         }
                         break;
 
                     case "moveButton":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             int fromPosition = jsonObject.getInt("fromPosition");
-                            int toPosition = jsonObject.getInt("toPosition");
+                            int toPosition   = jsonObject.getInt("toPosition");
 
                             rv_adapter.swapButtonFunction(fromPosition, toPosition);
                             rv_adapter.notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "updateButton":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            JSONObject jObject = new JSONObject(output).getJSONObject("button");
-                            Boolean updatePrinter = jsonObject.getBoolean("updatePrinter");
-                            Boolean updateDiscount = jsonObject.getBoolean("updateDiscount");
-                            Boolean updateCredit = jsonObject.getBoolean("updateCredit");
-                            String action = jsonObject.getString("action");
+                        if (check)
+                        {
+                            JSONObject jObject        = new JSONObject(output).getJSONObject("button");
+                            Boolean    updatePrinter  = jsonObject.getBoolean("updatePrinter");
+                            Boolean    updateDiscount = jsonObject.getBoolean("updateDiscount");
+                            Boolean    updateCredit   = jsonObject.getBoolean("updateCredit");
+                            String     action         = jsonObject.getString("action");
                             myButtonLayout = ButtonLayout.fromJson(jObject);
-                            dbA.execOnDb("UPDATE button SET title = \"" + myButtonLayout.getTitle().replaceAll("'", "'") +
-                                    "\", subtitle = \"" + myButtonLayout.getSubTitle().replaceAll("'", "'") + "\", img_name = \"" + myButtonLayout.getImg() + "\"," +
-                                    "color = " + myButtonLayout.getColor() + " , printer= " + myButtonLayout.getPrinterId() + ", fidelity_discount=" + myButtonLayout.getFidelity_discount() + ", fidelity_credit=" + myButtonLayout.getFidelity_credit() + " WHERE id = " + myButtonLayout.getID() + "");
+                            dbA.execOnDb("UPDATE button SET title = \"" + myButtonLayout.getTitle()
+                                                                                        .replaceAll("'", "'") +
+                                                 "\", subtitle = \"" + myButtonLayout.getSubTitle()
+                                                                                     .replaceAll("'", "'") + "\", img_name = \"" + myButtonLayout
+                                    .getImg() + "\"," +
+                                                 "color = " + myButtonLayout.getColor() + " , printer= " + myButtonLayout
+                                    .getPrinterId() + ", fidelity_discount=" + myButtonLayout.getFidelity_discount() + ", fidelity_credit=" + myButtonLayout
+                                    .getFidelity_credit() + " WHERE id = " + myButtonLayout.getID() + "");
                             if (updatePrinter)
+                            {
                                 dbA.recursiveUpdatePrinter(myButtonLayout.getID(), myButtonLayout.getPrinterId());
+                            }
                             if (updateDiscount)
-                                dbA.recursiveUpdateFidelityDiscount(myButtonLayout.getID(), myButtonLayout.getFidelity_discount());
+                            {
+                                dbA.recursiveUpdateFidelityDiscount(myButtonLayout.getID(), myButtonLayout
+                                        .getFidelity_discount());
+                            }
                             if (updateCredit)
-                                dbA.recursiveUpdateFidelityCredit(myButtonLayout.getID(), myButtonLayout.getFidelity_credit());
+                            {
+                                dbA.recursiveUpdateFidelityCredit(myButtonLayout.getID(), myButtonLayout
+                                        .getFidelity_credit());
+                            }
                             if (action.equals("update"))
+                            {
                                 rv_adapter.getCurrentCatButtonSet(myButtonLayout.getCatID());
+                            }
                             else
-                                rv_adapter.goToCategory(myButtonLayout.getCatID(), myButtonLayout.getID(), myButtonLayout.getTitle());
+                            {
+                                rv_adapter.goToCategory(myButtonLayout.getCatID(), myButtonLayout.getID(), myButtonLayout
+                                        .getTitle());
+                            }
                             rv_adapter.closePopupWindow();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "updateButton2":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             JSONObject jObject = new JSONObject(output).getJSONObject("button");
                             myButtonLayout = ButtonLayout.fromJson(jObject);
-                            dbA.execOnDb("UPDATE button SET title = \"" + myButtonLayout.getTitle().replaceAll("'", "'") +
-                                    "\", subtitle = \"" + myButtonLayout.getSubTitle().replaceAll("'", "'") + "\", img_name = \"" + myButtonLayout.getImg() + "\", isCat = " + myButtonLayout.getCat() + ", price= " + myButtonLayout.getPrice() + ", vat=" + myButtonLayout.getVat() +
-                                    ",color = " + myButtonLayout.getColor() + " , printer= " + myButtonLayout.getPrinterId() + ", fidelity_discount=" + myButtonLayout.getFidelity_discount() + ", fidelity_credit=" + myButtonLayout.getFidelity_credit() + ", credit_value=" + myButtonLayout.getCredit_value() + " WHERE id = " + myButtonLayout.getID() + "");
+                            dbA.execOnDb("UPDATE button SET title = \"" + myButtonLayout.getTitle()
+                                                                                        .replaceAll("'", "'") +
+                                                 "\", subtitle = \"" + myButtonLayout.getSubTitle()
+                                                                                     .replaceAll("'", "'") + "\", img_name = \"" + myButtonLayout
+                                    .getImg() + "\", isCat = " + myButtonLayout.getCat() + ", price= " + myButtonLayout
+                                    .getPrice() + ", vat=" + myButtonLayout.getVat() +
+                                                 ",color = " + myButtonLayout.getColor() + " , printer= " + myButtonLayout
+                                    .getPrinterId() + ", fidelity_discount=" + myButtonLayout.getFidelity_discount() + ", fidelity_credit=" + myButtonLayout
+                                    .getFidelity_credit() + ", credit_value=" + myButtonLayout.getCredit_value() + " WHERE id = " + myButtonLayout
+                                    .getID() + "");
                             dbA.showData("button");
                             //dbA.insertButtonFromServer(myButtonLayout);
                             rv_adapter.getCurrentCatButtonSet(myButtonLayout.getCatID());
                             rv_adapter.closePopupWindow();
                             rv_adapter.notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "updateButton3":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             JSONObject jObject = new JSONObject(output).getJSONObject("button");
                             myButtonLayout = ButtonLayout.fromJson(jObject);
                             //dbA.insertButtonFromServer(myButtonLayout);
-                            dbA.execOnDb("UPDATE button SET title = \"" + myButtonLayout.getTitle().replaceAll("'", "'") +
-                                    "\", subtitle = \"" + myButtonLayout.getSubTitle().replaceAll("'", "'") + "\", img_name = \"" + myButtonLayout.getImg() + "\", isCat = " + myButtonLayout.getCat() + ", price= " + myButtonLayout.getPrice() + ", vat=" + myButtonLayout.getVat() +
-                                    ",color = " + myButtonLayout.getColor() + " , printer= " + myButtonLayout.getPrinterId() + ", fidelity_discount=" + myButtonLayout.getFidelity_discount() + ", fidelity_credit=" + myButtonLayout.getFidelity_credit() + ", credit_value=" + myButtonLayout.getCredit_value() + " WHERE id = " + myButtonLayout.getID() + "");
+                            dbA.execOnDb("UPDATE button SET title = \"" + myButtonLayout.getTitle()
+                                                                                        .replaceAll("'", "'") +
+                                                 "\", subtitle = \"" + myButtonLayout.getSubTitle()
+                                                                                     .replaceAll("'", "'") + "\", img_name = \"" + myButtonLayout
+                                    .getImg() + "\", isCat = " + myButtonLayout.getCat() + ", price= " + myButtonLayout
+                                    .getPrice() + ", vat=" + myButtonLayout.getVat() +
+                                                 ",color = " + myButtonLayout.getColor() + " , printer= " + myButtonLayout
+                                    .getPrinterId() + ", fidelity_discount=" + myButtonLayout.getFidelity_discount() + ", fidelity_credit=" + myButtonLayout
+                                    .getFidelity_credit() + ", credit_value=" + myButtonLayout.getCredit_value() + " WHERE id = " + myButtonLayout
+                                    .getID() + "");
 
                             //da cambiare -1
                             dbA.showData("button");
@@ -456,20 +548,27 @@ public class MainActivity extends AppCompatActivity implements
                             rv_adapter.closePopupWindow();
 
 
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "deleteButton":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            int id = jsonObject.getInt("id");
+                        if (check)
+                        {
+                            int id         = jsonObject.getInt("id");
                             int currentCat = jsonObject.getInt("currentId");
                             dbA.deleteButton(id, 1);
                             ArrayList<ButtonLayout> bs = dbA.fetchButtonsByQuery("Select * from button where catID=" + currentCat + " AND id!=-30 AND id!=-20");
-                            for (int i = 0; i < bs.size(); i++) {
-                                dbA.execOnDb("UPDATE button set position=" + (i + 1) + " WHERE id=" + bs.get(i).getID());
+                            for (int i = 0; i < bs.size(); i++)
+                            {
+                                dbA.execOnDb("UPDATE button set position=" + (i + 1) + " WHERE id=" + bs
+                                        .get(i)
+                                        .getID());
                             }
                             rv_adapter.getCurrentCatButtonSet(currentCat);
                             rv_adapter.closeTwoPopupWindow();
@@ -477,31 +576,42 @@ public class MainActivity extends AppCompatActivity implements
                             // if the current button to be deleted is present in an existing unpaid order
                             // or it's present in any of its subcategories or products
                             // cancel the delete
-                        } else if (jsonObject.getString("reason").equals("buttonInOrder")) {
+                        }
+                        else if (jsonObject.getString("reason").equals("buttonInOrder"))
+                        {
                             Toast.makeText(getApplicationContext(),
-                                    "This button or any of its sub-buttons is present in order N. " + (jsonObject.getInt("billNumber") + 1),
-                                    Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                                           "This button or any of its sub-buttons is present in order N. " + (jsonObject
+                                                   .getInt("billNumber") + 1),
+                                           Toast.LENGTH_LONG
+                            ).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "insertVat":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             int status = jsonObject.getInt("status");
-                            switch (status) {
+                            switch (status)
+                            {
                                 case 1:
                                     JSONObject jObject = new JSONObject(output).getJSONObject("vat");
                                     myVat = Vat.fromJson(jObject);
-                                    dbA.addVatValueFromServer(myVat.getId(), myVat.getValue(), myVat.getPerc());
+                                    dbA.addVatValueFromServer(myVat.getId(), myVat.getValue(), myVat
+                                            .getPerc());
                                     ArrayList<VatModel> newVats = dbA.fetchVatArrayByQuery();
                                     rv_adapter.setVatFromServer(newVats, myPopupView);
                                     break;
                                 case 2:
                                     JSONObject jObject1 = new JSONObject(output).getJSONObject("vat");
                                     myVat = Vat.fromJson(jObject1);
-                                    dbA.updateVatValueFromServer(myVat.getId(), myVat.getValue(), myVat.getPerc());
+                                    dbA.updateVatValueFromServer(myVat.getId(), myVat.getValue(), myVat
+                                            .getPerc());
                                     ArrayList<VatModel> newVats1 = dbA.fetchVatArrayByQuery();
                                     rv_adapter.setVatFromServer(newVats1, myPopupView);
                                     break;
@@ -511,46 +621,59 @@ public class MainActivity extends AppCompatActivity implements
                                     break;
                             }
 
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "insertVat1":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            JSONObject jObject = new JSONObject(output).getJSONObject("vat");
-                            int buttonId = jsonObject.getInt("buttonId");
-                            ButtonLayout b = dbA.fetchButtonByQuery("select * from button where id=" + buttonId);
+                        if (check)
+                        {
+                            JSONObject   jObject  = new JSONObject(output).getJSONObject("vat");
+                            int          buttonId = jsonObject.getInt("buttonId");
+                            ButtonLayout b        = dbA.fetchButtonByQuery("select * from button where id=" + buttonId);
                             myVat = Vat.fromJson(jObject);
                             rv_adapter.addVatFromServer(myVat, b);
 
 
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "updateVat":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             JSONObject jObject = new JSONObject(output).getJSONObject("vat");
                             myVat = Vat.fromJson(jObject);
                             dbA.updateVatValueFromServer(myVat.getId(), myVat.getValue(), myVat.getPerc());
                             ArrayList<VatModel> newVats1 = dbA.fetchVatArrayByQuery();
                             rv_adapter.setVatFromServer(newVats1, myPopupView);
 
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "deleteVat":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
 
                             int status = jsonObject.getInt("status");
-                            switch (status) {
+                            switch (status)
+                            {
                                 case 1:
                                     int vatId = jsonObject.getInt("id");
                                     rv_adapter.deleteVat(vatId);
@@ -564,44 +687,68 @@ public class MainActivity extends AppCompatActivity implements
 
                             }
 
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "insertFiscalPrinter":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            int printerId = jsonObject.getInt("printerId");
-                            JSONObject jObject = new JSONObject(output).getJSONObject("fiscalPrinter");
+                        if (check)
+                        {
+                            int           printerId       = jsonObject.getInt("printerId");
+                            JSONObject    jObject         = new JSONObject(output).getJSONObject("fiscalPrinter");
                             FiscalPrinter myFiscalPrinter = FiscalPrinter.fromJson(jObject);
-                            int api = 0;
-                            if (myFiscalPrinter.isUseApi()) api = 1;
-                            if (printerId == -1) {
-                                dbA.insertFiscalPrinter(myFiscalPrinter.getModel(), myFiscalPrinter.getAddress(), myFiscalPrinter.getModel(), myFiscalPrinter.getPort(), api);
-                            } else {
-                                dbA.updateFiscalPrinter(myFiscalPrinter.getModel(), myFiscalPrinter.getAddress(), myFiscalPrinter.getModel(), myFiscalPrinter.getPort(), api);
+                            int           api             = 0;
+                            if (myFiscalPrinter.isUseApi())
+                            {
+                                api = 1;
+                            }
+                            if (printerId == -1)
+                            {
+                                dbA.insertFiscalPrinter(myFiscalPrinter.getModel(), myFiscalPrinter.getAddress(), myFiscalPrinter
+                                        .getModel(), myFiscalPrinter.getPort(), api);
+                            }
+                            else
+                            {
+                                dbA.updateFiscalPrinter(myFiscalPrinter.getModel(), myFiscalPrinter.getAddress(), myFiscalPrinter
+                                        .getModel(), myFiscalPrinter.getPort(), api);
                             }
                             printerSettingAdapter.setPrinters();
                             new StaticValue(getApplicationContext(), StaticValue.blackboxInfo);
 
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "insertKitchenPrinter":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            int printerId = jsonObject.getInt("printerId");
-                            JSONObject jObject = new JSONObject(output).getJSONObject("kitchenPrinter");
-                            KitchenPrinter myPrinter = KitchenPrinter.fromJson(jObject);
-                            int singleOrder = 0;
-                            if (myPrinter.isSingleOrder() == 1) singleOrder = 1;
-                            if (printerId == -1) {
-                                dbA.insertKitchenPrinter(myPrinter.getName(), myPrinter.getAddress(), myPrinter.getPort(), singleOrder);
-                            } else {
-                                dbA.updateKitchenPrinter(myPrinter.getName(), myPrinter.getAddress(), myPrinter.getPort(), singleOrder, myPrinter.getId());
+                        if (check)
+                        {
+                            int            printerId   = jsonObject.getInt("printerId");
+                            JSONObject     jObject     = new JSONObject(output).getJSONObject("kitchenPrinter");
+                            KitchenPrinter myPrinter   = KitchenPrinter.fromJson(jObject);
+                            int            singleOrder = 0;
+                            if (myPrinter.isSingleOrder() == 1)
+                            {
+                                singleOrder = 1;
+                            }
+                            if (printerId == -1)
+                            {
+                                dbA.insertKitchenPrinter(myPrinter.getName(), myPrinter.getAddress(), myPrinter
+                                        .getPort(), singleOrder);
+                            }
+                            else
+                            {
+                                dbA.updateKitchenPrinter(myPrinter.getName(), myPrinter.getAddress(), myPrinter
+                                        .getPort(), singleOrder, myPrinter.getId());
                             }
                             printerSettingAdapter.setPrinters();
 
@@ -613,46 +760,64 @@ public class MainActivity extends AppCompatActivity implements
                             checkboxK.setActivated(false);
                             selectedKitchenPrinter = new KitchenPrinter();
                             Toast.makeText(MainActivity.this, "Update", Toast.LENGTH_SHORT).show();
+
                             new StaticValue(getApplicationContext(), StaticValue.blackboxInfo);
-
-
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "updateUser":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             JSONObject jObject = new JSONObject(output).getJSONObject("user");
                             myUser = User.fromJson(jObject);
                             String oldPassword = jsonObject.getString("oldPassword");
-                            dbA.updateUserByPasscode(myUser.getName(), myUser.getSurname(), myUser.getPasscode(), myUser.getEmail(), myUser.getUserRole(), myUser.getId(), oldPassword);
+                            dbA.updateUserByPasscode(myUser.getName(), myUser.getSurname(), myUser.getPasscode(), myUser
+                                    .getEmail(), myUser.getUserRole(), myUser.getId(), oldPassword);
                             dbA.showData("user");
                             setupNewUserWindow(myPopupView, myPopupWindow);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "passcode already in use", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "passcode already in use", Toast.LENGTH_SHORT)
+                                 .show();
                         }
 
                         break;
 
                     case "insertModifierGroup":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            JSONObject jObject = new JSONObject(output).getJSONObject("modifierGroup");
-                            ModifiersGroupAdapter.ModifiersGroup myModifierGroup = ModifiersGroupAdapter.ModifiersGroup.fromJson(jObject);
+                        if (check)
+                        {
+                            JSONObject jObject = new JSONObject(output)
+                                    .getJSONObject("modifierGroup");
+                            ModifiersGroupAdapter.ModifiersGroup myModifierGroup = ModifiersGroupAdapter.ModifiersGroup
+                                    .fromJson(jObject);
                             dbA.insertModifierGroupsFromServer(myModifierGroup);
                             group_rv_adapter.getCurrentModifiersGroupSet();
                             int open = jsonObject.getInt("open");
-                            if (open == 0) {
-                                if (group_rv_adapter.selectedGroup != null) {
-                                    if (group_rv_adapter.myGroupId != group_rv_adapter.selectedGroup.getID()) {
-                                        if (group_rv_adapter.childAdapter != null) {
+                            if (open == 0)
+                            {
+                                if (group_rv_adapter.selectedGroup != null)
+                                {
+                                    if (group_rv_adapter.myGroupId != group_rv_adapter.selectedGroup
+                                            .getID())
+                                    {
+                                        if (group_rv_adapter.childAdapter != null)
+                                        {
                                             closeModifiersView();
                                             group_rv_adapter.turnGroupModifiersOFF();
                                         }
-                                    } else {
-                                        if (group_rv_adapter.childAdapter != null) {
+                                    }
+                                    else
+                                    {
+                                        if (group_rv_adapter.childAdapter != null)
+                                        {
                                             boolean check1 = myModifierGroup.getNotes() > 0;
                                             group_rv_adapter.childAdapter.setNotesContainer(check1);
                                         }
@@ -660,12 +825,17 @@ public class MainActivity extends AppCompatActivity implements
                                         openModifiersView(group_rv_adapter.myGroupId);
                                     }
                                 }
-                            } else {
-                                if (group_rv_adapter.childAdapter != null) {
+                            }
+                            else
+                            {
+                                if (group_rv_adapter.childAdapter != null)
+                                {
                                     group_rv_adapter.childAdapter.notifyDataSetChanged();
                                     boolean check1 = myModifierGroup.getNotes() > 0;
                                     if (wereModifiersOpen)
+                                    {
                                         group_rv_adapter.childAdapter.setNotesContainer(check1);
+                                    }
                                 }
                                 group_rv_adapter.selectedGroup = myModifierGroup;
                                 group_rv_adapter.turnGroupModifiersOFF();
@@ -673,41 +843,62 @@ public class MainActivity extends AppCompatActivity implements
                             }
                             group_rv_adapter.closePopupWindow();
 
-                        } else {
+                        }
+                        else
+                        {
                             //findViewById(R.id.AddUserWindow).startAnimation(shake);
-                            Toast.makeText(getApplicationContext(), "error inserting modifier group", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "error inserting modifier group", Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
+
                     case "updateModifierGroup":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            JSONObject jObject = new JSONObject(output).getJSONObject("modifierGroup");
-                            ModifiersGroupAdapter.ModifiersGroup myModifierGroup = ModifiersGroupAdapter.ModifiersGroup.fromJson(jObject);
+                        if (check)
+                        {
+                            JSONObject jObject = new JSONObject(output)
+                                    .getJSONObject("modifierGroup");
+                            ModifiersGroupAdapter.ModifiersGroup myModifierGroup = ModifiersGroupAdapter.ModifiersGroup
+                                    .fromJson(jObject);
                             dbA.updateModifierGroupsFromServer(myModifierGroup);
                             group_rv_adapter.getCurrentModifiersGroupSet();
                             int open = jsonObject.getInt("open");
-                            if (open == 0) {
-                                if (group_rv_adapter.selectedGroup != null) {
-                                    if (group_rv_adapter.myGroupId != group_rv_adapter.selectedGroup.getID()) {
-                                        if (group_rv_adapter.childAdapter != null) {
+                            if (open == 0)
+                            {
+                                if (group_rv_adapter.selectedGroup != null)
+                                {
+                                    if (group_rv_adapter.myGroupId != group_rv_adapter.selectedGroup
+                                            .getID())
+                                    {
+                                        if (group_rv_adapter.childAdapter != null)
+                                        {
                                             closeModifiersView();
                                             group_rv_adapter.turnGroupModifiersOFF();
                                         }
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         boolean check1 = myModifierGroup.getNotes() > 0;
                                         if (group_rv_adapter.childAdapter != null)
+                                        {
                                             group_rv_adapter.childAdapter.setNotesContainer(check1);
+                                        }
                                         group_rv_adapter.turnGroupModifiersOFF();
                                         openModifiersView(group_rv_adapter.myGroupId);
                                     }
                                 }
-                            } else {
-                                if (group_rv_adapter.childAdapter != null) {
+                            }
+                            else
+                            {
+                                if (group_rv_adapter.childAdapter != null)
+                                {
                                     group_rv_adapter.childAdapter.notifyDataSetChanged();
                                     boolean check1 = myModifierGroup.getNotes() > 0;
                                     if (wereModifiersOpen)
+                                    {
                                         group_rv_adapter.childAdapter.setNotesContainer(check1);
+                                    }
                                 }
                                 group_rv_adapter.selectedGroup = myModifierGroup;
                                 //open modifiers
@@ -716,15 +907,19 @@ public class MainActivity extends AppCompatActivity implements
                             }
                             group_rv_adapter.closePopupWindow();
 
-                        } else {
+                        }
+                        else
+                        {
                             //findViewById(R.id.AddUserWindow).startAnimation(shake);
-                            Toast.makeText(getApplicationContext(), "error inserting modifier group", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "error inserting modifier group", Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "deleteModifierGroup":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             int id = jsonObject.getInt("id");
                             dbA.deleteModifierFromTableByID("modifiers_group", id);
                             group_rv_adapter.getCurrentModifiersGroupSet();
@@ -733,191 +928,229 @@ public class MainActivity extends AppCompatActivity implements
                             findViewById(R.id.modifier_notes_container).setVisibility(GONE);
                             group_rv_adapter.closeTwoPopupWindow();
                             rv_adapter.closeTwoPopupWindow();
-                        } else {
+                        }
+                        else
+                        {
                             //findViewById(R.id.AddUserWindow).startAnimation(shake);
-                            Toast.makeText(getApplicationContext(), "error deleting modifier group", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "error deleting modifier group", Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
-                    case "deleteFromModifierGroupAssigned":
-                        check = jsonObject.getBoolean("check");
-                        if (check) {
-                            int groupId = jsonObject.getInt("groupId");
-                            int productId = jsonObject.getInt("productId");
-                            group_rv_adapter.myPopupView.setActivated(false);
-                            dbA.execOnDb("DELETE FROM modifiers_group_assigned WHERE group_id = " + groupId + " AND prod_id=" + productId);
-
-                        } else {
-                            //findViewById(R.id.AddUserWindow).startAnimation(shake);
-                            Toast.makeText(getApplicationContext(), "error deleting modifier group", Toast.LENGTH_SHORT).show();
-                        }
-                        break;
 
                     case "insertInModifierGroupAssigned":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            JSONObject jObject = new JSONObject(output).getJSONObject("mga");
-                            ModifierGroupAssigned mga = ModifierGroupAssigned.fromJson(jObject);
+                        if (check)
+                        {
+                            JSONObject            jObject = new JSONObject(output).getJSONObject("mga");
+                            ModifierGroupAssigned mga     = ModifierGroupAssigned.fromJson(jObject);
                             group_rv_adapter.myPopupView.setActivated(true);
                             dbA.execOnDb("DELETE FROM modifiers_group_assigned WHERE group_id = " + mga.getGroupId() + " AND prod_id=" + mga.getProdId());
                             dbA.insertModifiersGroupGroupsFromServer(mga);
-                        } else {
+                        }
+                        else
+                        {
                             //findViewById(R.id.AddUserWindow).startAnimation(shake);
-                            Toast.makeText(getApplicationContext(), "error deleting modifier group", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "error deleting modifier group", Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "moveModifierGroup":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             int fromPosition = jsonObject.getInt("fromPosition");
-                            int toPosition = jsonObject.getInt("toPosition");
+                            int toPosition   = jsonObject.getInt("toPosition");
 
                             group_rv_adapter.swapModifierGroupFunction(fromPosition, toPosition);
                             group_rv_adapter.notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "updateModifierVat":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            JSONObject jObject = new JSONObject(output).getJSONObject("modifier");
+                        if (check)
+                        {
+                            JSONObject               jObject  = new JSONObject(output).getJSONObject("modifier");
                             ModifierAdapter.Modifier modifier = ModifierAdapter.Modifier.fromJson(jObject);
 
                             modifiers_rv_adapter.myModifier.setVat(0);
-                            dbA.execOnDb("UPDATE modifier SET vat=" + modifier.getVat() + " WHERE id=" + modifier.getID() + ";");
+                            dbA.execOnDb("UPDATE modifier SET vat=" + modifier.getVat() + " WHERE id=" + modifier
+                                    .getID() + ";");
                             CustomButton vatContainer = modifiers_rv_adapter.myPopupView.findViewById(R.id.modVatInsert);
                             vatContainer.setText("");
                             modifiers_rv_adapter.notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "insertModifier":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            JSONObject jObject = new JSONObject(output).getJSONObject("modifier");
+                        if (check)
+                        {
+                            JSONObject               jObject  = new JSONObject(output).getJSONObject("modifier");
                             ModifierAdapter.Modifier modifier = ModifierAdapter.Modifier.fromJson(jObject);
                             dbA.insertModifierFromServer(modifier);
                             modifiers_rv_adapter.getCurrentModifiersSet();
                             if (modifiers_rv_adapter.number_of_modifiers == modifiers_rv_adapter.MAX_NUMBER_OF_MODIFIERS)
-                                Toast.makeText(getApplicationContext(), R.string.max_number_of_modifiers_reached, Toast.LENGTH_SHORT).show();
+                            {
+                                Toast.makeText(getApplicationContext(), R.string.max_number_of_modifiers_reached, Toast.LENGTH_SHORT)
+                                     .show();
+                            }
                             modifiers_rv_adapter.closePopupWindow();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "updateModifier":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            JSONObject jObject = new JSONObject(output).getJSONObject("modifier");
+                        if (check)
+                        {
+                            JSONObject               jObject  = new JSONObject(output).getJSONObject("modifier");
                             ModifierAdapter.Modifier modifier = ModifierAdapter.Modifier.fromJson(jObject);
                             dbA.updateModifierFromServer(modifier);
                             modifiers_rv_adapter.getCurrentModifiersSet();
                             modifiers_rv_adapter.closePopupWindow();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "deleteModifier":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             int id = jsonObject.getInt("id");
                             dbA.deleteModifierFromTableByID("modifier", id);
                             modifiers_rv_adapter.getCurrentModifiersSet();
                             modifiers_rv_adapter.closeTwoPopupWindow();
-                        } else {
+                        }
+                        else
+                        {
                             //findViewById(R.id.AddUserWindow).startAnimation(shake);
-                            Toast.makeText(getApplicationContext(), "error deleting modifier group", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "error deleting modifier group", Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "moveModifier":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             int fromPosition = jsonObject.getInt("fromPosition");
-                            int toPosition = jsonObject.getInt("toPosition");
+                            int toPosition   = jsonObject.getInt("toPosition");
 
                             modifiers_rv_adapter.swapModifierFunction(fromPosition, toPosition);
                             modifiers_rv_adapter.notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
-                    case "deleteModifierAssigned":
+                    case "deleteFromModifierAssigned":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            int modifierId = jsonObject.getInt("modifierId");
-                            int groupId = jsonObject.getInt("groupId");
-                            modifiers_rv_adapter.myPopupView.setActivated(false);
-                            dbA.execOnDb("DELETE FROM modifiers_assigned WHERE modifier_id = " + modifierId);
-                            modifiers_rv_adapter.nModifiersAttached--;
-                            // As the last modifier of the group gets un-attached, the group assignment entry gets erased
-                            if (modifiers_rv_adapter.nModifiersAttached <= 0) {
-                                dbA.execOnDb("DELETE FROM modifiers_group_assigned WHERE group_id = " + groupId);
-                                // Spegne gruppo
-                                int i = dbA.fetchModifiersGroupByQuery("SELECT * FROM modifiers_group WHERE id=" + groupId)
-                                        .get(0).getPosition();
-                                group_rv_adapter.getChildAt(i).setActivated(false);
-                                // Log.i(TAG, "GROUP POSITION " + i);
+                        if (check)
+                        {
+                            int assignmentId = jsonObject.getInt("assignmentId");
+                            int modId        = jsonObject.getInt("modifierId");
 
-                                modifiers_rv_adapter.assignmentID = -1;
-                                modifiers_rv_adapter.nModifiersAttached = -1;
-                            }
-                        } else {
+                            dbA.execOnDb(String.format("DELETE FROM modifiers_assigned WHERE assignment_id = %s AND modifier_id = %s;", assignmentId, modId));
+                            dbA.execOnDb(String.format("DELETE FROM modifiers_group_assigned WHERE id = %s;", assignmentId));
+
+                            modifiers_rv_adapter.myPopupView.setActivated(false);
+
+                            modifiers_rv_adapter.nModifiersAttached--;
+                        }
+
+                        else
+                        {
                             //findViewById(R.id.AddUserWindow).startAnimation(shake);
-                            Toast.makeText(getApplicationContext(), "error deleting modifier group", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "error deleting modifier group", Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "insertInModifierAssigned":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            JSONObject jObject = new JSONObject(output).getJSONObject("ma");
-                            JSONObject jObject2 = new JSONObject(output).getJSONObject("mga");
-                            ModifierGroupAssigned mga = ModifierGroupAssigned.fromJson(jObject2);
-                            dbA.execOnDb("DELETE FROM modifiers_group_assigned WHERE group_id = " + mga.getGroupId() + " AND prod_id=" + mga.getProdId());
+                        if (check)
+                        {
+                            JSONObject            jObject  = new JSONObject(output).getJSONObject("ma");
+                            JSONObject            jObject2 = new JSONObject(output).getJSONObject("mga");
+                            ModifierGroupAssigned mga      = ModifierGroupAssigned.fromJson(jObject2);
+
+                            dbA.execOnDb("DELETE FROM modifiers_group_assigned WHERE group_id = " + mga
+                                    .getGroupId() + " AND prod_id=" + mga.getProdId());
                             dbA.insertModifiersGroupGroupsFromServer(mga);
 
-                            ModifierAssigned ma = ModifierAssigned.fromJson(jObject);
-                            int groupId = jsonObject.getInt("groupId");
+                            ModifierAssigned ma      = ModifierAssigned.fromJson(jObject);
+                            int              groupId = jsonObject.getInt("groupId");
+
                             modifiers_rv_adapter.myPopupView.setActivated(true);
+
                             int i = dbA.fetchModifiersGroupByQuery("SELECT * FROM modifiers_group WHERE id=" + groupId)
-                                    .get(0).getPosition();
+                                       .get(0).getPosition();
                             group_rv_adapter.getChildAt(i - 1).setActivated(true);
-                            dbA.execOnDb("DELETE FROM modifiers_assigned WHERE assignment_id=" + ma.getAssignementId() + " AND modifier_id = " + ma.getModifierId());
+
+                            dbA.execOnDb("DELETE FROM modifiers_assigned WHERE assignment_id=" + ma.getAssignementId() + " AND modifier_id = " + ma
+                                    .getModifierId());
 
                             dbA.execOnDb("INSERT INTO modifiers_assigned(assignment_id, modifier_id, fixed) " +
-                                    "VALUES(" + ma.getAssignementId() + "," + ma.getModifierId() + ", " + ma.getFixed() + ");");
+                                                 "VALUES(" + ma.getAssignementId() + "," + ma.getModifierId() + ", " + ma
+                                    .getFixed() + ");");
+
                             modifiers_rv_adapter.nModifiersAttached++;
 
-                        } else {
+                            dbA.showData("modifiers_group_assigned");
+                            dbA.showData("modifiers_assigned");
+                        }
+                        else
+                        {
                             //findViewById(R.id.AddUserWindow).startAnimation(shake);
-                            Toast.makeText(getApplicationContext(), "error inserting modifier group", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "error inserting modifier group", Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "insertVatFromModifier":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             JSONObject jObject = new JSONObject(output).getJSONObject("vat");
-                            int from = jsonObject.getInt("from");
+                            int        from    = jsonObject.getInt("from");
                             myVat = Vat.fromJson(jObject);
-                            if (from == 0) {
+                            if (from == 0)
+                            {
                                 int status = jsonObject.getInt("status");
-                                switch (status) {
+                                switch (status)
+                                {
                                     case 1:
                                         //dbA.addVatValue(myVat.getValue());
-                                        dbA.addVatValueFromServer(myVat.getId(), myVat.getValue(), myVat.getPerc());
+                                        dbA.addVatValueFromServer(myVat.getId(), myVat.getValue(), myVat
+                                                .getPerc());
                                         break;
                                     case 2:
-                                        dbA.updateVatValueFromServer(myVat.getId(), myVat.getValue(), myVat.getPerc());
+                                        dbA.updateVatValueFromServer(myVat.getId(), myVat.getValue(), myVat
+                                                .getPerc());
                                         break;
                                     default:
                                         break;
@@ -928,127 +1161,160 @@ public class MainActivity extends AppCompatActivity implements
                                 modifiers_rv_adapter.vatAdapter.notifyDataSetChanged();
                                 CustomButton vatContainer = modifiers_rv_adapter.myPopupView.findViewById(R.id.modVatInsert);
                                 vatContainer.setText("");
-                            } else {
+                            }
+                            else
+                            {
                                 modifiers_rv_adapter.setVatAdapterFromServer(myVat.getValue(), modifiers_rv_adapter.myPopupView, modifiers_rv_adapter.myPopupWindow);
                             }
 
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "No check passed for route " + route, Toast.LENGTH_SHORT)
+                                 .show();
                         }
                         break;
 
                     case "azzeramentoScontrini":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             Intent intent = new Intent(getApplicationContext(), SplashScreen1.class);
                             startActivity(intent);
                             finish();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "error in azzeramentoOrdini ", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "error in azzeramentoOrdini ", Toast.LENGTH_SHORT)
+                                 .show();
 
                         }
                         break;
 
                     case "updateInvoiceNumber":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             int numeroFattura = jsonObject.getInt("numeroFattura");
                             dbA.updateNumeroFatture(Integer.valueOf(numeroFattura));
                             openSettingPopup();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "error in updateInvoiceNumber ", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "error in updateInvoiceNumber ", Toast.LENGTH_SHORT)
+                                 .show();
 
                         }
                         break;
 
                     case "getInvoiceNumber":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             int numeroFattura = jsonObject.getInt("numeroFattura");
                             dbA.updateNumeroFatture(Integer.valueOf(numeroFattura));
                             openUpdateInvoiceNumber();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "error in updateInvoiceNumber ", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "error in updateInvoiceNumber ", Toast.LENGTH_SHORT)
+                                 .show();
 
                         }
                         break;
 
                     case "updateAdminDeviceInfo":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             JSONObject jObject = new JSONObject(output).getJSONObject("deviceInfo");
-                            DeviceInfo device = DeviceInfo.fromJson(jObject);
+                            DeviceInfo device  = DeviceInfo.fromJson(jObject);
                             dbA.execOnDb("delete from device_info");
                             dbA.insertDeviceInfoWithId(device);
 
                             new StaticValue(getApplicationContext(), StaticValue.blackboxInfo);
                             myPopupWindow.dismiss();
-                        } else {
+                        }
+                        else
+                        {
 
-                            Toast.makeText(getApplicationContext(), "error in updateInvoiceNumber ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "error in updateInvoiceNumber ", Toast.LENGTH_SHORT)
+                                 .show();
 
                         }
                         break;
 
                     case "exportProductDatabase":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
-                            Toast.makeText(getApplicationContext(), "Exporting successful", Toast.LENGTH_SHORT).show();
+                        if (check)
+                        {
+                            Toast.makeText(getApplicationContext(), "Exporting successful", Toast.LENGTH_SHORT)
+                                 .show();
                             Log.i(TAG, "Exporting to blackbox successful");
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Exporting error. Check blackbox log", Toast.LENGTH_LONG).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "Exporting error. Check blackbox log", Toast.LENGTH_LONG)
+                                 .show();
                             Log.i(TAG, "Exporting to blackbox error");
                         }
                         break;
 
                     default:
                         Log.e(TAG, "Got unknown route: " + route);
-                        Toast.makeText(getApplicationContext(), "got unknown route: " + route, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "got unknown route: " + route, Toast.LENGTH_LONG)
+                             .show();
                         break;
                 }
 
-            } catch (JSONException e) {
+            }
+            catch (JSONException e)
+            {
                 e.printStackTrace();
             }
-        } else { }
+        }
+        else
+        {
+        }
     }
 
-
-    /** UPDATES THE BUTTON SET AND NOTIFIES IT TO THE ADAPTER **/
-    public static void setButtonSet(ArrayList<ButtonLayout> bs) {
-        buttons.clear();
-        buttons = bs;
-        rv_adapter.notifyDataSetChanged();
-    }
-
-    public boolean getIsAdded() {
+    public boolean getIsAdded()
+    {
         return isAdded;
     }
 
-    public void setBarcodeShow(boolean b) {
+    public void setBarcodeShow(boolean b)
+    {
         isBarcodeShow = b;
     }
 
     @Override
-    public boolean dispatchKeyEvent(KeyEvent e) {
+    public boolean dispatchKeyEvent(KeyEvent e)
+    {
 
-        if (e.getAction() == KeyEvent.ACTION_DOWN) {
+        if (e.getAction() == KeyEvent.ACTION_DOWN)
+        {
             char pressedKey = (char) e.getUnicodeChar();
             barcode += pressedKey;
         }
-        if (e.getAction() == KeyEvent.ACTION_DOWN && e.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+        if (e.getAction() == KeyEvent.ACTION_DOWN && e.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+        {
             Toast.makeText(getApplicationContext(),
-                    "barcode--->>>" + barcode, Toast.LENGTH_LONG)
-                    .show();
+                           "barcode--->>>" + barcode, Toast.LENGTH_LONG
+            )
+                 .show();
             if (isBarcodeShow)
+            {
                 ((CustomEditText) findViewById(R.id.single_input)).setText(barcode);
+            }
             barcode = "";
         }
 
         return super.dispatchKeyEvent(e);
     }
 
-    public void resetPinpadTimer(int type) {
+    public void resetPinpadTimer(int type)
+    {
         TimerManager.stopPinpadAlert();
         TimerManager.setContext(getApplicationContext());
         intentPasscode = new Intent(getApplicationContext(), PinpadBroadcastReciver.class);
@@ -1060,30 +1326,46 @@ public class MainActivity extends AppCompatActivity implements
         TimerManager.startPinpadAlert(type);
     }
 
-    public void callHttpHandler(String route, List<NameValuePair> params) {
-        httpHandler = new HttpHandler();
+    public void callHttpHandler(String route, List<NameValuePair> params)
+    {
+        httpHandler          = new HttpHandler();
         httpHandler.delegate = this;
         httpHandler.UpdateInfoAsyncTask(route, params);
         httpHandler.execute();
     }
 
-    public void callHttpHandlerTMP(String route, List<NameValuePair> params, String ip) {
-        httpHandler = new HttpHandler();
-        httpHandler.testIp = ip;
+
+    public void callHttpHandler(String route, RequestParam params)
+    {
+        httpHandler          = new HttpHandler();
+        httpHandler.delegate = this;
+        httpHandler.UpdateInfoAsyncTask(route, params);
+        httpHandler.execute();
+    }
+
+
+    public void callHttpHandlerTMP(String route, List<NameValuePair> params, String ip)
+    {
+        httpHandler          = new HttpHandler();
+        httpHandler.testIp   = ip;
         httpHandler.delegate = this;
         httpHandler.UpdateInfoAsyncTask(route, params);
         httpHandler.execute();
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+    public boolean dispatchTouchEvent(MotionEvent event)
+    {
+        if (event.getAction() == MotionEvent.ACTION_DOWN)
+        {
             resetPinpadTimer(1);
             View v = getCurrentFocus();
-            if (v instanceof CustomEditText) {
+            if (v instanceof CustomEditText)
+            {
                 Rect outRect = new Rect();
                 v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY()))
+                {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -1099,14 +1381,17 @@ public class MainActivity extends AppCompatActivity implements
 
 
     @Override
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
         switchView(3, 0);
     }
 
     // Updates adapter and sets it in gridview
-    public void switchView(int view_id, int id) {
-        switch (view_id) {
+    public void switchView(int view_id, int id)
+    {
+        switch (view_id)
+        {
             case DEFAULT_VIEW:
                 setContentView(R.layout.activity_main);
                 setDefaultSettings(true);
@@ -1121,7 +1406,8 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void fireUserWindow() {
+    private void fireUserWindow()
+    {
 
         LayoutInflater layoutInflater = (LayoutInflater) this
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -1129,63 +1415,83 @@ public class MainActivity extends AppCompatActivity implements
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
         setupAdminWindow(popupView, popupWindow);
         popupWindow.setFocusable(true);
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
     }
 
-    public void setupAdminWindow(final View popupView, final PopupWindow popupWindow) {
-        popupView.findViewById(R.id.operation_button).setOnClickListener(new View.OnClickListener() {
+    public void setupAdminWindow(final View popupView, final PopupWindow popupWindow)
+    {
+        popupView.findViewById(R.id.operation_button).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
 
                 long rowCount = dbA.getTablesRowCount("button");
 
                 //at least one is present is fake button for article
-                if (rowCount > 1) {
+                if (rowCount > 1)
+                {
                     Intent intent = new Intent(MainActivity.this, Operative.class);
                     intent.putExtra("isAdmin", 0);
                     intent.putExtra("username", username);
                     startActivity(intent);
                     finish();
-                } else {
-                    Toast.makeText(getBaseContext(), "Please, configure at least one button before use operative part", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(getBaseContext(), "Please, configure at least one button before use operative part", Toast.LENGTH_SHORT)
+                         .show();
                 }
 
             }
         });
-        popupView.findViewById(R.id.addUser_button).setOnClickListener(new View.OnClickListener() {
+        popupView.findViewById(R.id.addUser_button).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupView.findViewById(R.id.AdminWindow).setVisibility(View.GONE);
                 popupView.findViewById(R.id.AddUserWindow).setVisibility(View.VISIBLE);
                 setupNewUserWindow(popupView, popupWindow);
             }
         });
-        popupView.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+        popupView.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupWindow.dismiss();
             }
         });
-        popupView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+        popupView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupWindow.dismiss();
             }
         });
-        popupView.findViewById(R.id.configure_button).setOnClickListener(new View.OnClickListener() {
+        popupView.findViewById(R.id.configure_button).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupWindow.dismiss();
             }
         });
-        popupView.findViewById(R.id.printerOption_button).setOnClickListener(new View.OnClickListener() {
+        popupView.findViewById(R.id.printerOption_button)
+                 .setOnClickListener(new View.OnClickListener()
+                 {
 
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(me, R.string.please_perform_this_operation_from_operative, Toast.LENGTH_SHORT).show();
+                     @Override
+                     public void onClick(View v)
+                     {
+                         Toast.makeText(me, R.string.please_perform_this_operation_from_operative, Toast.LENGTH_SHORT)
+                              .show();
                /* popupView.findViewById(R.id.AdminWindow).setVisibility(View.GONE);
                 popupView.findViewById(R.id.AddUserWindow).setVisibility(View.GONE);
                 popupView.findViewById(R.id.SessionWindow_ma).setVisibility(View.VISIBLE);
@@ -1199,11 +1505,13 @@ public class MainActivity extends AppCompatActivity implements
 
                 setupNewSessionWindow(popupView, popupWindow);*/
 
-            }
-        });
-        popupView.findViewById(R.id.switchUser_button).setOnClickListener(new View.OnClickListener() {
+                     }
+                 });
+        popupView.findViewById(R.id.switchUser_button).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
 
                 Intent intent = new Intent(getApplicationContext(), PinpadActivity.class);
                 startActivity(intent);
@@ -1211,14 +1519,18 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        popupView.findViewById(R.id.cashstatus_button).setOnClickListener(new View.OnClickListener() {
+        popupView.findViewById(R.id.cashstatus_button).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-                if (dbA.checkIfCashManagementIsSet() == 1) {
+            public void onClick(View view)
+            {
+                if (dbA.checkIfCashManagementIsSet() == 1)
+                {
                     openCashStatusPopup();
 
                     //open cash drawer
-                    if (StaticValue.printerName.equals("ditron")) {
+                    if (StaticValue.printerName.equals("ditron"))
+                    {
                         PrinterDitronThread ditron = PrinterDitronThread.getInstance();
                         ditron.closeAll();
                         ditron.startSocket();
@@ -1231,22 +1543,28 @@ public class MainActivity extends AppCompatActivity implements
 
                     myThread.setClientThread();
                     myThread.setRunBaby(true);
-                } else
-                    Toast.makeText(me, R.string.please_fill_cash_management_first, Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(me, R.string.please_fill_cash_management_first, Toast.LENGTH_SHORT)
+                         .show();
+                }
 
             }
         });
 
     }
 
-    public void openCashStatusPopup() {
+    public void openCashStatusPopup()
+    {
         LayoutInflater layoutInflater = (LayoutInflater) this
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
         final View popupView = layoutInflater.inflate(R.layout.popup_cashstatus, null);
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
 
         setupDismissKeyboard(popupView);
 
@@ -1258,22 +1576,23 @@ public class MainActivity extends AppCompatActivity implements
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
     }
 
-    public void setupCashStatus(final View popupView, final PopupWindow popupWindow) {
-        CustomEditText total_deposit = popupView.findViewById(R.id.total_deposit);
-        CustomEditText five_cents = popupView.findViewById(R.id.amount_005);
-        CustomEditText ten_cents = popupView.findViewById(R.id.amount_010);
-        CustomEditText twenty_cents = popupView.findViewById(R.id.amount_020);
-        CustomEditText fifty_cents = popupView.findViewById(R.id.amount_050);
-        CustomEditText one_euro = popupView.findViewById(R.id.amount_100);
-        CustomEditText two_euros = popupView.findViewById(R.id.amount_200);
-        CustomEditText five_euros = popupView.findViewById(R.id.amount_500);
-        CustomEditText ten_euros = popupView.findViewById(R.id.amount_1000);
-        CustomEditText twenty_euros = popupView.findViewById(R.id.amount_2000);
-        CustomEditText fifty_euros = popupView.findViewById(R.id.amount_5000);
-        CustomEditText hundred_euros = popupView.findViewById(R.id.amount_10000);
+    public void setupCashStatus(final View popupView, final PopupWindow popupWindow)
+    {
+        CustomEditText total_deposit    = popupView.findViewById(R.id.total_deposit);
+        CustomEditText five_cents       = popupView.findViewById(R.id.amount_005);
+        CustomEditText ten_cents        = popupView.findViewById(R.id.amount_010);
+        CustomEditText twenty_cents     = popupView.findViewById(R.id.amount_020);
+        CustomEditText fifty_cents      = popupView.findViewById(R.id.amount_050);
+        CustomEditText one_euro         = popupView.findViewById(R.id.amount_100);
+        CustomEditText two_euros        = popupView.findViewById(R.id.amount_200);
+        CustomEditText five_euros       = popupView.findViewById(R.id.amount_500);
+        CustomEditText ten_euros        = popupView.findViewById(R.id.amount_1000);
+        CustomEditText twenty_euros     = popupView.findViewById(R.id.amount_2000);
+        CustomEditText fifty_euros      = popupView.findViewById(R.id.amount_5000);
+        CustomEditText hundred_euros    = popupView.findViewById(R.id.amount_10000);
         CustomEditText twohundred_euros = popupView.findViewById(R.id.amount_20000);
 
-        RelativeLayout deposit_window = popupView.findViewById(R.id.deposit_window);
+        RelativeLayout deposit_window         = popupView.findViewById(R.id.deposit_window);
         RelativeLayout withdraw_amount_window = popupView.findViewById(R.id.withdrawamount_window);
 
         withdraw_amount_window.setVisibility(View.GONE);
@@ -1282,47 +1601,80 @@ public class MainActivity extends AppCompatActivity implements
         DecimalFormat twoD = new DecimalFormat("#.00");
 
         ImageButton okButton = popupView.findViewById(R.id.ok);
-        ImageButton cancel = popupView.findViewById(R.id.kill);
+        ImageButton cancel   = popupView.findViewById(R.id.kill);
 
-        okButton.setOnClickListener(new View.OnClickListener() {
+        okButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-                if (deposit_window.getVisibility() == View.VISIBLE) {
-                    if (!total_deposit.getText().toString().equals("")) {
+            public void onClick(View view)
+            {
+                if (deposit_window.getVisibility() == View.VISIBLE)
+                {
+                    if (!total_deposit.getText().toString().equals(""))
+                    {
 
                         String total_deposit_string = total_deposit.getText().toString();
 
                         //all other fields not filled
-                        if (five_cents.getText().toString().equals("") && ten_cents.getText().toString().equals("") && twenty_cents.getText().toString().equals("")
-                                && fifty_cents.getText().toString().equals("") && one_euro.getText().toString().equals("") && two_euros.getText().toString().equals("")
-                                && five_euros.getText().toString().equals("") && ten_euros.getText().toString().equals("") && twenty_euros.getText().toString().equals("")
-                                && fifty_euros.getText().toString().equals("") && hundred_euros.getText().toString().equals("")
-                                && twohundred_euros.getText().toString().equals("")) {
+                        if (five_cents.getText().toString().equals("") && ten_cents.getText()
+                                                                                   .toString()
+                                                                                   .equals("") && twenty_cents
+                                .getText()
+                                .toString()
+                                .equals("")
+                                && fifty_cents.getText().toString().equals("") && one_euro.getText()
+                                                                                          .toString()
+                                                                                          .equals("") && two_euros
+                                .getText()
+                                .toString()
+                                .equals("")
+                                && five_euros.getText().toString().equals("") && ten_euros.getText()
+                                                                                          .toString()
+                                                                                          .equals("") && twenty_euros
+                                .getText()
+                                .toString()
+                                .equals("")
+                                && fifty_euros.getText()
+                                              .toString()
+                                              .equals("") && hundred_euros.getText()
+                                                                          .toString()
+                                                                          .equals("")
+                                && twohundred_euros.getText().toString().equals(""))
+                        {
 
                             dbA.insertTotalDeposit(Float.parseFloat(total_deposit_string));
 
                             total_deposit.setText("");
-                        } else {
-                            String fiveCents = five_cents.getText().toString();
-                            String tenCents = ten_cents.getText().toString();
+                        }
+                        else
+                        {
+                            String fiveCents   = five_cents.getText().toString();
+                            String tenCents    = ten_cents.getText().toString();
                             String twentyCents = twenty_cents.getText().toString();
-                            String fiftyCents = fifty_cents.getText().toString();
-                            String oneE = one_euro.getText().toString();
-                            String twoE = two_euros.getText().toString();
-                            String fiveE = five_euros.getText().toString();
-                            String tenE = ten_euros.getText().toString();
-                            String twentyE = twenty_euros.getText().toString();
-                            String fiftyE = fifty_euros.getText().toString();
-                            String hundred = hundred_euros.getText().toString();
-                            String twoHundred = twohundred_euros.getText().toString();
+                            String fiftyCents  = fifty_cents.getText().toString();
+                            String oneE        = one_euro.getText().toString();
+                            String twoE        = two_euros.getText().toString();
+                            String fiveE       = five_euros.getText().toString();
+                            String tenE        = ten_euros.getText().toString();
+                            String twentyE     = twenty_euros.getText().toString();
+                            String fiftyE      = fifty_euros.getText().toString();
+                            String hundred     = hundred_euros.getText().toString();
+                            String twoHundred  = twohundred_euros.getText().toString();
 
                             dbA.insertCashStatus(Float.parseFloat(total_deposit_string.replace(",", ".")),
-                                    fiveCents.equals("") ? 0 : Integer.parseInt(fiveCents), tenCents.equals("") ? 0 : Integer.parseInt(tenCents),
-                                    twentyCents.equals("") ? 0 : Integer.parseInt(twentyCents), fiftyCents.equals("") ? 0 : Integer.parseInt(fiftyCents),
-                                    oneE.equals("") ? 0 : Integer.parseInt(oneE), twoE.equals("") ? 0 : Integer.parseInt(twoE),
-                                    fiveE.equals("") ? 0 : Integer.parseInt(fiveE), tenE.equals("") ? 0 : Integer.parseInt(tenE),
-                                    twentyE.equals("") ? 0 : Integer.parseInt(twentyE), fiftyE.equals("") ? 0 : Integer.parseInt(fiftyE),
-                                    hundred.equals("") ? 0 : Integer.parseInt(hundred), twoHundred.equals("") ? 0 : Integer.parseInt(twoHundred));
+                                                 fiveCents.equals("") ? 0 : Integer.parseInt(fiveCents), tenCents
+                                                         .equals("") ? 0 : Integer.parseInt(tenCents),
+                                                 twentyCents.equals("") ? 0 : Integer.parseInt(twentyCents), fiftyCents
+                                                         .equals("") ? 0 : Integer.parseInt(fiftyCents),
+                                                 oneE.equals("") ? 0 : Integer.parseInt(oneE), twoE.equals("") ? 0 : Integer
+                                            .parseInt(twoE),
+                                                 fiveE.equals("") ? 0 : Integer.parseInt(fiveE), tenE
+                                                         .equals("") ? 0 : Integer.parseInt(tenE),
+                                                 twentyE.equals("") ? 0 : Integer.parseInt(twentyE), fiftyE
+                                                         .equals("") ? 0 : Integer.parseInt(fiftyE),
+                                                 hundred.equals("") ? 0 : Integer.parseInt(hundred), twoHundred
+                                                         .equals("") ? 0 : Integer.parseInt(twoHundred)
+                            );
 
                             total_deposit.setText("");
                             five_cents.setText("");
@@ -1339,99 +1691,165 @@ public class MainActivity extends AppCompatActivity implements
                             twohundred_euros.setText("");
                         }
 
-                        CashManagement cash = dbA.getCashManagement();
+                        CashManagement cash        = dbA.getCashManagement();
                         CashManagement cash_static = dbA.getCashManagementStatic();
 
-                        if (dbA.checkIfCashTotalIsDifferent() >= cash_static.getMinWithdraw()) {
-                            CustomEditText five_cents_a = popupView.findViewById(R.id.amount_005a);
-                            CustomEditText ten_cents_a = popupView.findViewById(R.id.amount_010a);
-                            CustomEditText twenty_cents_a = popupView.findViewById(R.id.amount_020a);
-                            CustomEditText fifty_cents_a = popupView.findViewById(R.id.amount_050a);
-                            CustomEditText one_euro_a = popupView.findViewById(R.id.amount_100a);
-                            CustomEditText two_euros_a = popupView.findViewById(R.id.amount_200a);
-                            CustomEditText five_euros_a = popupView.findViewById(R.id.amount_500a);
-                            CustomEditText ten_euros_a = popupView.findViewById(R.id.amount_1000a);
-                            CustomEditText twenty_euros_a = popupView.findViewById(R.id.amount_2000a);
-                            CustomEditText fifty_euros_a = popupView.findViewById(R.id.amount_5000a);
-                            CustomEditText hundred_euros_a = popupView.findViewById(R.id.amount_10000a);
+                        if (dbA.checkIfCashTotalIsDifferent() >= cash_static.getMinWithdraw())
+                        {
+                            CustomEditText five_cents_a       = popupView.findViewById(R.id.amount_005a);
+                            CustomEditText ten_cents_a        = popupView.findViewById(R.id.amount_010a);
+                            CustomEditText twenty_cents_a     = popupView.findViewById(R.id.amount_020a);
+                            CustomEditText fifty_cents_a      = popupView.findViewById(R.id.amount_050a);
+                            CustomEditText one_euro_a         = popupView.findViewById(R.id.amount_100a);
+                            CustomEditText two_euros_a        = popupView.findViewById(R.id.amount_200a);
+                            CustomEditText five_euros_a       = popupView.findViewById(R.id.amount_500a);
+                            CustomEditText ten_euros_a        = popupView.findViewById(R.id.amount_1000a);
+                            CustomEditText twenty_euros_a     = popupView.findViewById(R.id.amount_2000a);
+                            CustomEditText fifty_euros_a      = popupView.findViewById(R.id.amount_5000a);
+                            CustomEditText hundred_euros_a    = popupView.findViewById(R.id.amount_10000a);
                             CustomEditText twohundred_euros_a = popupView.findViewById(R.id.amount_20000a);
 
                             double amount = dbA.checkIfCashTotalIsDifferent();
 
-                            int[] counter = {cash.getTwoHundredEuros() - cash_static.getTwoHundredEuros(), cash.getHundredEuros() - cash_static.getHundredEuros(),
-                                    cash.getFiftyEuros() - cash_static.getFiftyEuros(), cash.getTwentyEuros() - cash_static.getTwentyEuros(),
-                                    cash.getTenEuros() - cash_static.getTenEuros(), cash.getFiveEuros() - cash_static.getFiveEuros(),
-                                    cash.getTwoEuros() - cash_static.getTwoEuros(), cash.getOneEuros() - cash_static.getOneEuros(), cash.getFiftyCents() - cash_static.getFiftyCents(),
-                                    cash.getTwentyCents() - cash_static.getTwentyCents(), cash.getTenCents() - cash_static.getTenCents(),
+                            int[] counter = {cash.getTwoHundredEuros() - cash_static.getTwoHundredEuros(), cash
+                                    .getHundredEuros() - cash_static.getHundredEuros(),
+                                    cash.getFiftyEuros() - cash_static.getFiftyEuros(), cash.getTwentyEuros() - cash_static
+                                    .getTwentyEuros(),
+                                    cash.getTenEuros() - cash_static.getTenEuros(), cash.getFiveEuros() - cash_static
+                                    .getFiveEuros(),
+                                    cash.getTwoEuros() - cash_static.getTwoEuros(), cash.getOneEuros() - cash_static
+                                    .getOneEuros(), cash.getFiftyCents() - cash_static.getFiftyCents(),
+                                    cash.getTwentyCents() - cash_static.getTwentyCents(), cash.getTenCents() - cash_static
+                                    .getTenCents(),
                                     cash.getFiveCents() - cash_static.getFiveCents()};
 
                             withdraw_amount_window.setVisibility(View.VISIBLE);
                             deposit_window.setVisibility(View.GONE);
 
-                            DecimalFormat twoD = new DecimalFormat("#.00");
+                            DecimalFormat  twoD            = new DecimalFormat("#.00");
                             CustomEditText withdraw_amount = popupView.findViewById(R.id.withdraw_amount);
                             withdraw_amount.setText(twoD.format(amount).replace(".", ","));
 
                             if (counter[11] <= 0)
+                            {
                                 five_cents_a.setText("");
+                            }
                             else
+                            {
                                 five_cents_a.setText(counter[11] + "");
+                            }
                             if (counter[10] <= 0)
+                            {
                                 ten_cents_a.setText("");
+                            }
                             else
+                            {
                                 ten_cents_a.setText(counter[10] + "");
+                            }
                             if (counter[9] <= 0)
+                            {
                                 twenty_cents_a.setText("");
+                            }
                             else
+                            {
                                 twenty_cents_a.setText(counter[9] + "");
+                            }
                             if (counter[8] <= 0)
+                            {
                                 fifty_cents_a.setText("");
+                            }
                             else
+                            {
                                 fifty_cents_a.setText(counter[8] + "");
+                            }
                             if (counter[7] <= 0)
+                            {
                                 one_euro_a.setText("");
+                            }
                             else
+                            {
                                 one_euro_a.setText(counter[7] + "");
+                            }
                             if (counter[6] <= 0)
+                            {
                                 two_euros_a.setText("");
+                            }
                             else
+                            {
                                 two_euros_a.setText(counter[6] + "");
+                            }
                             if (counter[5] <= 0)
+                            {
                                 five_euros_a.setText("");
+                            }
                             else
+                            {
                                 five_euros_a.setText(counter[5] + "");
+                            }
                             if (counter[4] <= 0)
+                            {
                                 ten_euros_a.setText("");
+                            }
                             else
+                            {
                                 ten_euros_a.setText(counter[4] + "");
+                            }
                             if (counter[3] <= 0)
+                            {
                                 twenty_euros_a.setText("");
+                            }
                             else
+                            {
                                 twenty_euros_a.setText(counter[3] + "");
+                            }
                             if (counter[2] <= 0)
+                            {
                                 fifty_euros_a.setText("");
+                            }
                             else
+                            {
                                 fifty_euros_a.setText(counter[2] + "");
+                            }
                             if (counter[1] <= 0)
+                            {
                                 hundred_euros_a.setText("");
+                            }
                             else
+                            {
                                 hundred_euros_a.setText(counter[1] + "");
+                            }
                             if (counter[0] <= 0)
+                            {
                                 twohundred_euros_a.setText("");
+                            }
                             else
+                            {
                                 twohundred_euros_a.setText(counter[0] + "");
-                        } else
+                            }
+                        }
+                        else
+                        {
                             popupWindow.dismiss();
-                    } else
-                        Toast.makeText(me, R.string.please_fill_withdraw_value, Toast.LENGTH_SHORT).show();
-                } else
+                        }
+                    }
+                    else
+                    {
+                        Toast.makeText(me, R.string.please_fill_withdraw_value, Toast.LENGTH_SHORT)
+                             .show();
+                    }
+                }
+                else
+                {
                     popupWindow.dismiss();
+                }
             }
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
+        cancel.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 total_deposit.setText("");
                 five_cents.setText("");
                 ten_cents.setText("");
@@ -1454,7 +1872,8 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * show setup new session windows to create sessions, only admin can do this
      */
-    public void setupNewSessionWindow(final View popupView, final PopupWindow popupWindow) {
+    public void setupNewSessionWindow(final View popupView, final PopupWindow popupWindow)
+    {
 
         RecyclerView session_recycler = popupView.findViewById(R.id.session_time_recycler);
         session_recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -1464,33 +1883,39 @@ public class MainActivity extends AppCompatActivity implements
 
         DividerItemDecoration divider = new
                 DividerItemDecoration(this,
-                DividerItemDecoration.VERTICAL);
+                                      DividerItemDecoration.VERTICAL
+        );
         divider.setDrawable(ContextCompat.getDrawable(getBaseContext(),
-                R.drawable.divider_line_horizontal1dp));
+                                                      R.drawable.divider_line_horizontal1dp
+        ));
         session_recycler.addItemDecoration(divider);
 
 
-        String startTime = "";
-        String endTime = "";
+        String               startTime               = "";
+        String               endTime                 = "";
         final CustomEditText newSessionNameContainer = popupView.findViewById(R.id.new_session_name_et);
         newSessionNameContainer.setText("");
         CustomButton startTimeContainer = popupView.findViewById(R.id.start_session_button_et);
         startTimeContainer.setText(R.string.startTime);
         CustomButton endTimeContainer = popupView.findViewById(R.id.end_session_button_et);
         endTimeContainer.setText(R.string.endTime);
-        startTimeContainer.setOnClickListener(new View.OnClickListener() {
+        startTimeContainer.setOnClickListener(new View.OnClickListener()
+        {
 
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // TODO Auto-generated method stub
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
+                Calendar         mcurrentTime = Calendar.getInstance();
+                int              hour         = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int              minute       = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MainActivity.this, 4, new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(MainActivity.this, 4, new TimePickerDialog.OnTimeSetListener()
+                {
                     @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        String formattedHours = new DecimalFormat("00").format((selectedHour));
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute)
+                    {
+                        String formattedHours   = new DecimalFormat("00").format((selectedHour));
                         String formattedMinutes = new DecimalFormat("00").format((selectedMinute));
                         startTimeContainer.setText(formattedHours + ":" + formattedMinutes);
                         String startTime = formattedHours + ":" + formattedMinutes + ":00";
@@ -1502,18 +1927,22 @@ public class MainActivity extends AppCompatActivity implements
 
             }
         });
-        endTimeContainer.setOnClickListener(new View.OnClickListener() {
+        endTimeContainer.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // TODO Auto-generated method stub
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
+                Calendar         mcurrentTime = Calendar.getInstance();
+                int              hour         = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int              minute       = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MainActivity.this, 4, new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(MainActivity.this, 4, new TimePickerDialog.OnTimeSetListener()
+                {
                     @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        String formattedHours = new DecimalFormat("00").format((selectedHour));
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute)
+                    {
+                        String formattedHours   = new DecimalFormat("00").format((selectedHour));
                         String formattedMinutes = new DecimalFormat("00").format((selectedMinute));
                         endTimeContainer.setText(formattedHours + ":" + formattedMinutes);
                         String endTime = formattedHours + ":" + formattedMinutes + ":00";
@@ -1526,16 +1955,22 @@ public class MainActivity extends AppCompatActivity implements
         });
 
 
-        popupView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+        popupView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 final CustomEditText newSessionNameContainer = popupView.findViewById(R.id.new_session_name_et);
-                CustomButton startTimeContainer = popupView.findViewById(R.id.start_session_button_et);
-                CustomButton endTimeContainer = popupView.findViewById(R.id.end_session_button_et);
-                String sessionName = newSessionNameContainer.getText().toString();
-                String startTime = startTimeContainer.getText().toString();
-                String endTime = endTimeContainer.getText().toString();
-                if (!sessionName.equals("") && !startTime.equals("Start Time") && !endTime.equals("End Time")) {
+                CustomButton         startTimeContainer      = popupView.findViewById(R.id.start_session_button_et);
+                CustomButton         endTimeContainer        = popupView.findViewById(R.id.end_session_button_et);
+                String sessionName = newSessionNameContainer.getText()
+                                                            .toString();
+                String startTime = startTimeContainer.getText()
+                                                     .toString();
+                String endTime = endTimeContainer.getText()
+                                                 .toString();
+                if (!sessionName.equals("") && !startTime.equals("Start Time") && !endTime.equals("End Time"))
+                {
                     dbA.saveNewSessionTime(startTime + ":00", endTime + ":00", sessionName);
 //                    sessionAdapter.notifyDataSetChanged();
                     RecyclerView session_recycler = popupView.findViewById(R.id.session_time_recycler);
@@ -1546,23 +1981,30 @@ public class MainActivity extends AppCompatActivity implements
 
                     DividerItemDecoration divider = new
                             DividerItemDecoration(getApplicationContext(),
-                            DividerItemDecoration.VERTICAL);
+                                                  DividerItemDecoration.VERTICAL
+                    );
                     divider.setDrawable(ContextCompat.getDrawable(getBaseContext(),
-                            R.drawable.divider_line_horizontal1dp));
+                                                                  R.drawable.divider_line_horizontal1dp
+                    ));
                     session_recycler.addItemDecoration(divider);
 
                     newSessionNameContainer.setText("");
                     startTimeContainer.setText(R.string.startTime);
                     endTimeContainer.setText(R.string.endTime);
-                } else {
-                    Toast.makeText(MainActivity.this, R.string.please_fill_all_fields, Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this, R.string.please_fill_all_fields, Toast.LENGTH_SHORT)
+                         .show();
 
                 }
             }
         });
-        popupView.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+        popupView.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                /* @SuppressLint("WrongViewCast") RelativeLayout.LayoutParams rlp1 =
                         (RelativeLayout.LayoutParams)popupView.findViewById(R.id.SessionWindow_ma).getLayoutParams();
                 int top1 = (int)(dpHeight-52)/2 - rlp1.height/2;
@@ -1579,16 +2021,19 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void setButtonSet(int sessionTimeId, String sessionName, String start, String end) {
+    public void setButtonSet(int sessionTimeId, String sessionName, String start, String end)
+    {
 
     }
 
     @Override
-    public void deleteSession(int sessionTimeId) {
+    public void deleteSession(int sessionTimeId)
+    {
 
     }
 
-    public void setButtonSetPopup(int sessionTimeId, String sessionName, String start, String end, View popupView, PopupWindow popupWindow) {
+    public void setButtonSetPopup(int sessionTimeId, String sessionName, String start, String end, View popupView, PopupWindow popupWindow)
+    {
 
         CustomEditText newSessionNameContainer = popupView.findViewById(R.id.new_session_name_et);
         newSessionNameContainer.setText(sessionName);
@@ -1596,19 +2041,23 @@ public class MainActivity extends AppCompatActivity implements
         startTimeContainer.setText(start);
         CustomButton endTimeContainer = popupView.findViewById(R.id.end_session_button_et);
         endTimeContainer.setText(end);
-        startTimeContainer.setOnClickListener(new View.OnClickListener() {
+        startTimeContainer.setOnClickListener(new View.OnClickListener()
+        {
 
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // TODO Auto-generated method stub
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
+                Calendar         mcurrentTime = Calendar.getInstance();
+                int              hour         = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int              minute       = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MainActivity.this, 4, new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(MainActivity.this, 4, new TimePickerDialog.OnTimeSetListener()
+                {
                     @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        String formattedHours = new DecimalFormat("00").format((selectedHour));
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute)
+                    {
+                        String formattedHours   = new DecimalFormat("00").format((selectedHour));
                         String formattedMinutes = new DecimalFormat("00").format((selectedMinute));
                         startTimeContainer.setText(formattedHours + ":" + formattedMinutes);
                         String startTime = formattedHours + ":" + formattedMinutes + ":00";
@@ -1620,18 +2069,22 @@ public class MainActivity extends AppCompatActivity implements
 
             }
         });
-        endTimeContainer.setOnClickListener(new View.OnClickListener() {
+        endTimeContainer.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // TODO Auto-generated method stub
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
+                Calendar         mcurrentTime = Calendar.getInstance();
+                int              hour         = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int              minute       = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MainActivity.this, 4, new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(MainActivity.this, 4, new TimePickerDialog.OnTimeSetListener()
+                {
                     @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        String formattedHours = new DecimalFormat("00").format((selectedHour));
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute)
+                    {
+                        String formattedHours   = new DecimalFormat("00").format((selectedHour));
                         String formattedMinutes = new DecimalFormat("00").format((selectedMinute));
                         endTimeContainer.setText(formattedHours + ":" + formattedMinutes);
                         String endTime = formattedHours + ":" + formattedMinutes + ":00";
@@ -1646,21 +2099,30 @@ public class MainActivity extends AppCompatActivity implements
         /**
          * OK Button behavior while in New User window
          */
-        popupView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+        popupView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 final CustomEditText newSessionNameContainer = popupView.findViewById(R.id.new_session_name_et);
-                CustomButton startTimeContainer = popupView.findViewById(R.id.start_session_button_et);
-                CustomButton endTimeContainer = popupView.findViewById(R.id.end_session_button_et);
-                String sessionName = newSessionNameContainer.getText().toString();
-                String startTime = startTimeContainer.getText().toString();
-                String endTime = endTimeContainer.getText().toString();
-                if (!sessionName.equals("") && !startTime.equals("Start Time") && !endTime.equals("End Time")) {
+                CustomButton         startTimeContainer      = popupView.findViewById(R.id.start_session_button_et);
+                CustomButton         endTimeContainer        = popupView.findViewById(R.id.end_session_button_et);
+                String sessionName = newSessionNameContainer.getText()
+                                                            .toString();
+                String startTime = startTimeContainer.getText()
+                                                     .toString();
+                String endTime = endTimeContainer.getText()
+                                                 .toString();
+                if (!sessionName.equals("") && !startTime.equals("Start Time") && !endTime.equals("End Time"))
+                {
                     dbA.updateNewSessionTime(sessionTimeId, startTime + ":00", endTime + ":00", sessionName);
 
                     setupNewSessionWindow(popupView, popupWindow);
-                } else {
-                    Toast.makeText(MainActivity.this, R.string.please_fill_all_fields, Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this, R.string.please_fill_all_fields, Toast.LENGTH_SHORT)
+                         .show();
 
                 }
             }
@@ -1668,21 +2130,25 @@ public class MainActivity extends AppCompatActivity implements
         /**
          *  X button behavior while in New User window
          */
-        popupView.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+        popupView.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 setupNewSessionWindow(popupView, popupWindow);
 
             }
         });
     }
 
-    public void deleteSessionPopup(int sessionId, View popupView, PopupWindow popupWindow) {
+    public void deleteSessionPopup(int sessionId, View popupView, PopupWindow popupWindow)
+    {
         dbA.deleteSessionTime(sessionId);
         setupNewSessionWindow(popupView, popupWindow);
     }
 
-    public void setupNewUserWindow(final View popupView, final PopupWindow popupWindow) {
+    public void setupNewUserWindow(final View popupView, final PopupWindow popupWindow)
+    {
         RecyclerView user_recycler = popupView.findViewById(R.id.users_recycler);
         user_recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         user_recycler.setHasFixedSize(true);
@@ -1690,17 +2156,19 @@ public class MainActivity extends AppCompatActivity implements
         user_recycler.setAdapter(userAdapter);
 
 
-        final CustomEditText Name = popupView.findViewById(R.id.name_et);
-        final CustomEditText Surname = popupView.findViewById(R.id.surname_et);
-        final CustomEditText Email = popupView.findViewById(R.id.email_et);
-        final ImageButton manager = popupView.findViewById(R.id.manager_checkbox);
+        final CustomEditText Name     = popupView.findViewById(R.id.name_et);
+        final CustomEditText Surname  = popupView.findViewById(R.id.surname_et);
+        final CustomEditText Email    = popupView.findViewById(R.id.email_et);
+        final ImageButton    manager  = popupView.findViewById(R.id.manager_checkbox);
         final CustomEditText Passcode = popupView.findViewById(R.id.passcode_et);
         //set max length to 4 for passcode and 6 for password
         //  Password.setFilters(new InputFilter[] { new InputFilter.LengthFilter(6) });
         Passcode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(6)});
-        manager.setOnClickListener(new View.OnClickListener() {
+        manager.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 manager.setActivated(!manager.isActivated());
 
             }
@@ -1709,45 +2177,69 @@ public class MainActivity extends AppCompatActivity implements
         /**
          * OK Button behavior while in New User window
          */
-        popupView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+        popupView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                String name = Name.getText().toString();
+            public void onClick(View v)
+            {
+                String name    = Name.getText().toString();
                 String surname = Surname.getText().toString();
-                String email = Email.getText().toString();
+                String email   = Email.getText().toString();
                 // String passwordField = Password.getText().toString();
                 String passcode = Passcode.getText().toString();
                 if (name.equals("") || surname.equals("") || email.equals("") || passcode.equals(""))
-                    Toast.makeText(getBaseContext(), R.string.please_fill_all_fields, Toast.LENGTH_SHORT).show();
-                else if (dbA.checkIfPasscodeExists(passcode)) {
-                    Toast.makeText(getBaseContext(), R.string.passcode_is_already_used, Toast.LENGTH_SHORT).show();
-                } else {
-                    if (!Pattern.matches("^[-a-zA-Z0-9_]+@[a-zA-Z]+\\.[a-zA-Z]{2,5}$", email)) {
-                        Toast.makeText(getBaseContext(), R.string.not_a_valid_email, Toast.LENGTH_SHORT).show();
-                    } else {
+                {
+                    Toast.makeText(getBaseContext(), R.string.please_fill_all_fields, Toast.LENGTH_SHORT)
+                         .show();
+                }
+                else if (dbA.checkIfPasscodeExists(passcode))
+                {
+                    Toast.makeText(getBaseContext(), R.string.passcode_is_already_used, Toast.LENGTH_SHORT)
+                         .show();
+                }
+                else
+                {
+                    if (!Pattern.matches("^[-a-zA-Z0-9_]+@[a-zA-Z]+\\.[a-zA-Z]{2,5}$", email))
+                    {
+                        Toast.makeText(getBaseContext(), R.string.not_a_valid_email, Toast.LENGTH_SHORT)
+                             .show();
+                    }
+                    else
+                    {
                         //String password = Login.randomAlphaNumericWord(6);
                         String password = passcode;
 
-                        if (StaticValue.blackbox) {
+                        if (StaticValue.blackbox)
+                        {
                             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
                             params.add(new BasicNameValuePair("name", name));
                             params.add(new BasicNameValuePair("surname", surname));
                             params.add(new BasicNameValuePair("email", email));
                             params.add(new BasicNameValuePair("password", passcode));
-                            myPopupView = popupView;
+                            myPopupView   = popupView;
                             myPopupWindow = popupWindow;
                             if (manager.isActivated())
+                            {
                                 params.add(new BasicNameValuePair("userType", String.valueOf(1)));
+                            }
                             else
+                            {
                                 params.add(new BasicNameValuePair("userType", String.valueOf(2)));
+                            }
                             callHttpHandler("/insertUser", params);
-                        } else {
-                            if (manager.isActivated()) {
+                        }
+                        else
+                        {
+                            if (manager.isActivated())
+                            {
                                 dbA.insertUser(name, surname, email, passcode, 1, passcode);
-                            } else /*if(cashier.isActivated())*/ {
+                            }
+                            else /*if(cashier.isActivated())*/
+                            {
                                 dbA.insertUser(name, surname, email, passcode, 2, passcode);
                             }
-                            Toast.makeText(MainActivity.this, resources.getString(R.string.new_user_created_password_, password), Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, resources.getString(R.string.new_user_created_password_, password), Toast.LENGTH_LONG)
+                                 .show();
                             popupView.findViewById(R.id.AdminWindow).setVisibility(View.VISIBLE);
                             popupView.findViewById(R.id.AddUserWindow).setVisibility(View.GONE);
 
@@ -1760,9 +2252,11 @@ public class MainActivity extends AppCompatActivity implements
         /**
          *  X button behavior while in New User window
          */
-        popupView.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+        popupView.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupView.findViewById(R.id.AdminWindow).setVisibility(View.VISIBLE);
                 popupView.findViewById(R.id.AddUserWindow).setVisibility(View.GONE);
                 /*@SuppressLint("WrongViewCast") RelativeLayout.LayoutParams rlp1 =
@@ -1778,25 +2272,32 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Default settings setup: grid manager, recycler view, rv adapter etc..
      */
-    private void setDefaultSettings(boolean restorePreviousView) {
-        this.findViewById(R.id.cashier).setOnClickListener(new View.OnClickListener() {
+    private void setDefaultSettings(boolean restorePreviousView)
+    {
+        this.findViewById(R.id.cashier).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 openSettingPopup();
             }
         });
 
-        this.findViewById(R.id.orders).setOnClickListener(new View.OnClickListener() {
+        this.findViewById(R.id.orders).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // dbA.restartDb();
                 /*Intent intent = new Intent(MainActivity.this, PaymentActivity.class);
                 startActivity(intent);*/
             }
         });
-        findViewById(R.id.clients).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.clients).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 /*Intent intent = new Intent(MainActivity.this, ClientsActivity.class);
                 intent.putExtra("username", username);
                 intent.putExtra("isAdmin", isAdmin);
@@ -1805,18 +2306,23 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        findViewById(R.id.reservations).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.reservations).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 fireSingleInputDialogForTimerPopup();
             }
         });
         //if(isAdmin)
         ((CustomTextView) findViewById(R.id.admin_username_button_tv)).setText(username);
-        findViewById(R.id.admin).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.admin).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                switch (isAdmin) {
+            public void onClick(View v)
+            {
+                switch (isAdmin)
+                {
                     case 0:
                         fireUserWindow();
                         break;
@@ -1835,9 +2341,11 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        findViewById(R.id.table_set).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.table_set).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 Intent intent = new Intent(MainActivity.this, TableActivity.class);
                 intent.putExtra("username", username);
                 intent.putExtra("isAdmin", isAdmin);
@@ -1848,22 +2356,30 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         wereModifiersOpen = false;
-        recyclerview = findViewById(R.id.recyclerView);
+        recyclerview      = findViewById(R.id.recyclerView);
         recyclerview.setHasFixedSize(true);
         grid_manager = new GridLayoutManager(this, 4);
-        grid_manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+        grid_manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup()
+        {
 
             @Override
-            public int getSpanSize(int position) {
+            public int getSpanSize(int position)
+            {
                 return 1;
             }
         });
         recyclerview.setLayoutManager(grid_manager);
         if (restorePreviousView)
+        {
             rv_adapter.goToCategory(0, grid_status.getCurrent_category_id(), grid_status.getPrevious_category_title());
-        else getHomeButtonSet();
+        }
+        else
+        {
+            getHomeButtonSet();
+        }
         recyclerview.addItemDecoration(new LineSeparator(this, 14));
-        if (!restorePreviousView) {
+        if (!restorePreviousView)
+        {
             rv_adapter = new GridAdapter(this, buttons, dbA);
         }
         recyclerview.setAdapter(rv_adapter);
@@ -1878,18 +2394,21 @@ public class MainActivity extends AppCompatActivity implements
     private void openSettingPopup()
     {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.popup_setting, null);
+        final View     popupView      = layoutInflater.inflate(R.layout.popup_setting, null);
 
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
 
         popupView.post(new Runnable()
         {
             @Override
             public void run()
-                { setupSettingWindows(popupView, popupWindow); }
+            {
+                setupSettingWindows(popupView, popupWindow);
+            }
         });
 
         popupWindow.setFocusable(true);
@@ -1899,95 +2418,121 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setupSettingWindows(final View popupview, final PopupWindow popupWindow)
     {
-        popupview.findViewById(R.id.registration_button).setOnClickListener(new View.OnClickListener()
+        popupview.findViewById(R.id.registration_button)
+                 .setOnClickListener(new View.OnClickListener()
+                 {
+                     @Override
+                     public void onClick(View v)
+                     {
+                         popupWindow.dismiss();
+                         setupRegistrationLayout();
+                     }
+                 });
+
+        popupview.findViewById(R.id.ipsetting_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-                setupRegistrationLayout();
-            }
-        });
-
-        popupview.findViewById(R.id.ipsetting_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupWindow.dismiss();
                 setupIpSettingsPopup();
             }
         });
 
-        popupview.findViewById(R.id.cash_management_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openCashManagementPopup();
-            }
-        });
+        popupview.findViewById(R.id.cash_management_button)
+                 .setOnClickListener(new View.OnClickListener()
+                 {
+                     @Override
+                     public void onClick(View view)
+                     {
+                         openCashManagementPopup();
+                     }
+                 });
 
-        popupview.findViewById(R.id.rfid_setting_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-                openRFIDPopup();
+        popupview.findViewById(R.id.rfid_setting_button)
+                 .setOnClickListener(new View.OnClickListener()
+                 {
+                     @Override
+                     public void onClick(View v)
+                     {
+                         popupWindow.dismiss();
+                         openRFIDPopup();
 
-            }
-        });
+                     }
+                 });
 
-        popupview.findViewById(R.id.database_button).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.database_button).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupWindow.dismiss();
                 openDatabasePopup();
             }
         });
 
-        popupview.findViewById(R.id.update_invoice_number_button).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.update_invoice_number_button)
+                 .setOnClickListener(new View.OnClickListener()
+                 {
+                     @Override
+                     public void onClick(View v)
+                     {
+                         Toast.makeText(me, "Update Invoice Number", Toast.LENGTH_SHORT).show();
+                         popupWindow.dismiss();
+                         if (!StaticValue.blackbox)
+                         {
+                             openUpdateInvoiceNumber();
+                         }
+                         else
+                         {
+                             openUpdateInvoiceForBlackbox();
+                         }
+
+
+                     }
+                 });
+
+        popupview.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(me, "Update Invoice Number", Toast.LENGTH_SHORT).show();
-                popupWindow.dismiss();
-                if (!StaticValue.blackbox)
-                    openUpdateInvoiceNumber();
-                else
-                    openUpdateInvoiceForBlackbox();
-
-
-            }
-        });
-
-        popupview.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
 
             }
         });
         /**
          *  X button behavior while in New User window
          */
-        popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupWindow.dismiss();
             }
         });
     }
 
-    public void openUpdateInvoiceForBlackbox() {
-        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-        String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+    public void openUpdateInvoiceForBlackbox()
+    {
+        List<NameValuePair> params     = new ArrayList<NameValuePair>(2);
+        String              android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         params.add(new BasicNameValuePair("androidId", android_id));
 
         callHttpHandler("/getInvoiceNumber", params);
 
     }
 
-    public void openUpdateInvoiceNumber() {
+    public void openUpdateInvoiceNumber()
+    {
         LayoutInflater layoutInflater = (LayoutInflater) this
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.single_input_dialog, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_single_input, null);
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
 
         setupUpdateInvoicePopup(popupView, popupWindow);
 
@@ -1998,18 +2543,24 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    public void setupUpdateInvoicePopup(View popupview, final PopupWindow popupWindow) {
+    public void setupUpdateInvoicePopup(View popupview, final PopupWindow popupWindow)
+    {
         CustomEditText text = popupview.findViewById(R.id.single_input);
         text.setInputType(InputType.TYPE_CLASS_NUMBER);
         text.setHint(R.string.update_invoice_number);
         int numero = dbA.selectNumeroFattura();
         text.setText(String.valueOf(numero));
-        popupview.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                String newNumber = ((CustomEditText) popupview.findViewById(R.id.single_input)).getText().toString();
-                if (!newNumber.equals("")) {
-                    if (StaticValue.blackbox) {
+            public void onClick(View v)
+            {
+                String newNumber = ((CustomEditText) popupview.findViewById(R.id.single_input)).getText()
+                                                                                               .toString();
+                if (!newNumber.equals(""))
+                {
+                    if (StaticValue.blackbox)
+                    {
                         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
                         params.add(new BasicNameValuePair("numeroFattura", newNumber));
                         String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -2018,12 +2569,16 @@ public class MainActivity extends AppCompatActivity implements
                         callHttpHandler("/updateInvoiceNumber", params);
 
                         popupWindow.dismiss();
-                    } else {
+                    }
+                    else
+                    {
                         dbA.updateNumeroFatture(Integer.valueOf(newNumber));
                         popupWindow.dismiss();
                         openSettingPopup();
                     }
-                } else {
+                }
+                else
+                {
 
                 }
             }
@@ -2031,9 +2586,11 @@ public class MainActivity extends AppCompatActivity implements
         /**
          *  X button behavior while in New User window
          */
-        popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupWindow.dismiss();
                 openSettingPopup();
             }
@@ -2042,17 +2599,21 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    public void openDatabasePopup() {
+    public void openDatabasePopup()
+    {
         LayoutInflater layoutInflater = (LayoutInflater) this
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.database_options, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_database_options, null);
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
-        popupView.post(new Runnable() {
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
+        popupView.post(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
 
                 //setupSettingWindows(popupView, popupWindow);
 
@@ -2065,25 +2626,34 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private void setupDatabasePopup(View popupview, final PopupWindow popupWindow) {
+    private void setupDatabasePopup(View popupview, final PopupWindow popupWindow)
+    {
         CustomButton export = popupview.findViewById(R.id.export_button);
-        export.setOnClickListener(new View.OnClickListener() {
+        export.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                String database = ((CustomEditText) popupview.findViewById(R.id.database_name)).getText().toString();
-                if (!database.equals("")) {
+            public void onClick(View v)
+            {
+                String database = ((CustomEditText) popupview.findViewById(R.id.database_name)).getText()
+                                                                                               .toString();
+                if (!database.equals(""))
+                {
                     exportDatabase(database, popupview);
-                } else {
+                }
+                else
+                {
                     Toast.makeText(me, "Fill file name", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         CustomButton export_blackbox = popupview.findViewById(R.id.export_button_blackbox);
-        export_blackbox.setOnClickListener(new View.OnClickListener() {
+        export_blackbox.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                String cursorButtonsString = DatabaseUtils.dumpCursorToString(dbA.fetchByQuery("SELECT * FROM button"));
+            public void onClick(View v)
+            {
+                String cursorButtonsString  = DatabaseUtils.dumpCursorToString(dbA.fetchByQuery("SELECT * FROM button"));
                 String cursorModifierString = DatabaseUtils.dumpCursorToString(dbA.fetchByQuery("SELECT * FROM modifier"));
 
                 List<NameValuePair> params = new ArrayList<NameValuePair>(2);
@@ -2096,40 +2666,54 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         CustomButton import_button = popupview.findViewById(R.id.import_button);
-        import_button.setOnClickListener(new View.OnClickListener() {
+        import_button.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                String database = ((CustomEditText) popupview.findViewById(R.id.database_name)).getText().toString();
-                if (!database.equals("")) {
+            public void onClick(View v)
+            {
+                String database = ((CustomEditText) popupview.findViewById(R.id.database_name)).getText()
+                                                                                               .toString();
+                if (!database.equals(""))
+                {
                     File file = new File(Environment.getExternalStorageDirectory() + File.separator
-                            + "Download" + File.separator + database + ".db");
-                    if (file.exists()) {
+                                                 + "Download" + File.separator + database + ".db");
+                    if (file.exists())
+                    {
                         //Do something
                         importDatabase(database);
-                    } else {
-                        Toast.makeText(me, "No file " + database + " found", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(me, "No file " + database + " found", Toast.LENGTH_SHORT)
+                             .show();
                     }
 
 
-                } else {
+                }
+                else
+                {
                     Toast.makeText(me, "Fille file name", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
 
-        popupview.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupWindow.dismiss();
             }
         });
         /**
          *  X button behavior while in New User window
          */
-        popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupWindow.dismiss();
 
             }
@@ -2137,13 +2721,17 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    public void exportDatabase(String databaseName, View popupview) {
-        try {
+    public void exportDatabase(String databaseName, View popupview)
+    {
+        try
+        {
             File backupDB = new File(
-                                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                                databaseName + ".db"); // for example "my_data_backup.db"
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                    databaseName + ".db"
+            ); // for example "my_data_backup.db"
             File currentDB = getApplicationContext().getDatabasePath("mydatabase.db");
-            if (currentDB.exists()) {
+            if (currentDB.exists())
+            {
                 FileChannel src = new FileInputStream(currentDB).getChannel();
                 FileChannel dst = new FileOutputStream(backupDB).getChannel();
                 dst.transferFrom(src, 0, src.size());
@@ -2153,7 +2741,9 @@ public class MainActivity extends AppCompatActivity implements
             ((CustomEditText) popupview.findViewById(R.id.database_name)).setText("");
             Toast.makeText(me, "Database Esportato", Toast.LENGTH_SHORT).show();
             Log.i(TAG, "BACKUP OK");
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
             Toast.makeText(me, "Errore Esporto Database", Toast.LENGTH_SHORT).show();
             Log.i(TAG, "BACKUP FAIL");
@@ -2161,32 +2751,43 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    public void importDatabase(String databaseName) {
-        try {
-            dbA.getDbHelper().importDatabase(Environment.getExternalStorageDirectory() + File.separator
-                    + "Download" + File.separator + databaseName + ".db", getApplicationContext().getDatabasePath("mydatabase.db").getPath());
+    public void importDatabase(String databaseName)
+    {
+        try
+        {
+            dbA.getDbHelper()
+               .importDatabase(Environment.getExternalStorageDirectory() + File.separator
+                                       + "Download" + File.separator + databaseName + ".db", getApplicationContext()
+                                       .getDatabasePath("mydatabase.db")
+                                       .getPath());
 
             Intent i = getBaseContext().getPackageManager()
-                    .getLaunchIntentForPackage(getBaseContext().getPackageName());
+                                       .getLaunchIntentForPackage(getBaseContext().getPackageName());
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
             ActivityCompat.finishAfterTransition(MainActivity.this);
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
 
-    private void openRFIDPopup() {
+    private void openRFIDPopup()
+    {
         LayoutInflater layoutInflater = (LayoutInflater) this
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
         final View popupView = layoutInflater.inflate(R.layout.popup_rfiddevice, null);
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
-        popupView.post(new Runnable() {
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
+        popupView.post(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
 
                 //setupSettingWindows(popupView, popupWindow);
 
@@ -2203,18 +2804,21 @@ public class MainActivity extends AppCompatActivity implements
 
     //class for Printer Model Selection
 
-    private void setupIpSettingsPopup() {
+    private void setupIpSettingsPopup()
+    {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.popup_ip_settings, null);
+        final View     popupView      = layoutInflater.inflate(R.layout.popup_ip_settings, null);
 
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
 
-        popupView.post(() -> {
-            //setupSettingWindows(popupView, popupWindow);
-        });
+        popupView.post(() ->
+                       {
+                           //setupSettingWindows(popupView, popupWindow);
+                       });
 
         setUpIpSettingsLayout(popupView, popupWindow);
         popupWindow.setFocusable(true);
@@ -2222,41 +2826,57 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+    public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id)
+    {
         //forse va bene anche if(pos != 0)
-        if (pos != 0) {
+        if (pos != 0)
+        {
             printerModel = adapterView.getItemAtPosition(pos).toString();
-        } else {
+        }
+        else
+        {
             Toast.makeText(me, R.string.select_printer_model, Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
+    public void onNothingSelected(AdapterView<?> adapterView)
+    {
 
     }
 
-    public void setSelectedPrinter(View popupview, KitchenPrinter kitchenPrinter) {
-        popupview.findViewById(R.id.pos_printer).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
-        popupview.findViewById(R.id.kitchen_printer).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.green_2));
-        popupview.findViewById(R.id.black_box).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
+    public void setSelectedPrinter(View popupview, KitchenPrinter kitchenPrinter)
+    {
+        popupview.findViewById(R.id.pos_printer)
+                 .setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
+        popupview.findViewById(R.id.kitchen_printer)
+                 .setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.green_2));
+        popupview.findViewById(R.id.black_box)
+                 .setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
         popupview.findViewById(R.id.kitchen_printer_selection).setVisibility(View.VISIBLE);
         popupview.findViewById(R.id.pos_printer_selection).setVisibility(View.GONE);
         popupview.findViewById(R.id.blackbox_selection).setVisibility(View.GONE);
         ImageButton checkboxK = popupview.findViewById(R.id.apiInputCheckBox);
         selectedKitchenPrinter = kitchenPrinter;
-        if (kitchenPrinter.getId() != -1) {
+        if (kitchenPrinter.getId() != -1)
+        {
 
-            if (!kitchenPrinter.getName().equals("")) {
-                ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_name)).setText(kitchenPrinter.getName());
+            if (!kitchenPrinter.getName().equals(""))
+            {
+                ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_name)).setText(kitchenPrinter
+                                                                                                     .getName());
             }
 
-            if (!kitchenPrinter.getAddress().equals("")) {
-                ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_IP)).setText(kitchenPrinter.getAddress());
+            if (!kitchenPrinter.getAddress().equals(""))
+            {
+                ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_IP)).setText(kitchenPrinter
+                                                                                                   .getAddress());
             }
 
-            if (kitchenPrinter.getPort() > 0) {
-                ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_port)).setText(String.valueOf(kitchenPrinter.getPort()));
+            if (kitchenPrinter.getPort() > 0)
+            {
+                ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_port)).setText(String.valueOf(kitchenPrinter
+                                                                                                                    .getPort()));
 
             }
 
@@ -2265,10 +2885,14 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    public void setSelectedBlackbox(View popupview, BlackboxInfo blackbox) {
-        popupview.findViewById(R.id.pos_printer).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
-        popupview.findViewById(R.id.kitchen_printer).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
-        popupview.findViewById(R.id.black_box).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.green_2));
+    public void setSelectedBlackbox(View popupview, BlackboxInfo blackbox)
+    {
+        popupview.findViewById(R.id.pos_printer)
+                 .setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
+        popupview.findViewById(R.id.kitchen_printer)
+                 .setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
+        popupview.findViewById(R.id.black_box)
+                 .setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.green_2));
         popupview.findViewById(R.id.kitchen_printer_selection).setVisibility(View.GONE);
         popupview.findViewById(R.id.pos_printer_selection).setVisibility(View.GONE);
         popupview.findViewById(R.id.blackbox_selection).setVisibility(View.VISIBLE);
@@ -2279,7 +2903,7 @@ public class MainActivity extends AppCompatActivity implements
     {
         show = 1;
 
-        Spinner spinner = popupview.findViewById(R.id.pos_printer_name);
+        Spinner                 spinner     = popupview.findViewById(R.id.pos_printer_name);
         ArrayList<PrinterModel> spinnerList = new ArrayList<>();
         spinnerList.add(new PrinterModel("Select Printer Model"));
         spinnerList.add(new PrinterModel("Ditron"));
@@ -2294,44 +2918,61 @@ public class MainActivity extends AppCompatActivity implements
         spinner.setOnItemSelectedListener(this);
 
         ImageButton checkbox = popupview.findViewById(R.id.api_checkBox);
-        checkbox.setOnClickListener(new View.OnClickListener() {
+        checkbox.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 checkbox.setActivated(!checkbox.isActivated());
 
             }
         });
 
         ImageButton checkboxK = popupview.findViewById(R.id.apiInputCheckBox);
-        checkboxK.setOnClickListener(new View.OnClickListener() {
+        checkboxK.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 checkboxK.setActivated(!checkboxK.isActivated());
 
             }
         });
 
         FiscalPrinter fiscalPrinter = dbA.selectFiscalPrinter();
-        if (fiscalPrinter.getId() != -1) {
-            if (fiscalPrinter.getModel().equals("Ditron")) {
+        if (fiscalPrinter.getId() != -1)
+        {
+            if (fiscalPrinter.getModel().equals("Ditron"))
+            {
                 spinner.setSelection(1);
-            } else if (fiscalPrinter.getModel().equals("Custom")) {
+            }
+            else if (fiscalPrinter.getModel().equals("Custom"))
+            {
                 spinner.setSelection(2);
-            } else if (fiscalPrinter.getModel().equals("Epson")) {
+            }
+            else if (fiscalPrinter.getModel().equals("Epson"))
+            {
                 spinner.setSelection(3);
-            } else if (fiscalPrinter.getModel().equals("RCH")) {
+            }
+            else if (fiscalPrinter.getModel().equals("RCH"))
+            {
                 spinner.setSelection(4);
             }
-            if (!fiscalPrinter.getAddress().equals("")) {
-                ((CustomEditText) popupview.findViewById(R.id.pos_printer_IP)).setText(fiscalPrinter.getAddress());
+            if (!fiscalPrinter.getAddress().equals(""))
+            {
+                ((CustomEditText) popupview.findViewById(R.id.pos_printer_IP)).setText(fiscalPrinter
+                                                                                               .getAddress());
             }
 
-            if (fiscalPrinter.getPort() > 0) {
-                ((CustomEditText) popupview.findViewById(R.id.pos_printer_port)).setText(String.valueOf(fiscalPrinter.getPort()));
+            if (fiscalPrinter.getPort() > 0)
+            {
+                ((CustomEditText) popupview.findViewById(R.id.pos_printer_port)).setText(String.valueOf(fiscalPrinter
+                                                                                                                .getPort()));
 
             }
 
-            if (fiscalPrinter.isUseApi()) {
+            if (fiscalPrinter.isUseApi())
+            {
                 checkbox.setActivated(true);
             }
         }
@@ -2353,31 +2994,47 @@ public class MainActivity extends AppCompatActivity implements
         popupview.findViewById(R.id.pos_printer).setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 show = 1;
-                popupview.findViewById(R.id.pos_printer).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.green_2));
-                popupview.findViewById(R.id.kitchen_printer).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
-                popupview.findViewById(R.id.black_box).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
+                popupview.findViewById(R.id.pos_printer)
+                         .setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.green_2));
+                popupview.findViewById(R.id.kitchen_printer)
+                         .setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
+                popupview.findViewById(R.id.black_box)
+                         .setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
                 popupview.findViewById(R.id.kitchen_printer_selection).setVisibility(View.GONE);
                 popupview.findViewById(R.id.pos_printer_selection).setVisibility(View.VISIBLE);
                 popupview.findViewById(R.id.blackbox_selection).setVisibility(View.GONE);
                 FiscalPrinter fiscalPrinter = dbA.selectFiscalPrinter();
-                if (fiscalPrinter.getId() != -1) {
-                    if (fiscalPrinter.getModel().equals("Ditron")) {
+                if (fiscalPrinter.getId() != -1)
+                {
+                    if (fiscalPrinter.getModel().equals("Ditron"))
+                    {
                         spinner.setSelection(1);
-                    } else if (fiscalPrinter.getModel().equals("Custom")) {
+                    }
+                    else if (fiscalPrinter.getModel().equals("Custom"))
+                    {
                         spinner.setSelection(2);
-                    } else if (fiscalPrinter.getModel().equals("Epson")) {
+                    }
+                    else if (fiscalPrinter.getModel().equals("Epson"))
+                    {
                         spinner.setSelection(3);
-                    } else if (fiscalPrinter.getModel().equals("RCH")) {
+                    }
+                    else if (fiscalPrinter.getModel().equals("RCH"))
+                    {
                         spinner.setSelection(4);
                     }
-                    if (!fiscalPrinter.getAddress().equals("")) {
-                        ((CustomEditText) popupview.findViewById(R.id.pos_printer_IP)).setText(fiscalPrinter.getAddress());
+                    if (!fiscalPrinter.getAddress().equals(""))
+                    {
+                        ((CustomEditText) popupview.findViewById(R.id.pos_printer_IP)).setText(fiscalPrinter
+                                                                                                       .getAddress());
                     }
 
-                    if (fiscalPrinter.getPort() > 0) {
-                        ((CustomEditText) popupview.findViewById(R.id.pos_printer_port)).setText(String.valueOf(fiscalPrinter.getPort()));
+                    if (fiscalPrinter.getPort() > 0)
+                    {
+                        ((CustomEditText) popupview.findViewById(R.id.pos_printer_port)).setText(String.valueOf(fiscalPrinter
+                                                                                                                        .getPort()));
 
                     }
                     checkbox.setActivated(fiscalPrinter.isUseApi());
@@ -2386,26 +3043,36 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        popupview.findViewById(R.id.kitchen_printer).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.kitchen_printer).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 show = 2;
-                popupview.findViewById(R.id.pos_printer).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
-                popupview.findViewById(R.id.kitchen_printer).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.green_2));
-                popupview.findViewById(R.id.black_box).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
+                popupview.findViewById(R.id.pos_printer)
+                         .setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
+                popupview.findViewById(R.id.kitchen_printer)
+                         .setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.green_2));
+                popupview.findViewById(R.id.black_box)
+                         .setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
                 popupview.findViewById(R.id.kitchen_printer_selection).setVisibility(View.VISIBLE);
                 popupview.findViewById(R.id.pos_printer_selection).setVisibility(View.GONE);
                 popupview.findViewById(R.id.blackbox_selection).setVisibility(View.GONE);
             }
         });
 
-        popupview.findViewById(R.id.black_box).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.black_box).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 show = 3;
-                popupview.findViewById(R.id.pos_printer).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
-                popupview.findViewById(R.id.kitchen_printer).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
-                popupview.findViewById(R.id.black_box).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.green_2));
+                popupview.findViewById(R.id.pos_printer)
+                         .setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
+                popupview.findViewById(R.id.kitchen_printer)
+                         .setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.blackTransparent));
+                popupview.findViewById(R.id.black_box)
+                         .setBackground(ContextCompat.getDrawable(getApplicationContext(), R.color.green_2));
                 popupview.findViewById(R.id.kitchen_printer_selection).setVisibility(View.GONE);
                 popupview.findViewById(R.id.pos_printer_selection).setVisibility(View.GONE);
                 popupview.findViewById(R.id.blackbox_selection).setVisibility(View.VISIBLE);
@@ -2413,46 +3080,79 @@ public class MainActivity extends AppCompatActivity implements
         });
 
 
-        popupview.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                switch (show) {
+            public void onClick(View v)
+            {
+                switch (show)
+                {
                     //
                     case 1:
-                        String address = ((CustomEditText) popupview.findViewById(R.id.pos_printer_IP)).getText().toString();
-                        String port = ((CustomEditText) popupview.findViewById(R.id.pos_printer_port)).getText().toString();
+                        String address = ((CustomEditText) popupview.findViewById(R.id.pos_printer_IP))
+                                .getText()
+                                .toString();
+                        String port = ((CustomEditText) popupview.findViewById(R.id.pos_printer_port))
+                                .getText()
+                                .toString();
                         ImageButton checkbox = popupview.findViewById(R.id.api_checkBox);
                         int i = 0;
-                        if (checkbox.isActivated()) i = 1;
-                        if (printerModel == null) {
-                            Toast.makeText(MainActivity.this, R.string.select_printer_model, Toast.LENGTH_SHORT).show();
-                        } else if (printerModel.equals("")) {
-                            Toast.makeText(MainActivity.this, R.string.select_printer_model, Toast.LENGTH_SHORT).show();
-                        } else if (address.equals("")) {
-                            Toast.makeText(MainActivity.this, R.string.select_an_address, Toast.LENGTH_SHORT).show();
-                        } else if (port.equals("")) {
-                            Toast.makeText(MainActivity.this, R.string.select_a_port_number, Toast.LENGTH_SHORT).show();
-                        } else {
-                            if (StaticValue.blackbox) {
-                                FiscalPrinter fiscalPrinter = dbA.selectFiscalPrinter();
-                                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                        if (checkbox.isActivated())
+                        {
+                            i = 1;
+                        }
+                        if (printerModel == null)
+                        {
+                            Toast.makeText(MainActivity.this, R.string.select_printer_model, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        else if (printerModel.equals(""))
+                        {
+                            Toast.makeText(MainActivity.this, R.string.select_printer_model, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        else if (address.equals(""))
+                        {
+                            Toast.makeText(MainActivity.this, R.string.select_an_address, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        else if (port.equals(""))
+                        {
+                            Toast.makeText(MainActivity.this, R.string.select_a_port_number, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        else
+                        {
+                            if (StaticValue.blackbox)
+                            {
+                                FiscalPrinter       fiscalPrinter = dbA.selectFiscalPrinter();
+                                List<NameValuePair> params        = new ArrayList<NameValuePair>(2);
                                 params.add(new BasicNameValuePair("model", printerModel));
                                 params.add(new BasicNameValuePair("address", address));
                                 params.add(new BasicNameValuePair("port", port));
                                 params.add(new BasicNameValuePair("api", String.valueOf(i)));
-                                params.add(new BasicNameValuePair("printerId", String.valueOf(fiscalPrinter.getId())));
+                                params.add(new BasicNameValuePair("printerId", String.valueOf(fiscalPrinter
+                                                                                                      .getId())));
 
                                 callHttpHandler("/insertFiscalPrinter", params);
-                            } else {
+                            }
+                            else
+                            {
 
                                 FiscalPrinter fiscalPrinter = dbA.selectFiscalPrinter();
-                                if (fiscalPrinter.getId() == -1) {
-                                    dbA.insertFiscalPrinter(printerModel, address, printerModel, Integer.valueOf(port), i);
-                                } else {
-                                    dbA.updateFiscalPrinter(printerModel, address, printerModel, Integer.valueOf(port), i);
+                                if (fiscalPrinter.getId() == -1)
+                                {
+                                    dbA.insertFiscalPrinter(printerModel, address, printerModel, Integer
+                                            .valueOf(port), i);
+                                }
+                                else
+                                {
+                                    dbA.updateFiscalPrinter(printerModel, address, printerModel, Integer
+                                            .valueOf(port), i);
                                 }
                                 printerSettingAdapter.setPrinters();
-                                Toast.makeText(MainActivity.this, R.string.updated, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, R.string.updated, Toast.LENGTH_SHORT)
+                                     .show();
                             }
                         }
                         new StaticValue(getApplicationContext(), StaticValue.blackboxInfo);
@@ -2460,43 +3160,73 @@ public class MainActivity extends AppCompatActivity implements
 
                     // kitchen settings window
                     case 2:
-                        String nameK = ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_name)).getText().toString();
-                        String addressK = ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_IP)).getText().toString();
-                        String portK = ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_port)).getText().toString();
+                        String nameK = ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_name))
+                                .getText()
+                                .toString();
+                        String addressK = ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_IP))
+                                .getText()
+                                .toString();
+                        String portK = ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_port))
+                                .getText()
+                                .toString();
                         int iK = 0;
-                        if (checkboxK.isActivated()) iK = 1;
-                        if (nameK.equals("")) {
-                            Toast.makeText(MainActivity.this, "Select one name", Toast.LENGTH_SHORT).show();
-                        } else if (addressK.equals("")) {
-                            Toast.makeText(MainActivity.this, "Select an address", Toast.LENGTH_SHORT).show();
-                        } else if (portK.equals("")) {
-                            Toast.makeText(MainActivity.this, "Select a port number", Toast.LENGTH_SHORT).show();
-                        } else {
+                        if (checkboxK.isActivated())
+                        {
+                            iK = 1;
+                        }
+                        if (nameK.equals(""))
+                        {
+                            Toast.makeText(MainActivity.this, "Select one name", Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        else if (addressK.equals(""))
+                        {
+                            Toast.makeText(MainActivity.this, "Select an address", Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        else if (portK.equals(""))
+                        {
+                            Toast.makeText(MainActivity.this, "Select a port number", Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        else
+                        {
                             //KitchenPrinter kitchenPrinter = dbA.selectKitchenPrinter();
 
-                            if (StaticValue.blackbox) {
+                            if (StaticValue.blackbox)
+                            {
                                 List<NameValuePair> params = new ArrayList<NameValuePair>(2);
                                 params.add(new BasicNameValuePair("name", nameK));
                                 params.add(new BasicNameValuePair("address", addressK));
                                 params.add(new BasicNameValuePair("port", portK));
                                 params.add(new BasicNameValuePair("singleOrder", String.valueOf(iK)));
-                                params.add(new BasicNameValuePair("printerId", String.valueOf(selectedKitchenPrinter.getId())));
+                                params.add(new BasicNameValuePair("printerId", String.valueOf(selectedKitchenPrinter
+                                                                                                      .getId())));
                                 myPopupView = popupview;
                                 callHttpHandler("/insertKitchenPrinter", params);
-                            } else {
+                            }
+                            else
+                            {
 
-                                if (selectedKitchenPrinter.getId() == -1) {
+                                if (selectedKitchenPrinter.getId() == -1)
+                                {
                                     dbA.insertKitchenPrinter(nameK, addressK, Integer.valueOf(portK), iK);
-                                } else {
-                                    dbA.updateKitchenPrinter(nameK, addressK, Integer.valueOf(portK), iK, selectedKitchenPrinter.getId());
+                                }
+                                else
+                                {
+                                    dbA.updateKitchenPrinter(nameK, addressK, Integer.valueOf(portK), iK, selectedKitchenPrinter
+                                            .getId());
                                 }
                                 printerSettingAdapter.setPrinters();
-                                ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_name)).setText("");
+                                ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_name))
+                                        .setText("");
                                 ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_IP)).setText("");
-                                ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_port)).setText("");
+                                ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_port))
+                                        .setText("");
                                 checkboxK.setActivated(false);
                                 selectedKitchenPrinter = new KitchenPrinter();
-                                Toast.makeText(MainActivity.this, "Update", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Update", Toast.LENGTH_SHORT)
+                                     .show();
                             }
 
                         }
@@ -2506,8 +3236,12 @@ public class MainActivity extends AppCompatActivity implements
 
                     // blackbox settings window
                     case 3:
-                        String blackboxName = ((CustomEditText) popupview.findViewById(R.id.blackbox_name)).getText().toString();
-                        String blackboxAddress = ((CustomEditText) popupview.findViewById(R.id.blackbox_IP)).getText().toString();
+                        String blackboxName = ((CustomEditText) popupview.findViewById(R.id.blackbox_name))
+                                .getText()
+                                .toString();
+                        String blackboxAddress = ((CustomEditText) popupview.findViewById(R.id.blackbox_IP))
+                                .getText()
+                                .toString();
 
                         if (blackboxAddress.isEmpty() && bbSettingAdaper.blackbox != null)
                         {
@@ -2521,7 +3255,7 @@ public class MainActivity extends AppCompatActivity implements
                             Log.i(TAG, "[onCreate] Testing blackbox: " + blackboxName + " @ " + blackboxAddress);
 
                             HttpHandler httpHandler = new HttpHandler();
-                            httpHandler.testIp = blackboxAddress;
+                            httpHandler.testIp   = blackboxAddress;
                             httpHandler.delegate = MainActivity.this;
 
                             ArrayList<NameValuePair> params = new ArrayList<>();
@@ -2530,7 +3264,7 @@ public class MainActivity extends AppCompatActivity implements
 
                             try
                             {
-                                String res = httpHandler.execute().get();
+                                String     res        = httpHandler.execute().get();
                                 JSONObject jsonObject = new JSONObject(res);
 
                                 if (jsonObject.getBoolean("success"))
@@ -2548,7 +3282,9 @@ public class MainActivity extends AppCompatActivity implements
 
                             // should never happen
                             catch (Exception e)
-                                { e.printStackTrace(); }
+                            {
+                                e.printStackTrace();
+                            }
                         }
 
                         break;
@@ -2562,12 +3298,17 @@ public class MainActivity extends AppCompatActivity implements
         /**
          *  X button behavior while in New User window
          */
-        popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 if (selectedKitchenPrinter.getId() == -1)
+                {
                     popupWindow.dismiss();
-                else {
+                }
+                else
+                {
                     ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_name)).setText("");
                     ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_IP)).setText("");
                     ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_port)).setText("");
@@ -2579,14 +3320,16 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    public void openCashManagementPopup() {
+    public void openCashManagementPopup()
+    {
         LayoutInflater layoutInflater = (LayoutInflater) this
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.cash_management, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_cash_management, null);
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
 
         dbA.showData("cash_management_set");
 
@@ -2598,26 +3341,28 @@ public class MainActivity extends AppCompatActivity implements
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
     }
 
-    public void setupCashManagement(final View popupView, final PopupWindow popupWindow) {
-        CustomEditText min_cash = popupView.findViewById(R.id.min_cash);
-        CustomEditText max_cash = popupView.findViewById(R.id.max_cash);
-        CustomEditText min_withdraw = popupView.findViewById(R.id.min_withdraw);
-        CustomEditText five_cents = popupView.findViewById(R.id.amount_005);
-        CustomEditText ten_cents = popupView.findViewById(R.id.amount_010);
-        CustomEditText twenty_cents = popupView.findViewById(R.id.amount_020);
-        CustomEditText fifty_cents = popupView.findViewById(R.id.amount_050);
-        CustomEditText one_euro = popupView.findViewById(R.id.amount_100);
-        CustomEditText two_euros = popupView.findViewById(R.id.amount_200);
-        CustomEditText five_euros = popupView.findViewById(R.id.amount_500);
-        CustomEditText ten_euros = popupView.findViewById(R.id.amount_1000);
-        CustomEditText twenty_euros = popupView.findViewById(R.id.amount_2000);
-        CustomEditText fifty_euros = popupView.findViewById(R.id.amount_5000);
-        CustomEditText hundred_euros = popupView.findViewById(R.id.amount_10000);
+    public void setupCashManagement(final View popupView, final PopupWindow popupWindow)
+    {
+        CustomEditText min_cash         = popupView.findViewById(R.id.min_cash);
+        CustomEditText max_cash         = popupView.findViewById(R.id.max_cash);
+        CustomEditText min_withdraw     = popupView.findViewById(R.id.min_withdraw);
+        CustomEditText five_cents       = popupView.findViewById(R.id.amount_005);
+        CustomEditText ten_cents        = popupView.findViewById(R.id.amount_010);
+        CustomEditText twenty_cents     = popupView.findViewById(R.id.amount_020);
+        CustomEditText fifty_cents      = popupView.findViewById(R.id.amount_050);
+        CustomEditText one_euro         = popupView.findViewById(R.id.amount_100);
+        CustomEditText two_euros        = popupView.findViewById(R.id.amount_200);
+        CustomEditText five_euros       = popupView.findViewById(R.id.amount_500);
+        CustomEditText ten_euros        = popupView.findViewById(R.id.amount_1000);
+        CustomEditText twenty_euros     = popupView.findViewById(R.id.amount_2000);
+        CustomEditText fifty_euros      = popupView.findViewById(R.id.amount_5000);
+        CustomEditText hundred_euros    = popupView.findViewById(R.id.amount_10000);
         CustomEditText twohundred_euros = popupView.findViewById(R.id.amount_20000);
 
         DecimalFormat twoD = new DecimalFormat("#.00");
 
-        if (dbA.checkIfCashManagementIsSet() == 1) {
+        if (dbA.checkIfCashManagementIsSet() == 1)
+        {
             CashManagement cash = dbA.getCashManagementStatic();
             min_cash.setText(twoD.format(cash.getMinCash()).replace(".", ",") + "");
             max_cash.setText(twoD.format(cash.getMaxCash()).replace(".", ",") + "");
@@ -2637,53 +3382,92 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         ImageButton okButton = popupView.findViewById(R.id.ok);
-        ImageButton cancel = popupView.findViewById(R.id.kill);
+        ImageButton cancel   = popupView.findViewById(R.id.kill);
 
-        okButton.setOnClickListener(new View.OnClickListener() {
+        okButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-                if (!min_cash.getText().toString().equals("") && !max_cash.getText().toString().equals("") && !min_withdraw.getText().toString().equals("")) {
+            public void onClick(View view)
+            {
+                if (!min_cash.getText().toString().equals("") && !max_cash.getText()
+                                                                          .toString()
+                                                                          .equals("") && !min_withdraw
+                        .getText()
+                        .toString()
+                        .equals(""))
+                {
 
-                    String min_cash_string = min_cash.getText().toString();
-                    String max_cash_string = max_cash.getText().toString();
+                    String min_cash_string     = min_cash.getText().toString();
+                    String max_cash_string     = max_cash.getText().toString();
                     String min_withdraw_string = min_withdraw.getText().toString();
 
                     //all other fields not filled
-                    if (five_cents.getText().toString().equals("") && ten_cents.getText().toString().equals("") && twenty_cents.getText().toString().equals("")
-                            && fifty_cents.getText().toString().equals("") && one_euro.getText().toString().equals("") && two_euros.getText().toString().equals("")
-                            && five_euros.getText().toString().equals("") && ten_euros.getText().toString().equals("") && twenty_euros.getText().toString().equals("")
-                            && fifty_euros.getText().toString().equals("") && hundred_euros.getText().toString().equals("")
-                            && twohundred_euros.getText().toString().equals("")) {
+                    if (five_cents.getText().toString().equals("") && ten_cents.getText()
+                                                                               .toString()
+                                                                               .equals("") && twenty_cents
+                            .getText()
+                            .toString()
+                            .equals("")
+                            && fifty_cents.getText().toString().equals("") && one_euro.getText()
+                                                                                      .toString()
+                                                                                      .equals("") && two_euros
+                            .getText()
+                            .toString()
+                            .equals("")
+                            && five_euros.getText().toString().equals("") && ten_euros.getText()
+                                                                                      .toString()
+                                                                                      .equals("") && twenty_euros
+                            .getText()
+                            .toString()
+                            .equals("")
+                            && fifty_euros.getText()
+                                          .toString()
+                                          .equals("") && hundred_euros.getText()
+                                                                      .toString()
+                                                                      .equals("")
+                            && twohundred_euros.getText().toString().equals(""))
+                    {
 
-                        dbA.insertCashManagementGeneral(Float.parseFloat(min_cash_string), Float.parseFloat(max_cash_string), Float.parseFloat(min_withdraw_string));
+                        dbA.insertCashManagementGeneral(Float.parseFloat(min_cash_string), Float.parseFloat(max_cash_string), Float
+                                .parseFloat(min_withdraw_string));
 
                         min_cash.setText("");
                         max_cash.setText("");
                         min_withdraw.setText("");
 
                         popupWindow.dismiss();
-                    } else {
-                        String fiveCents = five_cents.getText().toString();
-                        String tenCents = ten_cents.getText().toString();
+                    }
+                    else
+                    {
+                        String fiveCents   = five_cents.getText().toString();
+                        String tenCents    = ten_cents.getText().toString();
                         String twentyCents = twenty_cents.getText().toString();
-                        String fiftyCents = fifty_cents.getText().toString();
-                        String oneE = one_euro.getText().toString();
-                        String twoE = two_euros.getText().toString();
-                        String fiveE = five_euros.getText().toString();
-                        String tenE = ten_euros.getText().toString();
-                        String twentyE = twenty_euros.getText().toString();
-                        String fiftyE = fifty_euros.getText().toString();
-                        String hundred = hundred_euros.getText().toString();
-                        String twoHundred = twohundred_euros.getText().toString();
+                        String fiftyCents  = fifty_cents.getText().toString();
+                        String oneE        = one_euro.getText().toString();
+                        String twoE        = two_euros.getText().toString();
+                        String fiveE       = five_euros.getText().toString();
+                        String tenE        = ten_euros.getText().toString();
+                        String twentyE     = twenty_euros.getText().toString();
+                        String fiftyE      = fifty_euros.getText().toString();
+                        String hundred     = hundred_euros.getText().toString();
+                        String twoHundred  = twohundred_euros.getText().toString();
 
                         dbA.insertCashManagement(Float.parseFloat(min_cash_string.replace(",", ".")),
-                                Float.parseFloat(max_cash_string.replace(",", ".")),
-                                Float.parseFloat(min_withdraw_string.replace(",", ".")), fiveCents.equals("") ? 0 : Integer.parseInt(fiveCents),
-                                tenCents.equals("") ? 0 : Integer.parseInt(tenCents), twentyCents.equals("") ? 0 : Integer.parseInt(twentyCents),
-                                fiftyCents.equals("") ? 0 : Integer.parseInt(fiftyCents), oneE.equals("") ? 0 : Integer.parseInt(oneE),
-                                twoE.equals("") ? 0 : Integer.parseInt(twoE), fiveE.equals("") ? 0 : Integer.parseInt(fiveE), tenE.equals("") ? 0 : Integer.parseInt(tenE),
-                                twentyE.equals("") ? 0 : Integer.parseInt(twentyE), fiftyE.equals("") ? 0 : Integer.parseInt(fiftyE),
-                                hundred.equals("") ? 0 : Integer.parseInt(hundred), twoHundred.equals("") ? 0 : Integer.parseInt(twoHundred));
+                                                 Float.parseFloat(max_cash_string.replace(",", ".")),
+                                                 Float.parseFloat(min_withdraw_string.replace(",", ".")), fiveCents
+                                                         .equals("") ? 0 : Integer.parseInt(fiveCents),
+                                                 tenCents.equals("") ? 0 : Integer.parseInt(tenCents), twentyCents
+                                                         .equals("") ? 0 : Integer.parseInt(twentyCents),
+                                                 fiftyCents.equals("") ? 0 : Integer.parseInt(fiftyCents), oneE
+                                                         .equals("") ? 0 : Integer.parseInt(oneE),
+                                                 twoE.equals("") ? 0 : Integer.parseInt(twoE), fiveE
+                                                         .equals("") ? 0 : Integer.parseInt(fiveE), tenE
+                                                         .equals("") ? 0 : Integer.parseInt(tenE),
+                                                 twentyE.equals("") ? 0 : Integer.parseInt(twentyE), fiftyE
+                                                         .equals("") ? 0 : Integer.parseInt(fiftyE),
+                                                 hundred.equals("") ? 0 : Integer.parseInt(hundred), twoHundred
+                                                         .equals("") ? 0 : Integer.parseInt(twoHundred)
+                        );
 
                         min_cash.setText("");
                         max_cash.setText("");
@@ -2703,14 +3487,20 @@ public class MainActivity extends AppCompatActivity implements
 
                         popupWindow.dismiss();
                     }
-                } else
-                    Toast.makeText(me, R.string.please_fill_cash_and_withdraw_fields, Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(me, R.string.please_fill_cash_and_withdraw_fields, Toast.LENGTH_SHORT)
+                         .show();
+                }
             }
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
+        cancel.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 min_cash.setText("");
                 max_cash.setText("");
                 min_withdraw.setText("");
@@ -2732,17 +3522,21 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    private void setupRegistrationLayout() {
+    private void setupRegistrationLayout()
+    {
         LayoutInflater layoutInflater = (LayoutInflater) this
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
         final View popupView = layoutInflater.inflate(R.layout.popup_registration, null);
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
-        popupView.post(new Runnable() {
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
+        popupView.post(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
 
                 setUpRegistrationLayout(popupView, popupWindow);
 
@@ -2756,17 +3550,18 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private void setUpRegistrationLayout(final View popupview, final PopupWindow popupWindow) {
+    private void setUpRegistrationLayout(final View popupview, final PopupWindow popupWindow)
+    {
         DeviceInfo deviceInfo = dbA.selectDeviceInfo();
         dbA.showData("device_info");
-        CustomEditText Address = popupview.findViewById(R.id.address_et);
-        CustomEditText StoreEmail = popupview.findViewById(R.id.first_r_email_et);
+        CustomEditText Address        = popupview.findViewById(R.id.address_et);
+        CustomEditText StoreEmail     = popupview.findViewById(R.id.first_r_email_et);
         CustomEditText RagioneSociale = popupview.findViewById(R.id.store_name_et);
-        CustomEditText PartitaIva = popupview.findViewById(R.id.store_IVA);
-        CustomEditText Cap = popupview.findViewById(R.id.cap_et);
-        CustomEditText Comune = popupview.findViewById(R.id.comune_et);
-        CustomEditText Provincia = popupview.findViewById(R.id.provincia_et);
-        CustomEditText StoreName = popupview.findViewById(R.id.store_name_invoice_et);
+        CustomEditText PartitaIva     = popupview.findViewById(R.id.store_IVA);
+        CustomEditText Cap            = popupview.findViewById(R.id.cap_et);
+        CustomEditText Comune         = popupview.findViewById(R.id.comune_et);
+        CustomEditText Provincia      = popupview.findViewById(R.id.provincia_et);
+        CustomEditText StoreName      = popupview.findViewById(R.id.store_name_invoice_et);
         RagioneSociale.setText(deviceInfo.getRagioneSociale());
         PartitaIva.setText(deviceInfo.getPartitaIva());
         Address.setText(deviceInfo.getAddress());
@@ -2778,35 +3573,48 @@ public class MainActivity extends AppCompatActivity implements
 
 
         licenseButton = popupview.findViewById(R.id.licensing);
-        licenseButton.setOnClickListener(new View.OnClickListener() {
+        licenseButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 licenseString = fireSingleInputDialogPopup();
             }
         });
 
-        popupview.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 Toast.makeText(me, R.string.updated, Toast.LENGTH_SHORT).show();
                 String ragioneSociale = RagioneSociale.getText().toString();
-                String partitaIva = PartitaIva.getText().toString();
-                String address = Address.getText().toString();
-                String storeEmail = StoreEmail.getText().toString().replaceAll(" ", "");
-                String cap = Cap.getText().toString();
-                String comune = Comune.getText().toString();
-                String provincia = Provincia.getText().toString();
-                String storeName = StoreName.getText().toString();
+                String partitaIva     = PartitaIva.getText().toString();
+                String address        = Address.getText().toString();
+                String storeEmail     = StoreEmail.getText().toString().replaceAll(" ", "");
+                String cap            = Cap.getText().toString();
+                String comune         = Comune.getText().toString();
+                String provincia      = Provincia.getText().toString();
+                String storeName      = StoreName.getText().toString();
 
-                if (ragioneSociale.equals("")) {
-                    Toast.makeText(getApplicationContext(), R.string.please_insert_your_store_name, Toast.LENGTH_SHORT).show();
-                } else if (!storeEmail.equals("") && !Pattern.matches("^[-a-zA-Z0-9._%]+@[a-zA-Z]+\\.[a-zA-Z]{2,5}$", storeEmail)) {
-                    Toast.makeText(getApplicationContext(), R.string.store_email_is_not_well_formed, Toast.LENGTH_SHORT).show();
-                } else {
+                if (ragioneSociale.equals(""))
+                {
+                    Toast.makeText(getApplicationContext(), R.string.please_insert_your_store_name, Toast.LENGTH_SHORT)
+                         .show();
+                }
+                else if (!storeEmail.equals("") && !Pattern.matches("^[-a-zA-Z0-9._%]+@[a-zA-Z]+\\.[a-zA-Z]{2,5}$", storeEmail))
+                {
+                    Toast.makeText(getApplicationContext(), R.string.store_email_is_not_well_formed, Toast.LENGTH_SHORT)
+                         .show();
+                }
+                else
+                {
 
-                    if (StaticValue.blackbox) {
+                    if (StaticValue.blackbox)
+                    {
                         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                        String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                        String android_id = Settings.Secure.getString(getApplicationContext()
+                                                                              .getContentResolver(), Settings.Secure.ANDROID_ID);
                         params.add(new BasicNameValuePair("androidId", android_id));
                         params.add(new BasicNameValuePair("deviceId", String.valueOf(deviceInfo.getId())));
                         params.add(new BasicNameValuePair("ragioneSociale", ragioneSociale));
@@ -2819,26 +3627,38 @@ public class MainActivity extends AppCompatActivity implements
                         params.add(new BasicNameValuePair("storeName", storeName));
                         String license = "";
                         if (!licenseString.equals(""))
+                        {
                             license = licenseString;
+                        }
                         else
+                        {
                             license = "-1";
+                        }
                         params.add(new BasicNameValuePair("license", license));
                         callHttpHandler("/updateAdminDeviceInfo", params);
                         myPopupWindow = popupWindow;
-                    } else {
+                    }
+                    else
+                    {
                         String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
                         dbA.updateDeviceInfo(deviceInfo.getId(), ragioneSociale, partitaIva, address, provincia, comune, cap, storeEmail, android_id);
 
-                        if (!licenseString.equals("")) {
-                            if (dbA.checkIfStaticCodeIsUsed(licenseString)) {
-                                Date c = Calendar.getInstance().getTime();
-                                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                                String formattedDate = df.format(c);
+                        if (!licenseString.equals(""))
+                        {
+                            if (dbA.checkIfStaticCodeIsUsed(licenseString))
+                            {
+                                Date             c             = Calendar.getInstance().getTime();
+                                SimpleDateFormat df            = new SimpleDateFormat("dd/MM/yyyy");
+                                String           formattedDate = df.format(c);
                                 dbA.execOnDb("UPDATE registered_activation_code SET code='" + licenseString + "' , SET registration='" + formattedDate + "'");
                                 dbA.execOnDb("UPDATE static_activation_code SET used=1 where code='" + licenseString + "'");
-                                Toast.makeText(me, R.string.license_updated, Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(me, R.string.cant_update_license_code, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(me, R.string.license_updated, Toast.LENGTH_SHORT)
+                                     .show();
+                            }
+                            else
+                            {
+                                Toast.makeText(me, R.string.cant_update_license_code, Toast.LENGTH_SHORT)
+                                     .show();
                             }
                         }
                         dbA.showData("static_activation_code");
@@ -2853,48 +3673,61 @@ public class MainActivity extends AppCompatActivity implements
         /**
          *  X button behavior while in New User window
          */
-        popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 popupWindow.dismiss();
 
             }
         });
     }
 
-    public void fireSingleInputDialogForTimerPopup() {
+    public void fireSingleInputDialogForTimerPopup()
+    {
         LayoutInflater layoutInflater = (LayoutInflater) this
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.single_input_dialog, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_single_input, null);
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
 
-        dbA.showData("general_settings");
 
-        RelativeLayout other_input = popupView.findViewById(R.id.single_input_window);
+        RelativeLayout other_input  = popupView.findViewById(R.id.single_input_window);
         RelativeLayout timer_layout = popupView.findViewById(R.id.single_input_timer_window);
+
         timer_layout.setVisibility(View.VISIBLE);
         other_input.setVisibility(View.GONE);
+
         CustomEditText timer_input = popupView.findViewById(R.id.single_input_timer);
         timer_input.setHint(R.string.insert_reservation_timer_period);
-        if (dbA.getReservationPopupTimer() != 0) {
+        if (dbA.getReservationPopupTimer() != 0)
+        {
             timer_input.setText(resources.getString(R.string._minutes, dbA.getReservationPopupTimer()));
         }
 
         ImageButton okButton = popupView.findViewById(R.id.ok);
-        okButton.setOnClickListener(new View.OnClickListener() {
+        okButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-                if (!timer_input.getText().toString().equals("") && timer_input.getText().toString().length() <= 2) {
+            public void onClick(View view)
+            {
+                if (!timer_input.getText().toString().equals("") && timer_input.getText()
+                                                                               .toString()
+                                                                               .length() <= 2)
+                {
                     int timer = Integer.parseInt(timer_input.getText().toString());
                     timer_input.setText("");
 
                     dbA.setReservationPopupTimer(timer);
 
                     popupWindow.dismiss();
-                } else {
+                }
+                else
+                {
                     timer_input.setText("");
                     popupWindow.dismiss();
                 }
@@ -2902,9 +3735,11 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         ImageButton killButton = popupView.findViewById(R.id.kill);
-        killButton.setOnClickListener(new View.OnClickListener() {
+        killButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 popupWindow.dismiss();
             }
         });
@@ -2913,17 +3748,21 @@ public class MainActivity extends AppCompatActivity implements
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
     }
 
-    public String fireSingleInputDialogPopup() {
+    public String fireSingleInputDialogPopup()
+    {
         LayoutInflater layoutInflater = (LayoutInflater) this
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.single_input_dialog, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_single_input, null);
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
-        popupView.post(new Runnable() {
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
+        popupView.post(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                /* @SuppressLint("WrongViewCast") RelativeLayout.LayoutParams rlp1 =
                         (RelativeLayout.LayoutParams) popupView.findViewById(R.id.single_input_window).getLayoutParams();
                 int top1 = (int) (dpHeight - 52) / 2 - rlp1.height / 2;
@@ -2937,27 +3776,35 @@ public class MainActivity extends AppCompatActivity implements
         //license_input.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL);
 
         ImageButton okButton = popupView.findViewById(R.id.ok);
-        okButton.setOnClickListener(new View.OnClickListener() {
+        okButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-                if (!license_input.getText().toString().equals("")) {
+            public void onClick(View view)
+            {
+                if (!license_input.getText().toString().equals(""))
+                {
                     licenseString = license_input.getText().toString();
                     license_input.setText("");
 
                     licenseButton.setText(licenseString);
 
                     popupWindow.dismiss();
-                } else {
+                }
+                else
+                {
                     license_input.setText("");
-                    Toast.makeText(getApplicationContext(), R.string.insert_a_valid_license_key, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.insert_a_valid_license_key, Toast.LENGTH_SHORT)
+                         .show();
                 }
             }
         });
 
         ImageButton killButton = popupView.findViewById(R.id.kill);
-        killButton.setOnClickListener(new View.OnClickListener() {
+        killButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 popupWindow.dismiss();
             }
         });
@@ -2971,13 +3818,16 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Modifiers settings setup
      */
-    private void setModifiersSettings() {
+    private void setModifiersSettings()
+    {
         mod_group_recyclerview = findViewById(R.id.modifiersGroupRecyclerView);
-        grid_manager = new GridLayoutManager(this, 6);
-        grid_manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+        grid_manager           = new GridLayoutManager(this, 6);
+        grid_manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup()
+        {
 
             @Override
-            public int getSpanSize(int position) {
+            public int getSpanSize(int position)
+            {
                 return 1;
             }
         });
@@ -2994,14 +3844,18 @@ public class MainActivity extends AppCompatActivity implements
 
         // buttons onClick setup
         ((CustomButton) findViewById(R.id.addGroup)).setText(R.string.select_group);
-        findViewById(R.id.addGroup).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.addGroup).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 //addModifier non era attivo
-                if (!((Activity) me).findViewById(R.id.addModifier).isActivated()) {
+                if (!((Activity) me).findViewById(R.id.addModifier).isActivated())
+                {
                     v.setActivated(!v.isActivated());
                     //addGroup is now active
-                    if (v.isActivated()) {
+                    if (v.isActivated())
+                    {
                         group_rv_adapter.turnGroupModifiersOFF();
                         ((CustomTextView) findViewById(R.id.modifiers_group_tv)).setText(R.string.select_modifier_group);
                         ((CustomButton) v).setText(R.string.add_group);
@@ -3009,12 +3863,14 @@ public class MainActivity extends AppCompatActivity implements
                                 .setText(R.string.info_tv_main_modifiers);
                         group_rv_adapter.setAddGroupToProduct();
                         group_rv_adapter.switchAddGroupActive(true);
-                        if (modifiers_rv_adapter != null) {
+                        if (modifiers_rv_adapter != null)
+                        {
                             modifiers_rv_adapter.setNotesContainer(false);
                         }
                     }
                     //addGroup is now inactive
-                    else {
+                    else
+                    {
                         ((CustomTextView) findViewById(R.id.modifiers_group_tv)).setText(R.string.select_modifier_group);
                         ((CustomTextView) findViewById(R.id.infoTextView))
                                 .setText(R.string.info_tv_main_modifiers);
@@ -3024,20 +3880,24 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 }
                 //addModifier era attivo
-                else {
+                else
+                {
                     ((Activity) me).findViewById(R.id.addModifier).setActivated(false);
                     ((CustomButton) findViewById(R.id.addModifier)).setText(R.string.select_modifier);
                     ((CustomTextView) findViewById(R.id.infoTextView))
                             .setText(R.string.info_tv_main_modifiers);
-                    if (group_rv_adapter.addModifierActive) {
+                    if (group_rv_adapter.addModifierActive)
+                    {
                         group_rv_adapter.switchAddModifierActive();
                     }
-                    if (group_rv_adapter.addModifierActiveFixed) {
+                    if (group_rv_adapter.addModifierActiveFixed)
+                    {
                         group_rv_adapter.switchAddModifierActiveFixed();
                     }
                     v.setActivated(!v.isActivated());
                     //addGroup is now active
-                    if (v.isActivated()) {
+                    if (v.isActivated())
+                    {
                         group_rv_adapter.turnGroupModifiersOFF();
                         ((CustomTextView) findViewById(R.id.modifiers_group_tv)).setText(R.string.select_modifier_group);
                         ((CustomButton) v).setText(R.string.add_groups);
@@ -3045,12 +3905,14 @@ public class MainActivity extends AppCompatActivity implements
                                 .setText(R.string.info_tv_main_modifiers);
                         group_rv_adapter.setAddGroupToProduct();
                         group_rv_adapter.switchAddGroupActive(true);
-                        if (modifiers_rv_adapter != null) {
+                        if (modifiers_rv_adapter != null)
+                        {
                             modifiers_rv_adapter.setNotesContainer(false);
                         }
                     }
                     //addGroup is now inactive
-                    else {
+                    else
+                    {
                         ((CustomTextView) findViewById(R.id.modifiers_group_tv)).setText(R.string.select_modifier_group);
                         ((CustomButton) v).setText(R.string.select_group);
                         ((CustomTextView) findViewById(R.id.infoTextView))
@@ -3062,21 +3924,23 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        findViewById(R.id.addGroup).setOnLongClickListener(new View.OnLongClickListener() {
+        findViewById(R.id.addGroup).setOnLongClickListener(new View.OnLongClickListener()
+        {
             @Override
-            public boolean onLongClick(View v) {
+            public boolean onLongClick(View v)
+            {
 
                 LayoutInflater inflater = (LayoutInflater) me
                         .getSystemService(LAYOUT_INFLATER_SERVICE);
-                v = inflater.inflate(R.layout.two_button_popup, null);
+                v = inflater.inflate(R.layout.popup_two_button, null);
                 /*RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams)v.findViewById(R.id.popup_container)
                         .getLayoutParams();
                 int t = (int)(dpHeight-52)/2 - rlp.height/2;
                 rlp.topMargin = t;
                 v.findViewById(R.id.popup_container).setLayoutParams(rlp);*/
-                CustomTextView title = v.findViewById(R.id.popup_text);
-                CustomButton firstButton = v.findViewById(R.id.firstButton);
-                CustomButton secondButton = v.findViewById(R.id.secondButton);
+                CustomTextView title        = v.findViewById(R.id.popup_text);
+                CustomButton   firstButton  = v.findViewById(R.id.firstButton);
+                CustomButton   secondButton = v.findViewById(R.id.secondButton);
 
                 title.setText(R.string.switch_to_permanent_modifiers_mode);
                 title.setAllCaps(true);
@@ -3087,38 +3951,48 @@ public class MainActivity extends AppCompatActivity implements
 
                 final PopupWindow popupWindow = new PopupWindow(v, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 
-                firstButton.setOnClickListener(new View.OnClickListener() {
+                firstButton.setOnClickListener(new View.OnClickListener()
+                {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(View view)
+                    {
                         popupWindow.dismiss();
                     }
                 });
 
-                secondButton.setOnClickListener(new View.OnClickListener() {
+                secondButton.setOnClickListener(new View.OnClickListener()
+                {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(View view)
+                    {
                         popupWindow.dismiss();
                         //addGroup was inactive
-                        if (!((Activity) me).findViewById(R.id.addGroup).isActivated()) {
+                        if (!((Activity) me).findViewById(R.id.addGroup).isActivated())
+                        {
                             ((Activity) me).findViewById(R.id.addGroup).setActivated(!
-                                    ((Activity) me).findViewById(R.id.addGroup).isActivated());
+                                                                                             ((Activity) me)
+                                                                                                     .findViewById(R.id.addGroup)
+                                                                                                     .isActivated());
                             group_rv_adapter.setAddGroupActive();
                         }
                         //addModifier era attivo
-                        if (((Activity) me).findViewById(R.id.addModifier).isActivated()) {
+                        if (((Activity) me).findViewById(R.id.addModifier).isActivated())
+                        {
                             ((Activity) me).findViewById(R.id.addModifier).setActivated(false);
                             ((CustomButton) findViewById(R.id.addModifier)).setText(R.string.select_modifier);
                         }
                         group_rv_adapter.turnGroupModifiersOFF();
                         ((CustomTextView) findViewById(R.id.modifiers_group_tv)).setText(R.string.select_permanent_modifier_group);
                         ((CustomTextView) findViewById(R.id.infoTextView)).
-                                setText(R.string.info_tv_main_permanent_modifiers);
+                                                                                  setText(R.string.info_tv_main_permanent_modifiers);
                         ((CustomButton) findViewById(R.id.addGroup)).setText(R.string.add_group);
                         //group_rv_adapter.setAddGroupToProductFixed();
                         group_rv_adapter.switchAddGroupActiveFixed(true);
                         //se era attiva la barra delle note, la disattivo
                         if (modifiers_rv_adapter != null)
+                        {
                             modifiers_rv_adapter.setNotesContainer(false);
+                        }
                     }
                 });
 
@@ -3131,14 +4005,18 @@ public class MainActivity extends AppCompatActivity implements
 
         // addModifier
         ((CustomButton) findViewById(R.id.addModifier)).setText(R.string.select_modifier);
-        findViewById(R.id.addModifier).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.addModifier).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 //addGroup non era attivo
-                if (!((Activity) me).findViewById(R.id.addGroup).isActivated()) {
+                if (!((Activity) me).findViewById(R.id.addGroup).isActivated())
+                {
                     v.setActivated(!v.isActivated());
                     //addModifier is now inactive
-                    if (!v.isActivated()) {
+                    if (!v.isActivated())
+                    {
                         //v.setActivated(!v.isActivated());
                         ((CustomButton) v).setText(R.string.select_modifier);
                         ((CustomTextView) findViewById(R.id.modifiers_group_tv))
@@ -3147,20 +4025,25 @@ public class MainActivity extends AppCompatActivity implements
                                 .setText(R.string.info_tv_main_modifiers);
                         group_rv_adapter.turnGroupModifiersOFF();
                         group_rv_adapter.setFireModifierPopupWindow();
-                        if (group_rv_adapter.getAddModifierActive()) {
+                        if (group_rv_adapter.getAddModifierActive())
+                        {
                             group_rv_adapter.setAddGroupActive();
                         }
-                        if (group_rv_adapter.getAddGroupActiveFixed()) {
+                        if (group_rv_adapter.getAddGroupActiveFixed())
+                        {
                             group_rv_adapter.setAddGroupActiveFixed();
                         }
-                        if (group_rv_adapter.addModifierActive) {
+                        if (group_rv_adapter.addModifierActive)
+                        {
                             group_rv_adapter.switchAddModifierActive();
                         }
-                        if (group_rv_adapter.addModifierActiveFixed) {
+                        if (group_rv_adapter.addModifierActiveFixed)
+                        {
                             group_rv_adapter.switchAddModifierActiveFixed();
                         }
 
-                        if (modifiers_rv_adapter != null) {
+                        if (modifiers_rv_adapter != null)
+                        {
                             modifiers_rv_adapter.switchAddModifierActive(false);
                             modifiers_rv_adapter.switchAddModifierActiveFixed(false);
                             wereModifiersOpen = false;
@@ -3173,7 +4056,8 @@ public class MainActivity extends AppCompatActivity implements
                         }
                     }
                     //addModifier is now active
-                    else {
+                    else
+                    {
                         //v.setActivated(!v.isActivated());
                         ((CustomButton) v).setText(R.string.add_modifier);
                         ((CustomTextView) findViewById(R.id.modifiers_group_tv))
@@ -3186,29 +4070,37 @@ public class MainActivity extends AppCompatActivity implements
                         //addModifierActive viene già settato qui
                         group_rv_adapter.switchAddModifierActive();
                         //per adesso questo lo tengo, poi vediamo
-                        if (wereModifiersOpen && v.isActivated()) {
+                        if (wereModifiersOpen && v.isActivated())
+                        {
 
                             modifiers_rv_adapter.switchAddModifierActive(true);
                             modifiers_rv_adapter.setAddModifierActiveFixed(false);
-                        } else if (wereModifiersOpen) {
+                        }
+                        else if (wereModifiersOpen)
+                        {
                             modifiers_rv_adapter.switchAddModifierActive(false);
                         }
                     }
                 }
                 //AddGroup was active (here i've changed something)
-                else if (((Activity) me).findViewById(R.id.addGroup).isActivated()) {
+                else if (((Activity) me).findViewById(R.id.addGroup).isActivated())
+                {
                     ((Activity) me).findViewById(R.id.addGroup).setActivated(false);
                     ((CustomButton) findViewById(R.id.addGroup)).setText(R.string.select_group);
+
                     //dato che addGroup era attivo, allora devo settare opportunamente i booleani
-                    if (group_rv_adapter.getAddGroupActive()) {
+                    if (group_rv_adapter.getAddGroupActive())
+                    {
                         group_rv_adapter.setAddGroupActive();
                     }
-                    if (group_rv_adapter.getAddGroupActiveFixed()) {
+                    if (group_rv_adapter.getAddGroupActiveFixed())
+                    {
                         group_rv_adapter.setAddGroupActiveFixed();
                     }
                     v.setActivated(!v.isActivated());
                     //addModifier is now active
-                    if (v.isActivated()) {
+                    if (v.isActivated())
+                    {
                         ((CustomButton) v).setText(R.string.add_modifier);
                         ((CustomTextView) findViewById(R.id.modifiers_group_tv))
                                 .setText(R.string.select_modifier_group);
@@ -3219,31 +4111,40 @@ public class MainActivity extends AppCompatActivity implements
                         //group_rv_adapter.setAddModifierToProduct();
                         group_rv_adapter.turnGroupModifiersOFF();
                         group_rv_adapter.switchAddModifierActive();
-                        if (wereModifiersOpen && v.isActivated()) {
+                        if (wereModifiersOpen && v.isActivated())
+                        {
 
                             modifiers_rv_adapter.switchAddModifierActive(true);
                             modifiers_rv_adapter.setAddModifierActiveFixed(false);
-                        } else if (wereModifiersOpen) {
+                        }
+                        else if (wereModifiersOpen)
+                        {
                             modifiers_rv_adapter.switchAddModifierActive(false);
                         }
                     }
                     //addModifier is now inactive
-                    else {
+                    else
+                    {
                         ((CustomButton) v).setText(R.string.select_modifier);
-                        ((CustomTextView) findViewById(R.id.modifiers_group_tv))
-                                .setText(R.string.select_modifier_group);
+                        ((CustomTextView) findViewById(R.id.modifiers_group_tv)).setText(R.string.select_modifier_group);
+
                         ((CustomTextView) findViewById(R.id.infoTextView))
                                 .setText(R.string.info_tv_main_modifiers);
                         group_rv_adapter.turnGroupModifiersOFF();
                         group_rv_adapter.setFireModifierPopupWindow();
-                        if (group_rv_adapter.addModifierActive) {
+
+                        if (group_rv_adapter.addModifierActive)
+                        {
                             group_rv_adapter.switchAddModifierActive();
                         }
-                        if (group_rv_adapter.addModifierActiveFixed) {
+
+                        if (group_rv_adapter.addModifierActiveFixed)
+                        {
                             group_rv_adapter.switchAddModifierActiveFixed();
                         }
 
-                        if (modifiers_rv_adapter != null) {
+                        if (modifiers_rv_adapter != null)
+                        {
                             modifiers_rv_adapter.switchAddModifierActive(false);
                             modifiers_rv_adapter.switchAddModifierActiveFixed(false);
                             wereModifiersOpen = false;
@@ -3259,22 +4160,21 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        findViewById(R.id.addModifier).setOnLongClickListener(new View.OnLongClickListener() {
+
+
+        findViewById(R.id.addModifier).setOnLongClickListener(new View.OnLongClickListener()
+        {
             @Override
-            public boolean onLongClick(View v) {
+            public boolean onLongClick(View v)
+            {
+                LayoutInflater inflater = (LayoutInflater) me.getSystemService(LAYOUT_INFLATER_SERVICE);
+
+                v = inflater.inflate(R.layout.popup_two_button, null);
 
 
-                LayoutInflater inflater = (LayoutInflater) me
-                        .getSystemService(LAYOUT_INFLATER_SERVICE);
-                v = inflater.inflate(R.layout.two_button_popup, null);
-                /*RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams)v.findViewById(R.id.popup_container)
-                        .getLayoutParams();
-                int t = (int)(dpHeight-52)/2 - rlp.height/2;
-                rlp.topMargin = t;
-                v.findViewById(R.id.popup_container).setLayoutParams(rlp);*/
-                CustomTextView title = v.findViewById(R.id.popup_text);
-                CustomButton firstButton = v.findViewById(R.id.firstButton);
-                CustomButton secondButton = v.findViewById(R.id.secondButton);
+                CustomTextView title        = v.findViewById(R.id.popup_text);
+                CustomButton   firstButton  = v.findViewById(R.id.firstButton);
+                CustomButton   secondButton = v.findViewById(R.id.secondButton);
 
                 title.setText(R.string.switch_to_permanent_modifiers_mode);
                 title.setAllCaps(true);
@@ -3285,35 +4185,45 @@ public class MainActivity extends AppCompatActivity implements
 
                 final PopupWindow popupWindow = new PopupWindow(v, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 
-                firstButton.setOnClickListener(new View.OnClickListener() {
+                firstButton.setOnClickListener(new View.OnClickListener()
+                {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(View view)
+                    {
                         popupWindow.dismiss();
                     }
                 });
 
-                secondButton.setOnClickListener(new View.OnClickListener() {
+                secondButton.setOnClickListener(new View.OnClickListener()
+                {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(View view)
+                    {
                         popupWindow.dismiss();
                         //addGroup was inactive
-                        if (!((Activity) me).findViewById(R.id.addGroup).isActivated()) {
+                        if (!((Activity) me).findViewById(R.id.addGroup).isActivated())
+                        {
                             if (!((Activity) me).findViewById(R.id.addModifier).isActivated())
-                                ((Activity) me).findViewById(R.id.addModifier).setActivated(!
-                                        ((Activity) me).findViewById(R.id.addModifier).isActivated());
+                            {
+                                ((Activity) me).findViewById(R.id.addModifier).setActivated(!((Activity) me).findViewById(R.id.addModifier).isActivated());
+                            }
 
-                            ((CustomTextView) findViewById(R.id.modifiers_group_tv))
-                                    .setText(R.string.select_permanent_modifier_group);
-                            ((CustomTextView) findViewById(R.id.infoTextView))
-                                    .setText(R.string.info_tv_main_permanent_modifiers);
+                            ((CustomTextView) findViewById(R.id.modifiers_group_tv)).setText(R.string.select_permanent_modifier_group);
+
+                            ((CustomTextView) findViewById(R.id.infoTextView)).setText(R.string.info_tv_main_permanent_modifiers);
+
                             ((CustomButton) findViewById(R.id.addModifier)).setText(R.string.add_modifier);
+
                             group_rv_adapter.turnGroupModifiersOFF();
                             group_rv_adapter.setAddModifierToProductFixed();
-                            if (group_rv_adapter.addModifierActive) {
+
+                            if (group_rv_adapter.addModifierActive)
+                            {
                                 group_rv_adapter.switchAddModifierActive();
                             }
 
-                            if (modifiers_rv_adapter != null) {
+                            if (modifiers_rv_adapter != null)
+                            {
                                 modifiers_rv_adapter.switchAddModifierActive(false);
                                 modifiers_rv_adapter.switchAddModifierActiveFixed(false);
                                 wereModifiersOpen = false;
@@ -3326,30 +4236,40 @@ public class MainActivity extends AppCompatActivity implements
                                 //myLine.setOffset(0);
                             }
                         }
+
                         //addGroup was active
-                        else if (((Activity) me).findViewById(R.id.addGroup).isActivated()) {
+                        else if (((Activity) me).findViewById(R.id.addGroup).isActivated())
+                        {
                             ((Activity) me).findViewById(R.id.addGroup).setActivated(false);
                             ((CustomButton) findViewById(R.id.addGroup)).setText(R.string.select_group);
-                            ((Activity) me).findViewById(R.id.addModifier).setActivated(!
-                                    ((Activity) me).findViewById(R.id.addModifier).isActivated());
-                            if (group_rv_adapter.getAddGroupActive()) {
+                            ((Activity) me).findViewById(R.id.addModifier).setActivated(!((Activity) me).findViewById(R.id.addModifier).isActivated());
+
+                            if (group_rv_adapter.getAddGroupActive())
+                            {
                                 group_rv_adapter.setAddGroupActive();
                             }
-                            if (group_rv_adapter.getAddGroupActiveFixed()) {
+
+                            if (group_rv_adapter.getAddGroupActiveFixed())
+                            {
                                 group_rv_adapter.setAddGroupActiveFixed();
                             }
 
-                            ((CustomTextView) findViewById(R.id.modifiers_group_tv))
-                                    .setText(R.string.select_permanent_modifier_group);
-                            ((CustomTextView) findViewById(R.id.infoTextView))
-                                    .setText(R.string.info_tv_main_permanent_modifiers);
+                            ((CustomTextView) findViewById(R.id.modifiers_group_tv)).setText(R.string.select_permanent_modifier_group);
+
+                            ((CustomTextView) findViewById(R.id.infoTextView)).setText(R.string.info_tv_main_permanent_modifiers);
+
                             ((CustomButton) findViewById(R.id.addModifier)).setText(R.string.add_modifier);
+
                             group_rv_adapter.setAddModifierToProductFixed();
                             group_rv_adapter.turnGroupModifiersOFF();
-                            if (group_rv_adapter.addModifierActive) {
+
+                            if (group_rv_adapter.addModifierActive)
+                            {
                                 group_rv_adapter.switchAddModifierActive();
                             }
-                            if (modifiers_rv_adapter != null) {
+
+                            if (modifiers_rv_adapter != null)
+                            {
                                 modifiers_rv_adapter.switchAddModifierActive(false);
                                 modifiers_rv_adapter.switchAddModifierActiveFixed(false);
                                 wereModifiersOpen = false;
@@ -3364,6 +4284,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                     }
                 });
+
                 popupWindow.setFocusable(true);
                 popupWindow.showAtLocation(((Activity) me).findViewById(R.id.main), 0, 0, 0);
 
@@ -3371,16 +4292,21 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        findViewById(R.id.backToMainMenu).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.backToMainMenu).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 switchView(3, 0);
             }
         });
     }
 
-    public void closeModifiersView() {
-        if (wereModifiersOpen) {
+
+    public void closeModifiersView()
+    {
+        if (wereModifiersOpen)
+        {
             findViewById(R.id.modifiers_tv).setVisibility(View.INVISIBLE);
             findViewById(R.id.modifiers_tv_hline).setVisibility(View.INVISIBLE);
             findViewById(R.id.modifiersRecyclerView).setVisibility(View.INVISIBLE);
@@ -3390,28 +4316,35 @@ public class MainActivity extends AppCompatActivity implements
         isAdded = false;
     }
 
-    public void openModifiersView(int groupID) {
+
+    public void openModifiersView(int groupID)
+    {
         findViewById(R.id.modifiers_tv).setVisibility(View.VISIBLE);
         findViewById(R.id.modifiers_tv_hline).setVisibility(View.VISIBLE);
         findViewById(R.id.modifiersRecyclerView).setVisibility(View.VISIBLE);
         ((CustomTextView) findViewById(R.id.modifiers_tv)).setText(R.string.select_modifiers);
-        if (!wereModifiersOpen) {
+        if (!wereModifiersOpen)
+        {
             grid_manager = new GridLayoutManager(this, 4);
-            grid_manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            grid_manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup()
+            {
 
                 @Override
-                public int getSpanSize(int position) {
+                public int getSpanSize(int position)
+                {
                     return 1;
                 }
             });
             modifiers_recyclerview = findViewById(R.id.modifiersRecyclerView);
             modifiers_recyclerview.setLayoutManager(grid_manager);
-            if (!isAdded) {
+            if (!isAdded)
+            {
                 modifiers_recyclerview.addItemDecoration(myLine);
                 isAdded = true;
             }
             modifiers_rv_adapter = new ModifierAdapter(this, dbA, grid_status.getCurrent_product(),
-                    groupID, group_rv_adapter);
+                                                       groupID, group_rv_adapter
+            );
             modifiers_recyclerview.setAdapter(modifiers_rv_adapter);
             ItemTouchHelper.Callback callback =
                     new ItemTouchHelperCallback(modifiers_rv_adapter);
@@ -3419,51 +4352,73 @@ public class MainActivity extends AppCompatActivity implements
             touchHelper.attachToRecyclerView(modifiers_recyclerview);
             wereModifiersOpen = true;
             group_rv_adapter.setChildAdapter(modifiers_rv_adapter);
-            if (group_rv_adapter.getChecknotes()) {
+            if (group_rv_adapter.getChecknotes())
+            {
                 modifiers_rv_adapter.setNotesContainer(true);
             }
-            modifiers_recyclerview.post(new Runnable() {
+            modifiers_recyclerview.post(new Runnable()
+            {
                 @Override
-                public void run() {
+                public void run()
+                {
                     modifiers_rv_adapter.turnModifiersOFF();
-                    if (group_rv_adapter.addModifierActive) {
+                    if (group_rv_adapter.addModifierActive)
+                    {
                         modifiers_rv_adapter.switchAddModifierActive(true);
-                    } else if (group_rv_adapter.addModifierActiveFixed) {
+                    }
+                    else if (group_rv_adapter.addModifierActiveFixed)
+                    {
                         modifiers_rv_adapter.switchAddModifierActiveFixed(true);
                     }
                     group_rv_adapter.turnGroupModifiersOFF();
                     group_rv_adapter.getItemFromId(groupID).setActivated(true);
                     group_rv_adapter.setSelectedGroup(
-                            (ModifiersGroupAdapter.ModifiersGroup) group_rv_adapter.getItemFromId(groupID).getTag()
+                            (ModifiersGroupAdapter.ModifiersGroup) group_rv_adapter.getItemFromId(groupID)
+                                                                                   .getTag()
                     );
                 }
             });
-        } else {
-            if (group_rv_adapter.getChecknotes()) {
+        }
+
+        else
+        {
+            if (group_rv_adapter.getChecknotes())
+            {
                 modifiers_rv_adapter.setNotesContainer(true);
             }
+
             modifiers_rv_adapter.updateDataSet(groupID);
-            modifiers_recyclerview.post(new Runnable() {
+            modifiers_recyclerview.post(new Runnable()
+            {
                 @Override
-                public void run() {
+                public void run()
+                {
                     modifiers_rv_adapter.turnModifiersOFF();
-                    if (group_rv_adapter.addModifierActive) {
+                    if (group_rv_adapter.addModifierActive)
+                    {
                         modifiers_rv_adapter.switchAddModifierActive(true);
-                    } else if (group_rv_adapter.addModifierActiveFixed) {
+                    }
+
+                    else if (group_rv_adapter.addModifierActiveFixed)
+                    {
                         modifiers_rv_adapter.switchAddModifierActiveFixed(true);
                     }
+
                     group_rv_adapter.turnGroupModifiersOFF();
                     group_rv_adapter.getItemFromId(groupID).setActivated(true);
                     group_rv_adapter.setSelectedGroup(
-                            (ModifiersGroupAdapter.ModifiersGroup) group_rv_adapter.getItemFromId(groupID).getTag()
+                            (ModifiersGroupAdapter.ModifiersGroup) group_rv_adapter.getItemFromId(groupID)
+                                                                                   .getTag()
                     );
                 }
             });
         }
     }
 
-    private void getHomeButtonSet() {
-        buttons = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE catID = 0 AND id!=-30 and id!=-20 ORDER BY position");
+
+    private void getHomeButtonSet()
+    {
+        buttons         = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE catID = 0 AND id!=-30 and id!=-20 ORDER BY position");
         big_plus_button = new ButtonLayout(this);
         big_plus_button.setID(-11);
         big_plus_button.setPos(buttons.size());
@@ -3472,17 +4427,20 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    public void setGridStatus(StatusInfoHolder s) {
+    public void setGridStatus(StatusInfoHolder s)
+    {
         grid_status = s;
     }
 
-    public void notifyVatValueModified() {
+    public void notifyVatValueModified()
+    {
 
     }
 
 
     @Override
-    public void setModifyUser(User user, final View popupview, final PopupWindow popupWindow) {
+    public void setModifyUser(User user, final View popupview, final PopupWindow popupWindow)
+    {
         final CustomEditText Name = popupview.findViewById(R.id.name_et);
         Name.setText(user.getName());
         final CustomEditText Surname = popupview.findViewById(R.id.surname_et);
@@ -3497,35 +4455,57 @@ public class MainActivity extends AppCompatActivity implements
         final ImageButton manager = popupview.findViewById(R.id.manager_checkbox);
         //final ImageButton cashier = (ImageButton)findViewById(R.id.cashier_checkbox);
         if (user.getUserRole() == 1 || user.getUserRole() == 0)
+        {
             manager.setActivated(true);
+        }
         // cashier.setActivated(false);
-        manager.setOnClickListener(new View.OnClickListener() {
+        manager.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 if (user.getUserRole() != 0)
+                {
                     manager.setActivated(!manager.isActivated());
+                }
                 else
-                    Toast.makeText(MainActivity.this, R.string.you_cant_change_your_admin_role, Toast.LENGTH_SHORT).show();
+                {
+                    Toast.makeText(MainActivity.this, R.string.you_cant_change_your_admin_role, Toast.LENGTH_SHORT)
+                         .show();
+                }
             }
         });
         /**
          * OK Button behavior while in New User window
          */
-        popupview.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                String name = Name.getText().toString();
-                String surname = Surname.getText().toString();
+            public void onClick(View v)
+            {
+                String name     = Name.getText().toString();
+                String surname  = Surname.getText().toString();
                 String passcode = Passcode.getText().toString();
-                String email = Email.getText().toString();
+                String email    = Email.getText().toString();
                 if (name.equals("") || surname.equals("") /*|| email.equals("") */ || passcode.equals(""))
-                    Toast.makeText(getBaseContext(), R.string.please_fill_all_fields, Toast.LENGTH_SHORT).show();
-                else if (dbA.checkIfPasscodeExistsWithId(passcode, user.getId())) {
-                    Toast.makeText(getBaseContext(), R.string.passcode_is_already_used, Toast.LENGTH_SHORT).show();
-                } else if (!Pattern.matches("^[-a-zA-Z0-9_]+@[a-zA-Z]+\\.[a-zA-Z]{2,5}$", email)) {
-                    Toast.makeText(getBaseContext(), R.string.not_a_valid_email, Toast.LENGTH_SHORT).show();
-                } else {
-                    if (StaticValue.blackbox) {
+                {
+                    Toast.makeText(getBaseContext(), R.string.please_fill_all_fields, Toast.LENGTH_SHORT)
+                         .show();
+                }
+                else if (dbA.checkIfPasscodeExistsWithId(passcode, user.getId()))
+                {
+                    Toast.makeText(getBaseContext(), R.string.passcode_is_already_used, Toast.LENGTH_SHORT)
+                         .show();
+                }
+                else if (!Pattern.matches("^[-a-zA-Z0-9_]+@[a-zA-Z]+\\.[a-zA-Z]{2,5}$", email))
+                {
+                    Toast.makeText(getBaseContext(), R.string.not_a_valid_email, Toast.LENGTH_SHORT)
+                         .show();
+                }
+                else
+                {
+                    if (StaticValue.blackbox)
+                    {
                         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
                         params.add(new BasicNameValuePair("password", passcode));
                         params.add(new BasicNameValuePair("oldPassword", user.getPasscode()));
@@ -3535,18 +4515,26 @@ public class MainActivity extends AppCompatActivity implements
                         params.add(new BasicNameValuePair("passcode", passcode));
                         params.add(new BasicNameValuePair("userType", String.valueOf(user.getUserRole())));
                         params.add(new BasicNameValuePair("id", String.valueOf(user.getId())));
-                        myPopupView = popupview;
+                        myPopupView   = popupview;
                         myPopupWindow = popupWindow;
                         httpHandler.UpdateInfoAsyncTask("/updateUser", params);
                         httpHandler.execute();
-                    } else {
+                    }
+                    else
+                    {
                         String password = passcode;
-                        if (user.getUserRole() == 0) {
+                        if (user.getUserRole() == 0)
+                        {
                             dbA.updateUser(name, surname, passcode, email, 0, user.getId());
-                        } else {
-                            if (manager.isActivated()) {
+                        }
+                        else
+                        {
+                            if (manager.isActivated())
+                            {
                                 dbA.updateUser(name, surname, passcode, email, 1, user.getId());
-                            } else /*if(cashier.isActivated())*/ {
+                            }
+                            else /*if(cashier.isActivated())*/
+                            {
                                 dbA.updateUser(name, surname, passcode, email, 2, user.getId());
                             }
                         }
@@ -3571,39 +4559,54 @@ public class MainActivity extends AppCompatActivity implements
         /**
          *  X button behavior while in New User window
          */
-        popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+        popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 setupNewUserWindow(popupview, popupWindow);
             }
         });
     }
 
     @Override
-    public void onTaskEndWithResult(String success) {
+    public void onTaskEndWithResult(String success)
+    {
 
     }
 
     @Override
-    public void onTaskFinishGettingData(String result) {
+    public void onTaskFinishGettingData(String result)
+    {
 
     }
 
-    public void setupDismissKeyboard(View view) {
+    public void setupDismissKeyboard(View view)
+    {
         //Set up touch listener for non-text box views to hide keyboard.
-        if ((view instanceof EditText)) {
-            ((EditText) view).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        if ((view instanceof EditText))
+        {
+            ((EditText) view).setOnEditorActionListener(new TextView.OnEditorActionListener()
+            {
                 @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (actionId == EditorInfo.IME_ACTION_NEXT) keyboard_next_flag = true;
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+                {
+                    if (actionId == EditorInfo.IME_ACTION_NEXT)
+                    {
+                        keyboard_next_flag = true;
+                    }
                     return false;
                 }
             });
-            view.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            view.setOnFocusChangeListener(new View.OnFocusChangeListener()
+            {
                 @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
-                        if (!(getCurrentFocus() instanceof EditText) && !keyboard_next_flag) {
+                public void onFocusChange(View v, boolean hasFocus)
+                {
+                    if (!hasFocus)
+                    {
+                        if (!(getCurrentFocus() instanceof EditText) && !keyboard_next_flag)
+                        {
                             Log.d(TAG, "[setupdDismissKeyboard]::[OnFocusChange] You clicked out of an Edit Text!");
                             InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -3614,8 +4617,10 @@ public class MainActivity extends AppCompatActivity implements
             });
         }
         //If a layout container, iterate over children and seed recursion.
-        if (view instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+        if (view instanceof ViewGroup)
+        {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
+            {
                 View innerView = ((ViewGroup) view).getChildAt(i);
                 setupDismissKeyboard(innerView);
             }

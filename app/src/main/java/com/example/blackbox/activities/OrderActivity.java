@@ -10,7 +10,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -49,10 +48,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -163,6 +159,7 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                     }
                     break;
 
+
                 case "getBillData":
                     check = jsonObject.getBoolean("check");
                     if (check)
@@ -173,17 +170,20 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                         JSONArray modifierArray = new JSONObject(output).getJSONArray("modifiers");
                         JSONArray customerArray = new JSONObject(output).getJSONArray("customers");
 
+                        int tableNum = jsonObject.getInt("tableNumber");
+
                         TotalBill totals = TotalBill.fromJson(tbArray);
                         ArrayList<CashButtonLayout> products = CashButtonLayout.fromJsonArray(productArray);
                         ArrayList<CashButtonListLayout> modifiers = CashButtonListLayout.fromJsonArray(modifierArray);
                         Map<CashButtonLayout, ArrayList<CashButtonListLayout>> map = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+
                         for (CashButtonLayout product : products)
                         {
                             map.put(product, product.getCashList());
                         }
 
                         ArrayList<Customer> customers = Customer.fromJsonArray(customerArray);
-                        setPopupCashListFromServer(totals, products, map, customers);
+                        setPopupCashListFromServer(totals, products, map, customers, tableNum);
 
                     }
                     else
@@ -309,10 +309,30 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
         httpHandler.execute();
     }
 
-    public void setPopupCashListFromServer(TotalBill totalBill, ArrayList<CashButtonLayout> products, Map<CashButtonLayout, ArrayList<CashButtonListLayout>> map, ArrayList<Customer> customers)
+
+    public void setPopupCashListFromServer(TotalBill totalBill, ArrayList<CashButtonLayout> products, Map<CashButtonLayout, ArrayList<CashButtonListLayout>> map, ArrayList<Customer> customers, int tableNum)
     {
         CustomTextView numberBillView = (CustomTextView) myPopupView.findViewById(R.id.cash_order_number);
         numberBillView.setText("#" + (totalBill.getBillNumber() + 1));
+
+        // set the table button number, if a table is present
+        if (tableNum != -1)
+        {
+            myPopupView.findViewById(R.id.cash_table_not_set).setVisibility(View.GONE);
+            myPopupView.findViewById(R.id.cash_table).setVisibility(View.VISIBLE);
+            myPopupView.findViewById(R.id.cash_table_number).setVisibility(View.VISIBLE);
+            ( (CustomTextView) myPopupView.findViewById(R.id.cash_table_number)).setText(String.valueOf(tableNum));
+        }
+
+        else
+        {
+            myPopupView.findViewById(R.id.cash_table_not_set).setVisibility(View.VISIBLE);
+            myPopupView.findViewById(R.id.cash_table).setVisibility(View.GONE);
+            myPopupView.findViewById(R.id.cash_table_number).setVisibility(View.GONE);
+
+            ( (CustomTextView) myPopupView.findViewById(R.id.cash_table_not_set)).setText("TAKE-AWAY");
+            ( (CustomTextView) myPopupView.findViewById(R.id.cash_table_not_set)).setBackgroundColor(getResources().getColor(R.color.red));
+        }
 
         ExpandableListView expListView = (ExpandableListView) myPopupView.findViewById(R.id.cash_recyclerView);
         //set total for bill if billId exist, else set 0.0f
@@ -365,11 +385,8 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
             @Override
             public void onClick(View v)
             {
-
-
                 String username = intent.getStringExtra("username");
                 int isAdmin = intent.getIntExtra("isAdmin", -1);
-
 
                 Intent intent = new Intent(orderActivity, Operative.class);
                 intent.putExtra("username", username);
@@ -395,11 +412,8 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
             @Override
             public void onClick(View v)
             {
-
-
                 String username = intent.getStringExtra("username");
                 int isAdmin = intent.getIntExtra("isAdmin", -1);
-
 
                 Intent intent = new Intent(orderActivity, PaymentActivity.class);
                 intent.putExtra("username", username);
@@ -425,8 +439,6 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
             @Override
             public void onClick(View v)
             {
-
-
                 if (StaticValue.blackbox)
                 {
                     Map<String, ArrayList<CashButtonListLayout>> test = new HashMap<String, ArrayList<CashButtonListLayout>>();
@@ -454,9 +466,8 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                     params.add(new BasicNameValuePair("totalDiscount", String.valueOf(0.0)));
 
                     callHttpHandler("/printItemBillNonFiscal", params);
-
-
                 }
+
                 else
                 {
 
@@ -748,7 +759,7 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
     {
         //make open new popup
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.specific_order_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_specific_order, null);
         final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
@@ -1003,16 +1014,14 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
     public void showPaymentFromOrderWithTable(int billId, int orderNumber, int tableNumber)
     {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.specific_order_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_specific_order, null);
         final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+
         popupView.post(new Runnable()
         {
             @Override
             public void run()
             {
-
-                // TODO
-                // remove the get bill data
                 if (StaticValue.blackbox)
                 {
                     myPopupView = popupView;
@@ -1301,31 +1310,9 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
 
             }
         });
+
         popupWindow.setFocusable(true);
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
-
-
-       /* String username= intent.getStringExtra("username");
-        int isAdmin = intent.getIntExtra("isAdmin", -1);
-
-
-        Intent intent = new Intent(this, Operative.class);
-        intent.putExtra("tableNumber",tableNumber);
-        intent.putExtra("username", username);
-        intent.putExtra("isAdmin", isAdmin);
-        intent.setAction("setTable");
-        intent.putExtra("orderNumber", orderNumber-1 );
-        intent.putExtra("billId", billId);
-        intent.putExtra("userId", userId);
-        intent.putExtra("userType", userType);
-
-
-        intent.putExtra("tableNumber", tableNumber);
-
-        startActivity(intent);
-        finish();*/
-
-
     }
 
     /**

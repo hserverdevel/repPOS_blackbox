@@ -33,6 +33,10 @@ import java.util.Objects;
  * Created by tiziano on 2/25/19.
  */
 
+
+
+
+
 public class ActivityLicense extends AppCompatActivity
 {
     public float density;
@@ -41,7 +45,6 @@ public class ActivityLicense extends AppCompatActivity
     private DatabaseAdapter dbA;
     private String licenseString;
     private CustomButton codeButton;
-
 
 
     @Override
@@ -148,7 +151,7 @@ public class ActivityLicense extends AppCompatActivity
 
         LayoutInflater layoutInflater = (LayoutInflater) this
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.single_input_dialog,null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_single_input, null);
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,

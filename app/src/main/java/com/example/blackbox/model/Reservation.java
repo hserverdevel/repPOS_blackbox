@@ -28,7 +28,6 @@ public class Reservation implements Comparable<Reservation>{
 
     private int id;
     private String name;
-    private String surname;
     private int adults;
     private int children;
     private int disabled;
@@ -52,14 +51,6 @@ public class Reservation implements Comparable<Reservation>{
     }
     public void setName(String name) {
         this.name = name;
-    }
-
-
-    public String getSurname() {
-        return surname;
-    }
-    public void setSurname(String surname) {
-        this.surname = surname;
     }
 
 
@@ -125,7 +116,6 @@ public class Reservation implements Comparable<Reservation>{
         {
             res.setReservation_id(jsonObject.getInt("id"));
             res.name = jsonObject.getString("name");
-            res.surname = jsonObject.getString("surname");
             res.adults = jsonObject.getInt("adults");
             res.children = jsonObject.getInt("children");
             res.disabled = jsonObject.getInt("disabled");

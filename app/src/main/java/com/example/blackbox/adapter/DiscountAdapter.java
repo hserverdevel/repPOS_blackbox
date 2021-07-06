@@ -81,7 +81,7 @@ public class DiscountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
         RecyclerView.ViewHolder vh;
-        v = inflater.inflate(R.layout.discount_value_recycler, null);
+        v = inflater.inflate(R.layout.recycler_discount_value, null);
         vh = new ButtonHolder(v);
         return vh;
     }
@@ -224,7 +224,7 @@ public class DiscountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public ButtonHolder(View itemView) {
             super(itemView);
             view = itemView;
-            linearLayout = (LinearLayout) view.findViewById(R.layout.discount_value_recycler);
+            linearLayout = (LinearLayout) view.findViewById(R.layout.recycler_discount_value);
             discountContainer = (CustomTextView) view.findViewById(R.id.discount_name_container);
             valueContainer = (CustomTextView)view.findViewById(R.id.discount_value_container);
             deleteButton = (CustomButton) view.findViewById(R.id.custom_delete_discount_button);

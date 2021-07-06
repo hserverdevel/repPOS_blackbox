@@ -145,48 +145,72 @@
                android:layout_marginTop="14dp"
                android:id="@+id/client_info_container">
 
-               <TextView
-                   android:layout_width="260dp"
+
+               <com.example.blackbox.graphics.CustomTextView
+                   android:id="@+id/fidelity_code"
+                   android:layout_width="160dp"
                    android:layout_height="42dp"
-                   android:textAllCaps="true"
+                   android:background="@drawable/button_border_and_blue"
                    android:gravity="center"
-                   android:id="@+id/add_fidelity_code"
-                   android:background="@drawable/view_border_white_in"
+                   custom:typeface="franklin_gothic_book_cd"
                    android:textSize="21sp"
                    android:paddingStart="10dp"
                    android:inputType="textCapWords"
-                   custom:typeface="franklin_gothic_book_cd"
                    android:nextFocusDown="@id/name_et"
-                   />
+                   android:layout_marginTop="6dp"/>
 
-               <TextView
-                   android:layout_width="170dp"
+               <View
+                   android:layout_width="2dp"
                    android:layout_height="42dp"
-                   android:layout_toEndOf="@id/add_fidelity_code"
-                   android:hint="@string/fidelity_code"
-                   android:textAllCaps="true"
-                   android:gravity="right"
-                   android:id="@+id/show_fidelity_credit"
-                   android:background="@drawable/view_border_white_in"
+                   android:id="@+id/vline0_left"
+                   android:background="@drawable/divider_line"
+                   android:layout_toRightOf="@id/fidelity_code"
+                   android:layout_marginStart="6dp"
+                   android:layout_marginEnd="6dp"
+                   android:layout_marginTop="6dp"/>
+
+               <com.example.blackbox.graphics.CustomTextView
+                   android:id="@+id/fidelity_credit_amount"
+                   android:layout_width="160dp"
+                   android:layout_height="42dp"
+                   android:layout_toEndOf="@id/vline0_left"
+                   android:background="@drawable/popup_button_red"
+                   android:gravity="center"
+                   custom:typeface="franklin_gothic_book_cd"
                    android:textSize="21sp"
                    android:paddingStart="10dp"
                    android:inputType="textCapWords"
-                   custom:typeface="franklin_gothic_book_cd"
                    android:nextFocusDown="@id/name_et"
-                   />
+                   android:layout_marginTop="6dp"/>
 
 
+               <View
+                   android:layout_width="2dp"
+                   android:layout_height="42dp"
+                   android:id="@+id/vline0_right"
+                   android:background="@drawable/divider_line"
+                   android:layout_toRightOf="@id/fidelity_credit_amount"
+                   android:layout_marginStart="6dp"
+                   android:layout_marginEnd="6dp"
+                   android:layout_marginTop="6dp"/>
 
-               <ImageButton
+
+               <com.example.blackbox.graphics.CustomTextView
                    android:id="@+id/add_fidelity_credit_button"
-                   android:layout_width="42dp"
+                   android:layout_width="160dp"
                    android:layout_height="42dp"
-                   android:layout_alignParentEnd="true"
-                   android:padding="20dp"
-                   android:adjustViewBounds="true"
-                   android:scaleType="centerInside"
-                   android:src="@drawable/big_plus_button"
-                   />
+                   android:layout_toEndOf="@id/vline0_right"
+                   android:background="@drawable/popup_button_green"
+                   android:text="ADD CREDITS"
+                   android:gravity="center"
+                   custom:typeface="franklin_gothic_book_cd"
+                   android:textSize="21sp"
+                   android:paddingStart="10dp"
+                   android:inputType="textCapWords"
+                   android:nextFocusDown="@id/name_et"
+                   android:layout_marginTop="6dp"/>
+
+
 
                <View
                    android:layout_width="match_parent"
@@ -194,7 +218,7 @@
                    android:background="@drawable/divider_line_horizontal"
                    android:layout_marginTop="6dp"
                    android:id="@+id/hline_fidelity_code"
-                   android:layout_below="@id/add_fidelity_code"/>
+                   android:layout_below="@id/fidelity_code"/>
 
 
                <com.example.blackbox.graphics.CustomEditText
@@ -219,6 +243,7 @@
                    android:layout_below="@+id/hline_fidelity_code"
                    android:layout_marginStart="6dp"
                    android:layout_marginTop="6dp"/>
+
                <com.example.blackbox.graphics.CustomEditText
                    android:layout_width="238dp"
                    android:layout_height="42dp"
@@ -241,6 +266,7 @@
                    android:layout_below="@id/name_et"
                    android:layout_marginTop="6dp"
                    android:id="@+id/hline3_right"/>
+
                <com.example.blackbox.graphics.CustomEditText
                    android:layout_width="match_parent"
                    android:layout_height="42dp"

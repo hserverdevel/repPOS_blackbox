@@ -189,7 +189,7 @@ public class SubdivisionAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = inflater.inflate(R.layout.subdivision_element, null);
+        View v = inflater.inflate(R.layout.element_subdivision, null);
         SubdivisionElementHolder seh = new SubdivisionElementHolder(v);
         return seh;
     }

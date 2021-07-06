@@ -101,7 +101,6 @@ public class WaitingListModel {
         {
             wt.setId(jsonObject.getInt("id"));
             wt.name = jsonObject.getString("name");
-            wt.surname = jsonObject.getString("surname");
             wt.adults = jsonObject.getInt("adults");
             wt.children = jsonObject.getInt("children");
             wt.disabled = jsonObject.getInt("disabled");

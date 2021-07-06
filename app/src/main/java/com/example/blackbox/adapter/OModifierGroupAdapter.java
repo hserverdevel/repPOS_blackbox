@@ -121,7 +121,7 @@ public class OModifierGroupAdapter extends Adapter<ViewHolder>  {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = inflater.inflate(R.layout.gridview_subelement, null);
+        View v = inflater.inflate(R.layout.element_gridview_subelement, null);
         v.findViewById(R.id.subtitle).setVisibility(GONE);
         ViewHolder vh = new GroupHolder(v);
         return vh;

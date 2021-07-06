@@ -9,7 +9,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -164,7 +163,7 @@ public class CashAdapter extends BaseExpandableListAdapter {
             if (convertView == null) {
                 LayoutInflater infalInflater = (LayoutInflater) context
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = infalInflater.inflate(R.layout.gridview_cash, null);
+                convertView = infalInflater.inflate(R.layout.element_gridview_cash, null);
             }
         if(!product.getIsPaid()){
 
@@ -590,7 +589,7 @@ public class CashAdapter extends BaseExpandableListAdapter {
             LayoutInflater inflater = context.getLayoutInflater();
 
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.gridview_cash_modifier_modify, null);
+                convertView = inflater.inflate(R.layout.element_gridview_cash_modifier_modify, null);
             }
             CustomTextView title = (CustomTextView) convertView.findViewById(R.id.cash_modifier_title);
             CustomTextView quantity = (CustomTextView) convertView.findViewById(R.id.cash_modifier_quantity);

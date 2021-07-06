@@ -47,7 +47,7 @@ public class ButtonAdapter extends BaseAdapter{
         if(convertView == null || button.getID() == -11) {
                 LayoutInflater inflater = (LayoutInflater) context
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.gridview_element, null);
+                view = inflater.inflate(R.layout.element_gridview_element, null);
         }
         else view = convertView;
         if(button.getID()!= -11){ // NOT big_plus_button case

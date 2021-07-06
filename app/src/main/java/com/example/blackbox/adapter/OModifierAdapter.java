@@ -220,7 +220,7 @@ public class OModifierAdapter extends Adapter<ViewHolder> implements ItemTouchHe
         View v;
         ViewHolder vh;
 
-        v = inflater.inflate(R.layout.gridview_subelement, null);
+        v = inflater.inflate(R.layout.element_gridview_subelement, null);
         v.findViewById(R.id.subtitle).setVisibility(GONE);
         vh = new GroupHolder(v);
 

@@ -167,7 +167,7 @@ public class OrderFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
-        myself = inflater.inflate(R.layout.order_fragment, container, false);
+        myself = inflater.inflate(R.layout.fragment_order, container, false);
         dbA = new DatabaseAdapter(this.getContext());
 
         o_tv = (CustomTextView)myself.findViewById(R.id.orderNumber_tv);

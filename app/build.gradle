@@ -1,18 +1,19 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
     buildToolsVersion '28.0.2'
     defaultConfig {
         applicationId "com.example.blackbox"
         minSdkVersion 18
-        targetSdkVersion 28
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -49,10 +50,10 @@ dependencies {
     })
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
-    compile project(':ziplib-release')
+    implementation project(':ziplib-release')
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:28.0.0'
-    testCompile 'junit:junit:4.12'
+    implementation 'junit:junit:4.12'
     implementation 'com.android.support.constraint:constraint-layout:+'
     implementation 'com.android.support:multidex:1.0.2'
 

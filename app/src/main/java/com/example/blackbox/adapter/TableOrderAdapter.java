@@ -97,7 +97,7 @@ public class TableOrderAdapter extends Adapter<ViewHolder> implements ItemTouchH
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
         ViewHolder vh;
-        v = inflater.inflate(R.layout.table_order_recycler, null);
+        v = inflater.inflate(R.layout.recycler_table_order, null);
         vh = new ButtonHolder(v);
         return vh;
     }
@@ -241,7 +241,7 @@ public class TableOrderAdapter extends Adapter<ViewHolder> implements ItemTouchH
                     float dpHeight = outMetrics.heightPixels;// / density;
                     float dpWidth  = outMetrics.widthPixels;// / density;
 
-                    final View popupView = inflater.inflate(R.layout.recent_orders_popup, null);
+                    final View popupView = inflater.inflate(R.layout.popup_recent_orders, null);
                     final PopupWindow popupWindow = new PopupWindow(
                             popupView,
                             RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -362,7 +362,7 @@ public class TableOrderAdapter extends Adapter<ViewHolder> implements ItemTouchH
                     float dpHeight = outMetrics.heightPixels;// / density;
                     float dpWidth  = outMetrics.widthPixels;// / density;
 
-                    final View popupView = inflater.inflate(R.layout.recent_orders_popup, null);
+                    final View popupView = inflater.inflate(R.layout.popup_recent_orders, null);
                     final PopupWindow popupWindow = new PopupWindow(
                             popupView,
                             RelativeLayout.LayoutParams.MATCH_PARENT,

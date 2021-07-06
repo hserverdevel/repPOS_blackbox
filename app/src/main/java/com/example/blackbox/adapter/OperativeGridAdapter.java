@@ -96,11 +96,11 @@ public class OperativeGridAdapter extends Adapter<ViewHolder> {
         ViewHolder vh;
         switch (viewType) {
             case -1:
-                v = inflater.inflate(R.layout.gridview_subelement, null);
+                v = inflater.inflate(R.layout.element_gridview_subelement, null);
                 vh = new SubButtonHolder(v);
                 break;
             default:
-                v = inflater.inflate(R.layout.gridview_element, null);
+                v = inflater.inflate(R.layout.element_gridview_element, null);
                 vh = new ButtonHolder(v);
                 break;
         }
@@ -347,7 +347,7 @@ public class OperativeGridAdapter extends Adapter<ViewHolder> {
             public void onClick(View v) {
                 //recursively deleting buttons, dialog with YES/NO will show up
                 v.setElevation(0.0f);
-                final View dialogView = layoutInflater.inflate(R.layout.yes_no_dialog, null);
+                final View dialogView = layoutInflater.inflate(R.layout.popup_yes_no, null);
                 final PopupWindow popupDialog = new PopupWindow(
                         dialogView,
                         LayoutParams.MATCH_PARENT,

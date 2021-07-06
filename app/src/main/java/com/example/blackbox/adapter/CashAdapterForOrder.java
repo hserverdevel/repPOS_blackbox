@@ -144,7 +144,7 @@ public class CashAdapterForOrder extends BaseExpandableListAdapter {
             if (convertView == null) {
                 LayoutInflater infalInflater = (LayoutInflater) context
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = infalInflater.inflate(R.layout.gridview_cash, null);
+                convertView = infalInflater.inflate(R.layout.element_gridview_cash, null);
             }
         if(!product.getIsPaid()){
 
@@ -301,7 +301,7 @@ public class CashAdapterForOrder extends BaseExpandableListAdapter {
             LayoutInflater inflater = context.getLayoutInflater();
 
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.gridview_cash_modifier_modify, null);
+                convertView = inflater.inflate(R.layout.element_gridview_cash_modifier_modify, null);
             }
             CustomTextView title = (CustomTextView) convertView.findViewById(R.id.cash_modifier_title);
             CustomTextView quantity = (CustomTextView) convertView.findViewById(R.id.cash_modifier_quantity);

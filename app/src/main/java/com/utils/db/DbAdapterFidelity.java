@@ -149,7 +149,9 @@ public class DbAdapterFidelity extends DbAdapterPrinters
                     // the title of a fidelity package button is always "fidelity credit (50)",
                     // thus the number in parenthesis, representing the amount of credits, can be extracted
                     String title = mCursor.getString(mCursor.getColumnIndex("title"));
-                    fp.setCreditAmount(Integer.parseInt(title.replaceAll("fidelity credit \\(([0-9]+)\\)", "$1")));
+                    fp.setCreditAmount(Integer.parseInt(title.replaceAll(".+\\s*\\(([0-9]+)\\)\\s*FC", "$1")));
+
+                    fp.setName(title.replaceAll("(.+)\\s+\\([0-9]+\\)", "$1"));
 
                     array.add(fp);
                 }
@@ -158,7 +160,8 @@ public class DbAdapterFidelity extends DbAdapterPrinters
         }
         catch (Exception e)
         {
-            Log.d("fetchFailure", e.getMessage());
+            Log.e(TAG, "Fail on [selectAllFidelityPackages]");
+            e.printStackTrace();
         }
         finally
         {

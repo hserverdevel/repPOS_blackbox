@@ -23,18 +23,20 @@ import com.example.blackbox.activities.ReservationsActivity;
 import com.example.blackbox.graphics.CustomButton;
 import com.example.blackbox.graphics.CustomTextView;
 import com.example.blackbox.model.DateUtils;
+import com.example.blackbox.model.RequestParam;
 import com.example.blackbox.model.Reservation;
 import com.example.blackbox.model.Room;
 import com.example.blackbox.model.StaticValue;
 import com.example.blackbox.model.Table;
 import com.example.blackbox.model.TableUse;
-import com.google.gson.Gson;
 import com.utils.db.DatabaseAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import cz.msebera.android.httpclient.NameValuePair;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
@@ -85,9 +87,15 @@ public class ReservationsAdapter extends RecyclerView.Adapter
         dpWidth = outMetrics.widthPixels;// / density;
 
 
-        //before taking all reservations, delete old reservations
-        // TODO this.dbA.deleteOldReservations(formatNowDate());
-        reservations = dbA.getReservationList();
+        if (StaticValue.blackbox)
+        {
+            RequestParam params = new RequestParam();
+            params.add("reservationChecksum", dbA.getChecksumForTable("reservation"));
+            reservationsActivity.callHttpHandler("/getReservationList", params);
+        }
+
+        else
+            {  reservations = dbA.getReservationList(); }
 
         Collections.sort(reservations);
 
@@ -152,10 +160,10 @@ public class ReservationsAdapter extends RecyclerView.Adapter
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        View itemView = inflater.inflate(R.layout.reservation_list_element, null);
+        View itemView = inflater.inflate(R.layout.element_reservation_list, null);
 
         // TODO add a personalization
-        minsNotifyLimit = 0;
+        minsNotifyLimit = dbA.getReservationPopupTimer();
 
         return new ReservationHolder(itemView);
     }
@@ -169,7 +177,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter
         Reservation res = reservations.get(position);
 
 
-        resHolder.resName.setText(String.format("%s %s", res.getName(), res.getSurname()));
+        resHolder.resName.setText(res.getName());
 
         resHolder.resType.setText(resources.getString(R.string.adults_children_disabled, res.getAdults(), res.getChildren(), res.getDisabled()));
 
@@ -318,6 +326,16 @@ public class ReservationsAdapter extends RecyclerView.Adapter
 
 
 
+    public void refreshReservationList(ArrayList<Reservation> reser)
+    {
+        reservations = reser;
+
+        Collections.sort(reservations);
+
+        notifyDataSetChanged();
+    }
+
+
     public void refreshReservationList()
     {
         reservations = dbA.getReservationList();
@@ -326,6 +344,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter
 
         notifyDataSetChanged();
     }
+
 
 
 
@@ -367,10 +386,55 @@ public class ReservationsAdapter extends RecyclerView.Adapter
 
 
 
+    public void filter(int kind)
+    {
+        reservations = dbA.getReservationList();
+        Date now = new Date();
+        ArrayList<Reservation> res = new ArrayList<>();
+
+        switch (kind)
+        {
+            // expired reservations
+            case -1:
+                for (Reservation r : reservations)
+                if (DateUtils.isBeforeDay(r.getTime(), now))
+                    { res.add(r); }
+                break;
+
+            // today res
+            case 0:
+                for (Reservation r : reservations)
+                if (DateUtils.isSameDay(r.getTime(), now))
+                    { res.add(r); }
+                break;
+
+            // upcoming res
+            case 1:
+                for (Reservation r : reservations)
+                if (DateUtils.isAfterDay(r.getTime(), now))
+                    { res.add(r); }
+                break;
+
+            default:
+                break;
+        }
+
+        reservations = res;
+        notifyDataSetChanged();
+
+    }
+
+
+
+
+
+
+
+
     private void throwModifyPopup(Reservation res)
     {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.yes_no_dialog, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_yes_no, null);
 
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
@@ -414,7 +478,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter
 
                 dbA.deleteReservation(res.getReservation_id());
                 popupWindow.dismiss();
-                refreshReservationList();
+                refreshReservationList(dbA.getReservationList());
             }
         });
 
@@ -452,7 +516,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter
     {
         LayoutInflater layoutInflater = (LayoutInflater) context
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.reservation_green_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_reservation_green, null);
 
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
@@ -466,7 +530,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter
             public void onClick(View view)
             {
                 dbA.deleteReservation(res.getReservation_id());
-                refreshReservationList();
+                refreshReservationList(dbA.getReservationList());
 
                 reservationsActivity.changeActivity();
 
@@ -481,7 +545,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter
             public void onClick(View view)
             {
                 dbA.deleteReservation(res.getReservation_id());
-                refreshReservationList();
+                refreshReservationList(dbA.getReservationList());
 
                 popupWindow.dismiss();
             }

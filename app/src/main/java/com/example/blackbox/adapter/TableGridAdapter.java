@@ -65,7 +65,7 @@ public class TableGridAdapter extends Adapter<ViewHolder> implements ItemTouchHe
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
         ViewHolder vh;
-        v = inflater.inflate(R.layout.table_gridview, null);
+        v = inflater.inflate(R.layout.element_table_gridview, null);
         vh = new ButtonHolder(v);
         return vh;
     }

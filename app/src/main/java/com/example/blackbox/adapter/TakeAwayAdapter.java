@@ -95,7 +95,7 @@ public class TakeAwayAdapter extends Adapter<ViewHolder> implements ItemTouchHel
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
         ViewHolder vh;
-        v = inflater.inflate(R.layout.take_away_recycler, null);
+        v = inflater.inflate(R.layout.recycler_take_away, null);
         vh = new ButtonHolder(v);
         return vh;
     }
@@ -201,7 +201,7 @@ public class TakeAwayAdapter extends Adapter<ViewHolder> implements ItemTouchHel
             float dpHeight = outMetrics.heightPixels;// / density;
             float dpWidth  = outMetrics.widthPixels;// / density;
 
-            final View popupView = inflater.inflate(R.layout.recent_orders_popup, null);
+            final View popupView = inflater.inflate(R.layout.popup_recent_orders, null);
             final PopupWindow popupWindow = new PopupWindow(
                     popupView,
                     RelativeLayout.LayoutParams.MATCH_PARENT,

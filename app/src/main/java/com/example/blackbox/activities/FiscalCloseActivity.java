@@ -31,7 +31,7 @@ public class FiscalCloseActivity extends FragmentActivity implements ClientDeleg
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fiscal_close_screen);
+        setContentView(R.layout.activity_fiscal_close);
       //  getSupportActionBar().hide();
         this.context = this;
         dbA = new DatabaseAdapter(this);

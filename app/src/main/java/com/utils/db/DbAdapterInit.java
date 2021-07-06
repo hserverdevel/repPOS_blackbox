@@ -351,9 +351,8 @@ public class DbAdapterInit
                 }
                 mCursor.close();
             }
+
             database.close();
-
-
         }
         catch (Exception e)
         {

@@ -13,7 +13,10 @@ public class FidelityPackage
     // 2. the price of this package
     public double price;
 
-    // 3. the id in the button table, where the details for this package are stored.
+    // 3. the name of the package
+    public String name;
+
+    // 4. the id in the button table, where the details for this package are stored.
     public int buttonId;
 
     public int getCreditAmount() { return this.creditAmount; }
@@ -24,4 +27,7 @@ public class FidelityPackage
 
     public int getButtonId() { return this.buttonId; }
     public void setButtonId(int p) { this.buttonId = p; }
+
+    public String getName() { return this.name; }
+    public void setName(String n) { this.name = n; }
 }

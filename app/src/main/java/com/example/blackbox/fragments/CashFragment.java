@@ -179,10 +179,20 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
     public void activateAllCustomer()
     {
         resetArrayCustomer();
+
+        // first check that all are active.
+        // If so deactivate them
+        boolean allActive = true;
+        for (int i = 0; i < listDataCustomer.size(); i++)
+        {
+            if (!listDataCustomer.get(i).getActive())
+                allActive = false;
+        }
+
         for (int i = 0; i < listDataCustomer.size(); i++)
         {
             currentCustomerArray.add(i + 1);
-            listDataCustomer.get(i).setActive(true);
+            listDataCustomer.get(i).setActive(!allActive);
         }
     }
 
@@ -291,7 +301,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        view = inflater.inflate(R.layout.cash_fragment, container, false);
+        view = inflater.inflate(R.layout.fragment_cash, container, false);
         myself = view;
 
         viewTotal = (CustomTextView) view.findViewById(R.id.cash_euro_total);
@@ -374,8 +384,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             if (StaticValue.blackbox)
             {
                 List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                params.add(new BasicNameValuePair("androidId", android_id));
+                params.add(new BasicNameValuePair("androidId", StaticValue.androidId));
                 ((Operative) context).callHttpHandler("/getLastBillNumber", params);
             }
 
@@ -515,13 +524,10 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         density = getResources().getDisplayMetrics().density;
 
 
-        /**
-         * set on child click listener
-         */
+
+        // set on child click listener
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener()
         {
-
-
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l)
             {
@@ -816,12 +822,13 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         saveButton.setEnabled(false);
                         saveBillOnServer("saveButton", listDataHeader.size());
                     }
+
                     else
                     {
                         if (!getModifyProduct() && !ModifierFragment.getModify() && listDataHeader.size() != 0)
                         {
                             saveButton.setEnabled(false);
-                            Intent intent = getActivity().getIntent();
+                            Intent intent = getActivity(). getIntent();
                             intent.setAction("normal");
                             int numberBill = intent.getIntExtra("orderNumber", -1);
                             if (numberBill == -1)
@@ -900,13 +907,16 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         }
                     }
                 }
+
                 else
                 {
-
                     reprintOrderBill(billId);
                 }
 
-
+                // refresh the color of the table button
+                view.findViewById(R.id.cash_table_not_set).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.cash_table).setVisibility(View.GONE);
+                view.findViewById(R.id.cash_table_number).setVisibility(View.GONE);
             }
 
         });
@@ -1531,7 +1541,6 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 @Override
                 public void onClick(View view)
                 {
-
                     executeCalculatorAction();
                 }
             });
@@ -1722,29 +1731,28 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
 
 
-        view.findViewById(R.id.cash_client_container)
-            .setOnLongClickListener(new View.OnLongClickListener()
+        view.findViewById(R.id.cash_client_container).setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View view)
             {
-                @Override
-                public boolean onLongClick(View view)
+                ArrayList<CashButtonLayout> cashList = (ArrayList<CashButtonLayout>) listAdapter.getGroups();
+
+                resetArrayCustomer();
+
+                for (Customer current : listDataCustomer)
                 {
-
-
-                    ArrayList<CashButtonLayout> cashList = (ArrayList<CashButtonLayout>) listAdapter
-                            .getGroups();
-                    resetArrayCustomer();
-                    for (Customer current : listDataCustomer)
-                    {
-                        current.setActive(false);
-                    }
-                    listAdapter.setCustomerList(listDataCustomer);
-                    listAdapter.notifyDataSetChanged();
-                    activateAllCustomer();
-                    activityCommunicator = (ActivityCommunicator) context;
-                    activityCommunicator.goToMainPage();
-                    return true;
+                    current.setActive(false);
                 }
-            });
+
+                listAdapter.setCustomerList(listDataCustomer);
+                listAdapter.notifyDataSetChanged();
+                activateAllCustomer();
+                activityCommunicator = (ActivityCommunicator) context;
+                activityCommunicator.goToMainPage();
+                return true;
+            }
+        });
 
 
 
@@ -7104,7 +7112,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         float dpHeight = outMetrics.heightPixels;// / density;
         float dpWidth = outMetrics.widthPixels;// / density;
 
-        final View popupView = layoutInflater.inflate(R.layout.recent_orders_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_recent_orders, null);
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,

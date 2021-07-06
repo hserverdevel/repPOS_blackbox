@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: artifacts:ziplib-release:unspecified">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/ziplib-release.aar/8bf730b2c7b61f2475ca2a39deed3ebe/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/ziplib-release.aar/8bf730b2c7b61f2475ca2a39deed3ebe/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/ziplib-release.aar/8bf730b2c7b61f2475ca2a39deed3ebe/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/ziplib-release.aar/b9358463a78059d98ff3df6fb889aea9/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/ziplib-release.aar/b9358463a78059d98ff3df6fb889aea9/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/ziplib-release.aar/b9358463a78059d98ff3df6fb889aea9/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

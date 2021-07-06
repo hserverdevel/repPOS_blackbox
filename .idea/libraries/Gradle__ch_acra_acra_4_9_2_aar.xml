@@ -1,14 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: ch.acra:acra:4.9.2@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/acra-4.9.2.aar/09c4825ef4a6b0af7a22dc09ea267b01/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/acra-4.9.2.aar/09c4825ef4a6b0af7a22dc09ea267b01/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/acra-4.9.2.aar/6c6a4e1599778687ed70ebabd8f417e2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/acra-4.9.2.aar/6c6a4e1599778687ed70ebabd8f417e2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/acra-4.9.2.aar/6c6a4e1599778687ed70ebabd8f417e2/AndroidManifest.xml" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ch.acra/acra/4.9.2/63b9daba4655364c41416fff7952def16994b782/acra-4.9.2-javadoc.jar!/" />
-    </JAVADOC>
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ch.acra/acra/4.9.2/2833955349f098d8047617c5f3c8f0f268d8a2ae/acra-4.9.2-sources.jar!/" />
-    </SOURCES>
+    <JAVADOC />
+    <SOURCES />
   </library>
 </component>

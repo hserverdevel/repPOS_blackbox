@@ -79,7 +79,7 @@ public class OperativeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.operative_fragment, container, false);
+        view = inflater.inflate(R.layout.fragment_operative, container, false);
         view.findViewById(R.id.backButton).setOnLongClickListener(view -> {
             Log.i(TAG, "[onCreateView] backButton click");
             goToPreviousCatFromModifiers(0);

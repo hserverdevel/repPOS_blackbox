@@ -52,7 +52,7 @@ public class TableNameAdapter extends Adapter<ViewHolder> implements ItemTouchHe
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
         ViewHolder vh;
-        v = inflater.inflate(R.layout.table_name_recycler, null);
+        v = inflater.inflate(R.layout.recycler_table_name, null);
         vh = new ButtonHolder(v);
         return vh;
     }

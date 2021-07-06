@@ -150,7 +150,7 @@ public class CalculatorFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        myself = inflater.inflate(R.layout.calculator_fragment, container, false);
+        myself = inflater.inflate(R.layout.fragment_calculator, container, false);
         amount = new StringBuilder();
         communicator = (PaymentActivityCommunicator)getContext();
 

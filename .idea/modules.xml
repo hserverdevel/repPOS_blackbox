@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/repPOS_blackbox-master.iml" filepath="$PROJECT_DIR$/repPOS_blackbox-master.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ziplib-release/ziplib-release.iml" filepath="$PROJECT_DIR$/ziplib-release/ziplib-release.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/repPOS_blackbox.iml" filepath="$PROJECT_DIR$/.idea/modules/repPOS_blackbox.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/repPOS_blackbox.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/repPOS_blackbox.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ziplib-release/repPOS_blackbox.ziplib-release.iml" filepath="$PROJECT_DIR$/.idea/modules/ziplib-release/repPOS_blackbox.ziplib-release.iml" />
     </modules>
   </component>
 </project>

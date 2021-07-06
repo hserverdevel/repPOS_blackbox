@@ -67,7 +67,7 @@ public class UserAdapter extends Adapter<ViewHolder> implements ItemTouchHelperA
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
         ViewHolder vh;
-        v = inflater.inflate(R.layout.user_recycler, null);
+        v = inflater.inflate(R.layout.recycler_user, null);
         vh = new ButtonHolder(v);
         return vh;
     }

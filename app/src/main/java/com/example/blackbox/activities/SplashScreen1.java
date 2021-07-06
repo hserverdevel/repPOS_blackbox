@@ -6,25 +6,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.InputFilter;
 import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.provider.Settings.Secure;
 
@@ -45,15 +39,14 @@ import com.example.blackbox.model.FiscalPrinter;
 import com.example.blackbox.model.KitchenPrinter;
 import com.example.blackbox.model.ModifierAssigned;
 import com.example.blackbox.model.ModifierGroupAssigned;
+import com.example.blackbox.model.RequestParam;
 import com.example.blackbox.model.Reservation;
 import com.example.blackbox.model.Room;
 import com.example.blackbox.model.StaticValue;
 import com.example.blackbox.model.Table;
-import com.example.blackbox.model.TimerManager;
 import com.example.blackbox.model.User;
 import com.example.blackbox.model.Vat;
 import com.example.blackbox.model.WaitingListModel;
-import com.example.blackbox.revicer.PinpadBroadcastReciver;
 import com.example.blackbox.server.HttpHandler;
 import com.example.blackbox.server.LocalNotification;
 import com.utils.db.DatabaseAdapter;
@@ -64,7 +57,6 @@ import org.json.JSONObject;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.text.BreakIterator;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -75,7 +67,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import cz.msebera.android.httpclient.NameValuePair;
-import cz.msebera.android.httpclient.message.BasicNameValuePair;
 
 /**
  * Created by tiziano on 4/2/19.
@@ -94,12 +85,12 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
 
     private ProgressBar progressBar;
     private int progressStatus = 0;
-    private String status = "";
     private String username = "";
     private int userType;
     private DatabaseAdapter dbA;
 
     private String licenseString = "";
+
 
 
     @Override
@@ -111,7 +102,7 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
         context = this;
 
         Intent intent = getIntent();
-        status = intent.getStringExtra("status");
+        String status = intent.getStringExtra("status");
 
         username = intent.getStringExtra("username");
         if (username==null) { username= ""; }
@@ -199,14 +190,12 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             else
                             {
                                 // since the test worked, start the pipeline of updates
-                                String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-                                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
 
                                 WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
                                 String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
 
-                                params.add(new BasicNameValuePair("androidId", android_id));
-                                params.add(new BasicNameValuePair("ip", ip));
+                                RequestParam params = new RequestParam();
+                                params.add("ip", ip);
 
                                 callHttpHandler("/updateDeviceInfo", params);
                             }
@@ -272,10 +261,10 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             progressStatus += 20;
                             progressBar.setProgress(progressStatus);
 
-                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                            RequestParam params = new RequestParam();
 
-                            params.add(new BasicNameValuePair("buttonChecksum", dbA.getChecksumForTable("button")));
-                            params.add(new BasicNameValuePair("vatChecksum", dbA.getChecksumForTable("vat")));
+                            params.add("buttonChecksum", dbA.getChecksumForTable("button"));
+                            params.add("vatChecksum", dbA.getChecksumForTable("vat"));
 
                             callHttpHandler("/updateButtons", params);
                         }
@@ -315,10 +304,9 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             progressBar.setProgress(progressStatus);
                             progressBar.setProgress(progressStatus);
 
-                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-
-                            params.add(new BasicNameValuePair("modifierChecksum", dbA.getChecksumForTable("modifier")));
-                            params.add(new BasicNameValuePair("modifierGroupChecksum", dbA.getChecksumForTable("modifiers_group")));
+                            RequestParam params = new RequestParam();
+                            params.add("modifierChecksum", dbA.getChecksumForTable("modifier"));
+                            params.add("modifierGroupChecksum", dbA.getChecksumForTable("modifiers_group"));
 
                             callHttpHandler("/updateModifierButtons", params);
                         }
@@ -353,10 +341,10 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             progressStatus += 10;
                             progressBar.setProgress(progressStatus);
 
-                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                            RequestParam params = new RequestParam();
 
-                            params.add(new BasicNameValuePair("modifierAssignedChecksum", dbA.getChecksumForTable("modifiers_assigned")));
-                            params.add(new BasicNameValuePair("modifierGroupAssignedChecksum", dbA.getChecksumForTable("modifiers_group_assigned")));
+                            params.add("modifierAssignedChecksum", dbA.getChecksumForTable("modifiers_assigned"));
+                            params.add("modifierGroupAssignedChecksum", dbA.getChecksumForTable("modifiers_group_assigned"));
 
                             callHttpHandler("/updateModifierAssigned", params);
                         }
@@ -392,12 +380,12 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             progressStatus += 10;
                             progressBar.setProgress(progressStatus);
 
-                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                            RequestParam params = new RequestParam();
 
-                            params.add(new BasicNameValuePair("clientChecksum", dbA.getChecksumForTable("client")));
-                            params.add(new BasicNameValuePair("companyChecksum", dbA.getChecksumForTable("company")));
-                            params.add(new BasicNameValuePair("clientInCompanyChecksum", dbA.getChecksumForTable("client_in_company")));
-                            params.add(new BasicNameValuePair("fidelityChecksum", dbA.getChecksumForTable("fidelity")));
+                            params.add("clientChecksum", dbA.getChecksumForTable("client"));
+                            params.add("companyChecksum", dbA.getChecksumForTable("company"));
+                            params.add("clientInCompanyChecksum", dbA.getChecksumForTable("client_in_company"));
+                            params.add("fidelityChecksum", dbA.getChecksumForTable("fidelity"));
 
                             callHttpHandler("/updateClients",params );
                         }
@@ -440,12 +428,12 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             progressStatus += 10;
                             progressBar.setProgress(progressStatus);
 
-                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                            dbA.showData("checksum_registry");
-                            params.add(new BasicNameValuePair("roomChecksum", dbA.getChecksumForTable("room")));
-                            params.add(new BasicNameValuePair("tableConfigurationChecksum", dbA.getChecksumForTable("table_configuration")));
-                            params.add(new BasicNameValuePair("reservationChecksum", dbA.getChecksumForTable("reservation")));
-                            params.add(new BasicNameValuePair("waitingListChecksum", dbA.getChecksumForTable("waiting_list")));
+                            RequestParam params = new RequestParam();
+
+                            params.add("roomChecksum", dbA.getChecksumForTable("room"));
+                            params.add("tableConfigurationChecksum", dbA.getChecksumForTable("table_configuration"));
+                            params.add("reservationChecksum", dbA.getChecksumForTable("reservation"));
+                            params.add("waitingListChecksum", dbA.getChecksumForTable("waiting_list"));
 
 
                             callHttpHandler("/updateRooms",params );
@@ -491,8 +479,8 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             progressStatus += 10;
                             progressBar.setProgress(progressStatus);
 
-                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                            params.add(new BasicNameValuePair("userChecksum", dbA.getChecksumForTable("user")));
+                            RequestParam params = new RequestParam();
+                            params.add("userChecksum", dbA.getChecksumForTable("user"));
 
                             callHttpHandler("/updateUsers", params);
 
@@ -520,9 +508,9 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             progressStatus += 10;
                             progressBar.setProgress(progressStatus);
 
-                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                            params.add(new BasicNameValuePair("fiscalPrinterChecksum", dbA.getChecksumForTable("fiscal_printer")));
-                            params.add(new BasicNameValuePair("kitchenPrinterChecksum", dbA.getChecksumForTable("kitchen_printer")));
+                            RequestParam params = new RequestParam();
+                            params.add("fiscalPrinterChecksum", dbA.getChecksumForTable("fiscal_printer"));
+                            params.add("kitchenPrinterChecksum", dbA.getChecksumForTable("kitchen_printer"));
 
                             callHttpHandler("/updatePrinters",params );
                         }
@@ -579,28 +567,6 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                         break;
                 }
 
-                /* OLD TODO
-                if (progressStatus >= 100) {
-                    if (status == null) {
-                        Intent i = new Intent(SplashScreen1.this, Login.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
-                        finish();
-                    } else if (status.equals("pinpad")) {
-                        Intent i = new Intent(SplashScreen1.this, Operative.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        i.putExtra("isAdmin", userType);
-                        i.putExtra("username", username);
-                        startActivity(i);
-                        finish();
-                    } else {
-                        Intent i = new Intent(SplashScreen1.this, Login.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
-                        finish();
-                    }
-                }
-                 */
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -728,7 +694,17 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
     }
 
 
-    public void callHttpHandler(String route,  List<NameValuePair> params ){
+
+    public void callHttpHandler(String route, List<NameValuePair> params)
+    {
+        HttpHandler httpHandler = new HttpHandler();
+        httpHandler.delegate = this;
+        httpHandler.UpdateInfoAsyncTask(route, params);
+        httpHandler.execute();
+    }
+
+    public void callHttpHandler(String route,  RequestParam params)
+    {
         HttpHandler httpHandler = new HttpHandler();
         httpHandler.delegate = this;
         httpHandler.UpdateInfoAsyncTask(route, params);
@@ -829,31 +805,31 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
 
             if (StaticValue.blackbox)
             {
-                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                params.add(new BasicNameValuePair("ragioneSociale", ragioneSociale));
-                params.add(new BasicNameValuePair("partitaIva", partitaIva));
-                params.add(new BasicNameValuePair("provincia", provincia));
-                params.add(new BasicNameValuePair("comune", comune));
-                params.add(new BasicNameValuePair("cap", cap));
-                params.add(new BasicNameValuePair("address", address));
-                params.add(new BasicNameValuePair("email", storeEmail));
-                params.add(new BasicNameValuePair("androidId", android_id));
-                params.add(new BasicNameValuePair("ip", myIp));
-                params.add(new BasicNameValuePair("tokenId", StaticValue.myTag));
-                params.add(new BasicNameValuePair("multicastIp", StaticValue.multicastGroup));
-                params.add(new BasicNameValuePair("master", String.valueOf(StaticValue.master ? 1 : 0)));
-                params.add(new BasicNameValuePair("name", adminName));
-                params.add(new BasicNameValuePair("surname", adminSurname));
-                params.add(new BasicNameValuePair("adminEmail", adminEmail));
-                params.add(new BasicNameValuePair("password", adminPasscode));
-                params.add(new BasicNameValuePair("userType", String.valueOf(0)));
-                // params.add(new BasicNameValuePair("passcode", adminPasscode));
-                params.add(new BasicNameValuePair("code", licenseString));
+                RequestParam params = new RequestParam();
+                params.add("ragioneSociale", ragioneSociale);
+                params.add("partitaIva", partitaIva);
+                params.add("provincia", provincia);
+                params.add("comune", comune);
+                params.add("cap", cap);
+                params.add("address", address);
+                params.add("email", storeEmail);
+                params.add("androidId", android_id);
+                params.add("ip", myIp);
+                params.add("tokenId", StaticValue.myTag);
+                params.add("multicastIp", StaticValue.multicastGroup);
+                params.add("master", String.valueOf(StaticValue.master ? 1 : 0));
+                params.add("name", adminName);
+                params.add("surname", adminSurname);
+                params.add("adminEmail", adminEmail);
+                params.add("password", adminPasscode);
+                params.add("userType", String.valueOf(0));
+                // params.add("passcode", adminPasscode);
+                params.add("code", licenseString);
 
                 Date c = Calendar.getInstance().getTime();
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                 String formattedDate = df.format(c);
-                params.add(new BasicNameValuePair("registration", formattedDate));
+                params.add("registration", formattedDate);
 
                 callHttpHandler("/saveFirstRegistration", params);
             }
@@ -875,7 +851,7 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
     public String fireSingleInputDialogPopup()
     {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.single_input_dialog, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_single_input, null);
 
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
@@ -949,8 +925,8 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
             // run the /testBlackboxComm POST request
             // also test if the blackbox already know this device, and thus if the device
             // must be registered or not
-            ArrayList<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            params.add(new BasicNameValuePair("androidId", androidId));
+            RequestParam params = new RequestParam();
+            params.add("androidId", androidId);
 
             httpHandler.UpdateInfoAsyncTask("/testBlackboxComm", params);
 

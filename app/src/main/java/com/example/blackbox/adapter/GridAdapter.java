@@ -214,15 +214,15 @@ public class GridAdapter extends Adapter<ViewHolder> implements ItemTouchHelperA
         switch (viewType)
         {
             case -11:
-                v = inflater.inflate(R.layout.gridview_plus_button, null);
+                v = inflater.inflate(R.layout.button_gridview_plus, null);
                 vh = new PlusButtonHolder(v);
                 break;
             case -1:
-                v = inflater.inflate(R.layout.gridview_subelement, null);
+                v = inflater.inflate(R.layout.element_gridview_subelement, null);
                 vh = new SubButtonHolder(v);
                 break;
             default:
-                v = inflater.inflate(R.layout.gridview_element, null);
+                v = inflater.inflate(R.layout.element_gridview_element, null);
                 vh = new ButtonHolder(v);
                 break;
         }
@@ -1219,6 +1219,7 @@ public class GridAdapter extends Adapter<ViewHolder> implements ItemTouchHelperA
                                 if (StaticValue.blackbox)
                                 {
                                     List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+
                                     params.add(new BasicNameValuePair("title", title.replaceAll("'", "\'")));
                                     params.add(new BasicNameValuePair("subtitle", subtitle.replaceAll("'", "\'")));
                                     params.add(new BasicNameValuePair("color", String.valueOf(color)));
@@ -1229,9 +1230,9 @@ public class GridAdapter extends Adapter<ViewHolder> implements ItemTouchHelperA
                                     params.add(new BasicNameValuePair("price", String.valueOf(price)));
                                     params.add(new BasicNameValuePair("vat", String.valueOf(vat1)));
                                     params.add(new BasicNameValuePair("fidelityDiscount", String.valueOf(discount.isActivated())));
-                                    params.add(new BasicNameValuePair("creditValue", String.valueOf(cValue)));
-                                    String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                                    params.add(new BasicNameValuePair("androidId", android_id));
+                                    params.add(new BasicNameValuePair("fidelityCredit", String.valueOf(cValue)));
+                                    params.add(new BasicNameValuePair("androidId", StaticValue.androidId));
+
                                     myPopupWindow = popupWindow;
                                     ((MainActivity) context).callHttpHandler("/insertButton3", params);
                                 }
@@ -1274,7 +1275,7 @@ public class GridAdapter extends Adapter<ViewHolder> implements ItemTouchHelperA
                     {
                         //recursively deleting buttons, dialog with YES/NO will show up
                         v.setElevation(0.0f);
-                        final View dialogView = layoutInflater.inflate(R.layout.barcode_input_dialog, null);
+                        final View dialogView = layoutInflater.inflate(R.layout.popup_barcode_input, null);
                         final PopupWindow popupDialog = new PopupWindow(dialogView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                         ((MainActivity) context).setBarcodeShow(true);
 
@@ -1715,7 +1716,7 @@ public class GridAdapter extends Adapter<ViewHolder> implements ItemTouchHelperA
                         params.add(new BasicNameValuePair("price", String.valueOf(price)));
                         params.add(new BasicNameValuePair("vat", String.valueOf(vat1)));
                         params.add(new BasicNameValuePair("fidelityDiscount", String.valueOf(discount.isActivated())));
-                        params.add(new BasicNameValuePair("creditValue", String.valueOf(cValue)));
+                        params.add(new BasicNameValuePair("fidelityCredit", String.valueOf(cValue)));
                         String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
                         params.add(new BasicNameValuePair("androidId", android_id));
                         myPopupWindow = popupWindow;
@@ -1749,7 +1750,7 @@ public class GridAdapter extends Adapter<ViewHolder> implements ItemTouchHelperA
             {
                 //recursively deleting buttons, dialog with YES/NO will show up
                 v.setElevation(0.0f);
-                final View dialogView = layoutInflater.inflate(R.layout.yes_no_dialog, null);
+                final View dialogView = layoutInflater.inflate(R.layout.popup_yes_no, null);
                 final PopupWindow popupDialog = new PopupWindow(dialogView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 ((CustomTextView) dialogView.findViewById(R.id.delete_window)).setText(resources.getString(R.string.you_are_deleting__product, b.getTitle().toUpperCase()));
                 ((CustomButton) dialogView.findViewById(R.id.delete_button)).setText(R.string.deleteProduct);
@@ -1801,7 +1802,7 @@ public class GridAdapter extends Adapter<ViewHolder> implements ItemTouchHelperA
             {
                 //recursively deleting buttons, dialog with YES/NO will show up
                 v.setElevation(0.0f);
-                final View dialogView = layoutInflater.inflate(R.layout.barcode_input_dialog, null);
+                final View dialogView = layoutInflater.inflate(R.layout.popup_barcode_input, null);
                 final PopupWindow popupDialog = new PopupWindow(dialogView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 ((MainActivity) context).setBarcodeShow(true);
 
@@ -2150,7 +2151,7 @@ public class GridAdapter extends Adapter<ViewHolder> implements ItemTouchHelperA
 
                 //recursively deleting buttons, dialog with YES/NO will show up
                 v.setElevation(0.0f);
-                final View dialogView = layoutInflater.inflate(R.layout.yes_no_dialog, null);
+                final View dialogView = layoutInflater.inflate(R.layout.popup_yes_no, null);
                 final PopupWindow popupDialog = new PopupWindow(dialogView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 ((CustomTextView) dialogView.findViewById(R.id.delete_window)).setText(resources.getString(R.string.you_are_deleting_2, resources.getString(getCurrentLevelName()), b.getTitle().toUpperCase()));
                 ((CustomButton) dialogView.findViewById(R.id.delete_button)).setText(resources.getString(R.string.delete_, resources.getString(getCurrentLevelName())));
@@ -2657,7 +2658,7 @@ public class GridAdapter extends Adapter<ViewHolder> implements ItemTouchHelperA
             {
                 //recursively deleting buttons, dialog with YES/NO will show up
                 v.setElevation(0.0f);
-                final View dialogView = layoutInflater.inflate(R.layout.yes_no_dialog, null);
+                final View dialogView = layoutInflater.inflate(R.layout.popup_yes_no, null);
                 final PopupWindow popupDialog = new PopupWindow(dialogView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 ((CustomTextView) dialogView.findViewById(R.id.delete_window)).setText(resources.getString(R.string.you_are_deleting__product, b.getTitle().toUpperCase()));
                 ((CustomButton) dialogView.findViewById(R.id.delete_button)).setText(R.string.deleteProduct);
@@ -2709,7 +2710,7 @@ public class GridAdapter extends Adapter<ViewHolder> implements ItemTouchHelperA
             {
                 //recursively deleting buttons, dialog with YES/NO will show up
                 v.setElevation(0.0f);
-                final View dialogView = layoutInflater.inflate(R.layout.barcode_input_dialog, null);
+                final View dialogView = layoutInflater.inflate(R.layout.popup_barcode_input, null);
                 final PopupWindow popupDialog = new PopupWindow(dialogView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 ((MainActivity) context).setBarcodeShow(true);
 
@@ -2807,7 +2808,6 @@ public class GridAdapter extends Adapter<ViewHolder> implements ItemTouchHelperA
      */
     private void popupVatWindow(View popupView, PopupWindow popupWindow, ButtonLayout b)
     {
-
         vatState = true;
         LayoutParams rlp = (LayoutParams) popupView.findViewById(R.id.new_Popup_Vat_Insert).getLayoutParams();
         int t = (int) (dpHeight - 52) / 2 - rlp.height / 2;
@@ -3172,7 +3172,7 @@ public class GridAdapter extends Adapter<ViewHolder> implements ItemTouchHelperA
                 params.add(new BasicNameValuePair("isCat", String.valueOf(showProduct)));
                 params.add(new BasicNameValuePair("printerId", String.valueOf(printerId)));
                 params.add(new BasicNameValuePair("fidelityDiscount", String.valueOf(discount.isActivated())));
-                params.add(new BasicNameValuePair("creditValue", String.valueOf(cValue)));
+                params.add(new BasicNameValuePair("fidelityCredit", String.valueOf(cValue)));
                 String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
                 params.add(new BasicNameValuePair("androidId", android_id));
 
@@ -3502,7 +3502,7 @@ public class GridAdapter extends Adapter<ViewHolder> implements ItemTouchHelperA
             {
                 View v;
                 IconHolder iconHolder;
-                v = inflater.inflate(R.layout.icon_element, null);
+                v = inflater.inflate(R.layout.element_icon, null);
                 iconHolder = new IconHolder(v);
                 return iconHolder;
             }

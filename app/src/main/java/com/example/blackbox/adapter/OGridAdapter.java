@@ -178,11 +178,11 @@ public class OGridAdapter extends Adapter<ViewHolder>
         switch (viewType)
         {
             case -1:
-                v = inflater.inflate(R.layout.gridview_subelement, null);
+                v = inflater.inflate(R.layout.element_gridview_subelement, null);
                 vh = new SubButtonHolder(v);
                 break;
             default:
-                v = inflater.inflate(R.layout.gridview_element, null);
+                v = inflater.inflate(R.layout.element_gridview_element, null);
                 vh = new ButtonHolder(v);
                 break;
         }
@@ -416,7 +416,7 @@ public class OGridAdapter extends Adapter<ViewHolder>
                 public boolean onLongClick(View view)
                 {
                     LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
-                    final View popupView = layoutInflater.inflate(R.layout.operative_quantity_popup, null);
+                    final View popupView = layoutInflater.inflate(R.layout.popup_operative_quantity, null);
 
                     final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                     popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);

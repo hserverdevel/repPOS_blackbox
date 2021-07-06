@@ -3,7 +3,10 @@ package com.example.blackbox.server;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.blackbox.model.RequestParam;
 import com.example.blackbox.model.StaticValue;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.utils.db.DatabaseAdapter;
 
 import org.json.JSONException;
@@ -24,44 +27,71 @@ import cz.msebera.android.httpclient.NameValuePair;
 import cz.msebera.android.httpclient.conn.ConnectTimeoutException;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 
-public class HttpHandler extends AsyncTask<Void, Void, String> {
-
+public class HttpHandler extends AsyncTask<Void, Void, String>
+{
     private static final String TAG = "<HttpHandler>";
 
-    public static final String REQUEST_METHOD = "POST";
-    public static final int READ_TIMEOUT = 15000;
-    public static final int CONNECTION_TIMEOUT = 15000;
-
-    public String url;
+    public String              url;
     public List<NameValuePair> jsonValues;
-    private String address;
+    public JSONObject          jsonParam = new JSONObject();
 
     // a test ip used to test a blackbox
     // and thus avoiding using the StaticValue blackbox info
     public String testIp = "";
 
-    // this deletegate will be later used in the interface AsyncResponse hereby defined
-    public AsyncResponse delegate = null;
+    // this delegate will be later used in the interface AsyncResponse hereby defined
+    public  AsyncResponse delegate = null;
+    private String        address;
 
 
 
-    /** define the input value for the POST request
-     * @param url : the route of the request
+    /**
+     * define the input value for the POST request
+     *
+     * @param url        : the route of the request
      * @param jsonValues : the json format params to pass with the request
-    */
-    public void UpdateInfoAsyncTask(String url, List<NameValuePair> jsonValues) {
-        this.url = url;
+     */
+    public void UpdateInfoAsyncTask(String url, List<NameValuePair> jsonValues)
+    {
+        this.url        = url;
         this.jsonValues = jsonValues;
+
+        try
+        {
+            for (NameValuePair values : jsonValues)
+            {
+                jsonParam.put(values.getName(), values.getValue());
+            }
+        }
+
+        catch (Exception e)
+        {
+        }
+
+    }
+
+
+    public void UpdateInfoAsyncTask(String url, RequestParam params)
+    {
+        this.url = url;
+
+        if (!params.hasKey("androidId"))
+        {
+            params.add("androidId", StaticValue.androidId);
+        }
+
+        this.jsonParam = params.toJson();
     }
 
 
     @Override
-    protected String doInBackground(Void... params) {
+    protected String doInBackground(Void... params)
+    {
         String stringUrl = url;
-        List<NameValuePair> jsonBody = jsonValues;
 
         // the output to be returned
         String route = stringUrl.replace("/", "");
+
         // this is the base configuration of the result, that is returned if the connection fails
         // otherwise the `result` var will be overwritten with the result of the connection
         String result = "{\"route\": \"" + route + "\", \"success\": \"false\"}";
@@ -79,7 +109,9 @@ public class HttpHandler extends AsyncTask<Void, Void, String> {
             // with the current defined blackbox
             testIp = "";
 
-            Log.i(TAG, String.format("--------------> %s@%s\n\tinput:\t%s", delegate, address, jsonValues));
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+            Log.i(TAG, String.format("Delegate: %s\n%s\n__INPUT__:\n%s", delegate, address, gson.toJson(jsonParam)));
 
 
             //Create a URL object holding our url
@@ -93,10 +125,6 @@ public class HttpHandler extends AsyncTask<Void, Void, String> {
             connection.setConnectTimeout(5000);
             connection.connect();
 
-            JSONObject jsonParam = new JSONObject();
-            for (NameValuePair values : jsonBody) {
-                jsonParam.put(values.getName(), values.getValue());
-            }
 
             DataOutputStream os = new DataOutputStream(connection.getOutputStream());
             os.writeBytes(jsonParam.toString());
@@ -126,7 +154,7 @@ public class HttpHandler extends AsyncTask<Void, Void, String> {
                 Log.i(TAG, "status code: " + statusCode);
 
                 if (statusCode != 200)
-                    { Log.d(TAG, "InputStream status code != 200: " + connection.getErrorStream()); }
+                    { Log.e(TAG, "InputStream status code != 200: " + connection.getErrorStream());  }
             }
 
         }
@@ -134,34 +162,47 @@ public class HttpHandler extends AsyncTask<Void, Void, String> {
         // if any exception, return a success: false value
         // to indicate that the communication with the blackbox failed
         catch (Exception e)
-            { e.printStackTrace(); }
+        {
+            e.printStackTrace();
+        }
 
         finally // disconnect
         {
             if (connection != null)
-            { connection.disconnect(); }
+                { connection.disconnect(); }
         }
 
         return result;
     }
 
 
-    private static String convertStreamToString(InputStream is) {
+
+    private static String convertStreamToString(InputStream is)
+    {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
+        StringBuilder  sb     = new StringBuilder();
 
         String line;
-        try {
-            while ((line = reader.readLine()) != null) {
+        try
+        {
+            while ((line = reader.readLine()) != null)
+            {
                 sb.append(line).append("\n");
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
-        } finally {
-            try {
+        }
+        finally
+        {
+            try
+            {
                 is.close();
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 e.printStackTrace();
             }
         }
@@ -172,15 +213,23 @@ public class HttpHandler extends AsyncTask<Void, Void, String> {
     }
 
 
+
+
+
     // pass the result of the request to the delegate
     // which is any other class that implements the AsyncResponse interface
     protected void onPostExecute(String result)
     {
-        Log.i(TAG, String.format("%s@%s -------------->\n\toutput:\t%s", delegate, address, result));
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        try
+        { Log.i(TAG, String.format("Delegate: %s\n%s\n__OUTPUT__:\n%s", delegate, address, gson.toJson(new JSONObject(result)))); }
+
+        catch (Exception e)
+        {}
 
         delegate.processFinish(result);
     }
-
 
 
     /**
@@ -189,11 +238,11 @@ public class HttpHandler extends AsyncTask<Void, Void, String> {
      * and as such, they will be able to call `processFinish` to obtain
      * the output of the Http Request sent from HttpHandler
      **/
-    public interface AsyncResponse {
+    public interface AsyncResponse
+    {
 
         void processFinish(String output);
     }
-
 
 
 }

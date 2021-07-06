@@ -144,7 +144,7 @@ public class TimerClass
     {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
 
-        final View popupView = layoutInflater.inflate(R.layout.reservation_automatic_popup, null);
+        final View popupView = layoutInflater.inflate(R.layout.popup_reservation_automatic, null);
 
         final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);

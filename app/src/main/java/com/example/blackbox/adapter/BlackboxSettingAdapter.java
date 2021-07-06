@@ -8,16 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.example.blackbox.R;
 import com.example.blackbox.activities.MainActivity;
 import com.example.blackbox.graphics.CustomButton;
 import com.example.blackbox.graphics.CustomTextView;
 import com.example.blackbox.graphics.ItemTouchHelperAdapter;
-import com.example.blackbox.graphics.OnSwipeTouchListener;
 import com.example.blackbox.model.BlackboxInfo;
-import com.example.blackbox.model.KitchenPrinter;
 import com.utils.db.DatabaseAdapter;
 
 import java.util.ArrayList;
@@ -62,7 +59,7 @@ public class BlackboxSettingAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v;
         RecyclerView.ViewHolder vh;
-        v = inflater.inflate(R.layout.printer_setting_recycler, null);
+        v = inflater.inflate(R.layout.recycler_printer_setting, null);
         vh = new ButtonHolder(v);
         return vh;
     }

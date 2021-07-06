@@ -5,13 +5,11 @@ import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.example.blackbox.R;
 import com.example.blackbox.activities.PaymentActivity;
@@ -19,8 +17,6 @@ import com.example.blackbox.fragments.CalculatorFragment;
 import com.example.blackbox.fragments.OrderFragment;
 import com.example.blackbox.fragments.PaymentActivityCommunicator;
 import com.example.blackbox.graphics.CustomButton;
-import com.example.blackbox.model.CashButtonLayout;
-import com.example.blackbox.model.Fidelity;
 import com.example.blackbox.model.LeftPayment;
 import com.example.blackbox.model.PaymentButton;
 import com.utils.db.DatabaseAdapter;
@@ -118,7 +114,7 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View itemView = inflater.inflate(R.layout.payment_button, null);
+        View itemView = inflater.inflate(R.layout.button_payment, null);
         return new ButtonHolder(itemView);
     }
 

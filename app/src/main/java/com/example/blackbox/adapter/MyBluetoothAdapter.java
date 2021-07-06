@@ -58,7 +58,7 @@ public class MyBluetoothAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
         RecyclerView.ViewHolder vh;
-        v = inflater.inflate(R.layout.printer_setting_recycler, null);
+        v = inflater.inflate(R.layout.recycler_printer_setting, null);
         vh = new ButtonHolder(v);
         return vh;
 
