@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -120,7 +121,7 @@ public class PinpadActivity extends AppCompatActivity {
                 if (passcode.length() == 6)
                 {
                     DatabaseAdapter dbA = new DatabaseAdapter(getApplicationContext());
-                    if(dbA.checkUserPasscode(username, passcode))
+                    if (dbA.checkUserPasscode(username, passcode))
                     {
                         Intent intent = new Intent(getApplicationContext(), Operative.class);
                         intent.putExtra("isAdmin", isAdmin);

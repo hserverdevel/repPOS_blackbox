@@ -91,6 +91,14 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
 
     private String licenseString = "";
 
+    /**
+     * Indicate the status that started splashScreen.
+     * If null, it's the first start, if it's `pindpad`
+     * it's started after a lock
+     * **/
+    private String status;
+
+
 
 
     @Override
@@ -102,7 +110,7 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
         context = this;
 
         Intent intent = getIntent();
-        String status = intent.getStringExtra("status");
+        status = intent.getStringExtra("status");
 
         username = intent.getStringExtra("username");
         if (username==null) { username= ""; }
@@ -115,6 +123,7 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
         // check if any of the blackbox that have been saved
         // can be used. Otherwise, ask for a new one with a Popup
         List<BlackboxInfo> allBlackbox = dbA.selectAllBlackbox();
+
         // if the goodBlackbox contains the blackbox that has passed
         // the test, and thus can be used. If no blackbox pass the test,
         // goodBlackbox is null.
@@ -551,6 +560,8 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             // move to the login activity
                             Intent i = new Intent(SplashScreen1.this, Login.class);
                             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            i.putExtra("status", status);
+                            i.putExtra("userType", userType);
                             startActivity(i);
                             finish();
 

@@ -5,88 +5,114 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import com.example.blackbox.activities.Operative;
+import com.example.blackbox.revicer.PinpadBroadcastReciver;
+
 import static android.content.Context.ALARM_SERVICE;
 
 /**
  * Created by tiziano on 9/19/17.
  */
 
-public class TimerManager {
+public class TimerManager
+{
 
-    private static long sessionTimeStart;
+    public static  Intent        intentPinpad;
+    public static  Intent        intentLogout;
+    public static  Intent        intentCloseFiscal;
+    public static  Context       context;
+    private static long          sessionTimeStart;
     private static PendingIntent pendingIntent;
-    private long lastInteractionTime;
-    private static AlarmManager alarmManagerPinpad;
-    public static Intent intentPinpad;
-    public static Intent intentLogout;
-    public static Intent intentCloseFiscal;
-    public static Context context;
-    private static AlarmManager alarmManagerLogout;
-    private static AlarmManager alarmManagerFiscalClose;
+    private static AlarmManager  alarmManagerPinpad;
+    private static AlarmManager  alarmManagerLogout;
+    private static AlarmManager  alarmManagerFiscalClose;
+    private        long          lastInteractionTime;
 
+    public static long getSessionTimeStart()
+    {
+        return sessionTimeStart;
+    }
 
-    public static void setSessionTimeStart(long time){
+    public static void setSessionTimeStart(long time)
+    {
         sessionTimeStart = time;
     }
-    public static long getSessionTimeStart(){
-        return sessionTimeStart ;
-    }
 
-    public static void setIntentPinpad(Intent i ) {
+    public static void setIntentPinpad(Intent i)
+    {
         intentPinpad = i;
     }
-    public static void setIntentLogout(Intent i ) {
+
+    public static void setIntentLogout(Intent i)
+    {
         intentLogout = i;
     }
 
-    public static void setAlarmManagerFiscalClose(Intent i) {
+    public static void setAlarmManagerFiscalClose(Intent i)
+    {
         intentCloseFiscal = i;
     }
 
-    public static void setContext(Context c) {
+    public static void setContext(Context c)
+    {
         context = c;
     }
 
 
-    public static void startPinpadAlert(int type) {
-        pendingIntent = PendingIntent.getBroadcast(context, 0, intentPinpad, 0);
+    public static void startPinpadAlert(int type)
+    {
+        pendingIntent      = PendingIntent.getBroadcast(context, 0, intentPinpad, 0);
         alarmManagerPinpad = (AlarmManager) context.getSystemService(ALARM_SERVICE);
 
         //5 min in millisecond
         //one is for normal activity, 2 is for payment so that last longer
-        if(type==1) {
+        if (type == 1)
+        {
             alarmManagerPinpad.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (StaticValue.normalPinpad), pendingIntent);
-        }else if(type==2){
+        }
+        else if (type == 2)
+        {
             alarmManagerPinpad.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (StaticValue.paymentPinpad), pendingIntent);
-        }else{
+        }
+        else
+        {
             alarmManagerPinpad.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (StaticValue.normalPinpad), pendingIntent);
         }
     }
 
-    public static void stopPinpadAlert() {
-        if(context!=null && intentPinpad!=null) {
+
+    public static void stopPinpadAlert()
+    {
+        if (context != null && intentPinpad != null)
+        {
             pendingIntent = PendingIntent.getBroadcast(context, 0, intentPinpad, 0);
             //15 min in millisecond
             alarmManagerPinpad.cancel(pendingIntent);
         }
     }
 
-    public static void startLogoutAlert() {
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, intentLogout, 0);
-            alarmManagerLogout = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-            //15 min in millisecond
-            alarmManagerLogout.set(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis() + (1500000), pendingIntent);
+
+    public static void startLogoutAlert()
+    {
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, intentLogout, 0);
+        alarmManagerLogout = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+        //15 min in millisecond
+        alarmManagerLogout.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1500000), pendingIntent);
     }
 
-    public static void stopLogoutAlert() {
+    public static void stopLogoutAlert()
+    {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, intentLogout, 0);
         //15 min in millisecond
         alarmManagerLogout.cancel(pendingIntent);
     }
 
-    public static void stopFiscalAlert() {
-        if(context!=null) {
-            if(intentCloseFiscal!=null) {
+    public static void stopFiscalAlert()
+    {
+        if (context != null)
+        {
+            if (intentCloseFiscal != null)
+            {
                 pendingIntent = PendingIntent.getBroadcast(context, 0, intentCloseFiscal, 0);
                 //15 min in millisecond
                 alarmManagerFiscalClose.cancel(pendingIntent);
@@ -94,8 +120,9 @@ public class TimerManager {
         }
     }
 
-    public static void startFiscalCloseAlert(){
-       // PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intentCloseFiscal, 0);
+    public static void startFiscalCloseAlert()
+    {
+        // PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intentCloseFiscal, 0);
 
        /* // Set the alarm to start at 21:32 PM
         Calendar calendar = Calendar.getInstance();
@@ -117,15 +144,15 @@ public class TimerManager {
     }
 
     /**
-    public static void startAlert(Context context) {
-        int timeInSec = 2;
+     public static void startAlert(Context context) {
+     int timeInSec = 2;
 
-        Intent intent = new Intent(context, MyBroadcastReceiver.class);
-        intent.setAction("printFiscal");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 2, intent, 0);
-        getAlarmManagerFiscalClose = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-        getAlarmManagerFiscalClose.set(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis() + (2000000), pendingIntent);
-    }
+     Intent intent = new Intent(context, MyBroadcastReceiver.class);
+     intent.setAction("printFiscal");
+     PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 2, intent, 0);
+     getAlarmManagerFiscalClose = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+     getAlarmManagerFiscalClose.set(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis() + (2000000), pendingIntent);
+     }
      */
 
     /**
@@ -160,7 +187,6 @@ public class TimerManager {
         }
         return check;
     }*/
-
 
 
 }

@@ -171,6 +171,8 @@ public class MainActivity extends AppCompatActivity implements
         rv_adapter.notifyDataSetChanged();
     }
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -191,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements
         userId   = intent.getIntExtra("userId", -1);
         userType = intent.getIntExtra("userType", -1);
 
-        /**DISPLAY METRICS**/
+        // DISPLAY METRICS
         Display        display    = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
@@ -206,6 +208,8 @@ public class MainActivity extends AppCompatActivity implements
 
         myLine = new ModifierLineSeparator(me, 14);
     }
+
+
 
     /**
      * Handles the ouput of the HttpHandler async process
@@ -1278,15 +1282,18 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+
     public boolean getIsAdded()
     {
         return isAdded;
     }
 
+
     public void setBarcodeShow(boolean b)
     {
         isBarcodeShow = b;
     }
+
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent e)
@@ -1313,6 +1320,7 @@ public class MainActivity extends AppCompatActivity implements
         return super.dispatchKeyEvent(e);
     }
 
+
     public void resetPinpadTimer(int type)
     {
         TimerManager.stopPinpadAlert();
@@ -1325,6 +1333,7 @@ public class MainActivity extends AppCompatActivity implements
         TimerManager.setIntentPinpad(intentPasscode);
         TimerManager.startPinpadAlert(type);
     }
+
 
     public void callHttpHandler(String route, List<NameValuePair> params)
     {

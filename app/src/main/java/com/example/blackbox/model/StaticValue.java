@@ -30,19 +30,24 @@ public class StaticValue
     public static FiscalPrinter             fiscalPrinterClass;
     public static ArrayList<KitchenPrinter> kitchenPrinterClass;
     public static DeviceInfo                deviceInfo;
+
     // is a blackbox present?
     public static boolean                   blackbox     = false;
     public static BlackboxInfo              blackboxInfo = new BlackboxInfo();
+
     // is a fiscal printer present?
     public static boolean                   printerOn    = false;
+
     // this device hardware Id
     public static String                    androidId;
 
     //change this every time government change vat (In Italy something like every two years......)
     public static int[]   vats                 = {4, 10, 15, 22};
     public static int     staticVat            = 1;
+
     public static String  printerName          = "RCH";
     public static boolean ditronApi            = true;
+
     public static String  IP                   = "10.10.10.213";
     public static int     port                 = 1471;
     public static String  orderIP              = "10.10.10.210";
