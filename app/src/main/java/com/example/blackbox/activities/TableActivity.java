@@ -1,5 +1,6 @@
 package com.example.blackbox.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -24,6 +25,7 @@ import com.example.blackbox.adapter.TableUseAdapter;
 import com.example.blackbox.graphics.CustomEditText;
 import com.example.blackbox.graphics.CustomTextView;
 import com.example.blackbox.graphics.OnSwipeTouchListener;
+import com.example.blackbox.model.RequestParam;
 import com.example.blackbox.model.Reservation;
 import com.example.blackbox.model.Room;
 import com.example.blackbox.model.StaticValue;
@@ -93,347 +95,6 @@ public class TableActivity extends AppCompatActivity implements
     private int isAdmin;
 
     private HttpHandler httpHandler;
-
-    @Override
-    public void processFinish(String output)
-    {
-        //Here you will receive the result fired from async class
-        //of onPostExecute(result) method.
-        // Each possible response is handled with a swtich case
-        JSONObject jsonObject = new JSONObject();
-        // the response route
-        String route = "";
-        // a bool indicating if the connection was succesful
-        boolean success = false;
-
-        try
-        {
-            jsonObject = new JSONObject(output);
-            route = jsonObject.getString("route");
-            success = jsonObject.getBoolean("success");
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-
-        if (success)
-        {
-            try
-            {
-                jsonObject = new JSONObject(output);
-                boolean check = false;
-
-                switch (route)
-                {
-                    case "insertRoom":
-                        check = jsonObject.getBoolean("check");
-                        if (check)
-                        {
-                            JSONObject jObject = new JSONObject(output).getJSONObject("room");
-                            Room room = Room.fromJson(jObject);
-                            dbA.insertRoomFromServer(room);
-                            roomAdapter.closePopupWindow();
-                            roomAdapter.notifyDataSetChanged();
-                            rooms = dbA.fetchRooms();
-                            showLastRoom(rooms.size() - 1);
-                        }
-                        else
-                        {
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
-                                 .show();
-                        }
-                        break;
-
-
-                    case "deleteRoom":
-                        check = jsonObject.getBoolean("check");
-                        if (check)
-                        {
-                            int roomId = jsonObject.getInt("id");
-                            dbA.execOnDb("DELETE FROM room WHERE id=" + roomId);
-                            dbA.execOnDb("DELETE FROM table_configuration WHERE room_id=" + roomId + ";");
-                            roomAdapter.closePopupWindow();
-                            restartRoom();
-                        }
-                        else
-                        {
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
-                                 .show();
-                        }
-                        break;
-
-
-                    case "updateRoom":
-                        check = jsonObject.getBoolean("check");
-                        if (check)
-                        {
-                            JSONObject jObject = new JSONObject(output).getJSONObject("room");
-                            Room room = Room.fromJson(jObject);
-                            dbA.execOnDb("UPDATE room SET name= '" + room.getName() + "' WHERE id = " + room
-                                    .getId() + "");
-                            roomAdapter.closePopupWindow();
-                            showLastRoom(roomAdapter.getRoomePosition());
-                        }
-                        else
-                        {
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
-                                 .show();
-                        }
-                        break;
-
-
-                    case "insertTable":
-                        check = jsonObject.getBoolean("check");
-                        if (check)
-                        {
-                            JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
-                            ArrayList<Table> tables = Table.fromJsonArray(usersObject);
-                            tableAdapter.addTableFromServer(tables);
-                        }
-                        else
-                        {
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
-                                 .show();
-                        }
-                        break;
-
-
-                    case "insertAndUpdateTable":
-                        check = jsonObject.getBoolean("check");
-                        if (check)
-                        {
-                            JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
-                            ArrayList<Table> tables = Table.fromJsonArray(usersObject);
-                            JSONObject jObject = new JSONObject(output).getJSONObject("table");
-                            Table table = Table.fromJson(jObject);
-                            dbA.updateTable(table.getTableNumber(), table.getPeopleNumber(), table.getRoomId(), table
-                                    .getTableName(), table.getMergeTable(), table.getShareTable(), table
-                                    .getId());
-                            tableAdapter.addTableFromServer(tables);
-                        }
-                        else
-                        {
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
-                                 .show();
-                        }
-                        break;
-
-
-                    case "deleteTable":
-                        check = jsonObject.getBoolean("check");
-                        if (check)
-                        {
-                            int roomId = jsonObject.getInt("roomId");
-                            int tableNumber = jsonObject.getInt("tableNumber");
-                            dbA.updateTableConfiguration(roomId, tableNumber);
-                            tableAdapter.functionAddTableFromServer();
-                        }
-                        else
-                        {
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
-                                 .show();
-                        }
-                        break;
-
-
-                    case "getTableUse":
-                        check = jsonObject.getBoolean("check");
-                        if (check)
-                        {
-                            JSONArray usersObject = new JSONObject(output).getJSONArray("tableUse");
-                            ArrayList<TableUse> tables = TableUse.fromJsonArray(usersObject);
-                            int rId = jsonObject.getInt("roomId");
-                            roomId = rId;
-                            int tableNumber = jsonObject.getInt("tableNumber");
-                            int billId = jsonObject.getInt("billId");
-                            CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
-                            if (rooms.size() > 0)
-                            {
-                                if (tableNumber == -1)
-                                {
-                                    roomName.setText(rooms.get(0).getName());
-                                    tableUseAdapter = new TableUseAdapter(this, dbA, tables, billId);
-                                    tableRecycler.setAdapter(tableUseAdapter);
-                                    tableUseAdapter.setRoomId(rooms.get(0).getId());
-
-                                }
-                                else
-                                {
-                                    Room setRoom = dbA.fetchRoomById(roomId);
-                                    roomName.setText(setRoom.getName());
-                                    tableUseAdapter = new TableUseAdapter(this, dbA, tables, billId);
-                                    tableRecycler.setAdapter(tableUseAdapter);
-                                    tableUseAdapter.setRoomId(roomId);
-                                    roomAdapter.setRooms(rooms, roomId);
-                                    tableUseAdapter.setTableNumber(getTableNumber());
-                                }
-                            }
-                            else
-                            {
-                                roomName.setText("");
-                                tables = new ArrayList<>();
-                                tableUseAdapter = new TableUseAdapter(this, dbA, tables, billId);
-                                tableRecycler.setAdapter(tableUseAdapter);
-                            }
-                        }
-                        else
-                        {
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
-                                 .show();
-                        }
-                        break;
-
-
-                    case "insertTableUse":
-                        check = jsonObject.getBoolean("check");
-                        if (check)
-                        {
-                            billId = jsonObject.getInt("billId");
-
-                            JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
-                            ArrayList<TableUse> mytables = TableUse.fromJsonArray(usersObject);
-
-                            JSONObject jObject = new JSONObject(output).getJSONObject("tableUse");
-                            TableUse tableUse = TableUse.fromJson(jObject);
-
-                            int type = jsonObject.getInt("type");
-
-                            if (type == 1)
-                            {
-                                setTableNumber(tableUse.getTableNumber());
-                                setRoomId(tableUse.getRoomId());
-
-                                tableUseAdapter.setTableNumber(tableUse.getTableNumber());
-                                tableUseAdapter.setRoomId(tableUse.getRoomId());
-                                tableUseAdapter.tables = mytables;
-                                tableUseAdapter.notifyDataSetChanged();
-                            }
-
-                            else
-                            {
-                                if (type == 2)
-                                {
-                                    tableUseAdapter.setIsMerge(true);
-                                    tableUseAdapter.setTableNumber(tableUse.getTableNumber());
-                                    tableUseAdapter.setRoomId(tableUse.getRoomId());
-                                    tableUseAdapter.setMainMergeId(tableUse.getId());
-                                    setIsMergeActivated(tableUse);
-                                    tableUseAdapter.tables = mytables;
-                                    tableUseAdapter.notifyDataSetChanged();
-                                    tableUseAdapter.myPopupWindow.dismiss();
-                                }
-                                else
-                                {
-                                    Toast.makeText(getApplicationContext(), R.string.this_table_cannot_be_merged, Toast.LENGTH_SHORT)
-                                         .show();
-                                    tableUseAdapter.openNoMergableTable();
-                                }
-
-                            }
-                        }
-
-                        else
-                        {
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
-                                 .show();
-                        }
-                        break;
-
-
-                    case "insertTableUseMerge":
-                        check = jsonObject.getBoolean("check");
-                        if (check)
-                        {
-                            billId = jsonObject.getInt("billId");
-
-                            int type = jsonObject.getInt("type");
-                            if (type == 1)
-                            {
-                                JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
-                                ArrayList<TableUse> mytables = TableUse.fromJsonArray(usersObject);
-                                tableUseAdapter.setMyButton();
-                                tableUseAdapter.tables = mytables;
-                                tableUseAdapter.notifyDataSetChanged();
-                            }
-                            else
-                            {
-                                tableUseAdapter.openNoMergableTable();
-                            }
-                        }
-                        else
-                        {
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
-                                 .show();
-                        }
-                        break;
-
-
-                    case "deleteTableUse":
-                        check = jsonObject.getBoolean("check");
-                        if (check)
-                        {
-                            JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
-                            ArrayList<TableUse> mytables = TableUse.fromJsonArray(usersObject);
-
-                            int type = jsonObject.getInt("type");
-                            if (type == 1)
-                            {
-                                tableUseAdapter.setIsMerge(false);
-                                tableUseAdapter.setTableNumber(-11);
-                                tableUseAdapter.setRoomId(-11);
-                                tableUseAdapter.tables = mytables;
-                                tableUseAdapter.notifyDataSetChanged();
-
-                                CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
-                                Room room = dbA.fetchRoomById(roomId);
-                                roomName.setText(room.getName());
-                            }
-
-                            else if (type == 2)
-                            {
-                                tableUseAdapter.setTableNumber(-11);
-                                tableUseAdapter.setRoomId(-11);
-                                tableUseAdapter.tables = mytables;
-                                tableUseAdapter.notifyDataSetChanged();
-                            }
-                        }
-
-                        else
-                        {
-                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-            catch (JSONException e)
-            {
-                e.printStackTrace();
-            }
-        }
-
-        else
-        {
-            Toast.makeText(this,
-                    getString(R.string.error_blackbox_comm, StaticValue.blackboxInfo.getName(), StaticValue.blackboxInfo
-                            .getAddress()),
-                    Toast.LENGTH_LONG).show();
-        }
-    }
-
-
-    public void callHttpHandler(String route, List<NameValuePair> params)
-    {
-        httpHandler = new HttpHandler();
-        httpHandler.delegate = this;
-        httpHandler.UpdateInfoAsyncTask(route, params);
-        httpHandler.execute();
-    }
 
 
     @Override
@@ -740,16 +401,16 @@ public class TableActivity extends AppCompatActivity implements
                     }
 
                     if (tableNumber == -11)
-                        { newIntent.putExtra("tableNumber", -1); }
+                    { newIntent.putExtra("tableNumber", -1); }
                     else
-                        { newIntent.putExtra("tableNumber", tableNumber); }
+                    { newIntent.putExtra("tableNumber", tableNumber); }
 
 
                     int roomId = tableUseAdapter.getRoomId();
                     if (roomId == -11)
-                        { newIntent.putExtra("roomId", -1); }
+                    { newIntent.putExtra("roomId", -1); }
                     else
-                        { newIntent.putExtra("roomId", roomId); }
+                    { newIntent.putExtra("roomId", roomId); }
 
 
                     newIntent.putExtra("username", username);
@@ -765,12 +426,364 @@ public class TableActivity extends AppCompatActivity implements
     }
 
 
+    @Override
+    public void processFinish(String output)
+    {
+        //Here you will receive the result fired from async class
+        //of onPostExecute(result) method.
+        // Each possible response is handled with a swtich case
+        JSONObject jsonObject = new JSONObject();
+        // the response route
+        String route = "";
+        // a bool indicating if the connection was succesful
+        boolean success = false;
+
+        try
+        {
+            jsonObject = new JSONObject(output);
+            route = jsonObject.getString("route");
+            success = jsonObject.getBoolean("success");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
+        if (success)
+        {
+            try
+            {
+                jsonObject = new JSONObject(output);
+                boolean check = false;
+
+                switch (route)
+                {
+                    case "insertRoom":
+                        check = jsonObject.getBoolean("check");
+                        if (check)
+                        {
+                            JSONObject jObject = new JSONObject(output).getJSONObject("room");
+                            Room room = Room.fromJson(jObject);
+                            dbA.insertRoomFromServer(room);
+                            roomAdapter.closePopupWindow();
+                            roomAdapter.notifyDataSetChanged();
+                            rooms = dbA.fetchRooms();
+                            showLastRoom(rooms.size() - 1);
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        break;
+
+
+                    case "deleteRoom":
+                        check = jsonObject.getBoolean("check");
+                        if (check)
+                        {
+                            int roomId = jsonObject.getInt("id");
+                            dbA.execOnDb("DELETE FROM room WHERE id=" + roomId);
+                            dbA.execOnDb("DELETE FROM table_configuration WHERE room_id=" + roomId + ";");
+                            roomAdapter.closePopupWindow();
+                            restartRoom();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        break;
+
+
+                    case "updateRoom":
+                        check = jsonObject.getBoolean("check");
+                        if (check)
+                        {
+                            JSONObject jObject = new JSONObject(output).getJSONObject("room");
+                            Room room = Room.fromJson(jObject);
+                            dbA.execOnDb("UPDATE room SET name= '" + room.getName() + "' WHERE id = " + room
+                                    .getId() + "");
+                            roomAdapter.closePopupWindow();
+                            showLastRoom(roomAdapter.getRoomePosition());
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        break;
+
+
+                    case "insertTable":
+                        check = jsonObject.getBoolean("check");
+                        if (check)
+                        {
+                            JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
+                            ArrayList<Table> tables = Table.fromJsonArray(usersObject);
+                            tableAdapter.addTableFromServer(tables);
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        break;
+
+
+                    case "insertAndUpdateTable":
+                        check = jsonObject.getBoolean("check");
+                        if (check)
+                        {
+                            JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
+                            ArrayList<Table> tables = Table.fromJsonArray(usersObject);
+                            JSONObject jObject = new JSONObject(output).getJSONObject("table");
+                            Table table = Table.fromJson(jObject);
+                            dbA.updateTable(table.getTableNumber(), table.getPeopleNumber(), table.getRoomId(), table
+                                    .getTableName(), table.getMergeTable(), table.getShareTable(), table
+                                    .getId());
+                            tableAdapter.addTableFromServer(tables);
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        break;
+
+
+                    case "deleteTable":
+                        check = jsonObject.getBoolean("check");
+                        if (check)
+                        {
+                            int roomId = jsonObject.getInt("roomId");
+                            int tableNumber = jsonObject.getInt("tableNumber");
+                            dbA.updateTableConfiguration(roomId, tableNumber);
+                            tableAdapter.functionAddTableFromServer();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        break;
+
+
+                    case "getTableUse":
+                        check = jsonObject.getBoolean("check");
+                        if (check)
+                        {
+                            JSONArray usersObject = new JSONObject(output).getJSONArray("tableUse");
+                            ArrayList<TableUse> tables = TableUse.fromJsonArray(usersObject);
+                            int rId = jsonObject.getInt("roomId");
+                            roomId = rId;
+                            int tableNumber = jsonObject.getInt("tableNumber");
+                            int billId = jsonObject.getInt("billId");
+
+                            CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
+                            if (rooms.size() > 0)
+                            {
+                                if (tableNumber == -1)
+                                {
+                                    roomName.setText(dbA.fetchRoomById(roomId).getName());
+                                    tableUseAdapter = new TableUseAdapter(this, dbA, tables, billId);
+                                    tableRecycler.setAdapter(tableUseAdapter);
+                                    tableUseAdapter.setRoomId(rooms.get(0).getId());
+                                }
+
+                                else
+                                {
+                                    Room setRoom = dbA.fetchRoomById(roomId);
+                                    roomName.setText(setRoom.getName());
+                                    tableUseAdapter = new TableUseAdapter(this, dbA, tables, billId);
+                                    tableRecycler.setAdapter(tableUseAdapter);
+                                    tableUseAdapter.setRoomId(roomId);
+                                    roomAdapter.setRooms(rooms, roomId);
+                                    tableUseAdapter.setTableNumber(getTableNumber());
+                                }
+                            }
+                            else
+                            {
+                                roomName.setText("");
+                                tables = new ArrayList<>();
+                                tableUseAdapter = new TableUseAdapter(this, dbA, tables, billId);
+                                tableRecycler.setAdapter(tableUseAdapter);
+                            }
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        break;
+
+
+                    case "insertTableUse":
+                        check = jsonObject.getBoolean("check");
+                        if (check)
+                        {
+                            billId = jsonObject.getInt("billId");
+
+                            JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
+                            ArrayList<TableUse> mytables = TableUse.fromJsonArray(usersObject);
+
+                            JSONObject jObject = new JSONObject(output).getJSONObject("tableUse");
+                            TableUse tableUse = TableUse.fromJson(jObject);
+
+                            int type = jsonObject.getInt("type");
+
+                            if (type == 1)
+                            {
+                                setTableNumber(tableUse.getTableNumber());
+                                setRoomId(tableUse.getRoomId());
+
+                                tableUseAdapter.setTableNumber(tableUse.getTableNumber());
+                                tableUseAdapter.setRoomId(tableUse.getRoomId());
+                                tableUseAdapter.tables = mytables;
+                                tableUseAdapter.notifyDataSetChanged();
+                            }
+
+                            else
+                            {
+                                if (type == 2)
+                                {
+                                    tableUseAdapter.setIsMerge(true);
+                                    tableUseAdapter.setTableNumber(tableUse.getTableNumber());
+                                    tableUseAdapter.setRoomId(tableUse.getRoomId());
+                                    tableUseAdapter.setMainMergeId(tableUse.getId());
+                                    setIsMergeActivated(tableUse);
+                                    tableUseAdapter.tables = mytables;
+                                    tableUseAdapter.notifyDataSetChanged();
+                                    tableUseAdapter.myPopupWindow.dismiss();
+                                }
+                                else
+                                {
+                                    Toast.makeText(getApplicationContext(), R.string.this_table_cannot_be_merged, Toast.LENGTH_SHORT)
+                                         .show();
+                                    tableUseAdapter.openNoMergableTable();
+                                }
+
+                            }
+                        }
+
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        break;
+
+
+                    case "insertTableUseMerge":
+                        check = jsonObject.getBoolean("check");
+                        if (check)
+                        {
+                            billId = jsonObject.getInt("billId");
+
+                            int type = jsonObject.getInt("type");
+                            if (type == 1)
+                            {
+                                JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
+                                ArrayList<TableUse> mytables = TableUse.fromJsonArray(usersObject);
+                                tableUseAdapter.setMyButton();
+                                tableUseAdapter.tables = mytables;
+                                tableUseAdapter.notifyDataSetChanged();
+                            }
+                            else
+                            {
+                                tableUseAdapter.openNoMergableTable();
+                            }
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
+                                 .show();
+                        }
+                        break;
+
+
+                    case "deleteTableUse":
+                        check = jsonObject.getBoolean("check");
+                        if (check)
+                        {
+                            JSONArray usersObject = new JSONObject(output).getJSONArray("tables");
+                            ArrayList<TableUse> mytables = TableUse.fromJsonArray(usersObject);
+
+                            int type = jsonObject.getInt("type");
+                            if (type == 1)
+                            {
+                                tableUseAdapter.setIsMerge(false);
+                                tableUseAdapter.setTableNumber(-11);
+                                tableUseAdapter.setRoomId(-11);
+                                tableUseAdapter.tables = mytables;
+                                tableUseAdapter.notifyDataSetChanged();
+
+                                CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
+                                Room room = dbA.fetchRoomById(roomId);
+                                roomName.setText(room.getName());
+                            }
+
+                            else if (type == 2)
+                            {
+                                tableUseAdapter.setTableNumber(-11);
+                                tableUseAdapter.setRoomId(-11);
+                                tableUseAdapter.tables = mytables;
+                                tableUseAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        else
+        {
+            Toast.makeText(this,
+                    getString(R.string.error_blackbox_comm, StaticValue.blackboxInfo.getName(), StaticValue.blackboxInfo
+                            .getAddress()),
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    public void callHttpHandler(String route, List<NameValuePair> params)
+    {
+        httpHandler = new HttpHandler();
+        httpHandler.delegate = this;
+        httpHandler.UpdateInfoAsyncTask(route, params);
+        httpHandler.execute();
+    }
+
+    public void callHttpHandler(String route, RequestParam params)
+    {
+        httpHandler = new HttpHandler();
+        httpHandler.delegate = this;
+        httpHandler.UpdateInfoAsyncTask(route, params);
+        httpHandler.execute();
+    }
+
+
+
     /**
      * set swipe for configuration to swipe between rooms
      */
+    @SuppressLint("ClickableViewAccessibility")
     public void setSwipeForRoom()
     {
-
         RelativeLayout addRoomButton = (RelativeLayout) findViewById(R.id.room_plus_edittext);
         addRoomButton.setOnClickListener(new View.OnClickListener()
         {
@@ -785,9 +798,9 @@ public class TableActivity extends AppCompatActivity implements
 
         roomName.setOnTouchListener(new OnSwipeTouchListener(getApplicationContext())
         {
+            @SuppressLint("ClickableViewAccessibility")
             public void onSwipeLeft()
             {
-
                 int nextPosition = roomAdapter.nextRoomPosition();
                 if (nextPosition != -15)
                 {
@@ -795,13 +808,17 @@ public class TableActivity extends AppCompatActivity implements
                     {
                         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
                         roomName.setVisibility(View.GONE);
+
                         RelativeLayout addRoom = (RelativeLayout) findViewById(R.id.room_plus_edittext);
                         addRoom.setVisibility(View.VISIBLE);
+
                         roomAdapter.setRooms(rooms, -15);
+
                         ArrayList<Table> tables = new ArrayList<Table>();
                         tableAdapter.setTables(tables, -15);
                         roomAdapter.openNewRoomPopup();
                     }
+
                     else
                     {
                         RelativeLayout addRoom = (RelativeLayout) findViewById(R.id.room_plus_edittext);
@@ -836,8 +853,6 @@ public class TableActivity extends AppCompatActivity implements
 
             public void onClick()
             {
-
-
                 roomAdapter.openModifyRoomPopup();
             }
         });
@@ -1002,6 +1017,7 @@ public class TableActivity extends AppCompatActivity implements
     /**
      * set swipe for operative to swipe between rooms
      */
+    @SuppressLint("ClickableViewAccessibility")
     public void setSwipeForRoomOperative()
     {
 
@@ -1012,7 +1028,6 @@ public class TableActivity extends AppCompatActivity implements
         {
             public void onSwipeLeft()
             {
-
                 if (!tableUseAdapter.getIsMergeSet())
                 {
                     int nextPosition = roomAdapter.nextRoomPosition();
@@ -1031,7 +1046,6 @@ public class TableActivity extends AppCompatActivity implements
 
             public void onSwipeRight()
             {
-
                 if (!tableUseAdapter.getIsMergeSet())
                 {
                     int prevPosition = roomAdapter.prevRoomPosition();
@@ -1068,7 +1082,6 @@ public class TableActivity extends AppCompatActivity implements
                         roomName.setVisibility(View.VISIBLE);
 
                         openTableUseView(rooms.get(nextPosition).getId());
-
                     }
                 }
             }
@@ -1115,6 +1128,7 @@ public class TableActivity extends AppCompatActivity implements
                 }
             }
 
+
             public void onSwipeRight()
             {
 
@@ -1134,6 +1148,7 @@ public class TableActivity extends AppCompatActivity implements
 
             }
         });
+
 
         findViewById(R.id.room_container).setOnTouchListener(new OnSwipeTouchListener(getApplicationContext())
         {
@@ -1165,11 +1180,13 @@ public class TableActivity extends AppCompatActivity implements
                     if (prevPosition != -15)
                     {
                         roomAdapter.setRooms(rooms, rooms.get(prevPosition).getId());
+
                         CustomTextView roomName = (CustomTextView) findViewById(R.id.room_name_edittext);
                         roomName.setText(rooms.get(prevPosition).getName());
                         roomName.setVisibility(View.VISIBLE);
 
                         openTableUseView(rooms.get(prevPosition).getId());
+
                     }
                 }
 
@@ -1237,15 +1254,27 @@ public class TableActivity extends AppCompatActivity implements
     /**
      * in operative show table for one rooms
      *
-     * @param roomId
+     * @param roomId c
      */
     @Override
     public void openTableUseView(int roomId)
     {
-        dbA = new DatabaseAdapter(this);
-        ArrayList<TableUse> tables = new ArrayList<TableUse>();
-        tables = dbA.fetchTableUses(roomId);
-        tableUseAdapter.setTables(tables, roomId);
+        if (StaticValue.blackbox)
+        {
+            RequestParam params = new RequestParam();
+            params.add("roomId", roomId);
+            params.add("billId", billId);
+            params.add("tableNumber", tableNumber);
+
+            callHttpHandler("/getTableUse", params);
+        }
+
+        else
+        {
+            ArrayList<TableUse> tables = new ArrayList<TableUse>();
+            tables = dbA.fetchTableUses(roomId);
+            tableUseAdapter.setTables(tables, roomId);
+        }
     }
 
 

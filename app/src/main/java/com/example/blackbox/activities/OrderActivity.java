@@ -32,6 +32,7 @@ import com.example.blackbox.graphics.CustomTextView;
 import com.example.blackbox.model.CashButtonLayout;
 import com.example.blackbox.model.CashButtonListLayout;
 import com.example.blackbox.model.Customer;
+import com.example.blackbox.model.RequestParam;
 import com.example.blackbox.model.Room;
 import com.example.blackbox.model.StaticValue;
 import com.example.blackbox.model.TimerManager;
@@ -184,8 +185,8 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
 
                         ArrayList<Customer> customers = Customer.fromJsonArray(customerArray);
                         setPopupCashListFromServer(totals, products, map, customers, tableNum);
-
                     }
+
                     else
                     {
                         Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT)
@@ -301,7 +302,7 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
     }
 
 
-    public void callHttpHandler(String route, List<NameValuePair> params)
+    public void callHttpHandler(String route, RequestParam params)
     {
         httpHandler = new HttpHandler();
         httpHandler.delegate = this;
@@ -396,10 +397,7 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                 intent.putExtra("billId", totalBill.getId());
                 intent.putExtra("userId", userId);
                 intent.putExtra("userType", userType);
-
-                int tableNumber = intent.getIntExtra("tableNumber", -1);
-
-                intent.putExtra("tableNumber", tableNumber);
+                intent.putExtra("tableNumber", tableNum);
 
                 startActivity(intent);
                 myPopupWindow.dismiss();
@@ -448,22 +446,22 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                                                         .getPosition()), map.get(products.get(i)));
                     }
 
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                    RequestParam params = new RequestParam();
                     Gson gson = new Gson();
                     String prods = gson.toJson(products);
                     String mods = gson.toJson(test);
-                    params.add(new BasicNameValuePair("products", prods));
-                    params.add(new BasicNameValuePair("modifiers", mods));
-                    params.add(new BasicNameValuePair("printType", String.valueOf(4)));
-                    params.add(new BasicNameValuePair("billId", String.valueOf(totalBill.getId())));
-                    params.add(new BasicNameValuePair("paymentType", String.valueOf(1)));
-                    params.add(new BasicNameValuePair("deviceName", String.valueOf("device")));
-                    params.add(new BasicNameValuePair("orderNumber", String.valueOf(totalBill.getBillNumber())));
-                    params.add(new BasicNameValuePair("cost", String.valueOf(totalBill.getTotal())));
-                    params.add(new BasicNameValuePair("paid", String.valueOf(totalBill.getTotal())));
-                    params.add(new BasicNameValuePair("tableNumber", String.valueOf(-1)));
-                    params.add(new BasicNameValuePair("roomName", String.valueOf("")));
-                    params.add(new BasicNameValuePair("totalDiscount", String.valueOf(0.0)));
+                    params.add("products", prods);
+                    params.add("modifiers", mods);
+                    params.add("printType", String.valueOf(4));
+                    params.add("billId", String.valueOf(totalBill.getId()));
+                    params.add("paymentType", String.valueOf(1));
+                    params.add("deviceName", String.valueOf("device"));
+                    params.add("orderNumber", String.valueOf(totalBill.getBillNumber()));
+                    params.add("cost", String.valueOf(totalBill.getTotal()));
+                    params.add("paid", String.valueOf(totalBill.getTotal()));
+                    params.add("tableNumber", String.valueOf(-1));
+                    params.add("roomName", String.valueOf(""));
+                    params.add("totalDiscount", String.valueOf(0.0));
 
                     callHttpHandler("/printItemBillNonFiscal", params);
                 }
@@ -515,33 +513,30 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                                                         .getPosition()), map.get(products.get(i)));
                     }
 
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                    RequestParam params = new RequestParam();
                     Gson gson = new Gson();
                     String prods = gson.toJson(products);
                     String mods = gson.toJson(test);
                     String costum = gson.toJson(customers);
-                    params.add(new BasicNameValuePair("products", prods));
-                    params.add(new BasicNameValuePair("modifiers", mods));
-                    params.add(new BasicNameValuePair("customers", costum));
-                    params.add(new BasicNameValuePair("printType", String.valueOf(12)));
-                    params.add(new BasicNameValuePair("billId", String.valueOf(totalBill.getId())));
-                    params.add(new BasicNameValuePair("paymentType", String.valueOf(1)));
-                    params.add(new BasicNameValuePair("deviceName", String.valueOf("device")));
-                    params.add(new BasicNameValuePair("orderNumber", String.valueOf(totalBill.getBillNumber())));
-                    params.add(new BasicNameValuePair("cost", String.valueOf(totalBill.getTotal())));
-                    params.add(new BasicNameValuePair("paid", String.valueOf(totalBill.getTotal())));
-                    params.add(new BasicNameValuePair("tableNumber", String.valueOf(-1)));
-                    params.add(new BasicNameValuePair("roomName", String.valueOf("")));
-                    params.add(new BasicNameValuePair("indexList", String.valueOf(0)));
+                    params.add("products", prods);
+                    params.add("modifiers", mods);
+                    params.add("customers", costum);
+                    params.add("printType", String.valueOf(12));
+                    params.add("billId", String.valueOf(totalBill.getId()));
+                    params.add("paymentType", String.valueOf(1));
+                    params.add("deviceName", String.valueOf("device"));
+                    params.add("orderNumber", String.valueOf(totalBill.getBillNumber()));
+                    params.add("cost", String.valueOf(totalBill.getTotal()));
+                    params.add("paid", String.valueOf(totalBill.getTotal()));
+                    params.add("tableNumber", String.valueOf(-1));
+                    params.add("roomName", String.valueOf(""));
+                    params.add("indexList", String.valueOf(0));
 
                     callHttpHandler("/reprintOrder", params);
-
-
                 }
+                
                 else
                 {
-
-
                     ClientThread myThread = ClientThread.getInstance();
                     myThread.setProducts(products);
                     myThread.setModifiers(map);
@@ -569,7 +564,7 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
     {
         super.onCreate(savedInstanceState);
 
-        /** Hides app title **/
+        /* Hides app title **/
         getSupportActionBar().hide();
         setContentView(R.layout.activity_orders);
         dbA = new DatabaseAdapter(this);
@@ -687,14 +682,14 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                 {
                     if (flag)
                     {
-                        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                        params.add(new BasicNameValuePair("paid", String.valueOf(0)));
+                        RequestParam params = new RequestParam();
+                        params.add("paid", String.valueOf(0));
                         callHttpHandler("/getAllOrders", params);
                     }
                     else
                     {
-                        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                        params.add(new BasicNameValuePair("paid", String.valueOf(1)));
+                        RequestParam params = new RequestParam();
+                        params.add("paid", String.valueOf(1));
                         callHttpHandler("/getAllOrders", params);
                     }
                 }
@@ -773,8 +768,8 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                 {
                     myPopupView = popupView;
                     myPopupWindow = popupWindow;
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                    params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
+                    RequestParam params = new RequestParam();
+                    params.add("billId", String.valueOf(billId));
                     callHttpHandler("/getBillData", params);
                 }
 
@@ -921,22 +916,22 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                                                      .get(i)));
                                          }
 
-                                         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                                         RequestParam params = new RequestParam();
                                          Gson gson = new Gson();
                                          String prods = gson.toJson(listHeader);
                                          String mods = gson.toJson(test);
-                                         params.add(new BasicNameValuePair("products", prods));
-                                         params.add(new BasicNameValuePair("modifiers", mods));
-                                         params.add(new BasicNameValuePair("printType", String.valueOf(4)));
-                                         params.add(new BasicNameValuePair("billId", String.valueOf(totalFinal)));
-                                         params.add(new BasicNameValuePair("paymentType", String.valueOf(1)));
-                                         params.add(new BasicNameValuePair("deviceName", String.valueOf("device")));
-                                         params.add(new BasicNameValuePair("orderNumber", String.valueOf(orderNumber)));
-                                         params.add(new BasicNameValuePair("cost", String.valueOf(totalFinal)));
-                                         params.add(new BasicNameValuePair("paid", String.valueOf(totalFinal)));
-                                         params.add(new BasicNameValuePair("tableNumber", String.valueOf(-1)));
-                                         params.add(new BasicNameValuePair("roomName", String.valueOf("")));
-                                         params.add(new BasicNameValuePair("totalDiscount", String.valueOf(0.0)));
+                                         params.add("products", prods);
+                                         params.add("modifiers", mods);
+                                         params.add("printType", String.valueOf(4));
+                                         params.add("billId", String.valueOf(totalFinal));
+                                         params.add("paymentType", String.valueOf(1));
+                                         params.add("deviceName", String.valueOf("device"));
+                                         params.add("orderNumber", String.valueOf(orderNumber));
+                                         params.add("cost", String.valueOf(totalFinal));
+                                         params.add("paid", String.valueOf(totalFinal));
+                                         params.add("tableNumber", String.valueOf(-1));
+                                         params.add("roomName", String.valueOf(""));
+                                         params.add("totalDiscount", String.valueOf(0.0));
 
                                          callHttpHandler("/printItemBillNonFiscal", params);
 
@@ -1026,8 +1021,8 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                 {
                     myPopupView = popupView;
                     myPopupWindow = popupWindow;
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                    params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
+                    RequestParam params = new RequestParam();
+                    params.add("billId", String.valueOf(billId));
                     callHttpHandler("/getBillData", params);
                 }
 
@@ -1099,37 +1094,14 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                         }
                     });
 
+
                     popupView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
                         {
-
-
-                       /* String username= intent.getStringExtra("username");
-                        int isAdmin = intent.getIntExtra("isAdmin", -1);
-
-
-                        Intent intent = new Intent(orderActivity, Operative.class);
-                        intent.putExtra("username", username);
-                        intent.putExtra("isAdmin", isAdmin);
-                        intent.setAction("setTable");
-                        intent.putExtra("orderNumber", orderNumber-1 );
-                        intent.putExtra("billId", billId);
-                        intent.putExtra("userId", userId);
-                        intent.putExtra("userType", userType);
-
-                        int tableNumber = intent.getIntExtra("tableNumber", -1);
-
-                        intent.putExtra("tableNumber", tableNumber);
-
-                        startActivity(intent);
-                        popupWindow.dismiss();
-                        finish();*/
-
                             String username = intent.getStringExtra("username");
                             int isAdmin = intent.getIntExtra("isAdmin", -1);
-
 
                             Intent intent = new Intent(orderActivity, Operative.class);
                             intent.putExtra("tableNumber", tableNumber);
@@ -1141,14 +1113,12 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                             intent.putExtra("userId", userId);
                             intent.putExtra("userType", userType);
 
-
-                            intent.putExtra("tableNumber", tableNumber);
-
                             startActivity(intent);
                             popupWindow.dismiss();
                             finish();
                         }
                     });
+
 
                     popupView.findViewById(R.id.go_to_payment)
                              .setOnClickListener(new View.OnClickListener()
@@ -1156,31 +1126,7 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                                  @Override
                                  public void onClick(View v)
                                  {
-
-
-                      /*  String username= intent.getStringExtra("username");
-                        int isAdmin = intent.getIntExtra("isAdmin", -1);
-
-
-                        Intent intent = new Intent(orderActivity, PaymentActivity.class);
-                        intent.putExtra("username", username);
-                        intent.putExtra("isAdmin", isAdmin);
-                        intent.setAction("setTable");
-                        intent.putExtra("orderNumber", orderNumber );
-                        intent.putExtra("billId", billId);
-                        intent.putExtra("userId", userId);
-                        intent.putExtra("userType", userType);
-
-                        int tableNumber = intent.getIntExtra("tableNumber", -1);
-
-                        intent.putExtra("tableNumber", tableNumber);
-
-                        startActivity(intent);
-                        popupWindow.dismiss();
-                        finish();*/
-
-
-                                     String username = intent.getStringExtra("username");
+                                     username = intent.getStringExtra("username");
                                      int isAdmin = intent.getIntExtra("isAdmin", -1);
 
 
@@ -1192,8 +1138,6 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                                      intent.putExtra("billId", billId);
                                      intent.putExtra("userId", userId);
                                      intent.putExtra("userType", userType);
-
-
                                      intent.putExtra("tableNumber", tableNumber);
 
                                      startActivity(intent);
@@ -1202,13 +1146,13 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                                  }
                              });
 
+
                     popupView.findViewById(R.id.print_order_1)
                              .setOnClickListener(new View.OnClickListener()
                              {
                                  @Override
                                  public void onClick(View v)
                                  {
-
                                      if (StaticValue.blackbox)
                                      {
                                          Map<String, ArrayList<CashButtonListLayout>> test = new HashMap<String, ArrayList<CashButtonListLayout>>();
@@ -1219,26 +1163,24 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                                                      .get(i)));
                                          }
 
-                                         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                                         RequestParam params = new RequestParam();
                                          Gson gson = new Gson();
                                          String prods = gson.toJson(listHeader);
                                          String mods = gson.toJson(test);
-                                         params.add(new BasicNameValuePair("products", prods));
-                                         params.add(new BasicNameValuePair("modifiers", mods));
-                                         params.add(new BasicNameValuePair("printType", String.valueOf(4)));
-                                         params.add(new BasicNameValuePair("billId", String.valueOf(totalFinal)));
-                                         params.add(new BasicNameValuePair("paymentType", String.valueOf(1)));
-                                         params.add(new BasicNameValuePair("deviceName", String.valueOf("device")));
-                                         params.add(new BasicNameValuePair("orderNumber", String.valueOf(orderNumber)));
-                                         params.add(new BasicNameValuePair("cost", String.valueOf(totalFinal)));
-                                         params.add(new BasicNameValuePair("paid", String.valueOf(totalFinal)));
-                                         params.add(new BasicNameValuePair("totalDiscount", String.valueOf(0.0)));
-                                         params.add(new BasicNameValuePair("tableNumber", String.valueOf(-1)));
-                                         params.add(new BasicNameValuePair("roomName", String.valueOf("")));
+                                         params.add("products", prods);
+                                         params.add("modifiers", mods);
+                                         params.add("printType", String.valueOf(4));
+                                         params.add("billId", String.valueOf(totalFinal));
+                                         params.add("paymentType", String.valueOf(1));
+                                         params.add("deviceName", String.valueOf("device"));
+                                         params.add("orderNumber", String.valueOf(orderNumber));
+                                         params.add("cost", String.valueOf(totalFinal));
+                                         params.add("paid", String.valueOf(totalFinal));
+                                         params.add("totalDiscount", String.valueOf(0.0));
+                                         params.add("tableNumber", String.valueOf(-1));
+                                         params.add("roomName", String.valueOf(""));
 
                                          callHttpHandler("/printItemBillNonFiscal", params);
-
-
                                      }
                                      else
                                      {
@@ -1272,14 +1214,13 @@ public class OrderActivity extends AppCompatActivity implements TakeAwayAdapter.
                                  }
                              });
 
+
                     popupView.findViewById(R.id.reprint_order)
                              .setOnClickListener(new View.OnClickListener()
                              {
                                  @Override
                                  public void onClick(View v)
                                  {
-
-
                                      ClientThread myThread = ClientThread.getInstance();
                                      myThread.setProducts(listHeader);
                                      myThread.setModifiers(listChild);

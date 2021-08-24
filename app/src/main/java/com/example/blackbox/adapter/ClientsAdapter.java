@@ -24,6 +24,7 @@ import com.example.blackbox.graphics.CustomEditText;
 import com.example.blackbox.graphics.CustomTextView;
 import com.example.blackbox.graphics.OnSwipeTouchListener;
 import com.example.blackbox.model.ClientInfo;
+import com.example.blackbox.model.RequestParam;
 import com.example.blackbox.model.StaticValue;
 import com.utils.db.DatabaseAdapter;
 
@@ -77,8 +78,8 @@ public class ClientsAdapter extends RecyclerView.Adapter
 
             if (StaticValue.blackbox)
             {
-                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                params.add(new BasicNameValuePair("clientChecksum", dbA.getChecksumForTable("client")));
+                RequestParam params = new RequestParam();
+                params.add("clientChecksum", dbA.getChecksumForTable("client"));
 
                 clientsActivity.callHttpHandler("/fetchClients", params);
             }
@@ -100,9 +101,9 @@ public class ClientsAdapter extends RecyclerView.Adapter
         {
             if (StaticValue.blackbox)
             {
-                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
-                params.add(new BasicNameValuePair("clientChecksum", dbA.getChecksumForTable("client")));
+                RequestParam params = new RequestParam();
+                params.add("billId", String.valueOf(billId));
+                params.add("clientChecksum", dbA.getChecksumForTable("client"));
 
                 clientsActivity.callHttpHandler("/fetchExclusiveClients", params);
             }
@@ -511,9 +512,9 @@ public class ClientsAdapter extends RecyclerView.Adapter
 
                 if (StaticValue.blackbox)
                 {
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                    params.add(new BasicNameValuePair("clientId", String.valueOf(clientInfo.getClient_id())));
-                    params.add(new BasicNameValuePair("companyId", String.valueOf(clientInfo.getCompany_id())));
+                    RequestParam params = new RequestParam();
+                    params.add("clientId", String.valueOf(clientInfo.getClient_id()));
+                    params.add("companyId", String.valueOf(clientInfo.getCompany_id()));
 
 
                     ((ClientsActivity) context).callHttpHandler("/deleteClient", params);

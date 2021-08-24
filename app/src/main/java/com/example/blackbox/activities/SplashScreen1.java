@@ -1,11 +1,13 @@
 package com.example.blackbox.activities;
 
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.text.InputFilter;
 import android.text.format.Formatter;
 import android.util.DisplayMetrics;
@@ -20,8 +22,6 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import android.provider.Settings.Secure;
-
 
 import com.example.blackbox.R;
 import com.example.blackbox.adapter.ModifierAdapter;
@@ -47,6 +47,7 @@ import com.example.blackbox.model.Table;
 import com.example.blackbox.model.User;
 import com.example.blackbox.model.Vat;
 import com.example.blackbox.model.WaitingListModel;
+import com.example.blackbox.revicer.AlarmMailBroadcastReceiver;
 import com.example.blackbox.server.HttpHandler;
 import com.example.blackbox.server.LocalNotification;
 import com.utils.db.DatabaseAdapter;
@@ -66,7 +67,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import cz.msebera.android.httpclient.NameValuePair;
 
 /**
  * Created by tiziano on 4/2/19.
@@ -83,10 +83,10 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
 
     private Context context;
 
-    private ProgressBar progressBar;
-    private int progressStatus = 0;
-    private String username = "";
-    private int userType;
+    private ProgressBar     progressBar;
+    private int             progressStatus = 0;
+    private String          username       = "";
+    private int             userType;
     private DatabaseAdapter dbA;
 
     private String licenseString = "";
@@ -95,10 +95,8 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
      * Indicate the status that started splashScreen.
      * If null, it's the first start, if it's `pindpad`
      * it's started after a lock
-     * **/
+     **/
     private String status;
-
-
 
 
     @Override
@@ -113,9 +111,12 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
         status = intent.getStringExtra("status");
 
         username = intent.getStringExtra("username");
-        if (username==null) { username= ""; }
+        if (username == null)
+        {
+            username = "";
+        }
 
-        userType = intent.getIntExtra("isAdmin", -1);
+        userType    = intent.getIntExtra("isAdmin", -1);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         this.dbA = new DatabaseAdapter(this);
@@ -129,7 +130,9 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
         // goodBlackbox is null.
         BlackboxInfo goodBlackbox = testBlackboxes(allBlackbox);
         if (allBlackbox.isEmpty())
-            { openPopupBlackboxIP(1); }
+        {
+            openPopupBlackboxIP(1);
+        }
 
         // if none of the stored blackboxes manage to connect
         else if (goodBlackbox == null)
@@ -147,7 +150,11 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
 
         LocalNotification notificationService = LocalNotification.getInstance();
         notificationService.setLocalNotification(getApplicationContext());
+
+        AlarmMailBroadcastReceiver.setAlarm(this);
     }
+
+
 
 
     @Override
@@ -165,12 +172,14 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
         try
         {
             jsonObject = new JSONObject(output);
-            route = jsonObject.getString("route");
-            success = jsonObject.getBoolean("success");
+            route      = jsonObject.getString("route");
+            success    = jsonObject.getBoolean("success");
         }
 
-        catch (Exception e )
-            { e.printStackTrace(); }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
 
         // if we are testing the blackbox, a success: false result could be expected
@@ -192,7 +201,9 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             // is this device known to the blackbox?
                             // if not, start the registration
                             if (!jsonObject.getBoolean("deviceKnown"))
-                                { setupRegistrationPopupLayout(); }
+                            {
+                                setupRegistrationPopupLayout();
+                            }
 
                             // if the device is already known to the blackbox,
                             // start the sync with the blackbox
@@ -201,7 +212,7 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                                 // since the test worked, start the pipeline of updates
 
                                 WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
-                                String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+                                String      ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
 
                                 RequestParam params = new RequestParam();
                                 params.add("ip", ip);
@@ -212,7 +223,7 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
 
                         // the check is not present, thus the test failed
                         catch (Exception e)
-                            { /* do nothing */ }
+                        { /* do nothing */ }
                         break;
 
 
@@ -227,10 +238,10 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             progressBar.setProgress(0);
 
                             // save the created user and device info in the database
-                            JSONObject jObject = new JSONObject(output).getJSONObject("user");
+                            JSONObject jObject       = new JSONObject(output).getJSONObject("user");
                             JSONObject jObjectDevice = new JSONObject(output).getJSONObject("deviceInfo");
-                            User myUser = User.fromJson(jObject);
-                            DeviceInfo dInfo = DeviceInfo.fromJson(jObjectDevice);
+                            User       myUser        = User.fromJson(jObject);
+                            DeviceInfo dInfo         = DeviceInfo.fromJson(jObjectDevice);
 
                             dbA.insertDeviceInfo(
                                     "Store Name",
@@ -238,16 +249,18 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                                     dInfo.getComune(), dInfo.getProvincia(), dInfo.getCap(),
                                     dInfo.getEmail(), dInfo.getAndroidId(), dInfo.getTokenId(),
                                     dInfo.getIp(), dInfo.getMulticastIp(), dInfo.getMaster(),
-                                    dInfo.getOnlineCheck());
+                                    dInfo.getOnlineCheck()
+                            );
 
                             dbA.insertUser(myUser.getName(), myUser.getSurname(), myUser.getEmail(),
-                                           myUser.getPasscode(), 0, myUser.getPasscode());
+                                    myUser.getPasscode(), 0, myUser.getPasscode()
+                            );
 
                             // TODO
                             // handle registration licence codes
-                            Date c = Calendar.getInstance().getTime();
-                            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                            String formattedDate = df.format(c);
+                            Date             c             = Calendar.getInstance().getTime();
+                            SimpleDateFormat df            = new SimpleDateFormat("dd/MM/yyyy");
+                            String           formattedDate = df.format(c);
 
                             dbA.execOnDb("INSERT INTO registered_activation_code(code, registration) VALUES('" + licenseString + "', '" + formattedDate + "')");
                             dbA.execOnDb("UPDATE static_activation_code SET used=1 where code='" + licenseString + "'");
@@ -262,9 +275,10 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
 
                     case "updateDeviceInfo":
                         check = jsonObject.getBoolean("check");
-                        if (check) {
+                        if (check)
+                        {
                             JSONObject jObjectDevice = new JSONObject(output).getJSONObject("deviceInfo");
-                            DeviceInfo dInfo = DeviceInfo.fromJson(jObjectDevice);
+                            DeviceInfo dInfo         = DeviceInfo.fromJson(jObjectDevice);
                             dbA.execOnDb("delete from device_info");
                             dbA.insertDeviceInfoWithId(dInfo);
                             progressStatus += 20;
@@ -288,16 +302,16 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                         break;
 
 
-                    case "updateButtons" :
+                    case "updateButtons":
                         check = jsonObject.getBoolean("check");
                         if (check)
                         {
                             if (!jsonObject.getBoolean("updated"))
                             {
-                                JSONArray jVats = new JSONObject(output).getJSONArray("vats");
+                                JSONArray jVats    = new JSONObject(output).getJSONArray("vats");
                                 JSONArray jButtons = new JSONObject(output).getJSONArray("buttons");
 
-                                ArrayList<Vat> vats = Vat.fromJsonArray(jVats);
+                                ArrayList<Vat>          vats    = Vat.fromJsonArray(jVats);
                                 ArrayList<ButtonLayout> buttons = ButtonLayout.fromJsonArray(jButtons);
 
                                 dbA.execOnDb("delete from button");
@@ -321,22 +335,24 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                         }
 
                         else
-                            { Toast.makeText(getApplicationContext(), "Errore buttons", Toast.LENGTH_SHORT).show(); }
+                        {
+                            Toast.makeText(getApplicationContext(), "Errore buttons", Toast.LENGTH_SHORT).show();
+                        }
 
                         break;
 
 
-                    case "updateModifierButtons" :
+                    case "updateModifierButtons":
                         check = jsonObject.getBoolean("check");
                         if (check)
                         {
                             if (!jsonObject.getBoolean("updated"))
                             {
                                 JSONArray jModifierGroups = new JSONObject(output).getJSONArray("modifierGroups");
-                                JSONArray jModifiers = new JSONObject(output).getJSONArray("modifiers");
+                                JSONArray jModifiers      = new JSONObject(output).getJSONArray("modifiers");
 
                                 ArrayList<ModifiersGroupAdapter.ModifiersGroup> modifierGroups = ModifiersGroupAdapter.ModifiersGroup.fromJsonArray(jModifierGroups);
-                                ArrayList<ModifierAdapter.Modifier> modifiers = ModifierAdapter.Modifier.fromJsonArray(jModifiers);
+                                ArrayList<ModifierAdapter.Modifier>             modifiers      = ModifierAdapter.Modifier.fromJsonArray(jModifiers);
 
                                 dbA.execOnDb("delete from modifiers_group");
                                 dbA.execOnDb("delete from modifier");
@@ -359,19 +375,21 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                         }
 
                         else
-                            { Toast.makeText(getApplicationContext(), "Errore buttons", Toast.LENGTH_SHORT).show(); }
+                        {
+                            Toast.makeText(getApplicationContext(), "Errore buttons", Toast.LENGTH_SHORT).show();
+                        }
 
                         break;
 
 
-                    case "updateModifierAssigned" :
+                    case "updateModifierAssigned":
                         check = jsonObject.getBoolean("check");
                         if (check)
                         {
                             if (!jsonObject.getBoolean("updated"))
                             {
                                 JSONArray jmgA = new JSONObject(output).getJSONArray("modifierGroupAssigned");
-                                JSONArray jmA = new JSONObject(output).getJSONArray("modifierAssigned");
+                                JSONArray jmA  = new JSONObject(output).getJSONArray("modifierAssigned");
 
                                 ArrayList<ModifierGroupAssigned> modifierGroupAssigned = ModifierGroupAssigned
                                         .fromJsonArray(jmgA);
@@ -396,11 +414,13 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             params.add("clientInCompanyChecksum", dbA.getChecksumForTable("client_in_company"));
                             params.add("fidelityChecksum", dbA.getChecksumForTable("fidelity"));
 
-                            callHttpHandler("/updateClients",params );
+                            callHttpHandler("/updateClients", params);
                         }
 
                         else
-                            { Toast.makeText(getApplicationContext(), "Errore buttons", Toast.LENGTH_SHORT).show(); }
+                        {
+                            Toast.makeText(getApplicationContext(), "Errore buttons", Toast.LENGTH_SHORT).show();
+                        }
                         break;
 
 
@@ -410,14 +430,14 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                         {
                             if (!jsonObject.getBoolean("updated"))
                             {
-                                JSONArray jClients = new JSONObject(output).getJSONArray("clients");
-                                JSONArray jCompanies = new JSONObject(output).getJSONArray("companies");
-                                JSONArray jCics = new JSONObject(output).getJSONArray("cics");
-                                JSONArray jFielities = new JSONObject(output).getJSONArray("fidelities");
-                                ArrayList<Client> clients = Client.fromJsonArray(jClients);
-                                ArrayList<Company> companies = Company.fromJsonArray(jCompanies);
-                                ArrayList<ClientInCompany> cics = ClientInCompany.fromJsonArray(jCics);
-                                ArrayList<Fidelity> fidelities = Fidelity.fromJsonArray(jFielities);
+                                JSONArray                  jClients   = new JSONObject(output).getJSONArray("clients");
+                                JSONArray                  jCompanies = new JSONObject(output).getJSONArray("companies");
+                                JSONArray                  jCics      = new JSONObject(output).getJSONArray("cics");
+                                JSONArray                  jFielities = new JSONObject(output).getJSONArray("fidelities");
+                                ArrayList<Client>          clients    = Client.fromJsonArray(jClients);
+                                ArrayList<Company>         companies  = Company.fromJsonArray(jCompanies);
+                                ArrayList<ClientInCompany> cics       = ClientInCompany.fromJsonArray(jCics);
+                                ArrayList<Fidelity>        fidelities = Fidelity.fromJsonArray(jFielities);
 
                                 dbA.execOnDb("delete from client");
                                 dbA.execOnDb("delete from company");
@@ -445,11 +465,13 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             params.add("waitingListChecksum", dbA.getChecksumForTable("waiting_list"));
 
 
-                            callHttpHandler("/updateRooms",params );
+                            callHttpHandler("/updateRooms", params);
                         }
 
                         else
-                            { Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show(); }
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
+                        }
                         break;
 
 
@@ -464,10 +486,10 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                                 JSONArray jRes    = new JSONObject(output).getJSONArray("reservations");
                                 JSONArray jWt     = new JSONObject(output).getJSONArray("waitingLists");
 
-                                ArrayList<Room> rooms = Room.fromJsonArray(jRooms);
-                                ArrayList<Table> tables = Table.fromJsonArray(jTables);
-                                ArrayList<Reservation> reservations = Reservation.fromJsonArray(jRes);
-                                ArrayList<WaitingListModel> wls = WaitingListModel.fromJsonArray(jWt);
+                                ArrayList<Room>             rooms        = Room.fromJsonArray(jRooms);
+                                ArrayList<Table>            tables       = Table.fromJsonArray(jTables);
+                                ArrayList<Reservation>      reservations = Reservation.fromJsonArray(jRes);
+                                ArrayList<WaitingListModel> wls          = WaitingListModel.fromJsonArray(jWt);
 
                                 dbA.execOnDb("delete from room");
                                 dbA.execOnDb("delete from table_configuration");
@@ -496,7 +518,9 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                         }
 
                         else
-                            { Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show(); }
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
+                        }
                         break;
 
 
@@ -506,8 +530,8 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                         {
                             if (!jsonObject.getBoolean("updated"))
                             {
-                                JSONArray usersObject = new JSONObject(output).getJSONArray("users");
-                                ArrayList<User> userList = User.fromJsonArray(usersObject);
+                                JSONArray       usersObject = new JSONObject(output).getJSONArray("users");
+                                ArrayList<User> userList    = User.fromJsonArray(usersObject);
                                 dbA.execOnDb("delete from user");
                                 dbA.updateUserList(userList);
 
@@ -521,11 +545,13 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                             params.add("fiscalPrinterChecksum", dbA.getChecksumForTable("fiscal_printer"));
                             params.add("kitchenPrinterChecksum", dbA.getChecksumForTable("kitchen_printer"));
 
-                            callHttpHandler("/updatePrinters",params );
+                            callHttpHandler("/updatePrinters", params);
                         }
 
                         else
-                            { Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show(); }
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
+                        }
                         break;
 
 
@@ -541,12 +567,12 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                                 dbA.execOnDb("delete from kitchen_printer");
                                 if (fiscalExist)
                                 {
-                                    JSONObject fiscalPrinter = new JSONObject(output).getJSONObject("fiscalPrinter");
-                                    FiscalPrinter fPrinter = FiscalPrinter.fromJson(fiscalPrinter);
+                                    JSONObject    fiscalPrinter = new JSONObject(output).getJSONObject("fiscalPrinter");
+                                    FiscalPrinter fPrinter      = FiscalPrinter.fromJson(fiscalPrinter);
                                     dbA.insertFiscalPrinterSync(fPrinter);
                                 }
-                                JSONArray kitchenPrinter = new JSONObject(output).getJSONArray("kitchenPrinter");
-                                ArrayList<KitchenPrinter> kPrinters = KitchenPrinter.fromJsonArray(kitchenPrinter);
+                                JSONArray                 kitchenPrinter = new JSONObject(output).getJSONArray("kitchenPrinter");
+                                ArrayList<KitchenPrinter> kPrinters      = KitchenPrinter.fromJsonArray(kitchenPrinter);
                                 dbA.insertKitchenPrinterSync(kPrinters);
 
                                 dbA.updateChecksumForTable("fiscal_printer", jsonObject.getString("fiscalPrinterChecksum"));
@@ -568,7 +594,9 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                         }
 
                         else
-                            { Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show(); }
+                        {
+                            Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_SHORT).show();
+                        }
                         break;
 
 
@@ -578,18 +606,20 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                         break;
                 }
 
-            } catch (JSONException e) {
+            }
+            catch (JSONException e)
+            {
                 e.printStackTrace();
             }
         }
 
         else
         {
-            if (progressStatus!=100)
+            if (progressStatus != 100)
             {
                 Toast.makeText(this, "NO BLACKBOX", Toast.LENGTH_SHORT).show();
                 StaticValue.blackbox = false;
-                progressStatus = 100;
+                progressStatus       = 100;
             }
         }
     }
@@ -597,10 +627,11 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
 
     // ----- POPUP ------ //
 
+
     /**
      * Open the popup that allow the user to insert the hostname
      * and address of a new blackbox
-     * */
+     */
     private void openPopupBlackboxIP(int lastId)
     {
         LayoutInflater inflater = this.getLayoutInflater();
@@ -613,10 +644,10 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
         dialog.setCanceledOnTouchOutside(false);
         dialog.setContentView(inflater.inflate(R.layout.popup_setup_blackbox, null));
 
-        EditText blackboxIpEditText = dialog.findViewById(R.id.editText_blackbox_ip);
-        EditText blackboxNameEditText = dialog.findViewById(R.id.editText_blackbox_name);
-        CustomButton okButton = dialog.findViewById(R.id.ok_button_blackbox_ip);
-        CustomButton refresh = dialog.findViewById(R.id.refresh_button_blackbox_ip);
+        EditText     blackboxIpEditText   = dialog.findViewById(R.id.editText_blackbox_ip);
+        EditText     blackboxNameEditText = dialog.findViewById(R.id.editText_blackbox_name);
+        CustomButton okButton             = dialog.findViewById(R.id.ok_button_blackbox_ip);
+        CustomButton refresh              = dialog.findViewById(R.id.refresh_button_blackbox_ip);
 
         // on press of the OK button,
         // try to connect to the blackbbox,
@@ -626,7 +657,7 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
             @Override
             public void onClick(View view)
             {
-                String ipText = blackboxIpEditText.getText().toString().trim();
+                String ipText   = blackboxIpEditText.getText().toString().trim();
                 String nameText = blackboxNameEditText.getText().toString().trim();
 
                 // check first if the given name and address are correctly formatted
@@ -634,7 +665,8 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                 {
                     Toast.makeText(SplashScreen1.this,
                             "Malformed name of blackbox. Names must start with a letter and accept only [A-Z0-9_-.]",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_LONG
+                    ).show();
                 }
 
                 // if the pattern of the address is well-formed
@@ -655,17 +687,21 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                         dbA.insertBlackboxSync(b);
                         dbA.execOnDb("ALTER TABLE device_info ADD COLUMN store_name TEXT DEFAULT NULL;");
 
-                        Toast.makeText(SplashScreen1.this, "Connecting to blackbox "+nameText + "@" + ipText, Toast.LENGTH_LONG).show();
+                        Toast.makeText(SplashScreen1.this, "Connecting to blackbox " + nameText + "@" + ipText, Toast.LENGTH_LONG).show();
 
                         dialog.dismiss();
                     }
 
                     else
-                        { Toast.makeText(SplashScreen1.this, getString(R.string.error_blackbox_comm, nameText, ipText), Toast.LENGTH_LONG).show(); }
+                    {
+                        Toast.makeText(SplashScreen1.this, getString(R.string.error_blackbox_comm, nameText, ipText), Toast.LENGTH_LONG).show();
+                    }
                 }
 
                 else
-                    { Toast.makeText(SplashScreen1.this, "IP address is malformed", Toast.LENGTH_LONG).show(); }
+                {
+                    Toast.makeText(SplashScreen1.this, "IP address is malformed", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -705,16 +741,7 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
     }
 
 
-
-    public void callHttpHandler(String route, List<NameValuePair> params)
-    {
-        HttpHandler httpHandler = new HttpHandler();
-        httpHandler.delegate = this;
-        httpHandler.UpdateInfoAsyncTask(route, params);
-        httpHandler.execute();
-    }
-
-    public void callHttpHandler(String route,  RequestParam params)
+    public void callHttpHandler(String route, RequestParam params)
     {
         HttpHandler httpHandler = new HttpHandler();
         httpHandler.delegate = this;
@@ -725,8 +752,8 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
 
     private void setupRegistrationPopupLayout()
     {
-        Display display = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics ();
+        Display        display    = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
 
         density  = getResources().getDisplayMetrics().density;
@@ -737,82 +764,103 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
         findViewById(R.id.firstRegistrationWindow).setVisibility(View.VISIBLE);
 
         CustomEditText AdminPasscode = findViewById(R.id.first_admin_passcode_et);
-        AdminPasscode.setFilters(new InputFilter[] { new InputFilter.LengthFilter(6) });
+        AdminPasscode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(6)});
 
         CustomButton licenseButton = findViewById(R.id.licensing);
 
-        licenseButton.setOnClickListener(new View.OnClickListener() {
+        licenseButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-                // TODO
+            public void onClick(View view)
+            {
+
+                // display a popup to allow the user to input a license code
                 licenseString = fireSingleInputDialogPopup();
+
+                // TODO
+                // the string that was obtained should be validated somehow
+
             }
         });
 
 
-        findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 Toast.makeText(context, R.string.please_fill_first_registration_form, Toast.LENGTH_SHORT).show();
             }
         });
 
-        findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 saveFirstRegistration();
-            }});
+            }
+        });
     }
 
 
     private void saveFirstRegistration()
     {
         //final CustomEditText StoreName = (CustomEditText)findViewById(R.id.store_name_et);
-        CustomEditText  Address= findViewById(R.id.address_et);
-        CustomEditText  StoreEmail = findViewById(R.id.first_r_email_et);
-        CustomEditText  RagioneSociale = findViewById(R.id.store_name_et);
-        CustomEditText  PartitaIva = findViewById(R.id.store_IVA);
-        CustomEditText  AdminName = findViewById(R.id.first_admin_name_et);
-        CustomEditText  AdminSurname = findViewById(R.id.first_admin_surname_et);
-        CustomEditText  AdminEmail = findViewById(R.id.first_admin_email_et);
-        CustomEditText  AdminPasscode = findViewById(R.id.first_admin_passcode_et);
-        CustomEditText  Cap = findViewById(R.id.cap_et);
-        CustomEditText  Comune = findViewById(R.id.comune_et);
-        CustomEditText  Provincia = findViewById(R.id.provincia_et);
+        CustomEditText Address        = findViewById(R.id.address_et);
+        CustomEditText StoreEmail     = findViewById(R.id.first_r_email_et);
+        CustomEditText RagioneSociale = findViewById(R.id.store_name_et);
+        CustomEditText PartitaIva     = findViewById(R.id.store_IVA);
+        CustomEditText AdminName      = findViewById(R.id.first_admin_name_et);
+        CustomEditText AdminSurname   = findViewById(R.id.first_admin_surname_et);
+        CustomEditText AdminEmail     = findViewById(R.id.first_admin_email_et);
+        CustomEditText AdminPasscode  = findViewById(R.id.first_admin_passcode_et);
+        CustomEditText Cap            = findViewById(R.id.cap_et);
+        CustomEditText Comune         = findViewById(R.id.comune_et);
+        CustomEditText Provincia      = findViewById(R.id.provincia_et);
 
         String ragioneSociale = RagioneSociale.getText().toString().trim();
-        String partitaIva= PartitaIva.getText().toString().trim();
-        String address = Address.getText().toString().trim();
-        String storeEmail = StoreEmail.getText().toString().trim();
-        String adminName = AdminName.getText().toString().trim();
-        String adminSurname = AdminSurname.getText().toString().trim();
-        String adminEmail = AdminEmail.getText().toString().trim();
-        String adminPasscode = AdminPasscode.getText().toString().trim();
-        String cap= Cap.getText().toString().trim();
-        String comune= Comune.getText().toString().trim();
-        String provincia= Provincia.getText().toString().trim();
+        String partitaIva     = PartitaIva.getText().toString().trim();
+        String address        = Address.getText().toString().trim();
+        String storeEmail     = StoreEmail.getText().toString().trim();
+        String adminName      = AdminName.getText().toString().trim();
+        String adminSurname   = AdminSurname.getText().toString().trim();
+        String adminEmail     = AdminEmail.getText().toString().trim();
+        String adminPasscode  = AdminPasscode.getText().toString().trim();
+        String cap            = Cap.getText().toString().trim();
+        String comune         = Comune.getText().toString().trim();
+        String provincia      = Provincia.getText().toString().trim();
 
 
         // if any of the fields is not correctly formatted
         if (ragioneSociale.equals(""))
-            { Toast.makeText(context, R.string.please_insert_your_store_name, Toast.LENGTH_SHORT).show(); }
+        {
+            Toast.makeText(context, R.string.please_insert_your_store_name, Toast.LENGTH_SHORT).show();
+        }
         else if (!storeEmail.equals("") && !Pattern.matches("^[-a-zA-Z0-9._%]+@[a-zA-Z]+\\.[a-zA-Z]{2,5}$", storeEmail))
-            { Toast.makeText(context, R.string.store_email_is_not_well_formed, Toast.LENGTH_SHORT).show(); }
-        else if(!adminEmail.equals("") && !Pattern.matches("^[-a-zA-Z0-9._%]+@[a-zA-Z]+\\.[a-zA-Z]{2,5}$", adminEmail))
-            { Toast.makeText(context, R.string.admin_email_is_not_well_formed, Toast.LENGTH_SHORT).show(); }
-        else if(adminName.equals("") || adminSurname.equals("") || adminPasscode.equals(""))
-            { Toast.makeText(context, R.string.fill_admin_info_please, Toast.LENGTH_SHORT).show(); }
-        else if(licenseString.equals("") )
-            { Toast.makeText(context, R.string.fill_license_string_please, Toast.LENGTH_SHORT).show(); }
+        {
+            Toast.makeText(context, R.string.store_email_is_not_well_formed, Toast.LENGTH_SHORT).show();
+        }
+        else if (!adminEmail.equals("") && !Pattern.matches("^[-a-zA-Z0-9._%]+@[a-zA-Z]+\\.[a-zA-Z]{2,5}$", adminEmail))
+        {
+            Toast.makeText(context, R.string.admin_email_is_not_well_formed, Toast.LENGTH_SHORT).show();
+        }
+        else if (adminName.equals("") || adminSurname.equals("") || adminPasscode.equals(""))
+        {
+            Toast.makeText(context, R.string.fill_admin_info_please, Toast.LENGTH_SHORT).show();
+        }
+        else if (licenseString.equals(""))
+        {
+            Toast.makeText(context, R.string.fill_license_string_please, Toast.LENGTH_SHORT).show();
+        }
         /*else if(!dbA.checkIfStaticCodeIsUsed(licenseString)){
             Toast.makeText(context, R.string.license_code_already_used, Toast.LENGTH_SHORT).show();}*/
 
         // if all the fields have a correct output, send the registration form to the blackbox
         else
         {
-            String android_id = Secure.getString(context.getContentResolver(),Secure.ANDROID_ID);
             LocalNotification notificationService = LocalNotification.getInstance();
-            String myIp = notificationService.myIp;
+            String            myIp                = notificationService.myIp;
 
             if (StaticValue.blackbox)
             {
@@ -824,7 +872,7 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                 params.add("cap", cap);
                 params.add("address", address);
                 params.add("email", storeEmail);
-                params.add("androidId", android_id);
+                params.add("androidId", StaticValue.androidId);
                 params.add("ip", myIp);
                 params.add("tokenId", StaticValue.myTag);
                 params.add("multicastIp", StaticValue.multicastGroup);
@@ -837,9 +885,9 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
                 // params.add("passcode", adminPasscode);
                 params.add("code", licenseString);
 
-                Date c = Calendar.getInstance().getTime();
-                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                String formattedDate = df.format(c);
+                Date             c             = Calendar.getInstance().getTime();
+                SimpleDateFormat df            = new SimpleDateFormat("dd/MM/yyyy");
+                String           formattedDate = df.format(c);
                 params.add("registration", formattedDate);
 
                 callHttpHandler("/saveFirstRegistration", params);
@@ -847,31 +895,36 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
 
             else
             {
-                dbA.insertDeviceInfo(ragioneSociale,partitaIva,  address, provincia, comune, cap,  storeEmail, android_id);
-                dbA.insertUser(adminName, adminSurname, adminEmail, adminPasscode,0, adminPasscode);
-                Date c = Calendar.getInstance().getTime();
-                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                String formattedDate = df.format(c);
-                dbA.execOnDb("INSERT INTO registered_activation_code(code, registration) VALUES('"+licenseString+"', '"+formattedDate+"')");
-                dbA.execOnDb("UPDATE static_activation_code SET used=1 where code='"+licenseString+"'");
+                dbA.insertDeviceInfo(ragioneSociale, partitaIva, address, provincia, comune, cap, storeEmail, StaticValue.androidId);
+                dbA.insertUser(adminName, adminSurname, adminEmail, adminPasscode, 0, adminPasscode);
+                Date             c             = Calendar.getInstance().getTime();
+                SimpleDateFormat df            = new SimpleDateFormat("dd/MM/yyyy");
+                String           formattedDate = df.format(c);
+                dbA.execOnDb("INSERT INTO registered_activation_code(code, registration) VALUES('" + licenseString + "', '" + formattedDate + "')");
+                dbA.execOnDb("UPDATE static_activation_code SET used=1 where code='" + licenseString + "'");
             }
         }
     }
+
 
     // show the popup to input the licence code
     public String fireSingleInputDialogPopup()
     {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.popup_single_input, null);
+        final View     popupView      = layoutInflater.inflate(R.layout.popup_single_input, null);
 
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
 
-        popupView.post(new Runnable() {
+        popupView.post(new Runnable()
+        {
             @Override
-            public void run() {}
+            public void run()
+            {
+            }
         });
 
         CustomEditText license_input = popupView.findViewById(R.id.single_input);
@@ -880,9 +933,11 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
         CustomButton licenseButton = findViewById(R.id.licensing);
 
         ImageButton okButton = popupView.findViewById(R.id.ok);
-        okButton.setOnClickListener(new View.OnClickListener() {
+        okButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 if (!license_input.getText().toString().trim().equals(""))
                 {
                     licenseString = license_input.getText().toString();
@@ -901,9 +956,11 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
         });
 
         ImageButton killButton = popupView.findViewById(R.id.kill);
-        killButton.setOnClickListener(new View.OnClickListener() {
+        killButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 popupWindow.dismiss();
             }
         });
@@ -917,10 +974,10 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
 
     /**
      * Test if a list of blackbox are active or not
-     * @param allbb: the input list of blackbox to test
      *
+     * @param allbb: the input list of blackbox to test
      * @return the first blackbox that is able to communicate successfully with this app
-     * */
+     */
     public BlackboxInfo testBlackboxes(List<BlackboxInfo> allbb)
     {
         for (BlackboxInfo bb : allbb)
@@ -930,7 +987,7 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
 
             // create a new temporary http connection
             HttpHandler httpHandler = new HttpHandler();
-            httpHandler.testIp = bb.getAddress();
+            httpHandler.testIp   = bb.getAddress();
             httpHandler.delegate = this;
 
             // run the /testBlackboxComm POST request
@@ -944,7 +1001,7 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
             try
             {
                 // get the result of the communication
-                String res = httpHandler.execute().get();
+                String     res        = httpHandler.execute().get();
                 JSONObject jsonObject = new JSONObject(res);
 
                 // if the connection was successful,
@@ -958,26 +1015,35 @@ public class SplashScreen1 extends Activity implements HttpHandler.AsyncResponse
 
             // should never happen
             catch (Exception e)
-                { e.printStackTrace(); }
+            {
+                e.printStackTrace();
+            }
         }
 
         return null;
     }
 
 
-    public String getIpAddress(){
-        try {
+    public String getIpAddress()
+    {
+        try
+        {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
-                 en.hasMoreElements();) {
+                 en.hasMoreElements(); )
+            {
                 NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); )
+                {
                     InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress()) {
+                    if (!inetAddress.isLoopbackAddress())
+                    {
                         return inetAddress.getHostAddress();
                     }
                 }
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Log.e("IP Address", ex.toString());
         }
         return null;

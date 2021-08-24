@@ -1,4 +1,4 @@
-package com.example.blackbox;
+package com.example.blackbox.mail;
 
 import java.security.AccessController;
 import java.security.Provider;

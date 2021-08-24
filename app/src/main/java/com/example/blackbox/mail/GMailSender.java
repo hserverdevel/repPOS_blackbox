@@ -1,4 +1,5 @@
-package com.example.blackbox;
+package com.example.blackbox.mail;
+
 
 import android.util.Log;
 
@@ -18,18 +19,25 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class GMailSender extends javax.mail.Authenticator{
-    private String mailhost = "smtp.gmail.com";
-    private String user;
-    private String password;
-    private Session session;
 
-    static {
+public class GMailSender extends javax.mail.Authenticator
+{
+    private static final String TAG = "<GMailSender>";
+
+
+    static
+    {
         Security.addProvider(new JSSEProvider());
     }
 
-    public GMailSender(String user, String password) {
-        this.user = user;
+    private String  mailhost = "smtp.gmail.com";
+    private String  user;
+    private String  password;
+    private Session session;
+
+    public GMailSender(String user, String password)
+    {
+        this.user     = user;
         this.password = password;
 
         Properties props = new Properties();
@@ -38,70 +46,106 @@ public class GMailSender extends javax.mail.Authenticator{
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "465");
         props.put("mail.smtp.socketFactory.port", "465");
-        props.put("mail.smtp.socketFactory.class",
-                "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.socketFactory.fallback", "false");
         props.setProperty("mail.smtp.quitwait", "false");
 
         session = Session.getDefaultInstance(props, this);
     }
 
-    protected PasswordAuthentication getPasswordAuthentication() {
+
+    protected PasswordAuthentication getPasswordAuthentication()
+    {
         return new PasswordAuthentication(user, password);
     }
 
-    public synchronized void sendMail(String subject, String body, String sender, String recipients) throws Exception {
-        try{
+
+    public synchronized void sendMail(String subject, String body, String sender, String recipients) throws Exception
+    {
+        Log.i(TAG, String.format("[sendMail] - subject: %s", subject));
+        try
+        {
             MimeMessage message = new MimeMessage(session);
             DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
+
             message.setSender(new InternetAddress(sender));
             message.setSubject(subject);
             message.setDataHandler(handler);
+
             if (recipients.indexOf(',') > 0)
+            {
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
+            }
             else
+            {
                 message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
+            }
+
             Transport.send(message);
-        }catch(Exception e){
-            Log.e("sendMail Error", "Msg: "+e.getLocalizedMessage());
+        }
+
+        catch (Exception e)
+        {
+            Log.e(TAG, "[sendMail] - FATAL ERROR");
+            e.printStackTrace();
         }
     }
 
-    public class ByteArrayDataSource implements DataSource {
+
+    public class ByteArrayDataSource implements DataSource
+    {
         private byte[] data;
         private String type;
 
-        public ByteArrayDataSource(byte[] data, String type) {
+
+        public ByteArrayDataSource(byte[] data, String type)
+        {
             super();
             this.data = data;
             this.type = type;
         }
 
-        public ByteArrayDataSource(byte[] data) {
+
+        public ByteArrayDataSource(byte[] data)
+        {
             super();
             this.data = data;
         }
 
-        public void setType(String type) {
+
+        public void setType(String type)
+        {
             this.type = type;
         }
 
-        public String getContentType() {
+
+        public String getContentType()
+        {
             if (type == null)
+            {
                 return "application/octet-stream";
+            }
             else
+            {
                 return type;
+            }
         }
 
-        public InputStream getInputStream() throws IOException {
+
+        public InputStream getInputStream() throws IOException
+        {
             return new ByteArrayInputStream(data);
         }
 
-        public String getName() {
+
+        public String getName()
+        {
             return "ByteArrayDataSource";
         }
 
-        public OutputStream getOutputStream() throws IOException {
+
+        public OutputStream getOutputStream() throws IOException
+        {
             throw new IOException("Not Supported");
         }
     }

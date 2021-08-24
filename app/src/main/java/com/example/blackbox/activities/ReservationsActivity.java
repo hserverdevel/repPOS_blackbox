@@ -779,15 +779,15 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
 
                         if (StaticValue.blackbox)
                         {
-                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                            RequestParam params = new RequestParam();
 
-                            params.add(new BasicNameValuePair("name", name));
-                            params.add(new BasicNameValuePair("surname", surname));
-                            params.add(new BasicNameValuePair("adults", String.valueOf(adults)));
-                            params.add(new BasicNameValuePair("children", String.valueOf(children)));
-                            params.add(new BasicNameValuePair("disabled", String.valueOf(disabled)));
-                            params.add(new BasicNameValuePair("time", String.valueOf(time.getTime().getTime())));
-                            params.add(new BasicNameValuePair("telephone", telephoneNumber.getText().toString()));
+                            params.add("name", name);
+                            params.add("surname", surname);
+                            params.add("adults", String.valueOf(adults));
+                            params.add("children", String.valueOf(children));
+                            params.add("disabled", String.valueOf(disabled));
+                            params.add("time", String.valueOf(time.getTime().getTime()));
+                            params.add("telephone", telephoneNumber.getText().toString());
 
                             callHttpHandler("/insertReservation", params);
                         }
@@ -821,14 +821,14 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
 
                         if (StaticValue.blackbox)
                         {
-                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                            RequestParam params = new RequestParam();
 
-                            params.add(new BasicNameValuePair("name", name));
-                            params.add(new BasicNameValuePair("surname", surname));
-                            params.add(new BasicNameValuePair("adults", String.valueOf(adults)));
-                            params.add(new BasicNameValuePair("children", String.valueOf(children)));
-                            params.add(new BasicNameValuePair("disabled", String.valueOf(disabled)));
-                            params.add(new BasicNameValuePair("time", String.valueOf(now.getTime().getTime())));
+                            params.add("name", name);
+                            params.add("surname", surname);
+                            params.add("adults", String.valueOf(adults));
+                            params.add("children", String.valueOf(children));
+                            params.add("disabled", String.valueOf(disabled));
+                            params.add("time", String.valueOf(now.getTime().getTime()));
 
                             callHttpHandler("/insertWaitingList", params);
                         }
@@ -1286,15 +1286,6 @@ public class ReservationsActivity extends AppCompatActivity implements HttpHandl
     }
 
 
-
-
-    public void callHttpHandler(String route, List<NameValuePair> params)
-    {
-        HttpHandler httpHandler = new HttpHandler();
-        httpHandler.delegate = this;
-        httpHandler.UpdateInfoAsyncTask(route, params);
-        httpHandler.execute();
-    }
 
     public void callHttpHandler(String route, RequestParam params)
     {

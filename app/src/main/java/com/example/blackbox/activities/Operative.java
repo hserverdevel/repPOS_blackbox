@@ -59,6 +59,7 @@ import com.example.blackbox.fragments.OperativeFragment;
 import com.example.blackbox.graphics.CustomButton;
 import com.example.blackbox.graphics.CustomEditText;
 import com.example.blackbox.graphics.CustomTextView;
+import com.example.blackbox.mail.LogCatMailSender;
 import com.example.blackbox.model.ButtonLayout;
 import com.example.blackbox.model.CashButtonLayout;
 import com.example.blackbox.model.CashButtonListLayout;
@@ -283,43 +284,73 @@ public class Operative extends FragmentActivity implements
             @Override
             public boolean onLongClick(View v)
             {
-                AlertDialog.Builder builderSingle = new AlertDialog.Builder(Operative.this);
-                builderSingle.setTitle("Select One Name:-");
+                AlertDialog.Builder firstPopup = new AlertDialog.Builder(Operative.this);
+                firstPopup.setTitle("Choose one DEV possibility");
 
-                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Operative.this, android.R.layout.select_dialog_singlechoice);
-                for (String t : DatabaseHelper.TABLE_NAMES)
-                {
-                    arrayAdapter.add(t);
-                }
+                firstPopup.setItems(new CharSequence[] {"CANCEL", "SEND REPORT EMAIL", "OPEN TABLES FOR REFRESH"},
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            // The 'which' argument contains the index position
+                            // of the selected item
+                            Context context = Operative.this;
+                            switch (which)
+                            {
+                                case 0:
+                                    dialog.dismiss();
+                                    break;
 
-                builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.dismiss();
-                    }
-                });
 
-                builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        String selectedTable = arrayAdapter.getItem(which);
+                                case 1:
+                                    Toast.makeText(Operative.this, "Sending Email", Toast.LENGTH_SHORT);
+                                    LogCatMailSender.sendMail(false);
+                                    break;
 
-                        dialog.dismiss();
 
-                        DialogCreator.message(Operative.this, "CASCADE REFRESH FOR TABLE " + selectedTable);
+                                case 2:
+                                    AlertDialog.Builder builderSingle = new AlertDialog.Builder(Operative.this);
+                                    builderSingle.setTitle("SELECT ONE TABLE FOR REFRESH");
 
-                        ArrayList<NameValuePair> params = new ArrayList<>();
-                        params.add(new BasicNameValuePair("table", selectedTable));
+                                    final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Operative.this, android.R.layout.select_dialog_singlechoice);
+                                    for (String t : DatabaseHelper.TABLE_NAMES)
+                                    {
+                                        arrayAdapter.add(t);
+                                    }
 
-                        callHttpHandler("/DEVrefreshTable", params);
+                                    builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which)
+                                        {
+                                            String selectedTable = arrayAdapter.getItem(which);
 
-                    }
-                });
-                builderSingle.show();
+                                            dialog.dismiss();
+
+                                            DialogCreator.message(Operative.this, "CASCADE REFRESH FOR TABLE " + selectedTable);
+
+                                            RequestParam params = new RequestParam();
+                                            params.add("table", selectedTable);
+
+                                            callHttpHandler("/DEVrefreshTable", params);
+                                        }
+                                    });
+
+                                    builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which)
+                                        {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    builderSingle.show();
+                                    break;
+                            }
+                        }
+                    });
+
+                firstPopup.show();
 
                 return true;
             }
@@ -1199,15 +1230,6 @@ public class Operative extends FragmentActivity implements
     }
 
 
-    public void callHttpHandler(String route, List<NameValuePair> params)
-    {
-        httpHandler          = new HttpHandler();
-        httpHandler.delegate = this;
-        httpHandler.UpdateInfoAsyncTask(route, params);
-        httpHandler.execute();
-    }
-
-
     public void callHttpHandler(String route, RequestParam params)
     {
         httpHandler          = new HttpHandler();
@@ -1223,7 +1245,7 @@ public class Operative extends FragmentActivity implements
 
     public void selectFavourites()
     {
-        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+        RequestParam params = new RequestParam();
         callHttpHandler("/getFavouritesButtons", params);
     }
 
@@ -1962,18 +1984,17 @@ public class Operative extends FragmentActivity implements
             }
         });
 
-        popupView.findViewById(R.id.u_switchUser_button)
-                 .setOnClickListener(new View.OnClickListener()
-                 {
-                     @Override
-                     public void onClick(View v)
-                     {
-                         popupWindow.dismiss();
-                         Intent intent = new Intent(getApplicationContext(), PinpadActivity.class);
-                         startActivity(intent);
-                         finish();
-                     }
-                 });
+        popupView.findViewById(R.id.u_switchUser_button).setOnClickListener(new View.OnClickListener()
+        {
+             @Override
+             public void onClick(View v)
+             {
+                 popupWindow.dismiss();
+                 Intent intent = new Intent(getApplicationContext(), SplashScreen1.class);
+                 startActivity(intent);
+                 finish();
+             }
+        });
 
     }
 
@@ -2049,7 +2070,7 @@ public class Operative extends FragmentActivity implements
             public void onClick(View v)
             {
                 popupWindow.dismiss();
-                Intent intent = new Intent(getApplicationContext(), PinpadActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SplashScreen1.class);
                 startActivity(intent);
                 finish();
             }
@@ -2660,7 +2681,7 @@ public class Operative extends FragmentActivity implements
             {
                 if (StaticValue.blackbox)
                 {
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                    RequestParam params = new RequestParam();
                     callHttpHandler("/openCashDrawer", params);
                 }
 
@@ -3012,7 +3033,7 @@ public class Operative extends FragmentActivity implements
     {
         if (StaticValue.blackbox)
         {
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+            RequestParam params = new RequestParam();
             callHttpHandler("/azzeramentoScontrini", params);
         }
         else
@@ -3030,7 +3051,7 @@ public class Operative extends FragmentActivity implements
     {
         if (StaticValue.blackbox)
         {
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+            RequestParam params = new RequestParam();
             callHttpHandler("/chiusuraCassa", params);
         }
         else
@@ -3072,8 +3093,8 @@ public class Operative extends FragmentActivity implements
     {
         if (StaticValue.blackbox)
         {
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            params.add(new BasicNameValuePair("report", String.valueOf(report)));
+            RequestParam params = new RequestParam();
+            params.add("report", String.valueOf(report));
             callHttpHandler("/printReport", params);
         }
         else
@@ -3172,20 +3193,20 @@ public class Operative extends FragmentActivity implements
                         String password = passcode;
                         if (StaticValue.blackbox)
                         {
-                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                            params.add(new BasicNameValuePair("name", name));
-                            params.add(new BasicNameValuePair("surname", surname));
-                            params.add(new BasicNameValuePair("email", ""));
-                            params.add(new BasicNameValuePair("password", passcode));
+                            RequestParam params = new RequestParam();
+                            params.add("name", name);
+                            params.add("surname", surname);
+                            params.add("email", "");
+                            params.add("password", passcode);
                             myPopupView   = popupView;
                             myPopupWindow = popupWindow;
                             if (manager.isActivated())
                             {
-                                params.add(new BasicNameValuePair("userType", String.valueOf(1)));
+                                params.add("userType", String.valueOf(1));
                             }
                             else
                             {
-                                params.add(new BasicNameValuePair("userType", String.valueOf(2)));
+                                params.add("userType", String.valueOf(2));
                             }
                             callHttpHandler("/insertUser", params);
                         }
@@ -3968,15 +3989,15 @@ public class Operative extends FragmentActivity implements
                     String password = passcode;
                     if (StaticValue.blackbox)
                     {
-                        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                        params.add(new BasicNameValuePair("password", passcode));
-                        params.add(new BasicNameValuePair("oldPassword", user.getPasscode()));
-                        params.add(new BasicNameValuePair("name", name));
-                        params.add(new BasicNameValuePair("surname", surname));
-                        params.add(new BasicNameValuePair("email", email));
-                        params.add(new BasicNameValuePair("passcode", passcode));
-                        params.add(new BasicNameValuePair("userType", String.valueOf(user.getUserRole())));
-                        params.add(new BasicNameValuePair("id", String.valueOf(user.getId())));
+                        RequestParam params = new RequestParam();
+                        params.add("password", passcode);
+                        params.add("oldPassword", user.getPasscode());
+                        params.add("name", name);
+                        params.add("surname", surname);
+                        params.add("email", email);
+                        params.add("passcode", passcode);
+                        params.add("userType", String.valueOf(user.getUserRole()));
+                        params.add("id", String.valueOf(user.getId()));
                         myPopupView   = popupview;
                         myPopupWindow = popupWindow;
                         httpHandler.UpdateInfoAsyncTask("/updateUser", params);

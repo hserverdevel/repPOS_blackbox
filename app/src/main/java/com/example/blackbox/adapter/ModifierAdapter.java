@@ -252,18 +252,12 @@ public class ModifierAdapter extends Adapter<ViewHolder> implements ItemTouchHel
                 button.view.setTag(m);
 
 
-                // ERROR FIXME TODO NOTE
-                // why the hell is setting button.view.setActivated(true);
-                // NOT doing anything???
-
-                if (dbA.getAssignmentID(groupID, current_product.getID()) > 0 && (dbA.fetchAssignedModifiersByQuery(current_product.getID()).contains(m.getID())))
-                {
-                    boolean act = button.view.isActivated();
-                    button.view.setActivated(true);
-                }
-
-
-
+//                if (dbA.getAssignmentID(groupID, current_product.getID()) > 0 && (dbA.fetchAssignedModifiersByQuery(current_product.getID()).contains(m.getID())))
+//                {
+//                    boolean act = button.view.isActivated();
+//                    button.view.setActivated(true);
+//                }
+//
 
                 button.view.setOnClickListener(new OnClickListener()
                 {
@@ -659,10 +653,13 @@ public class ModifierAdapter extends Adapter<ViewHolder> implements ItemTouchHel
                 }
             }
         });
-        /** THROW POPUP WINDOW AFTER SETTING EVERYTHING UP **/
+
+
+        /* THROW POPUP WINDOW AFTER SETTING EVERYTHING UP **/
         popupWindow.setFocusable(true);
         popupWindow.showAtLocation(((Activity) context).findViewById(R.id.main), 0, 0, 0);
     }
+
 
 
     public void getCurrentModifiersSet()
@@ -861,6 +858,7 @@ public class ModifierAdapter extends Adapter<ViewHolder> implements ItemTouchHel
             Log.i("GROUP POSITION", "" + i);
             groups_rv_adapter.getChildAt(i - 1).setActivated(true);
         }
+
         if (assignmentID != -2)
         {
             Modifier m = (Modifier) v.getTag();
@@ -873,12 +871,12 @@ public class ModifierAdapter extends Adapter<ViewHolder> implements ItemTouchHel
                     params.add(new BasicNameValuePair("groupId", String.valueOf(groupID)));
                     params.add(new BasicNameValuePair("assignementId", String.valueOf(assignmentID)));
                     params.add(new BasicNameValuePair("fixed", String.valueOf(0)));
-                    String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                    params.add(new BasicNameValuePair("androidId", android_id));
+                    params.add(new BasicNameValuePair("androidId", StaticValue.androidId));
 
                     myPopupView = v;
                     ((MainActivity) context).callHttpHandler("/deleteFromModifierAssigned", params);
                 }
+
                 else
                 {
 
@@ -900,6 +898,7 @@ public class ModifierAdapter extends Adapter<ViewHolder> implements ItemTouchHel
                     }
                 }
             }
+
             else
             {
                 if (StaticValue.blackbox)
@@ -910,8 +909,7 @@ public class ModifierAdapter extends Adapter<ViewHolder> implements ItemTouchHel
                     params.add(new BasicNameValuePair("assignementId", String.valueOf(assignmentID)));
                     params.add(new BasicNameValuePair("fixed", String.valueOf(0)));
                     params.add(new BasicNameValuePair("productId", String.valueOf(current_product.getID())));
-                    String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                    params.add(new BasicNameValuePair("androidId", android_id));
+                    params.add(new BasicNameValuePair("androidId", StaticValue.androidId));
 
                     myPopupView = v;
                     ((MainActivity) context).callHttpHandler("/insertInModifierAssigned", params);
@@ -940,6 +938,7 @@ public class ModifierAdapter extends Adapter<ViewHolder> implements ItemTouchHel
 
     private void addModifierToProductFixed(View v)
     {
+        dbA.showData("modifiers_group_assigned");
         // No modifier from the current group was ever added before
         //dbA.showData("modifiers_group_assigned");
         if (assignmentID == -1)
@@ -1030,6 +1029,8 @@ public class ModifierAdapter extends Adapter<ViewHolder> implements ItemTouchHel
             Toast toast = Toast.makeText(context, R.string.the_whole_group_has_been_attached_to_product_already, Toast.LENGTH_SHORT);
             toast.show();
         }
+
+        dbA.showData("modifiers_group_assigned");
     }
 
     public void setupDismissKeyboard(View view)

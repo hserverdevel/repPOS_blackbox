@@ -1,5 +1,6 @@
 package com.example.blackbox.fragments;
 
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -45,6 +46,7 @@ import com.example.blackbox.model.ButtonLayout;
 import com.example.blackbox.model.CashButtonLayout;
 import com.example.blackbox.model.CashButtonListLayout;
 import com.example.blackbox.model.Customer;
+import com.example.blackbox.model.RequestParam;
 import com.example.blackbox.model.Room;
 import com.example.blackbox.model.StaticValue;
 import com.example.blackbox.model.TemporaryOrder;
@@ -66,9 +68,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cz.msebera.android.httpclient.NameValuePair;
-import cz.msebera.android.httpclient.message.BasicNameValuePair;
-
 import static android.content.Context.INPUT_METHOD_SERVICE;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
@@ -80,65 +79,123 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 {
 
-    private String deviceName = "A";
-    private int bill_id = -1;
-    private View myself;
-
-    public CashFragment() {}
-
-    View view;
-    CashButtonLayout button;
+    private static final String               STRING_VALUE          = "stringValue";
+    private static String                                                 PREF_NAME = "prefs";
     public ArrayList<CashButtonLayout> cashList;
-
     public boolean paid = false;
-
-    public boolean getPaid() {return paid;}
-
-    public void setPaid(boolean value) {paid = value;}
-
-
     public boolean discountMode = false;
-
-    public void setDiscountMode(boolean value) {discountMode = value;}
-
-    public boolean getDiscountMode() {return discountMode;}
-
-
-    private boolean discountEuro = true;
-    private boolean discountToBeDeleted = false;
-    private float totalDiscount = 0;
-
-    public void setTotalDiscount(float value) {totalDiscount = value;}
-
-
-    private String email = "";
-
-    public void setEmail(String mail) {email = mail;}
-
-
-    private boolean mailSelected = false;
-
-    public void setMailSelected(boolean value) {mailSelected = value;}
-
-
-    public float density;
-    private boolean keyboard_next_flag = false;
-
-    private ActivityCommunicator activityCommunicator;
-    private String activityAssignedValue = "";
-    private static final String STRING_VALUE = "stringValue";
-
-
-    CashAdapter listAdapter;
-
-    public CashAdapter getListAdapter() {return listAdapter;}
-
-    ExpandableListView expListView;
+    public  float   density;
     public ArrayList<Customer> listDataCustomer;
-    int currentCustomer = 0;
-
-
     public ArrayList<Integer> currentCustomerArray = new ArrayList<Integer>();
+    public CustomTextView viewTotal;
+    public CustomTextView tNumber;
+    public Boolean        modifyProduct = false;
+    public Boolean longClickOnChild = false;
+    public  int                                                    modifyChangePosition = -1;
+    public  CashButtonLayout                                       newModifiedProduct   = new CashButtonLayout();
+    public  Context                                                context;
+    public Boolean deleteProduct = false;
+    //boolean var used to set keypad and calculate
+    public  Boolean       keypad          = false;
+    public  Boolean       calculate       = false;
+    public  String        unspecItemName  = "";
+    public  int           tableNumber     = -1;
+    public  int           roomId          = -1;
+    public  String        roomName        = "";
+    public  boolean       firstOrderClick = false;
+    public  boolean errorPopupOpen = false;
+    public PopupWindow myPopupWindow;
+    View             view;
+    CashButtonLayout button;
+    CashAdapter listAdapter;
+    ExpandableListView expListView;
+    int currentCustomer = 0;
+    ArrayList<CashButtonLayout> listDataHeader;
+    Map<CashButtonLayout, ArrayList<CashButtonListLayout>> listDataChild;
+    String codiceFiscale = " ", IP;
+    CashFragment forClient = null;
+    private String deviceName = "A";
+    private int    bill_id    = -1;
+    private View   myself;
+    private boolean discountEuro        = true;
+    private boolean discountToBeDeleted = false;
+    private float   totalDiscount       = 0;
+    private String email = "";
+    private boolean mailSelected = false;
+    private boolean keyboard_next_flag = false;
+    private              ActivityCommunicator activityCommunicator;
+    private              String               activityAssignedValue = "";
+    private int cashListIndex = -1;
+    private Double  total = 0.00;
+    private Integer billId;
+    private DatabaseAdapter                                        dbA;
+    private CashButtonLayout                                       oldModifiedProduct   = new CashButtonLayout();
+    private Map<CashButtonLayout, ArrayList<CashButtonListLayout>> oldListDataChild     = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+    private        Map<CashButtonLayout, ArrayList<CashButtonListLayout>> map;
+    private StringBuilder amount          = new StringBuilder();
+    private boolean       operationDone   = false;
+    private boolean dotAdded       = false;
+    private int modifyPosition = -1;
+    public CashFragment()
+    {
+    }
+
+
+    public static Float roundDecimal(float floatNum, int numberOfDecimals)
+    {
+        BigDecimal value = new BigDecimal(floatNum);
+        value = value.setScale(numberOfDecimals, RoundingMode.HALF_EVEN);
+        return value.floatValue();
+    }
+
+
+    public boolean getPaid()
+    {
+        return paid;
+    }
+
+
+    public void setPaid(boolean value)
+    {
+        paid = value;
+    }
+
+
+    public boolean getDiscountMode()
+    {
+        return discountMode;
+    }
+
+
+    public void setDiscountMode(boolean value)
+    {
+        discountMode = value;
+    }
+
+
+    public void setTotalDiscount(float value)
+    {
+        totalDiscount = value;
+    }
+
+
+    public void setEmail(String mail)
+    {
+        email = mail;
+    }
+
+
+    public void setMailSelected(boolean value)
+    {
+        mailSelected = value;
+    }
+
+
+    public CashAdapter getListAdapter()
+    {
+        return listAdapter;
+    }
+
 
     public void addToArrayCustomer(int position)
     {
@@ -176,6 +233,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         listAdapter.notifyDataSetChanged();
     }
 
+
     public void activateAllCustomer()
     {
         resetArrayCustomer();
@@ -186,7 +244,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         for (int i = 0; i < listDataCustomer.size(); i++)
         {
             if (!listDataCustomer.get(i).getActive())
+            {
                 allActive = false;
+            }
         }
 
         for (int i = 0; i < listDataCustomer.size(); i++)
@@ -196,6 +256,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     public void resetArrayCustomer()
     {
 
@@ -203,37 +264,43 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
     }
 
-    ArrayList<CashButtonLayout> listDataHeader;
 
     public int getListDataHeader()
     {
         if (listDataHeader != null)
-        { return listDataHeader.size(); }
-        else { return 0; }
+        {
+            return listDataHeader.size();
+        }
+        else
+        {
+            return 0;
+        }
     }
 
-    Map<CashButtonLayout, ArrayList<CashButtonListLayout>> listDataChild;
 
-    private int cashListIndex = -1;
-
-    public int getCashListIndex() { return cashListIndex;}
-
-    public void setCashListIndex(int i) {cashListIndex = i;}
-
-    private Double total = 0.00;
-    private Integer billId;
-
-    public int getBillId() {return billId;}
+    public int getCashListIndex()
+    {
+        return cashListIndex;
+    }
 
 
-    public CustomTextView viewTotal;
-    public CustomTextView tNumber;
-    public Boolean modifyProduct = false;
+    public void setCashListIndex(int i)
+    {
+        cashListIndex = i;
+    }
+
+
+    public int getBillId()
+    {
+        return billId;
+    }
+
 
     public Boolean getModifyProduct()
     {
         return modifyProduct;
     }
+
 
     public void setModifyProduct(Boolean b)
     {
@@ -241,12 +308,11 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
     }
 
 
-    public Boolean longClickOnChild = false;
-
     public Boolean getLongClickOnChild()
     {
         return longClickOnChild;
     }
+
 
     public void setLongClickOnChild(Boolean b)
     {
@@ -254,64 +320,39 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
     }
 
 
-    private DatabaseAdapter dbA;
-    public int modifyChangePosition = -1;
-    private CashButtonLayout oldModifiedProduct = new CashButtonLayout();
-    private Map<CashButtonLayout, ArrayList<CashButtonListLayout>> oldListDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
-    public CashButtonLayout newModifiedProduct = new CashButtonLayout();
-    public Context context;
-    String codiceFiscale = " ", IP;
-    private static String PREF_NAME = "prefs";
-    private Map<CashButtonLayout, ArrayList<CashButtonListLayout>> map;
-
-
-    public Boolean deleteProduct = false;
-
-    public boolean getDeleteProduct() {return deleteProduct;}
-
-    //boolean var used to set keypad and calculate
-    public Boolean keypad = false;
-    public Boolean calculate = false;
-    private StringBuilder amount = new StringBuilder();
-    private boolean operationDone = false;
-    public String unspecItemName = "";
-    public int tableNumber = -1;
-    public int roomId = -1;
-    public String roomName = "";
-    public boolean firstOrderClick = false;
-    CashFragment forClient = null;
-    public boolean errorPopupOpen = false;
-    private boolean dotAdded = false;
-
-    public PopupWindow myPopupWindow;
-
-    private int modifyPosition = -1;
-
-    public void setModifyPosition(int i)
+    public boolean getDeleteProduct()
     {
-        modifyPosition = i;
+        return deleteProduct;
     }
+
 
     public int getModifyPosition()
     {
         return modifyPosition;
     }
 
+
+    public void setModifyPosition(int i)
+    {
+        modifyPosition = i;
+    }
+
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        view = inflater.inflate(R.layout.fragment_cash, container, false);
+        view   = inflater.inflate(R.layout.fragment_cash, container, false);
         myself = view;
 
-        viewTotal = (CustomTextView) view.findViewById(R.id.cash_euro_total);
-        button = new CashButtonLayout();
+        viewTotal     = (CustomTextView) view.findViewById(R.id.cash_euro_total);
+        button        = new CashButtonLayout();
         this.cashList = new ArrayList<CashButtonLayout>();
-        dbA = new DatabaseAdapter(this.getContext());
+        dbA           = new DatabaseAdapter(this.getContext());
 
         forClient = this;
         SharedPreferences prefs = getContext().getSharedPreferences(PREF_NAME, getContext().MODE_PRIVATE);
-        IP = StaticValue.IP;
+        IP          = StaticValue.IP;
         expListView = (ExpandableListView) view.findViewById(R.id.cash_recyclerView);
 
         Intent intent = getActivity().getIntent();
@@ -319,10 +360,11 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
         //set table number get from intent
         tableNumber = intent.getIntExtra("tableNumber", -1);
+        CustomTextView tNumberLayout = (CustomTextView) view.findViewById(R.id.cash_table_not_set);
+
         if (tableNumber != -1 && tableNumber != -11)
         {
             //table set
-            CustomTextView tNumberLayout = (CustomTextView) view.findViewById(R.id.cash_table_not_set);
             tNumberLayout.setVisibility(View.GONE);
             ((CustomTextView) view.findViewById(R.id.cash_table)).setVisibility(View.VISIBLE);
             tNumber = (CustomTextView) view.findViewById(R.id.cash_table_number);
@@ -337,13 +379,14 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             }
 
             else
-            { roomName = ""; }
+            {
+                roomName = "";
+            }
         }
 
         else
         {
             //no table
-            CustomTextView tNumberLayout = (CustomTextView) view.findViewById(R.id.cash_table_not_set);
             tNumberLayout.setVisibility(View.VISIBLE);
             ((CustomTextView) view.findViewById(R.id.cash_table)).setVisibility(View.GONE);
             tNumber = (CustomTextView) view.findViewById(R.id.cash_table_number);
@@ -371,7 +414,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 paid = true;
             }
             else
-            { paid = false; }
+            {
+                paid = false;
+            }
         }
 
         roomId = intent.getIntExtra("roomId", -1);
@@ -383,28 +428,28 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             //check database, se nitne
             if (StaticValue.blackbox)
             {
-                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                params.add(new BasicNameValuePair("androidId", StaticValue.androidId));
+                RequestParam params = new RequestParam();
+                params.add("androidId", StaticValue.androidId);
                 ((Operative) context).callHttpHandler("/getLastBillNumber", params);
             }
 
             else
             {
                 long lastClose = dbA.getLastClosing();
-                int maxNumber = dbA.getMaxOrderId(lastClose);
+                int  maxNumber = dbA.getMaxOrderId(lastClose);
                 if (maxNumber == -1)
                 {
                     //first time you open cashFragment in this session
                     CustomTextView numberBillView = (CustomTextView) myself.findViewById(R.id.cash_order_number);
                     orderNumber = 0;
-                    numberBillView.setText("#" + (orderNumber + 1));
+                    numberBillView.setText(String.format("#%d", orderNumber + 1));
                     intent.putExtra("orderNumber", orderNumber);
                 }
                 else
                 {
                     //set lates ordernumber
                     CustomTextView numberBillView = (CustomTextView) myself.findViewById(R.id.cash_order_number);
-                    numberBillView.setText("#" + (maxNumber + 2));
+                    numberBillView.setText(String.format("#%d", maxNumber + 2));
                     intent.putExtra("orderNumber", maxNumber + 1);
 
                 }
@@ -414,23 +459,23 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         {
             //here you came from anoter activity, e.g. clientsActivity
             CustomTextView numberBillView = (CustomTextView) myself.findViewById(R.id.cash_order_number);
-            numberBillView.setText("#" + (orderNumber + 1));
+            numberBillView.setText(String.format("#%d", orderNumber + 1));
             intent.putExtra("orderNumber", orderNumber);
 
         }
 
         if (StaticValue.blackbox && billId > 0)
         {
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
+            RequestParam params = new RequestParam();
+            params.add("billId", String.valueOf(billId));
             ((Operative) context).callHttpHandler("/getBillData", params);
         }
         else
         {
             listDataCustomer = new ArrayList<Customer>();
-            listDataHeader = new ArrayList<CashButtonLayout>();
-            listDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
-            map = dbA.getBillData(billId, context);
+            listDataHeader   = new ArrayList<CashButtonLayout>();
+            listDataChild    = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+            map              = dbA.getBillData(billId, context);
             //set total for bill if billId exist, else set 0.0f
             total = dbA.getOnlyBillPrice(billId);
             if (total == 0)
@@ -443,14 +488,20 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 DecimalFormat twoDForm = new DecimalFormat("#.00");
                 viewTotal.setText(twoDForm.format(total).replace(".", ","));
             }
-            listDataChild = map;
+            listDataChild  = map;
             listDataHeader = new ArrayList<>(map.keySet());
             boolean checkifAllCustomer = true;
             for (int i = 0; i < listDataHeader.size(); i++)
             {
-                if (listDataHeader.get(i).getProductId() != -20) { checkifAllCustomer = false; }
+                if (listDataHeader.get(i).getProductId() != -20)
+                {
+                    checkifAllCustomer = false;
+                }
             }
-            if (checkifAllCustomer) { cashListIndex = 0; }
+            if (checkifAllCustomer)
+            {
+                cashListIndex = 0;
+            }
             else
             {
                 if (listDataHeader.get(listDataHeader.size() - 1).getProductId() == -20)
@@ -518,11 +569,10 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             }
         }
 
-        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        Display        display    = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
         density = getResources().getDisplayMetrics().density;
-
 
 
         // set on child click listener
@@ -543,14 +593,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         {
                             for (int i = 0; i < listDataHeader.size(); i++)
                             {
-                                if (i != groupPosition)
-                                {
-                                    listDataHeader.get(i).setModifyModifier(false);
-                                }
-                                else
-                                {
-                                    listDataHeader.get(i).setModifyModifier(true);
-                                }
+                                listDataHeader.get(i).setModifyModifier(i == groupPosition);
 
                             }
                             listAdapter.notifyDataSetChanged();
@@ -563,18 +606,15 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                             activityCommunicator.showModifierPageToModify(groupPosition, listDataChild
                                     .get(listDataHeader.get(groupPosition)), listDataChild.get(listDataHeader
                                     .get(groupPosition))
-                                                                                          .get(childPosition)
-                                                                                          .getModifierId(), listDataHeader
+                                      .get(childPosition)
+                                      .getModifierId(), listDataHeader
                                     .get(groupPosition)
                                     .getTitle(), listDataHeader.get(groupPosition).getProductId());
                             expListView.setSelectedGroup(groupPosition);
                         }
                     }
                 }
-                else
-                {
 
-                }
                 return true;
             }
         });
@@ -597,19 +637,22 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     {
                         if (!getModifyProduct() && !ModifierFragment.getModify())
                         {
-                            Intent intent = getActivity().getIntent();
-                            int numberBill = intent.getIntExtra("orderNumber", -1);
-                            int bestNumberBill = dbA.getMaxOrderId(TimerManager.getSessionTimeStart());
-                            if (numberBill < bestNumberBill) { numberBill = bestNumberBill; }
+                            Intent intent         = getActivity().getIntent();
+                            int    numberBill     = intent.getIntExtra("orderNumber", -1);
+                            int    bestNumberBill = dbA.getMaxOrderId(TimerManager.getSessionTimeStart());
+                            if (numberBill < bestNumberBill)
+                            {
+                                numberBill = bestNumberBill;
+                            }
 
-                            listDataCustomer = new ArrayList<Customer>();
+                            listDataCustomer     = new ArrayList<Customer>();
                             currentCustomerArray = new ArrayList<Integer>();
-                            listDataHeader = new ArrayList<CashButtonLayout>();
-                            listDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
-                            listAdapter = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, paid);
+                            listDataHeader       = new ArrayList<CashButtonLayout>();
+                            listDataChild        = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+                            listAdapter          = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, paid);
 
                             expListView.setAdapter(listAdapter);
-                            listDataCustomer = new ArrayList<Customer>();
+                            listDataCustomer     = new ArrayList<Customer>();
                             currentCustomerArray = new ArrayList<Integer>();
 
                             listAdapter.notifyDataSetChanged();
@@ -626,7 +669,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                             }
 
                             long sessionTime = dbA.getLastClosing();
-                            int number = dbA.getMaxNumberOrderId(sessionTime);
+                            int  number      = dbA.getMaxNumberOrderId(sessionTime);
 
                             intent.putExtra("tableNumber", -1);
                             if (number + 1 > numberBill + 1)
@@ -643,7 +686,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                             }
 
                             CustomTextView numberTableSet = (CustomTextView) myself.findViewById(R.id.cash_table_number);
-                            String setto = "";
+                            String         setto          = "";
                             numberTableSet.setText(setto);
                             if (dbA.getPaidBill(billId) == 0)
                             {
@@ -687,15 +730,15 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         numberBill = dbA.getMaxOrderId(TimerManager.getSessionTimeStart());
                     }
                     totalDiscount = 0.0f;
-                    billId = -1;
+                    billId        = -1;
                     intent.putExtra("billId", billId);
                     activityCommunicator = (ActivityCommunicator) getActivity();
-                    listDataCustomer = new ArrayList<Customer>();
+                    listDataCustomer     = new ArrayList<Customer>();
                     currentCustomerArray = new ArrayList<Integer>();
                     currentCustomerArray = new ArrayList<Integer>();
-                    listDataHeader = new ArrayList<CashButtonLayout>();
-                    listDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
-                    listAdapter = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, paid);
+                    listDataHeader       = new ArrayList<CashButtonLayout>();
+                    listDataChild        = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+                    listAdapter          = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, paid);
 
 
                     expListView.setAdapter(listAdapter);
@@ -705,41 +748,40 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     total = 0.0;
                     viewTotal.setText("0,00");
                     ArrayList<TotalBill> paidBills = dbA.getBillsList("Select * from bill_total where paid=" + 1);
-                    long lastClose = dbA.getLastClosing();
-                    int maxNumber = dbA.getMaxOrderId(lastClose);
+                    long                 lastClose = dbA.getLastClosing();
+                    int                  maxNumber = dbA.getMaxOrderId(lastClose);
+                    CustomTextView numberBillView = (CustomTextView) myself.findViewById(R.id.cash_order_number);
+
+
                     if (maxNumber == -1)
                     {
                         //first time you open cashFragment in this session
-                        CustomTextView numberBillView = (CustomTextView) myself.findViewById(R.id.cash_order_number);
-                        numberBillView.setText("#" + 1);
+                        numberBillView.setText(String.format("#%d", 1));
                         intent.putExtra("orderNumber", 0);
                     }
                     else
                     {
                         //set lates ordernumber
-                        CustomTextView numberBillView = (CustomTextView) myself.findViewById(R.id.cash_order_number);
-                        numberBillView.setText("#" + (maxNumber + 2));
+                        numberBillView.setText(String.format("#%d", maxNumber + 2));
                         intent.putExtra("orderNumber", maxNumber + 1);
                     }
                     long sessionTime = dbA.getLastClosing();
-                    int number = dbA.getMaxNumberOrderId(sessionTime);
+                    int  number      = dbA.getMaxNumberOrderId(sessionTime);
                     intent.putExtra("paidBills", paidBills);
                     if (number + 1 > numberBill + 1)
                     {
                         intent.putExtra("orderNumber", (number + 1));
                         ((Operative) context).setCashFragmentValues(billId, number + 1);
-                        CustomTextView numberBillView = (CustomTextView) myself.findViewById(R.id.cash_order_number);
-                        numberBillView.setText("#" + (number + 2));
+                        numberBillView.setText(String.format("#%d", number + 2));
                     }
                     else
                     {
                         intent.putExtra("orderNumber", (numberBill + 1));
                         ((Operative) context).setCashFragmentValues(billId, numberBill + 1);
-                        CustomTextView numberBillView = (CustomTextView) myself.findViewById(R.id.cash_order_number);
                         numberBillView.setText("#" + (numberBill + 2));
                     }
                     mailSelected = false;
-                    email = "";
+                    email        = "";
                     intent.putExtra("email", email);
                 }
 
@@ -757,7 +799,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
                 int groupPosition = getModifyPosition();
 
-                keypad = false;
+                keypad    = false;
                 calculate = false;
                 myself.findViewById(R.id.layout_5).setActivated(false);
                 myself.findViewById(R.id.layout_6).setActivated(false);
@@ -785,21 +827,19 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         });
 
 
-        /**
-         *TODO set click to save current cash list
-         */
+
+        // TODO set click to save current cash list
         RelativeLayout saveButton = (RelativeLayout) view.findViewById(R.id.layout_3);
 
-        RelativeLayout paymentButton = (RelativeLayout) view.findViewById(R.id.layout_4);
-        RelativeLayout keypadButton = (RelativeLayout) view.findViewById(R.id.layout_5);
-        RelativeLayout calculator = (RelativeLayout) view.findViewById(R.id.layout_6);
-        RelativeLayout roundButton = (RelativeLayout) view.findViewById(R.id.layout_7);
+        RelativeLayout paymentButton  = (RelativeLayout) view.findViewById(R.id.layout_4);
+        RelativeLayout keypadButton   = (RelativeLayout) view.findViewById(R.id.layout_5);
+        RelativeLayout calculator     = (RelativeLayout) view.findViewById(R.id.layout_6);
+        RelativeLayout roundButton    = (RelativeLayout) view.findViewById(R.id.layout_7);
         RelativeLayout discountButton = (RelativeLayout) view.findViewById(R.id.layout_8);
 
 
         saveButton.setOnTouchListener(new OnSwipeTouchListener(context)
         {
-
             /**
              * show delete view
              */
@@ -812,9 +852,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
             }
 
+
             public void onClick()
             {
-
                 if (!paid)
                 {
                     if (StaticValue.blackbox)
@@ -828,20 +868,20 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         if (!getModifyProduct() && !ModifierFragment.getModify() && listDataHeader.size() != 0)
                         {
                             saveButton.setEnabled(false);
-                            Intent intent = getActivity(). getIntent();
+                            Intent intent = getActivity().getIntent();
                             intent.setAction("normal");
                             int numberBill = intent.getIntExtra("orderNumber", -1);
                             if (numberBill == -1)
                             {
                                 numberBill = dbA.getMaxOrderId(TimerManager.getSessionTimeStart());
                             }
-                            long sessionTime = dbA.getLastClosing();
-                            int number = dbA.getMaxOrderId(sessionTime);
-                            Date date = new Date(sessionTime);
-                            SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String dateText = df2.format(date);
-                            int newBillId = dbA.checkIfExists("Select * from bill_total where bill_number=" + numberBill + " and creation_time>='" + dateText + "';");
-                            billId = newBillId;
+                            long             sessionTime = dbA.getLastClosing();
+                            int              number      = dbA.getMaxOrderId(sessionTime);
+                            Date             date        = new Date(sessionTime);
+                            SimpleDateFormat df2         = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String           dateText    = df2.format(date);
+                            int              newBillId   = dbA.checkIfExists("Select * from bill_total where bill_number=" + numberBill + " and creation_time>='" + dateText + "';");
+                            billId  = newBillId;
                             bill_id = newBillId;
                             if (newBillId == -11)
                             {
@@ -855,10 +895,10 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                                     updateBill(billId);
                                     printOrderBill(billId);
                                 }
-                                listDataHeader = new ArrayList<CashButtonLayout>();
-                                listDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+                                listDataHeader   = new ArrayList<CashButtonLayout>();
+                                listDataChild    = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
                                 listDataCustomer = new ArrayList<>();
-                                listAdapter = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, false);
+                                listAdapter      = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, false);
                                 expListView.setAdapter(listAdapter);
                                 listAdapter.notifyDataSetChanged();
                                 activityCommunicator.deleteCurrentCash();
@@ -891,15 +931,15 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                                 }
                             }
                             CustomTextView numberTableSet = (CustomTextView) myself.findViewById(R.id.cash_table_number);
-                            String setto = "";
+                            String         setto          = "";
                             numberTableSet.setText(setto);
 
-                            listDataCustomer = new ArrayList<Customer>();
+                            listDataCustomer     = new ArrayList<Customer>();
                             currentCustomerArray = new ArrayList<Integer>();
 
                             intent.putExtra("billId", -1);
-                            bill_id = -1;
-                            billId = -1;
+                            bill_id     = -1;
+                            billId      = -1;
                             tableNumber = -11;
                             ((Operative) context).setBillId(-1);
                             saveButton.setEnabled(true);
@@ -922,7 +962,6 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         });
 
 
-
         paymentButton.setOnTouchListener(new OnSwipeTouchListener(context)
         {
             //to be implemented if needed
@@ -942,6 +981,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     calculator.setVisibility(View.GONE);
                 }*/
             }
+
 
             /**
              * show delete view
@@ -968,14 +1008,15 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
             }
 
+
             /**
              * Override OnGroupClick for expandable list
              */
             public void onClick()
             {
-                Intent intent1 = getActivity().getIntent();
+                Intent  intent1          = getActivity().getIntent();
                 boolean isSetTableAction = false;
-                int numberBill = intent1.getIntExtra("orderNumber", 1);
+                int     numberBill       = intent1.getIntExtra("orderNumber", 1);
 
                 if (!isSetTableAction)
                 {
@@ -999,8 +1040,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                                 {
                                     TemporaryOrder.setProduct(listDataHeader);
                                     saveBillAndPrint(0);
-                                    Operative op = (Operative) getActivity();
-                                    Intent intent = new Intent(getActivity(), PaymentActivity.class);
+                                    Operative op     = (Operative) getActivity();
+                                    Intent    intent = new Intent(getActivity(), PaymentActivity.class);
                                     intent.putExtra("username", op.getUser());
                                     intent.putExtra("isAdmin", op.isAdmin());
                                     intent.setAction("orderPayment");
@@ -1072,12 +1113,12 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 if (listDataHeader.size() > 0)
                 {
                     showSpinner();
-                    Gson gson = new Gson();
+                    Gson       gson     = new Gson();
                     JSONObject combined = new JSONObject();
 
-                    Float totalDiscount = dbA.getBillDiscountPrice(billId);
-                    Double costo = dbA.getBillPrice(billId);
-                    int orderNumber = intent.getIntExtra("orderNumber", -1);
+                    Float  totalDiscount = dbA.getBillDiscountPrice(billId);
+                    Double costo         = dbA.getBillPrice(billId);
+                    int    orderNumber   = intent.getIntExtra("orderNumber", -1);
                     if (StaticValue.printerName.equals("ditron"))
                     {
                         PrinterDitronThread ditron = PrinterDitronThread.getInstance();
@@ -1114,10 +1155,14 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     myThread.setTableNumber(tableNumber);
                     Room room = dbA.fetchRoomById(roomId);
                     if (room.getId() > 0)
-                    { myThread.setRoomName(room.getName()); }
+                    {
+                        myThread.setRoomName(room.getName());
+                    }
 
                     else
-                    { myThread.setRoomName(""); }
+                    {
+                        myThread.setRoomName("");
+                    }
 
                     myThread.delegate = forClient;
                     myThread.setClientThread();
@@ -1129,7 +1174,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         });
 
 
-         // set click on modify button to finish modify product in cash list part
+        // set click on modify button to finish modify product in cash list part
         CustomButton modify = (CustomButton) view.findViewById(R.id.modify_end_button);
         modify.setOnClickListener(new View.OnClickListener()
         {
@@ -1174,13 +1219,13 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 {
                     if (billId <= 0)
                     {
-                        Intent intent = getActivity().getIntent();
-                        int numberBill = intent.getIntExtra("orderNumber", 1);
-                        int billId = dbA.saveTotalBillForPayment(total, numberBill, 0);
+                        Intent intent     = getActivity().getIntent();
+                        int    numberBill = intent.getIntExtra("orderNumber", 1);
+                        int    billId     = dbA.saveTotalBillForPayment(total, numberBill, 0);
                         ((Operative) context).setBillId(billId);
                         bill_id = billId;
 
-                        CashFragment.this.billId = billId;
+                        CashFragment.this.billId  = billId;
                         CashFragment.this.bill_id = billId;
                         if (billId != 0)
                         {
@@ -1224,7 +1269,6 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         });
 
 
-
         view.findViewById(R.id.cash_table_container).setOnClickListener(
                 new View.OnClickListener()
                 {
@@ -1250,17 +1294,21 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                             intent.putExtra("roomId", roomId);
                             intent.setAction("operation");
 
-                            long lastClose = dbA.getLastClosing();
-                            Date date = new Date(lastClose);
-                            SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String dateText = df2.format(date);
+                            long             lastClose = dbA.getLastClosing();
+                            Date             date      = new Date(lastClose);
+                            SimpleDateFormat df2       = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String           dateText  = df2.format(date);
 
                             int newBillId = dbA.checkIfExists("Select * from bill_total where bill_number=" + numberBill + " and creation_time>='" + dateText + "';");
                             if (newBillId == -11)
-                                { intent.putExtra("billId", bill_id); }
+                            {
+                                intent.putExtra("billId", bill_id);
+                            }
 
                             else
-                                { intent.putExtra("billId", newBillId); }
+                            {
+                                intent.putExtra("billId", newBillId);
+                            }
 
                             startActivity(intent);
                         }
@@ -1268,7 +1316,6 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     }
                 }
         );
-
 
 
         keypadButton.setOnTouchListener(new OnSwipeTouchListener(context)
@@ -1287,7 +1334,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     view.findViewById(R.id.cash_hline).setVisibility(View.VISIBLE);
                     view.findViewById(R.id.cash_calculator_pad).setVisibility(View.GONE);
                     view.findViewById(R.id.cash_recycler_container).setVisibility(View.VISIBLE);
-                    keypad = false;
+                    keypad    = false;
                     calculate = false;
                     calculator.setActivated(false);
                     keypadButton.setActivated(false);
@@ -1303,12 +1350,13 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     view.findViewById(R.id.cash_hline).setVisibility(View.VISIBLE);
                     view.findViewById(R.id.cash_calculator_pad).setVisibility(View.GONE);
                     view.findViewById(R.id.cash_recycler_container).setVisibility(View.VISIBLE);
-                    keypad = false;
+                    keypad    = false;
                     calculate = false;
                     keypadButton.setActivated(false);
                     calculator.setActivated(false);
                 }
             }
+
 
             /**
              * show delete view
@@ -1338,6 +1386,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
             }
 
+
             /**
              * Override OnGrouopClick for expandable list
              */
@@ -1350,7 +1399,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     if (calculate)
                     {
                         calculate = false;
-                        keypad = true;
+                        keypad    = true;
                         view.findViewById(R.id.layout_6).setActivated(false);
                         view.findViewById(R.id.keypad_add_button_img).setVisibility(View.VISIBLE);
                         view.findViewById(R.id.calculator_add_button_img).setVisibility(View.GONE);
@@ -1395,7 +1444,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         view.findViewById(R.id.tv_percentage).setVisibility(View.GONE);*/
                         keypadButton.setActivated(true);
                         //discountButton.setActivated(false);
-                        keypad = true;
+                        keypad       = true;
                         discountMode = false;
                         view.findViewById(R.id.keypad_add_button_img).setVisibility(View.VISIBLE);
                         view.findViewById(R.id.calculator_add_button_img).setVisibility(View.GONE);
@@ -1406,7 +1455,6 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             }
 
         });
-
 
 
         //cALCULATE CLICK
@@ -1424,9 +1472,10 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 view.findViewById(R.id.cash_calculator_pad).setVisibility(View.GONE);
                 view.findViewById(R.id.cash_recycler_container).setVisibility(View.VISIBLE);
                 calculate = false;
-                keypad = false;
+                keypad    = false;
                 calculator.setActivated(false);
             }
+
 
             /**
              * show delete view
@@ -1456,6 +1505,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 */
             }
 
+
             /**
              * Override OnGrouopClick for expandable list
              */
@@ -1465,7 +1515,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
                 if (keypad)
                 {
-                    keypad = false;
+                    keypad    = false;
                     calculate = true;
                     view.findViewById(R.id.layout_5).setActivated(false);
                     view.findViewById(R.id.keypad_add_button_img).setVisibility(View.GONE);
@@ -1520,7 +1570,6 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         });
 
 
-
         view.findViewById(R.id.calculator_add_button).setOnClickListener(
                 new View.OnClickListener()
                 {
@@ -1534,7 +1583,6 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         );
 
 
-
         view.findViewById(R.id.calculator_add_button_img)
             .setOnClickListener(new View.OnClickListener()
             {
@@ -1544,7 +1592,6 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     executeCalculatorAction();
                 }
             });
-
 
 
         view.findViewById(R.id.cash_client_container).setOnClickListener(
@@ -1560,7 +1607,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                             if (StaticValue.blackbox)
                             {
                                 ((Operative) getContext()).openCustomerPopup("", -1,
-                                        intent.getIntExtra("orderNumber", -1), false, -1, tableNumber);
+                                        intent.getIntExtra("orderNumber", -1), false, -1, tableNumber
+                                );
                             }
                             else
                             {
@@ -1569,7 +1617,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                                     .setVisibility(View.GONE);
                                 view.findViewById(R.id.cash_recycler_container)
                                     .setVisibility(View.VISIBLE);
-                                keypad = false;
+                                keypad    = false;
                                 calculate = false;
                                 calculator.setActivated(false);
                                 keypadButton.setActivated(false);
@@ -1579,22 +1627,22 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                                 {
                                     numberBill = dbA.getMaxOrderId(TimerManager.getSessionTimeStart());
                                 }
-                                long sessionTime = dbA.getLastClosing();
-                                Date date = new Date(sessionTime);
-                                SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                String dateText = df2.format(date);
-                                int newBillId = dbA.checkIfExists("Select * from bill_total where bill_number=" + numberBill + " and creation_time>='" + dateText + "'");
+                                long             sessionTime = dbA.getLastClosing();
+                                Date             date        = new Date(sessionTime);
+                                SimpleDateFormat df2         = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                String           dateText    = df2.format(date);
+                                int              newBillId   = dbA.checkIfExists("Select * from bill_total where bill_number=" + numberBill + " and creation_time>='" + dateText + "'");
                                 if (newBillId == -11)
                                 {
                                     if (listDataHeader.size() > 0)
                                     {
 
                                         //salvo i data header e i suoi subelementi
-                                        Intent intent = getActivity().getIntent();
-                                        int billId = dbA.saveTotalBillForPayment(total, numberBill, 0);
+                                        Intent intent  = getActivity().getIntent();
+                                        int    billId  = dbA.saveTotalBillForPayment(total, numberBill, 0);
                                         Intent intent1 = getActivity().getIntent();
                                         intent1.putExtra("billId", billId);
-                                        bill_id = billId;
+                                        bill_id                   = billId;
                                         CashFragment.this.bill_id = billId;
                                         if (billId != 0)
                                         {
@@ -1714,21 +1762,21 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                                     }
                                     dbA.deleteLeftProductFromBill(billId, listDataHeader.size() - 1);
                                 }
-                                long sessionTimea = dbA.getLastClosing();
-                                Date datea = new Date(sessionTimea);
-                                SimpleDateFormat df2a = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                String dateTexta = df2a.format(datea);
+                                long             sessionTimea = dbA.getLastClosing();
+                                Date             datea        = new Date(sessionTimea);
+                                SimpleDateFormat df2a         = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                String           dateTexta    = df2a.format(datea);
                                 billId = dbA.checkIfExists("Select * from bill_total where bill_number=" + numberBill + " and creation_time>='" + dateTexta + "'");
                                 view.findViewById(R.id.cash_client_container).setEnabled(false);
                                 ((Operative) getContext()).openCustomerPopup("", -1,
-                                        intent.getIntExtra("orderNumber", -1), false, -1, tableNumber);
+                                        intent.getIntExtra("orderNumber", -1), false, -1, tableNumber
+                                );
 
                             }
                         }
                     }
                 }
         );
-
 
 
         view.findViewById(R.id.cash_client_container).setOnLongClickListener(new View.OnLongClickListener()
@@ -1755,7 +1803,6 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         });
 
 
-
         roundButton.setOnTouchListener(new OnSwipeTouchListener(context)
         {
             public void onSwipeRight()
@@ -1779,9 +1826,11 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 }
             }
 
+
             public void onSwipeLeft()
             {
             }
+
 
             public void onClick()
             {
@@ -1801,7 +1850,6 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
             }
         });
-
 
 
         discountButton.setOnTouchListener(new OnSwipeTouchListener(context)
@@ -1827,9 +1875,11 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 }
             }
 
+
             public void onSwipeLeft()
             {
             }
+
 
             public void onClick()
             {
@@ -1885,7 +1935,6 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
             }
         });
-
 
 
         ImageView percentageButton = (ImageView) view.findViewById(R.id.euro_discount_image_vv);
@@ -1971,8 +2020,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
     public void goToPaymentFromServer(int numberBill, int billId)
     {
-        Operative op = (Operative) getActivity();
-        Intent intent = new Intent(getActivity(), PaymentActivity.class);
+        Operative op     = (Operative) getActivity();
+        Intent    intent = new Intent(getActivity(), PaymentActivity.class);
         intent.putExtra("username", op.getUser());
         intent.putExtra("isAdmin", op.isAdmin());
         intent.setAction("orderPayment");
@@ -1991,10 +2040,11 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         startActivity(intent);
     }
 
+
     public void goToTableFromServer(int numberBill, int billId)
     {
-        Operative op = (Operative) getActivity();
-        Intent intent = new Intent(getActivity(), TableActivity.class);
+        Operative op     = (Operative) getActivity();
+        Intent    intent = new Intent(getActivity(), TableActivity.class);
         intent.putExtra("username", op.getUser());
         intent.putExtra("isAdmin", op.isAdmin());
         intent.setAction("setTable");
@@ -2005,6 +2055,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         intent.putExtra("billId", billId);
         startActivity(intent);
     }
+
 
     public void setCashListFromServer(TotalBill totalBill, ArrayList<CashButtonLayout> products, Map<CashButtonLayout, ArrayList<CashButtonListLayout>> mapServer, ArrayList<Customer> customers)
     {
@@ -2023,32 +2074,39 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             paid = true;
         }
         else
-        { paid = false; }
+        {
+            paid = false;
+        }
 
         listDataCustomer = new ArrayList<Customer>();
-        listDataHeader = new ArrayList<CashButtonLayout>();
-        listDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
-        map = mapServer;
+        listDataHeader   = new ArrayList<CashButtonLayout>();
+        listDataChild    = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+        map              = mapServer;
         //set total for bill if billId exist, else set 0.0f
         total = (double) totalBill.getTotal();
+        DecimalFormat twoDForm = new DecimalFormat("#.00");
         if (total == 0)
         {
-            DecimalFormat twoDForm = new DecimalFormat("#.00");
             viewTotal.setText("0,00");
         }
         else
         {
-            DecimalFormat twoDForm = new DecimalFormat("#.00");
             viewTotal.setText(twoDForm.format(total).replace(".", ","));
         }
-        listDataChild = map;
+        listDataChild  = map;
         listDataHeader = products;
         boolean checkifAllCustomer = true;
         for (int i = 0; i < listDataHeader.size(); i++)
         {
-            if (listDataHeader.get(i).getProductId() != -20) { checkifAllCustomer = false; }
+            if (listDataHeader.get(i).getProductId() != -20)
+            {
+                checkifAllCustomer = false;
+            }
         }
-        if (checkifAllCustomer) { cashListIndex = 0; }
+        if (checkifAllCustomer)
+        {
+            cashListIndex = 0;
+        }
         else
         {
             if (listDataHeader.get(listDataHeader.size() - 1).getProductId() == -20)
@@ -2082,14 +2140,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         totalDiscount = dbA.getBillDiscountPrice(billId);
         if (!paid)
         {
-            if (totalDiscount == 0.0f)
-            {
-                setDiscountLayout(false);
-            }
-            else
-            {
-                setDiscountLayout(true);
-            }
+            setDiscountLayout(totalDiscount != 0.0f);
         }
 
         //maybe this should work
@@ -2121,16 +2172,19 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
     public void saveBillFromPopupOnServer(int code)
     {
         boolean check = false;
-        if (listDataHeader.size() != 0) { check = true; }
-        Intent intent = getActivity().getIntent();
-        int numberBill = intent.getIntExtra("orderNumber", 1);
+        if (listDataHeader.size() != 0)
+        {
+            check = true;
+        }
+        Intent intent     = getActivity().getIntent();
+        int    numberBill = intent.getIntExtra("orderNumber", 1);
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+        RequestParam params = new RequestParam();
 
-        Gson gson = new Gson();
-        String products = gson.toJson(listDataHeader);
-        String customers = gson.toJson(listDataCustomer);
-        Map<String, ArrayList<CashButtonListLayout>> test = new HashMap<String, ArrayList<CashButtonListLayout>>();
+        Gson                                         gson      = new Gson();
+        String                                       products  = gson.toJson(listDataHeader);
+        String                                       customers = gson.toJson(listDataCustomer);
+        Map<String, ArrayList<CashButtonListLayout>> test      = new HashMap<String, ArrayList<CashButtonListLayout>>();
         for (int i = 0; i < listDataHeader.size(); i++)
         {
             test.put(String.valueOf(listDataHeader.get(i)
@@ -2138,21 +2192,20 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
 
         //String modifiers = gson.toJson(listDataChild);
-        String modifiers = gson.toJson(test);
-        String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        Operative op = (Operative) getActivity();
+        String    modifiers  = gson.toJson(test);
+        Operative op         = (Operative) getActivity();
 
-        params.add(new BasicNameValuePair("username", op.getUser()));
-        params.add(new BasicNameValuePair("androidId", android_id));
-        params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
-        params.add(new BasicNameValuePair("orderNumber", String.valueOf(numberBill)));
-        params.add(new BasicNameValuePair("total", String.valueOf(total)));
-        params.add(new BasicNameValuePair("products", products));
-        params.add(new BasicNameValuePair("customers", customers));
-        params.add(new BasicNameValuePair("modifiers", modifiers));
-        params.add(new BasicNameValuePair("totalDiscount", String.valueOf(totalDiscount)));
-        params.add(new BasicNameValuePair("code", String.valueOf(code)));
-        params.add(new BasicNameValuePair("cashListIndex", String.valueOf(cashListIndex)));
+        params.add("username", op.getUser());
+        params.add("androidId", StaticValue.androidId);
+        params.add("billId", String.valueOf(billId));
+        params.add("orderNumber", String.valueOf(numberBill));
+        params.add("total", String.valueOf(total));
+        params.add("products", products);
+        params.add("customers", customers);
+        params.add("modifiers", modifiers);
+        params.add("totalDiscount", String.valueOf(totalDiscount));
+        params.add("code", String.valueOf(code));
+        params.add("cashListIndex", String.valueOf(cashListIndex));
 
         ((Operative) context).callHttpHandler("/saveBillFromPopup", params);
     }
@@ -2161,18 +2214,24 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
     public void saveBillOnServer(String fromWhere, int cashIndex)
     {
         boolean check = false;
-        if (listDataHeader.size() != 0) { check = true; }
-        if (fromWhere.equals("tableButton") || fromWhere.equals("customerPopup")) { check = true; }
+        if (listDataHeader.size() != 0)
+        {
+            check = true;
+        }
+        if (fromWhere.equals("tableButton") || fromWhere.equals("customerPopup"))
+        {
+            check = true;
+        }
 
         if (!getModifyProduct() && !ModifierFragment.getModify() && check)
         {
-            Intent intent = getActivity().getIntent();
-            int numberBill = intent.getIntExtra("orderNumber", 1);
+            Intent intent     = getActivity().getIntent();
+            int    numberBill = intent.getIntExtra("orderNumber", 1);
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+            RequestParam params = new RequestParam();
 
-            Gson gson = new Gson();
-            String products = gson.toJson(listDataHeader);
+            Gson   gson      = new Gson();
+            String products  = gson.toJson(listDataHeader);
             String customers = gson.toJson(listDataCustomer);
             Map<String, ArrayList<CashButtonListLayout>> test =
                     new HashMap<String, ArrayList<CashButtonListLayout>>();
@@ -2184,25 +2243,26 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             }
 
             //String modifiers = gson.toJson(listDataChild);
-            String modifiers = gson.toJson(test);
-            Operative op = (Operative) getActivity();
+            String    modifiers = gson.toJson(test);
+            Operative op        = (Operative) getActivity();
 
-            params.add(new BasicNameValuePair("username", op.getUser()));
-            params.add(new BasicNameValuePair("androidId", StaticValue.androidId));
-            params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
+            params.add("username", op.getUser());
+            params.add("androidId", StaticValue.androidId);
+            params.add("billId", String.valueOf(billId));
 
-            params.add(new BasicNameValuePair("orderNumber", String.valueOf(numberBill)));
-            params.add(new BasicNameValuePair("total", String.valueOf(total)));
-            params.add(new BasicNameValuePair("products", products));
-            params.add(new BasicNameValuePair("customers", customers));
-            params.add(new BasicNameValuePair("modifiers", modifiers));
-            params.add(new BasicNameValuePair("totalDiscount", String.valueOf(totalDiscount)));
-            params.add(new BasicNameValuePair("from", fromWhere));
-            params.add(new BasicNameValuePair("cashListIndex", String.valueOf(cashIndex)));
+            params.add("orderNumber", String.valueOf(numberBill));
+            params.add("total", String.valueOf(total));
+            params.add("products", products);
+            params.add("customers", customers);
+            params.add("modifiers", modifiers);
+            params.add("totalDiscount", String.valueOf(totalDiscount));
+            params.add("from", fromWhere);
+            params.add("cashListIndex", String.valueOf(cashIndex));
 
             ((Operative) context).callHttpHandler("/saveBill", params);
         }
     }
+
 
     public void dropInitial()
     {
@@ -2221,14 +2281,15 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         dbA.execOnDb("delete from item_paid_spec");
     }
 
+
     public void resetListForSaveFromServer(int orderNumber)
     {
         dropInitial();
 
-        listDataHeader = new ArrayList<CashButtonLayout>();
-        listDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+        listDataHeader   = new ArrayList<CashButtonLayout>();
+        listDataChild    = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
         listDataCustomer = new ArrayList<>();
-        listAdapter = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, false);
+        listAdapter      = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, false);
 
         expListView.setAdapter(listAdapter);
         listAdapter.notifyDataSetChanged();
@@ -2238,10 +2299,10 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         setModifyBar(false);
 
         CustomTextView numberBillView = myself.findViewById(R.id.cash_order_number);
-        numberBillView.setText("#" + (orderNumber + 1));
+        numberBillView.setText(String.format("#%d", orderNumber + 1));
 
         CustomTextView numberTableSet = myself.findViewById(R.id.cash_table_number);
-        String setto = "";
+        String         setto          = "";
         numberTableSet.setText(setto);
 
         currentCustomerArray = new ArrayList<Integer>();
@@ -2249,8 +2310,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         intent.putExtra("orderNumber", orderNumber);
         intent.putExtra("billId", -1);
 
-        bill_id = -1;
-        billId = -1;
+        bill_id     = -1;
+        billId      = -1;
         tableNumber = -11;
 
         ((Operative) context).setBillId(-1);
@@ -2264,15 +2325,15 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         {
             //first time you open cashFragment in this session
             CustomTextView numberBillView = (CustomTextView) myself.findViewById(R.id.cash_order_number);
-            int orderNumber = 0;
-            numberBillView.setText("#" + (orderNumber + 1));
+            int            orderNumber    = 0;
+            numberBillView.setText(String.format("#%d", orderNumber + 1));
             intent.putExtra("orderNumber", orderNumber);
         }
         else
         {
             //set lates ordernumber
             CustomTextView numberBillView = (CustomTextView) myself.findViewById(R.id.cash_order_number);
-            numberBillView.setText("#" + (maxNumber + 2));
+            numberBillView.setText(String.format("#%d", maxNumber + 2));
             intent.putExtra("orderNumber", maxNumber + 1);
 
         }
@@ -2287,7 +2348,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
         popupView.post(new Runnable()
         {
             @Override
@@ -2322,7 +2384,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         if (listDataCustomer.size() > 0)
         {
             int listSize = listDataCustomer.size();
-            int check = 0;
+            int check    = 0;
             for (int i = 0; i < listDataCustomer.size(); i++)
             {
                 for (CashButtonLayout list : listDataHeader)
@@ -2334,30 +2396,45 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     }
                 }
             }
-            if (check == listSize) { return true; }
-            else { return false; }
+            if (check == listSize)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        else { return true; }
+        else
+        {
+            return true;
+        }
     }
 
+    /**
+     * popup that fires when you long click CancelButton, it asks if you want to save
+     * current bill or to delete it
+     */
     public void deleteBill()
     {
         if (!dbA.checkIfBillSplitPaid(billId))
         {
             if (!getModifyProduct() && !ModifierFragment.getModify())
             {
-                Intent intent = getActivity().getIntent();
-                int numberBill = intent.getIntExtra("orderNumber", -1);
-                int bestNumberBill = dbA.getMaxOrderId(TimerManager.getSessionTimeStart());
+                Intent intent         = getActivity().getIntent();
+                int    numberBill     = intent.getIntExtra("orderNumber", -1);
+                int    bestNumberBill = dbA.getMaxOrderId(TimerManager.getSessionTimeStart());
                 if (numberBill < bestNumberBill)
-                { numberBill = bestNumberBill; }
-                listDataCustomer = new ArrayList<Customer>();
+                {
+                    numberBill = bestNumberBill;
+                }
+                listDataCustomer     = new ArrayList<Customer>();
                 currentCustomerArray = new ArrayList<Integer>();
-                listDataHeader = new ArrayList<CashButtonLayout>();
-                listDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
-                listAdapter = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, paid);
+                listDataHeader       = new ArrayList<CashButtonLayout>();
+                listDataChild        = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+                listAdapter          = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, paid);
                 expListView.setAdapter(listAdapter);
-                listDataCustomer = new ArrayList<Customer>();
+                listDataCustomer     = new ArrayList<Customer>();
                 currentCustomerArray = new ArrayList<Integer>();
                 listAdapter.notifyDataSetChanged();
                 activityCommunicator.deleteCurrentCash();
@@ -2370,22 +2447,22 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     setDiscountLayout(false);
                 }
                 long sessionTime = dbA.getLastClosing();
-                int number = dbA.getMaxNumberOrderId(sessionTime);
+                int  number      = dbA.getMaxNumberOrderId(sessionTime);
                 intent.putExtra("tableNumber", -1);
                 if (number + 1 > numberBill + 1)
                 {
                     intent.putExtra("orderNumber", (number + 1));
                     CustomTextView numberBillView = (CustomTextView) myself.findViewById(R.id.cash_order_number);
-                    numberBillView.setText("#" + (number + 2));
+                    numberBillView.setText(String.format("#%d", number + 2));
                 }
                 else if (dbA.getPaidBill(billId) != 0 && dbA.getPaidBill(billId) != -1)
                 {
                     intent.putExtra("orderNumber", numberBill + 1);
                     CustomTextView numberBillView = (CustomTextView) myself.findViewById(R.id.cash_order_number);
-                    numberBillView.setText("#" + (numberBill + 2));
+                    numberBillView.setText(String.format("#%d", numberBill + 2));
                 }
                 CustomTextView numberTableSet = (CustomTextView) myself.findViewById(R.id.cash_table_number);
-                String setto = "";
+                String         setto          = "";
                 numberTableSet.setText(setto);
                 dbA.deleteBillData1(billId, context);
                 dbA.deleteDiscuntTotal(billId);
@@ -2397,32 +2474,6 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
-    /**
-     * popup that fires when you long click CancelButton, it asks if you want to save
-     * current bill or to delete it
-     */
-    /*public void openSaveBillPopup(View view){
-        LayoutInflater layoutInflater = (LayoutInflater) context
-                .getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.save_bill_popup, null);
-        final PopupWindow popupWindow = new PopupWindow(
-                popupView,
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
-        popupView.post(new Runnable() {
-            @Override
-            public void run() {
-                @SuppressLint("WrongViewCast") RelativeLayout.LayoutParams rlp1 =
-                        (RelativeLayout.LayoutParams) popupView.findViewById(R.id.save_bill_window).getLayoutParams();
-                rlp1.topMargin = (int) (150*density);
-                popupView.findViewById(R.id.save_bill_window).setLayoutParams(rlp1);
-                setUpSaveBillPopup(popupView, popupWindow, view);
-            }
-        });
-        setupDismissKeyboard(popupView);
-        popupWindow.setFocusable(true);
-        popupWindow.showAtLocation(((Activity)context).findViewById(R.id.operative), 0, 0, 0);
-    }*/
 
     /**
      * No button: it deletes everything
@@ -2444,18 +2495,20 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 {
                     if (!getModifyProduct() && !ModifierFragment.getModify())
                     {
-                        Intent intent = getActivity().getIntent();
-                        int numberBill = intent.getIntExtra("orderNumber", -1);
-                        int bestNumberBill = dbA.getMaxOrderId(TimerManager.getSessionTimeStart());
+                        Intent intent         = getActivity().getIntent();
+                        int    numberBill     = intent.getIntExtra("orderNumber", -1);
+                        int    bestNumberBill = dbA.getMaxOrderId(TimerManager.getSessionTimeStart());
                         if (numberBill < bestNumberBill)
-                        { numberBill = bestNumberBill; }
-                        listDataCustomer = new ArrayList<Customer>();
+                        {
+                            numberBill = bestNumberBill;
+                        }
+                        listDataCustomer     = new ArrayList<Customer>();
                         currentCustomerArray = new ArrayList<Integer>();
-                        listDataHeader = new ArrayList<CashButtonLayout>();
-                        listDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
-                        listAdapter = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, paid);
+                        listDataHeader       = new ArrayList<CashButtonLayout>();
+                        listDataChild        = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+                        listAdapter          = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, paid);
                         expListView.setAdapter(listAdapter);
-                        listDataCustomer = new ArrayList<Customer>();
+                        listDataCustomer     = new ArrayList<Customer>();
                         currentCustomerArray = new ArrayList<Integer>();
                         listAdapter.notifyDataSetChanged();
                         activityCommunicator.deleteCurrentCash();
@@ -2470,25 +2523,25 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                             setDiscountLayout(false);
                         }
                         long sessionTime = dbA.getLastClosing();
-                        int number = dbA.getMaxNumberOrderId(sessionTime);
+                        int  number      = dbA.getMaxNumberOrderId(sessionTime);
                         intent.putExtra("tableNumber", -1);
                         if (number + 1 > numberBill + 1)
                         {
                             intent.putExtra("orderNumber", (number + 1));
                             CustomTextView numberBillView = (CustomTextView) myself.findViewById(R.id.cash_order_number);
-                            numberBillView.setText("#" + (number + 2));
+                            numberBillView.setText(String.format("#%d", number + 2));
                         }
                         else if (dbA.getPaidBill(billId) != 0 && dbA.getPaidBill(billId) != -1)
                         {
                             intent.putExtra("orderNumber", numberBill + 1);
                             CustomTextView numberBillView = (CustomTextView) myself.findViewById(R.id.cash_order_number);
-                            numberBillView.setText("#" + (numberBill + 2));
+                            numberBillView.setText(String.format("#%d", numberBill + 2));
                         }
                         else
                         {
                             intent.putExtra("orderNumber", numberBill + 1);
                             CustomTextView numberBillView = (CustomTextView) myself.findViewById(R.id.cash_order_number);
-                            numberBillView.setText("#" + (numberBill + 1));
+                            numberBillView.setText(String.format("#%d", numberBill + 1));
                         }
                         CustomTextView tNumberLayout = (CustomTextView) v.findViewById(R.id.cash_table_not_set);
                         tNumberLayout.setVisibility(View.VISIBLE);
@@ -2530,11 +2583,11 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     {
                         numberBill = dbA.getMaxOrderId(TimerManager.getSessionTimeStart());
                     }
-                    long sessionTime = dbA.getLastClosing();
-                    Date date = new Date(sessionTime);
-                    SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String dateText1 = df2.format(date);
-                    int newBillId = dbA.checkIfExists("Select * from bill_total where bill_number=" + numberBill + " and creation_time>='" + dateText1 + "';");
+                    long             sessionTime = dbA.getLastClosing();
+                    Date             date        = new Date(sessionTime);
+                    SimpleDateFormat df2         = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String           dateText1   = df2.format(date);
+                    int              newBillId   = dbA.checkIfExists("Select * from bill_total where bill_number=" + numberBill + " and creation_time>='" + dateText1 + "';");
                     if (newBillId == -11)
                     {
                         saveBill(0);
@@ -2547,8 +2600,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                             printOrderBill(billId);
                         }
                         listDataHeader = new ArrayList<CashButtonLayout>();
-                        listDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
-                        listAdapter = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, false);
+                        listDataChild  = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+                        listAdapter    = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, false);
                         expListView.setAdapter(listAdapter);
                         listAdapter.notifyDataSetChanged();
                         activityCommunicator.deleteCurrentCash();
@@ -2570,10 +2623,10 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         numberBillView.setText("#" + (numberBill + 2));
                     }
                     CustomTextView numberTableSet = (CustomTextView) myself.findViewById(R.id.cash_table_number);
-                    String setto = "";
+                    String         setto          = "";
                     numberTableSet.setText(setto);
 
-                    listDataCustomer = new ArrayList<Customer>();
+                    listDataCustomer     = new ArrayList<Customer>();
                     currentCustomerArray = new ArrayList<Integer>();
 
                     intent.putExtra("billId", -1);
@@ -2582,6 +2635,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             }
         });
     }
+
 
     public void setupDismissKeyboard(View view)
     {
@@ -2593,7 +2647,10 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
                 {
-                    if (actionId == EditorInfo.IME_ACTION_NEXT) { keyboard_next_flag = true; }
+                    if (actionId == EditorInfo.IME_ACTION_NEXT)
+                    {
+                        keyboard_next_flag = true;
+                    }
                     return false;
                 }
             });
@@ -2626,6 +2683,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     public void setOldList(int groupPosition)
     {
         if (oldModifiedProduct.getCashListSize() == 0)
@@ -2641,17 +2699,20 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         Customer customer = new Customer();
         if (listDataCustomer.size() > 0)
         {
-            customer = listDataCustomer.get(listDataHeader.get(groupPosition)
-                                                          .getClientPosition() - 1);
+            customer     = listDataCustomer.get(listDataHeader.get(groupPosition)
+                                                              .getClientPosition() - 1);
             mailSelected = true;
         }
         if (billId > 0 && groupPosition < cashListIndex)
-        { printOrderDelete(groupPosition, customer); }
+        {
+            printOrderDelete(groupPosition, customer);
+        }
     }
+
 
     public void triggerCancelButton()
     {
-        keypad = false;
+        keypad    = false;
         calculate = false;
         myself.findViewById(R.id.layout_5).setActivated(false);
         myself.findViewById(R.id.layout_6).setActivated(false);
@@ -2662,6 +2723,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         ModifierFragment.setModify(false);
         deleteProduct = false;
     }
+
 
     public void setNewCustomerFromPopup(int customerId, String customerName, boolean isGroup)
     {
@@ -2691,7 +2753,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         if (customerId != -1)
                         {
                             if (c.getCustomerId() == customerId)
-                            { present = true; }
+                            {
+                                present = true;
+                            }
                         }
                     }
                 }
@@ -2702,10 +2766,19 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     int position = listDataCustomer.size() + 1;
                     if (customerName.equals(""))
                     {
-                        if (isGroup) { lastCustomer.setDescription("Group " + position); }
-                        else { lastCustomer.setDescription("Customer " + position); }
+                        if (isGroup)
+                        {
+                            lastCustomer.setDescription("Group " + position);
+                        }
+                        else
+                        {
+                            lastCustomer.setDescription("Customer " + position);
+                        }
                     }
-                    else { lastCustomer.setDescription(customerName); }
+                    else
+                    {
+                        lastCustomer.setDescription(customerName);
+                    }
                     lastCustomer.setCustomerId(customerId);
 
                     lastCustomer.setActive(true);
@@ -2751,10 +2824,19 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 int position = listDataCustomer.size() + 1;
                 if (customerName.equals(""))
                 {
-                    if (isGroup) { customer.setDescription("Group " + position); }
-                    else { customer.setDescription("Customer " + position); }
+                    if (isGroup)
+                    {
+                        customer.setDescription("Group " + position);
+                    }
+                    else
+                    {
+                        customer.setDescription("Customer " + position);
+                    }
                 }
-                else { customer.setDescription(customerName); }
+                else
+                {
+                    customer.setDescription(customerName);
+                }
                 customer.setCustomerId(customerId);
                 customer.setActive(true);
                 listDataCustomer.add(customer);
@@ -2787,15 +2869,16 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     public void saveBillForCustomer()
     {
-        Intent intent1 = getActivity().getIntent();
-        int orderNumber = intent1.getIntExtra("orderNumber", -1);
+        Intent intent1     = getActivity().getIntent();
+        int    orderNumber = intent1.getIntExtra("orderNumber", -1);
         if (orderNumber == -1)
         {
             //check database, se nitne
             long lastClose = dbA.getLastClosing();
-            int maxNumber = dbA.getMaxOrderId(lastClose);
+            int  maxNumber = dbA.getMaxOrderId(lastClose);
             //int maxNumber = dbA.getMaxOrderId(TimerManager.getSessionTimeStart());
             if (maxNumber == -1)
             {
@@ -2816,11 +2899,11 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             intent1.putExtra("orderNumber", orderNumber);
 
         }
-        long sessionTime = dbA.getLastClosing();
-        Date date = new Date(sessionTime);
-        SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateText = df2.format(date);
-        int newBillId = dbA.checkIfExists("Select * from bill_total where bill_number=" + orderNumber + " and creation_time>='" + dateText + "'");
+        long             sessionTime = dbA.getLastClosing();
+        Date             date        = new Date(sessionTime);
+        SimpleDateFormat df2         = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String           dateText    = df2.format(date);
+        int              newBillId   = dbA.checkIfExists("Select * from bill_total where bill_number=" + orderNumber + " and creation_time>='" + dateText + "'");
         if (newBillId == -11)
         {
             saveBillForTable();
@@ -2832,13 +2915,14 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     public void saveBillForCustomerForServer(int orderNumber, int customer_id, boolean modify, int modifyPosition)
     {
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+        RequestParam params = new RequestParam();
 
-        Gson gson = new Gson();
-        String products = gson.toJson(listDataHeader);
+        Gson   gson      = new Gson();
+        String products  = gson.toJson(listDataHeader);
         String customers = gson.toJson(listDataCustomer);
         Map<String, ArrayList<CashButtonListLayout>> test =
                 new HashMap<String, ArrayList<CashButtonListLayout>>();
@@ -2849,17 +2933,17 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
         //String modifiers = gson.toJson(listDataChild);
         String modifiers = gson.toJson(test);
-        params.add(new BasicNameValuePair("orderNumber", String.valueOf(orderNumber)));
-        params.add(new BasicNameValuePair("total", String.valueOf(total)));
-        params.add(new BasicNameValuePair("printIndex", String.valueOf(0)));
-        params.add(new BasicNameValuePair("products", products));
-        params.add(new BasicNameValuePair("customers", customers));
-        params.add(new BasicNameValuePair("modifiers", modifiers));
-        params.add(new BasicNameValuePair("totalDiscount", String.valueOf(totalDiscount)));
+        params.add("orderNumber", String.valueOf(orderNumber));
+        params.add("total", String.valueOf(total));
+        params.add("printIndex", String.valueOf(0));
+        params.add("products", products);
+        params.add("customers", customers);
+        params.add("modifiers", modifiers);
+        params.add("totalDiscount", String.valueOf(totalDiscount));
 
-        params.add(new BasicNameValuePair("customerId", String.valueOf(customer_id)));
-        params.add(new BasicNameValuePair("modify", String.valueOf(modify)));
-        params.add(new BasicNameValuePair("modifyPosition", String.valueOf(modifyPosition)));
+        params.add("customerId", String.valueOf(customer_id));
+        params.add("modify", String.valueOf(modify));
+        params.add("modifyPosition", String.valueOf(modifyPosition));
 
         ((Operative) context).callHttpHandler("/saveBillForCustomer", params);
 
@@ -2936,10 +3020,19 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 int position = listDataCustomer.size() + 1;
                 if (customerName.equals(""))
                 {
-                    if (isGroup) { customer.setDescription("Group " + position); }
-                    else { customer.setDescription("Customer " + position); }
+                    if (isGroup)
+                    {
+                        customer.setDescription("Group " + position);
+                    }
+                    else
+                    {
+                        customer.setDescription("Customer " + position);
+                    }
                 }
-                else { customer.setDescription(customerName); }
+                else
+                {
+                    customer.setDescription(customerName);
+                }
                 customer.setCustomerId(customerId);
                 customer.setActive(true);
                 listDataCustomer.add(customer);
@@ -2968,6 +3061,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             activityCommunicator.goToMainPage();
         }
     }
+
 
     /**
      * KEYPAD AND CALCULATE PART
@@ -3001,6 +3095,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
     }
 
+
     public void initCalculate()
     {
         //init calculator
@@ -3022,6 +3117,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         view.findViewById(R.id.d_50_label).setVisibility(View.GONE);
         setupDigits();
     }
+
 
     public void initDiscount()
     {
@@ -3048,13 +3144,14 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         setupDigits();
     }
 
+
     /**
      * Set up number button for calculator, keypad and discount
      */
     private void setupDigits()
     {
         RelativeLayout digitContainer = (RelativeLayout) myself.findViewById(R.id.digits_subcontainer);
-        View v;
+        View           v;
         for (int i = 0; i < digitContainer.getChildCount(); i++)
         {
             v = digitContainer.getChildAt(i);
@@ -3113,7 +3210,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         if (discountMode)
                         {
                             discountEuro = true;
-                            amount = new StringBuilder();
+                            amount       = new StringBuilder();
                             amount.append("€");
                             ((CustomTextView) myself.findViewById(R.id.calculator_input_text)).setText(amount
                                     .toString());
@@ -3167,7 +3264,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         if (discountMode)
                         {
                             discountEuro = true;
-                            amount = new StringBuilder();
+                            amount       = new StringBuilder();
                             amount.append("€");
                             ((CustomTextView) myself.findViewById(R.id.calculator_input_text)).setText(amount
                                     .toString());
@@ -3221,7 +3318,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         if (discountMode)
                         {
                             discountEuro = true;
-                            amount = new StringBuilder();
+                            amount       = new StringBuilder();
                             amount.append("€");
                             ((CustomTextView) myself.findViewById(R.id.calculator_input_text)).setText(amount
                                     .toString());
@@ -3275,7 +3372,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         if (discountMode)
                         {
                             discountEuro = false;
-                            amount = new StringBuilder();
+                            amount       = new StringBuilder();
                             amount.append("%");
                             ((CustomTextView) myself.findViewById(R.id.calculator_input_text)).setText(amount
                                     .toString());
@@ -3399,7 +3496,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                             operationDone = false;
                         }
                         else
-                        { buildString(((CustomButton) v).getText().charAt(0)); }
+                        {
+                            buildString(((CustomButton) v).getText().charAt(0));
+                        }
                     }
                 });
             }
@@ -3412,7 +3511,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     char c = ((CustomButton) v).getText().charAt(0);
                     if (c == 'C')
                     {
-                        amount = new StringBuilder();
+                        amount        = new StringBuilder();
                         operationDone = false;
                         if (keypad)
                         {
@@ -3427,6 +3526,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             });
         }
     }
+
 
     /**
      * build string to show in calculator or keypad
@@ -3469,7 +3569,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     }
                 }
                 else
-                { amount.append(c); }
+                {
+                    amount.append(c);
+                }
             }
             else
             {
@@ -3481,7 +3583,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         dotAdded = false;
                     }
                     else
-                    { amount.deleteCharAt(amount.length() - 1); }
+                    {
+                        amount.deleteCharAt(amount.length() - 1);
+                    }
                 }
             }
         }
@@ -3507,13 +3611,18 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             {
                 discountToBeDeleted = false;
                 if (amount.length() > 0 && amount.length() != 1)
-                { amount.deleteCharAt(amount.length() - 2); }
+                {
+                    amount.deleteCharAt(amount.length() - 2);
+                }
                 if (amount.length() == 1)
-                { amount.deleteCharAt(amount.length() - 1); }
+                {
+                    amount.deleteCharAt(amount.length() - 1);
+                }
             }
         }
         ((CustomTextView) myself.findViewById(R.id.calculator_input_text)).setText(amount.toString());
     }
+
 
     /**
      * execute keypad or calculator action
@@ -3531,7 +3640,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     unspecItemName = "Articolo";
                 }
 
-                float price = Float.parseFloat(amount.substring(0, amount.length() - 1));
+                float        price        = Float.parseFloat(amount.substring(0, amount.length() - 1));
                 ButtonLayout buttonLayout = dbA.fetchButtonByQuery("SELECT * FROM button WHERE id=-30;");
 
                 buttonLayout.setPrice(price);
@@ -3621,10 +3730,10 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         else if (calculate)
         {
             //execute calculation
-            String firstNumber = "";
+            String firstNumber  = "";
             String secondNumber = "";
-            float result = 0.0f;
-            int opType = searchOperation();
+            float  result       = 0.0f;
+            int    opType       = searchOperation();
             switch (opType)
             {
                 case 1:
@@ -3676,10 +3785,10 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
         else if (discountMode)
         {
-            String discount = "";
+            String discount   = "";
             String percentage = "";
             double result;
-            int opType = searchOperation();
+            int    opType     = searchOperation();
             switch (opType)
             {
                 case 5:
@@ -3689,7 +3798,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         if (total != 0)
                         {
                             discount = amount.substring(0, amount.length() - 1);
-                            result = Float.valueOf(discount);
+                            result   = Float.valueOf(discount);
                             if (result > total)
                             {
 
@@ -3716,14 +3825,18 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                                 total -= result;
                                 totalDiscount += result;
                                 if (dbA.checkIfDiscountExists(billId) < 0)
-                                { dbA.addDiscountToTable(totalDiscount, billId); }
+                                {
+                                    dbA.addDiscountToTable(totalDiscount, billId);
+                                }
                                 else
-                                { dbA.updateBillExtra(billId, totalDiscount, totalDiscount); }
+                                {
+                                    dbA.updateBillExtra(billId, totalDiscount, totalDiscount);
+                                }
                                 ((CustomTextView) view.findViewById(R.id.cash_euro_total)).setText((total + "")
                                         .concat("0"));
                                 setDiscountLayout(true);
-                                discountMode = false;
-                                discountEuro = true;
+                                discountMode        = false;
+                                discountEuro        = true;
                                 discountToBeDeleted = false;
                                 hideDiscountDigits();
                             }
@@ -3741,11 +3854,11 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     {
 
                         dbA.deleteDiscuntTotal(billId);
-                        discountMode = false;
-                        discountEuro = true;
+                        discountMode        = false;
+                        discountEuro        = true;
                         discountToBeDeleted = false;
                         total += totalDiscount;
-                        totalDiscount = 0.9f;
+                        totalDiscount       = 0.9f;
                         DecimalFormat twoDForm = new DecimalFormat("#.00");
                         viewTotal.setText(twoDForm.format(total).replace(".", ","));
                         if (view.findViewById(R.id.euro_icon_discount)
@@ -3764,7 +3877,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         float percDiscount = 0.0f;
                         if (amount.length() <= 4)
                         {
-                            percentage = amount.substring(0, amount.length() - 1);
+                            percentage   = amount.substring(0, amount.length() - 1);
                             percDiscount = Float.valueOf(percentage) / 100;
                             if (percDiscount > 1)
                             {
@@ -3799,7 +3912,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                             result = 0;
                         }
                         else if (result == 0)
-                        { break; }
+                        {
+                            break;
+                        }
                         //homage
                         else if (result == total)
                         {
@@ -3820,14 +3935,18 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                             total -= result;
                             totalDiscount += result;
                             if (dbA.checkIfDiscountExists(billId) != 0.0f)
-                            { dbA.addDiscountToTable(totalDiscount, billId); }
+                            {
+                                dbA.addDiscountToTable(totalDiscount, billId);
+                            }
                             else
-                            { dbA.updateDiscount(totalDiscount, billId); }
+                            {
+                                dbA.updateDiscount(totalDiscount, billId);
+                            }
                             DecimalFormat twoDForm = new DecimalFormat("#.00");
                             viewTotal.setText(twoDForm.format(total).replace(".", ","));
                             setDiscountLayout(true);
-                            discountMode = false;
-                            discountEuro = true;
+                            discountMode        = false;
+                            discountEuro        = true;
                             discountToBeDeleted = false;
                             hideDiscountDigits();
                         }
@@ -3846,6 +3965,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     public void hideDiscountDigits()
     {
         view.findViewById(R.id.cash_calculator_pad).setVisibility(View.GONE);
@@ -3854,10 +3974,12 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         view.findViewById(R.id.layout_8).setActivated(false);
     }
 
+
     public void setDiscountLayout(boolean value)
     {
 
     }
+
 
     /**
      * in executeCalculatorAction (above) check which calculator action is performed : + - x /
@@ -3891,8 +4013,12 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         {
             return 6;
         }
-        else { return -1; }
+        else
+        {
+            return -1;
+        }
     }
+
 
     /**
      * ipdate already saved bill
@@ -3981,12 +4107,12 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
     {
         if (listDataHeader.size() > 0)
         {
-            Intent intent = getActivity().getIntent();
-            int numberBill = intent.getIntExtra("orderNumber", 1);
+            Intent intent     = getActivity().getIntent();
+            int    numberBill = intent.getIntExtra("orderNumber", 1);
 
            /* if(StaticValue.blackbox){
 
-                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                RequestParam params = new RequestParam();
 
                 Gson gson = new Gson();
                 String products = gson.toJson(listDataHeader);
@@ -3999,19 +4125,19 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
                 //String modifiers = gson.toJson(listDataChild);
                 String modifiers = gson.toJson(test);
-                params.add(new BasicNameValuePair("orderNumber", String.valueOf(numberBill)));
-                params.add(new BasicNameValuePair("total", String.valueOf(total)));
-                params.add(new BasicNameValuePair("printIndex", String.valueOf(printed_index)));
-                params.add(new BasicNameValuePair("products", products));
-                params.add(new BasicNameValuePair("customers", customers));
-                params.add(new BasicNameValuePair("modifiers", modifiers));
-                params.add(new BasicNameValuePair("totalDiscount", String.valueOf(totalDiscount)));
+                params.add("orderNumber", String.valueOf(numberBill));
+                params.add("total", String.valueOf(total));
+                params.add("printIndex", String.valueOf(printed_index));
+                params.add("products", products);
+                params.add("customers", customers);
+                params.add("modifiers", modifiers);
+                params.add("totalDiscount", String.valueOf(totalDiscount));
 
                 ((Operative) context).callHttpHandler("/saveBill", params);
 
             }else {*/
             int billId = dbA.saveTotalBillForPayment(total, numberBill, printed_index);
-            bill_id = billId;
+            bill_id                   = billId;
             CashFragment.this.bill_id = billId;
             //salvo i data header e i suoi subelementi
             if (billId != 0)
@@ -4040,12 +4166,14 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 addDiscountToBill();
 
                 if (printed_index >= 0)
-                { printOrderBill(billId); }
+                {
+                    printOrderBill(billId);
+                }
 
-                listDataHeader = new ArrayList<CashButtonLayout>();
-                listDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+                listDataHeader   = new ArrayList<CashButtonLayout>();
+                listDataChild    = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
                 listDataCustomer = new ArrayList<>();
-                listAdapter = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, paid);
+                listAdapter      = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, paid);
                 expListView.setAdapter(listAdapter);
                 listAdapter.notifyDataSetChanged();
                 activityCommunicator.deleteCurrentCash();
@@ -4058,15 +4186,16 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     public void saveBillAndPrint(int printed_index)
     {
         if (listDataHeader.size() > 0)
         {
             //salvo i data header e i suoi subelementi
-            Intent intent = getActivity().getIntent();
-            int numberBill = intent.getIntExtra("orderNumber", 1);
-            this.billId = dbA.saveTotalBillForPayment(total, numberBill, printed_index);
-            bill_id = billId;
+            Intent intent     = getActivity().getIntent();
+            int    numberBill = intent.getIntExtra("orderNumber", 1);
+            this.billId               = dbA.saveTotalBillForPayment(total, numberBill, printed_index);
+            bill_id                   = billId;
             CashFragment.this.bill_id = billId;
             if (billId != 0)
             {
@@ -4096,6 +4225,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     public void saveBillForTable()
     {
         if (listDataHeader.size() > 0)
@@ -4109,15 +4239,16 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             {
                 saveBill(0);
             }
-            Intent intent = getActivity().getIntent();
-            int numberBill = intent.getIntExtra("orderNumber", 1);
+            Intent intent     = getActivity().getIntent();
+            int    numberBill = intent.getIntExtra("orderNumber", 1);
 
             int billId = dbA.saveTotalBillForPayment(total, numberBill, 0);
-            bill_id = billId;
+            bill_id                   = billId;
             CashFragment.this.bill_id = billId;
-            CashFragment.this.billId = billId;
+            CashFragment.this.billId  = billId;
         }
     }
+
 
     /**
      * set specific group to modify using its position
@@ -4165,21 +4296,26 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
     }
 
+
     @Override
     public void onAttach(Context context)
     {
         super.onAttach(context);
-        this.context = getActivity();
+        this.context         = getActivity();
         activityCommunicator = (ActivityCommunicator) this.context;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null)
-        { activityAssignedValue = savedInstanceState.getString(STRING_VALUE); }
+        {
+            activityAssignedValue = savedInstanceState.getString(STRING_VALUE);
+        }
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState)
@@ -4188,17 +4324,20 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         outState.putString(STRING_VALUE, activityAssignedValue);
     }
 
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
     }
 
+
     @Override
     public void onResume()
     {
         super.onResume();
     }
+
 
     /**
      * open an close modify button at the end of cash list depending on boolean b
@@ -4208,9 +4347,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
      */
     public void setModifyBar(Boolean b)
     {
-        View modifyButton = view.findViewById(R.id.modify_end_button);
-        ImageView totalBarLabel = (ImageView) view.findViewById(R.id.cash_euro_label);
-        CustomTextView totalBar = (CustomTextView) view.findViewById(R.id.cash_euro_total);
+        View           modifyButton  = view.findViewById(R.id.modify_end_button);
+        ImageView      totalBarLabel = (ImageView) view.findViewById(R.id.cash_euro_label);
+        CustomTextView totalBar      = (CustomTextView) view.findViewById(R.id.cash_euro_total);
         if (b)
         {
             modifyButton.setVisibility(View.VISIBLE);
@@ -4224,6 +4363,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             totalBar.setVisibility(View.VISIBLE);
         }
     }
+
 
     /**
      * used to recaulcate total to show when modifyitem
@@ -4248,6 +4388,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         viewTotal.setText(twoDForm.format(total).replace(".", ","));
     }
 
+
     /**
      * set total price label to zero
      */
@@ -4256,6 +4397,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         total = 0.00;
         viewTotal.setText("0,00");
     }
+
 
     /**
      * update total price label
@@ -4270,6 +4412,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         viewTotal.setText(twoDForm.format(total).replace(".", ","));
     }
 
+
     /**
      * substrac from total label cost of deleted item
      *
@@ -4278,39 +4421,22 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
     public void subPrice(CashButtonLayout button)
     {
         total -= button.getPriceFloat();
-        List<CashButtonListLayout> dataChild = listDataChild.get(button);
-        int productQuantity = button.getQuantityInt();
+        List<CashButtonListLayout> dataChild       = listDataChild.get(button);
+        int                        productQuantity = button.getQuantityInt();
         if (dataChild != null)
         {
             for (int i = 0; i < dataChild.size(); i++)
             {
-                Integer qty = dataChild.get(i).getQuantityInt();
-                int toSubstract = qty / productQuantity;
+                Integer qty         = dataChild.get(i).getQuantityInt();
+                int     toSubstract = qty / productQuantity;
                 total -= dataChild.get(i).getPriceFloat() * (toSubstract);
             }
         }
         total = Math.round(total * 10000) / 10000.00;
-        if (total <= 0) { total = 0.00; }
-        DecimalFormat twoDForm = new DecimalFormat("#0.00");
-        viewTotal.setText(twoDForm.format(total).replace(".", ","));
-    }
-
-    public void subPriceAllProduct(CashButtonLayout button)
-    {
-        total -= button.getPriceFloat() * button.getQuantityInt();
-        List<CashButtonListLayout> dataChild = listDataChild.get(button);
-        int productQuantity = button.getQuantityInt();
-        if (dataChild != null)
+        if (total <= 0)
         {
-            for (int i = 0; i < dataChild.size(); i++)
-            {
-                Integer qty = dataChild.get(i).getQuantityInt();
-                int toSubstract = qty / productQuantity;
-                total -= dataChild.get(i).getPriceFloat() * dataChild.get(i).getQuantityInt();
-            }
+            total = 0.00;
         }
-        total = Math.round(total * 10000) / 10000.00;
-        if (total <= 0) { total = 0.00; }
         DecimalFormat twoDForm = new DecimalFormat("#0.00");
         viewTotal.setText(twoDForm.format(total).replace(".", ","));
     }
@@ -4326,6 +4452,31 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
     }
 */
 
+
+    public void subPriceAllProduct(CashButtonLayout button)
+    {
+        total -= button.getPriceFloat() * button.getQuantityInt();
+        List<CashButtonListLayout> dataChild       = listDataChild.get(button);
+        int                        productQuantity = button.getQuantityInt();
+        if (dataChild != null)
+        {
+            for (int i = 0; i < dataChild.size(); i++)
+            {
+                Integer qty         = dataChild.get(i).getQuantityInt();
+                int     toSubstract = qty / productQuantity;
+                total -= dataChild.get(i).getPriceFloat() * dataChild.get(i).getQuantityInt();
+            }
+        }
+        total = Math.round(total * 10000) / 10000.00;
+        if (total <= 0)
+        {
+            total = 0.00;
+        }
+        DecimalFormat twoDForm = new DecimalFormat("#0.00");
+        viewTotal.setText(twoDForm.format(total).replace(".", ","));
+    }
+
+
     public void subPriceModifierWithQty(CashButtonListLayout button, int toSubstract)
     {
         total -= button.getPriceFloat() * toSubstract;
@@ -4333,6 +4484,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         DecimalFormat twoDForm = new DecimalFormat("#0.00");
         viewTotal.setText(twoDForm.format(total).replace(".", ","));
     }
+
 
     /**
      * used outside cashFragment
@@ -4354,6 +4506,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
         }
     }
+
 
     /**
      * add one product TODO use only buttonLayout
@@ -4389,8 +4542,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         if (billId > 0)
                         {
                             ArrayList<CashButtonListLayout> newModifier = new ArrayList<CashButtonListLayout>();
-                            Customer customer = new Customer();
-                            CashButtonLayout newbutton = new CashButtonLayout();
+                            Customer                        customer    = new Customer();
+                            CashButtonLayout                newbutton   = new CashButtonLayout();
                             newbutton.setTitle(text);
                             newbutton.setPrice(price);
                             newbutton.setQuantity(1);
@@ -4435,8 +4588,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     if (billId > 0)
                     {
                         ArrayList<CashButtonListLayout> newModifier = new ArrayList<CashButtonListLayout>();
-                        Customer customer = new Customer();
-                        CashButtonLayout newbutton = new CashButtonLayout();
+                        Customer                        customer    = new Customer();
+                        CashButtonLayout                newbutton   = new CashButtonLayout();
                         newbutton.setTitle(text);
                         newbutton.setPrice(price);
                         newbutton.setQuantity(1);
@@ -4512,6 +4665,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     /**
      * add fixed modifier after a product is added, if there are fixed modifiers for that product
      *
@@ -4520,7 +4674,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
      */
     public void addFixedModifiers(int buttonId, int listPosition)
     {
-        ArrayList<Integer> groupsInt = dbA.fetchAssignedGroupModifiersByQuery(buttonId);
+        ArrayList<Integer> groupsInt    = dbA.fetchAssignedGroupModifiersByQuery(buttonId);
         ArrayList<Integer> modifiersInt = dbA.fetchAssignedModifiersByQuery(buttonId);
         /*if(!StaticValue.blackbox) {
             if (groupsInt != null) {
@@ -4550,8 +4704,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         .get(i));
                 for (OModifierAdapter.OModifier m : mods)
                 {
-                    CashButtonLayout button1 = listDataHeader.get(listPosition);
-                    CashButtonListLayout list = new CashButtonListLayout();
+                    CashButtonLayout     button1 = listDataHeader.get(listPosition);
+                    CashButtonListLayout list    = new CashButtonListLayout();
                     list.setTitle(m.getTitle());
                     list.setPrice(m.getPrice());
                     list.setQuantity(1 * listDataHeader.get((listPosition)).getQuantityInt());
@@ -4567,6 +4721,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
 
     }
+
 
     /**
      * TODO remove text, price and quantity params and just use button layout
@@ -4592,8 +4747,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
         else
         {
-            ArrayList<CashButtonLayout> listDataHeaderTemp = new ArrayList<CashButtonLayout>();
-            HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>> listDataChildTemp = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+            ArrayList<CashButtonLayout>                                listDataHeaderTemp = new ArrayList<CashButtonLayout>();
+            HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>> listDataChildTemp  = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
             for (int j = 0; j < currentCustomerArray.size(); j++)
             {
                 if (listDataCustomer.size() == currentCustomerArray.get(j))
@@ -4768,6 +4923,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         ArrayList<Customer> a = listDataCustomer;
     }
 
+
     /**
      * TODO same as above
      * modify cash list product to a specific position
@@ -4801,7 +4957,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
         CashButtonLayout b = oldModifiedProduct;
         listDataChild.remove(listDataHeader.get(groupPosition));
-        ArrayList<Integer> groupsInt = dbA.fetchAssignedGroupModifiersByQuery(prodId);
+        ArrayList<Integer> groupsInt    = dbA.fetchAssignedGroupModifiersByQuery(prodId);
         ArrayList<Integer> modifiersInt = dbA.fetchAssignedModifiersByQuery(prodId);
         if (groupsInt != null)
         {
@@ -4811,8 +4967,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         .get(i));
                 for (OModifierAdapter.OModifier m : mods)
                 {
-                    CashButtonLayout button1 = listDataHeader.get(groupPosition);
-                    CashButtonListLayout list = new CashButtonListLayout();
+                    CashButtonLayout     button1 = listDataHeader.get(groupPosition);
+                    CashButtonListLayout list    = new CashButtonListLayout();
                     list.setTitle(m.getTitle());
                     list.setPrice(m.getPrice());
                     list.setQuantity(1 * listDataHeader.get(groupPosition).getQuantityInt());
@@ -4834,8 +4990,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         .get(i));
                 for (OModifierAdapter.OModifier m : mods)
                 {
-                    CashButtonLayout button1 = listDataHeader.get(groupPosition);
-                    CashButtonListLayout list = new CashButtonListLayout();
+                    CashButtonLayout     button1 = listDataHeader.get(groupPosition);
+                    CashButtonListLayout list    = new CashButtonListLayout();
                     list.setTitle(m.getTitle());
                     list.setPrice(m.getPrice());
                     list.setQuantity(1 * listDataHeader.get(groupPosition).getQuantityInt());
@@ -4862,6 +5018,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         resetCashNotChanghed();
     }
 
+
     /**
      * return the position of the last product item for one customer
      *
@@ -4884,6 +5041,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         return returnPosition;
     }
 
+
     /**
      * same as product but with modifier
      *
@@ -4897,7 +5055,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         CashButtonLayout button1 = listDataHeader.get(listDataHeader.size() - 1);
         button1.setModifyModifier(false);
         Integer position = 0;
-        Boolean check = false;
+        Boolean check    = false;
         //check modifiers list to see if that modifier is already present
         if (listDataCustomer.size() > 0)
         {
@@ -4920,7 +5078,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                             {
                                 if (listOfValues.get(k).getModifierId() == modifier.getID())
                                 {
-                                    check = true;
+                                    check    = true;
                                     position = k;
                                 }
                             }
@@ -4954,7 +5112,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                             list.setModifierId(modifier.getID());
                             list.setID(modifier.getID());
                             if (listOfValues != null)
-                            { button2.setNewCashList((ArrayList<CashButtonListLayout>) listOfValues); }
+                            {
+                                button2.setNewCashList((ArrayList<CashButtonListLayout>) listOfValues);
+                            }
                             button2.setCashList(list);
                             listDataChild.put(listDataHeader.get((j)), button2.getCashList());
                             //((Operative) getContext()).addToModifierCashList(list);
@@ -4983,7 +5143,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 {
                     if (listOfValues.get(i).getModifierId() == modifier.getID())
                     {
-                        check = true;
+                        check    = true;
                         position = i;
                     }
                 }
@@ -5017,7 +5177,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 //list.setID(modifier.getID());
                 list.setID(-1);
                 if (listOfValues != null)
-                { button1.setNewCashList((ArrayList<CashButtonListLayout>) listOfValues); }
+                {
+                    button1.setNewCashList((ArrayList<CashButtonListLayout>) listOfValues);
+                }
                 button1.setCashList(list);
                 listDataChild.put(listDataHeader.get((listDataHeader.size() - 1)), button1.getCashList());
             }
@@ -5030,6 +5192,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     /**
      * same as modify product but for modifier
      *
@@ -5040,18 +5203,18 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
     public void updateSpecificModifierText(OModifierAdapter.OModifier modifier, Integer quantity, Integer groupPosition)
     {
         updateTotal(modifier.getPrice() * listDataHeader.get(groupPosition).getQuantityInt());
-        CashButtonLayout button1 = listDataHeader.get(groupPosition);
-        ArrayList<CashButtonListLayout> prova1 = listDataChild.get(listDataHeader.get(groupPosition));
-        Integer position = 0;
-        Boolean check = false;
-        List<CashButtonListLayout> listOfValues = listDataChild.get(listDataHeader.get(groupPosition));
+        CashButtonLayout                button1      = listDataHeader.get(groupPosition);
+        ArrayList<CashButtonListLayout> prova1       = listDataChild.get(listDataHeader.get(groupPosition));
+        Integer                         position     = 0;
+        Boolean                         check        = false;
+        List<CashButtonListLayout>      listOfValues = listDataChild.get(listDataHeader.get(groupPosition));
         if (listOfValues != null)
         {
             for (int i = 0; i < listOfValues.size(); i++)
             {
                 if (listOfValues.get(i).getModifierId() == modifier.getID())
                 {
-                    check = true;
+                    check    = true;
                     position = i;
                 }
             }
@@ -5105,6 +5268,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         expListView.setSelectedGroup(groupPosition);
     }
 
+
     /**
      * remove a specific modifier
      *
@@ -5156,6 +5320,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     /**
      * can't remember where we use this
      * but its reset cash list---
@@ -5173,6 +5338,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         listAdapter.notifyDataSetChanged();
     }
 
+
     public int returnProductForCustomer(int clientPosition)
     {
         int count = 0;
@@ -5180,11 +5346,15 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         {
             if (listDataHeader.get(i).getClientPosition() != 0)
             {
-                if (listDataHeader.get(i).getClientPosition() == clientPosition) { count++; }
+                if (listDataHeader.get(i).getClientPosition() == clientPosition)
+                {
+                    count++;
+                }
             }
         }
         return count;
     }
+
 
     /**
      * delet a product from list
@@ -5208,7 +5378,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             {
                 Customer customer = new Customer();
                 if (listDataCustomer.size() > 0)
-                { customer = listDataCustomer.get(oldModifiedProduct.getClientPosition() - 1); }
+                {
+                    customer = listDataCustomer.get(oldModifiedProduct.getClientPosition() - 1);
+                }
                 ArrayList<CashButtonLayout> bb = listDataHeader;
                 printOrderDelete(1, customer);
 
@@ -5284,8 +5456,13 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             }
 
             if (listDataHeader.size() == 0)
-            { dbA.updateBillTotalPrintedIndex(0, billId); }
-            else { dbA.updateBillTotalPrintedIndex(listDataHeader.size(), billId); }
+            {
+                dbA.updateBillTotalPrintedIndex(0, billId);
+            }
+            else
+            {
+                dbA.updateBillTotalPrintedIndex(listDataHeader.size(), billId);
+            }
             ArrayList<Customer> a = listDataCustomer;
             cashListIndex = listDataHeader.size();
             listAdapter.notifyDataSetChanged();
@@ -5316,6 +5493,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     public void deleteAllProductsFromServer(int groupPosition)
     {
         int qq = listDataHeader.get(groupPosition).getQuantityInt();
@@ -5329,7 +5507,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         oldListDataChild.put(oldModifiedProduct, oldModifiedProduct.getCashList());
         Customer customer = new Customer();
         if (listDataCustomer.size() > 0)
-        { customer = listDataCustomer.get(oldModifiedProduct.getClientPosition() - 1); }
+        {
+            customer = listDataCustomer.get(oldModifiedProduct.getClientPosition() - 1);
+        }
         printOrderDelete(1, customer);
         listDataHeader.get(groupPosition).setQuantity(qq);
 
@@ -5385,7 +5565,10 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             int i = 0;
             for (CashButtonLayout button : listDataHeader)
             {
-                if (button.getProductId() != -20) { i++; }
+                if (button.getProductId() != -20)
+                {
+                    i++;
+                }
             }
             cashListIndex = i;
         }
@@ -5399,9 +5582,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
     {
         if (StaticValue.blackbox)
         {
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
-            params.add(new BasicNameValuePair("groupPosition", String.valueOf(groupPosition)));
+            RequestParam params = new RequestParam();
+            params.add("billId", String.valueOf(billId));
+            params.add("groupPosition", String.valueOf(groupPosition));
             ((Operative) getContext()).callHttpHandler("/checkIfBillSplitPaid", params);
         }
         else
@@ -5426,7 +5609,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 {
                     Customer customer = new Customer();
                     if (listDataCustomer.size() > 0)
-                    { customer = listDataCustomer.get(oldModifiedProduct.getClientPosition() - 1); }
+                    {
+                        customer = listDataCustomer.get(oldModifiedProduct.getClientPosition() - 1);
+                    }
                     printOrderDelete(1, customer);
 
                 }
@@ -5486,7 +5671,10 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     int i = 0;
                     for (CashButtonLayout button : listDataHeader)
                     {
-                        if (button.getProductId() != -20) { i++; }
+                        if (button.getProductId() != -20)
+                        {
+                            i++;
+                        }
                     }
                     //if(cashListIndex>0)
                     dbA.updateBillTotalPrintedIndex(cashListIndex - 1, billId);
@@ -5522,6 +5710,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     /**
      * delete customer from cash list
      *
@@ -5542,13 +5731,15 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     oldListDataChild.put(oldModifiedProduct, oldModifiedProduct.getCashList());
                     Customer customer = new Customer();
                     if (listDataCustomer.size() > 0)
-                    { customer = listDataCustomer.get(oldModifiedProduct.getClientPosition() - 1); }
+                    {
+                        customer = listDataCustomer.get(oldModifiedProduct.getClientPosition() - 1);
+                    }
                     printOrderDelete(i, customer);
                 }
 
                 listDataHeader.remove(i);
                 oldModifiedProduct = new CashButtonLayout();
-                oldListDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+                oldListDataChild   = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
             }
         }
 
@@ -5589,13 +5780,17 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         //reset current customer
         currentCustomerArray = new ArrayList<Integer>();
         listAdapter.setCustomerList(listDataCustomer);
-        if (listDataCustomer.size() == 0) { listAdapter.setFirstClientFalse(); }
+        if (listDataCustomer.size() == 0)
+        {
+            listAdapter.setFirstClientFalse();
+        }
         listAdapter.notifyDataSetChanged();
 
         activityCommunicator = (ActivityCommunicator) context;
         activityCommunicator.goToMainPage();
 
     }
+
 
     /**
      * set cash list to normal appareance
@@ -5609,6 +5804,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             expListView.expandGroup(i);
         }
     }
+
 
     /**
      * add or remove quantity to product
@@ -5632,7 +5828,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             oldModifiedProduct.setTitle(listDataHeader.get(groupPosition).getTitle());
             oldModifiedProduct.setPrice(listDataHeader.get(groupPosition).getPriceFloat());
             if (oldModifiedProduct.getQuantityInt() == -1)
-            { oldModifiedProduct.setQuantity(listDataHeader.get(groupPosition).getQuantityInt()); }
+            {
+                oldModifiedProduct.setQuantity(listDataHeader.get(groupPosition).getQuantityInt());
+            }
             oldModifiedProduct.setIsDelete(false);
             oldModifiedProduct.setProductId(listDataHeader.get(groupPosition).getProductId());
             oldModifiedProduct.setPrinterId(listDataHeader.get(groupPosition).getPrinterId());
@@ -5640,8 +5838,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
             modifyChangePosition = groupPosition;
 
-            CashButtonLayout button1 = listDataHeader.get(groupPosition);
-            Integer previusqty = listDataHeader.get(groupPosition).getQuantityInt();
+            CashButtonLayout button1    = listDataHeader.get(groupPosition);
+            Integer          previusqty = listDataHeader.get(groupPosition).getQuantityInt();
             listDataHeader.get(groupPosition).setQuantity(previusqty + 1);
             String total = button1.getTotal(button1.getQuantityInt());
             price.setText(total);
@@ -5710,8 +5908,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 modifyChangePosition = groupPosition;
                 if (listDataHeader.get(groupPosition).getQuantityInt() > 1)
                 {
-                    CashButtonLayout button1 = listDataHeader.get(groupPosition);
-                    Integer previusqty = listDataHeader.get(groupPosition).getQuantityInt();
+                    CashButtonLayout button1    = listDataHeader.get(groupPosition);
+                    Integer          previusqty = listDataHeader.get(groupPosition).getQuantityInt();
                     listDataHeader.get(groupPosition).setQuantity(previusqty - 1);
                     //  quantity.setText(listDataHeader.get(groupPosition).getQuantity());
                     String total = button1.getTotal(button1.getQuantityInt());
@@ -5747,6 +5945,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         //printOrderCorrection(modifyChangePosition);
     }
 
+
     /**
      * end modify layout for product
      */
@@ -5762,6 +5961,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         listAdapter.notifyDataSetChanged();
 
     }
+
 
     /**
      * end modify layout for modifier
@@ -5780,8 +5980,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
         if (billId > 0 && groupPosition < cashListIndex && groupPosition != -1)
         {
-            Customer customer = new Customer();
-            CashButtonLayout a = oldModifiedProduct;
+            Customer         customer = new Customer();
+            CashButtonLayout a        = oldModifiedProduct;
             if (listDataCustomer.size() > 0)
             {
                 customer = listDataCustomer.get(listDataHeader.get(groupPosition)
@@ -5798,16 +5998,16 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 {
                     toList.get(i).setPrinted(0);
                 }
-                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                Gson gson = new Gson();
-                String myProducts = gson.toJson(toList);
-                String mods = gson.toJson(test);
-                String myCustomers = gson.toJson(listDataCustomer);
-                params.add(new BasicNameValuePair("products", myProducts));
-                params.add(new BasicNameValuePair("modifiers", mods));
-                params.add(new BasicNameValuePair("printType", String.valueOf(10)));
-                params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
-                params.add(new BasicNameValuePair("customers", myCustomers));
+                RequestParam params      = new RequestParam();
+                Gson         gson        = new Gson();
+                String       myProducts  = gson.toJson(toList);
+                String       mods        = gson.toJson(test);
+                String       myCustomers = gson.toJson(listDataCustomer);
+                params.add("products", myProducts);
+                params.add("modifiers", mods);
+                params.add("printType", String.valueOf(10));
+                params.add("billId", String.valueOf(billId));
+                params.add("customers", myCustomers);
                 ((Operative) context).callHttpHandler("/printSingleOrder", params);
             }
             else
@@ -5819,10 +6019,12 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     public void printBillOnServerModify()
     {
 
     }
+
 
     /**
      * show item viw for element to be deleted
@@ -5838,7 +6040,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             if (billId != -1)
             {
                 double left = dbA.getBillPrice(billId);
-                float cash = 0.0f;
+                float  cash = 0.0f;
                 for (CashButtonLayout product : listDataHeader)
                 {
                     ArrayList<CashButtonListLayout> modifiersList = listDataChild.get(product);
@@ -5851,7 +6053,10 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     }
                     cash += product.getPriceFloat() * product.getQuantityInt();
                 }
-                if (left != cash) { left = cash; }
+                if (left != cash)
+                {
+                    left = cash;
+                }
                 if (left == 0.0f)
                 {
                     listDataHeader.get(groupPosition).setToDelete(true);
@@ -5904,6 +6109,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     public void resetCustomerToDelete()
     {
         if (listDataCustomer.size() > 0)
@@ -5918,6 +6124,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             listAdapter.notifyDataSetChanged();
         }
     }
+
 
     /**
      * WRONG NAME, NOW WHEN I SWIPE TO RIGHT IF DELETE IS NOT ACTIVE IT FIRE POPUP COSTUMER MODIFY WINDOW
@@ -5943,16 +6150,16 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             }
             else
             {
-                Intent intent = getActivity().getIntent();
-                int numberBill = intent.getIntExtra("orderNumber", -1);
+                Intent intent     = getActivity().getIntent();
+                int    numberBill = intent.getIntExtra("orderNumber", -1);
                 if (numberBill == -1)
                 {
                     numberBill = dbA.getMaxOrderId(TimerManager.getSessionTimeStart());
                 }
-                long sessionTime = dbA.getLastClosing();
-                Date date = new Date(sessionTime);
-                SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String dateText = df2.format(date);
+                long             sessionTime = dbA.getLastClosing();
+                Date             date        = new Date(sessionTime);
+                SimpleDateFormat df2         = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String           dateText    = df2.format(date);
 
                 int newBillId = dbA.checkIfExists("Select * from bill_total where bill_number=" + numberBill + " and creation_time>='" + dateText + "'");
                 if (newBillId == -11)
@@ -5961,7 +6168,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     {
                         //salvo i data header e i suoi subelementi
                         int billId = dbA.saveTotalBillForPayment(total, numberBill, 0);
-                        bill_id = billId;
+                        bill_id                   = billId;
                         CashFragment.this.bill_id = billId;
                         if (billId != 0)
                         {
@@ -6071,18 +6278,20 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     }
                     dbA.deleteLeftProductFromBill(billId, listDataHeader.size() - 1);
                 }
-                long sessionTimeb = dbA.getLastClosing();
-                Date dateb = new Date(sessionTimeb);
-                SimpleDateFormat df2b = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String dateTextb = df2b.format(dateb);
+                long             sessionTimeb = dbA.getLastClosing();
+                Date             dateb        = new Date(sessionTimeb);
+                SimpleDateFormat df2b         = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String           dateTextb    = df2b.format(dateb);
                 billId = dbA.checkIfExists("Select * from bill_total where bill_number=" + numberBill + " and creation_time>='" + dateTextb + "';");
                 ((Operative) getContext()).openCustomerPopup(listDataCustomer.get(customerPosition - 1)
                                                                              .getDescription(),
-                        (listDataCustomer.get(customerPosition - 1)).getCustomerId(), intent.getIntExtra("orderNumber", -1), true, (customerPosition - 1), tableNumber);
+                        (listDataCustomer.get(customerPosition - 1)).getCustomerId(), intent.getIntExtra("orderNumber", -1), true, (customerPosition - 1), tableNumber
+                );
 
             }
         }
     }
+
 
     /**
      * update note modifier text, used in modify and insert new
@@ -6128,7 +6337,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         for (int i = 0; i < listDataHeader.size(); i++)
                         {
                             if (listDataHeader.get(i).getClientPosition() == currentCustomer)
-                            { lastposition = i; }
+                            {
+                                lastposition = i;
+                            }
                         }
                         for (int i = 0; i < listDataChild.get(listDataHeader.get(lastposition))
                                                          .size(); i++)
@@ -6152,7 +6363,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         {
                             if (listDataHeader.get(i)
                                               .getClientPosition() == listDataCustomer.size())
-                            { lastposition = i; }
+                            {
+                                lastposition = i;
+                            }
                         }
                         for (int i = 0; i < listDataChild.get(listDataHeader.get(lastposition))
                                                          .size(); i++)
@@ -6195,7 +6408,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         for (int i = 0; i < listDataHeader.size(); i++)
                         {
                             if (listDataHeader.get(i).getClientPosition() - 1 == currentCustomer)
-                            { lastposition = i; }
+                            {
+                                lastposition = i;
+                            }
                         }
                         listDataChild.put(listDataHeader.get(lastposition), (ArrayList<CashButtonListLayout>) cashButtonList);
                     }
@@ -6206,7 +6421,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                         {
                             if (listDataHeader.get(i)
                                               .getClientPosition() == listDataCustomer.size())
-                            { lastposition = i; }
+                            {
+                                lastposition = i;
+                            }
                         }
                         listDataChild.put(listDataHeader.get(lastposition), (ArrayList<CashButtonListLayout>) cashButtonList);
 
@@ -6229,6 +6446,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
         listAdapter.notifyDataSetChanged();
     }
+
 
     //delete note
     public void deleteNoteFromList(int groupPosition)
@@ -6269,11 +6487,12 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     public void reprintOrderBill(int billId)
     {
         if (listDataCustomer.size() == 0)
         {
-            ArrayList<CashButtonLayout> newProducts = new ArrayList<CashButtonLayout>();
+            ArrayList<CashButtonLayout>                                newProducts  = new ArrayList<CashButtonLayout>();
             HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>> newModifiers = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
             //position is neded because in server method the modifiers are remapped on product using map key position
             //so I set the new position using an int and incrementing it (maybe this could be done better?)
@@ -6291,12 +6510,12 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             }
 
 
-            Gson gson = new Gson();
+            Gson       gson     = new Gson();
             JSONObject combined = new JSONObject();
 /*             ClientDelegate myClient = new ClientDelegate(8080);
              myClient.delegate = forClient;*/
-            Intent intent = getActivity().getIntent();
-            int orderNumber = intent.getIntExtra("orderNumber", -1);
+            Intent intent      = getActivity().getIntent();
+            int    orderNumber = intent.getIntExtra("orderNumber", -1);
          /*    try {
                  combined.put("products", gson.toJson(newProducts));
                  Gson gson1 = new GsonBuilder().enableComplexMapKeySerialization()
@@ -6339,19 +6558,29 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             myThread.setIndexList(cashListIndex);
             Room room = dbA.fetchRoomById(roomId);
             if (room.getId() > 0)
-            { myThread.setRoomName(room.getName()); }
-            else { myThread.setRoomName(""); }
+            {
+                myThread.setRoomName(room.getName());
+            }
+            else
+            {
+                myThread.setRoomName("");
+            }
             myThread.setClientThread();
             myThread.setRunBaby(true);
 
 
             if (listDataHeader.size() == 0)
-            { dbA.updateBillTotalPrintedIndex(0, billId); }
-            else { dbA.updateBillTotalPrintedIndex(listDataHeader.size(), billId); }
+            {
+                dbA.updateBillTotalPrintedIndex(0, billId);
+            }
+            else
+            {
+                dbA.updateBillTotalPrintedIndex(listDataHeader.size(), billId);
+            }
         }
         else
         {
-            ArrayList<CashButtonLayout> newProducts = new ArrayList<CashButtonLayout>();
+            ArrayList<CashButtonLayout>                                newProducts  = new ArrayList<CashButtonLayout>();
             HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>> newModifiers = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
             //position is neded because in server method the modifiers are remapped on product using map key position
             //so I set the new position using an int and incrementing it (maybe this could be done better?)
@@ -6369,12 +6598,12 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             }
 
 
-            Gson gson = new Gson();
+            Gson       gson     = new Gson();
             JSONObject combined = new JSONObject();
              /*ClientDelegate myClient = new ClientDelegate(8080);
              myClient.delegate = forClient;*/
-            Intent intent = getActivity().getIntent();
-            int orderNumber = intent.getIntExtra("orderNumber", -1);
+            Intent intent      = getActivity().getIntent();
+            int    orderNumber = intent.getIntExtra("orderNumber", -1);
             /* try {
                  combined.put("products", gson.toJson(newProducts));
                  Gson gson1 = new GsonBuilder().enableComplexMapKeySerialization()
@@ -6417,14 +6646,24 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             myThread.setIndexList(cashListIndex);
             Room room = dbA.fetchRoomById(roomId);
             if (room.getId() > 0)
-            { myThread.setRoomName(room.getName()); }
-            else { myThread.setRoomName(""); }
+            {
+                myThread.setRoomName(room.getName());
+            }
+            else
+            {
+                myThread.setRoomName("");
+            }
             myThread.setClientThread();
             myThread.setRunBaby(true);
 
             if (listDataHeader.size() == 0)
-            { dbA.updateBillTotalPrintedIndex(0, billId); }
-            else { dbA.updateBillTotalPrintedIndex(listDataHeader.size(), billId); }
+            {
+                dbA.updateBillTotalPrintedIndex(0, billId);
+            }
+            else
+            {
+                dbA.updateBillTotalPrintedIndex(listDataHeader.size(), billId);
+            }
         }
     }
 
@@ -6435,11 +6674,11 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         Room room = dbA.fetchRoomById(roomId);
         if (listDataCustomer.size() == 0)
         {
-            ArrayList<CashButtonLayout> newProducts = new ArrayList<CashButtonLayout>();
+            ArrayList<CashButtonLayout>                                newProducts  = new ArrayList<CashButtonLayout>();
             HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>> newModifiers = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
             //position is neded because in server method the modifiers are remapped on product using map key position
             //so I set the new position using an int and incrementing it (maybe this could be done better?)
-            int position = 0;
+            int position     = 0;
             int printedIndex = dbA.getTotalBillPrintedIndex(billId);
             for (int i = 0; i < listDataHeader.size(); i++)
             {
@@ -6466,12 +6705,17 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             }
 
 
-            Intent intent = getActivity().getIntent();
-            int orderNumber = intent.getIntExtra("orderNumber", -1);
+            Intent intent      = getActivity().getIntent();
+            int    orderNumber = intent.getIntExtra("orderNumber", -1);
 
             if (listDataHeader.size() == 0)
-            { dbA.updateBillTotalPrintedIndex(0, billId); }
-            else { dbA.updateBillTotalPrintedIndex(listDataHeader.size(), billId); }
+            {
+                dbA.updateBillTotalPrintedIndex(0, billId);
+            }
+            else
+            {
+                dbA.updateBillTotalPrintedIndex(listDataHeader.size(), billId);
+            }
 
             ClientThread myThread = ClientThread.getInstance();
             myThread.setContext(getActivity());
@@ -6486,8 +6730,13 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             myThread.setIndexList(cashListIndex);
 
             if (room.getId() > 0)
-            { myThread.setRoomName(room.getName()); }
-            else { myThread.setRoomName(""); }
+            {
+                myThread.setRoomName(room.getName());
+            }
+            else
+            {
+                myThread.setRoomName("");
+            }
             myThread.setClientThread();
             myThread.setRunBaby(true);
 
@@ -6495,11 +6744,11 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
         else
         {
-            ArrayList<CashButtonLayout> newProducts = new ArrayList<CashButtonLayout>();
+            ArrayList<CashButtonLayout>                                newProducts  = new ArrayList<CashButtonLayout>();
             HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>> newModifiers = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
             //position is neded because in server method the modifiers are remapped on product using map key position
             //so I set the new position using an int and incrementing it (maybe this could be done better?)
-            int position = 0;
+            int position      = 0;
             int cashListIndex = dbA.getTotalBillPrintedIndex(billId);
             for (int i = 0; i < listDataHeader.size(); i++)
             {
@@ -6515,8 +6764,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             }
 
 
-            Intent intent = getActivity().getIntent();
-            int orderNumber = intent.getIntExtra("orderNumber", -1);
+            Intent intent      = getActivity().getIntent();
+            int    orderNumber = intent.getIntExtra("orderNumber", -1);
 
 
             ClientThread myThread = ClientThread.getInstance();
@@ -6530,16 +6779,27 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             myThread.setTableNumber(tableNumber);
             myThread.setIndexList(cashListIndex);
             if (room.getId() > 0)
-            { myThread.setRoomName(room.getName()); }
-            else { myThread.setRoomName(""); }
+            {
+                myThread.setRoomName(room.getName());
+            }
+            else
+            {
+                myThread.setRoomName("");
+            }
             myThread.setClientThread();
             myThread.setRunBaby(true);
 
             if (listDataHeader.size() == 0)
-            { dbA.updateBillTotalPrintedIndex(0, billId); }
-            else { dbA.updateBillTotalPrintedIndex(listDataHeader.size(), billId); }
+            {
+                dbA.updateBillTotalPrintedIndex(0, billId);
+            }
+            else
+            {
+                dbA.updateBillTotalPrintedIndex(listDataHeader.size(), billId);
+            }
         }
     }
+
 
     public void printOrderCorrection(int changedPosition, Customer customer)
     {
@@ -6554,13 +6814,13 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 if (oldModifiedProduct.getQuantityInt() != newModifiedProduct.getQuantityInt())
                 {
                     HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>> newModifiers = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
-                    CashButtonLayout newButton = listDataHeader.get(changedPosition);
+                    CashButtonLayout                                           newButton    = listDataHeader.get(changedPosition);
                     newButton.setPosition(0);
                     newModifiers.put(newButton, listDataChild.get(listDataHeader.get(changedPosition)));
 
 
-                    Intent intent = getActivity().getIntent();
-                    int orderNumber = intent.getIntExtra("orderNumber", -1);
+                    Intent intent      = getActivity().getIntent();
+                    int    orderNumber = intent.getIntExtra("orderNumber", -1);
 
                     if (StaticValue.blackbox)
                     {
@@ -6569,34 +6829,32 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
                         test.put(String.valueOf(0), listDataChild.get(listDataHeader.get(changedPosition)));
 
-                        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                        Gson gson = new Gson();
-                        String newProduct = gson.toJson(newModifiedProduct);
-                        String mods = gson.toJson(test);
-                        String myCustomers = gson.toJson(listDataCustomer);
-                        String myCustomer = gson.toJson(customer);
-                        params.add(new BasicNameValuePair("oldProduct", newProduct));
+                        RequestParam params      = new RequestParam();
+                        Gson         gson        = new Gson();
+                        String       newProduct  = gson.toJson(newModifiedProduct);
+                        String       mods        = gson.toJson(test);
+                        String       myCustomers = gson.toJson(listDataCustomer);
+                        String       myCustomer  = gson.toJson(customer);
+                        params.add("oldProduct", newProduct);
 
                         if (newModifiedProduct.getQuantityInt() >= oldModifiedProduct.getQuantityInt())
                         {
-                            params.add(new BasicNameValuePair("quantity", String.valueOf((newModifiedProduct
-                                    .getQuantityInt() - oldModifiedProduct.getQuantityInt()))));
+                            params.add("quantity", String.valueOf((newModifiedProduct.getQuantityInt() - oldModifiedProduct.getQuantityInt())));
                         }
                         else
                         {
-                            params.add(new BasicNameValuePair("quantity", String.valueOf((oldModifiedProduct
-                                    .getQuantityInt() - newModifiedProduct.getQuantityInt()))));
+                            params.add("quantity", String.valueOf((oldModifiedProduct.getQuantityInt() - newModifiedProduct.getQuantityInt())));
                         }
 
-                        params.add(new BasicNameValuePair("modifiers", mods));
-                        params.add(new BasicNameValuePair("printType", String.valueOf(10)));
-                        params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
-                        params.add(new BasicNameValuePair("deviceName", String.valueOf(deviceName)));
-                        params.add(new BasicNameValuePair("orderNumber", String.valueOf(orderNumber + 1))); // add +1,
-                        params.add(new BasicNameValuePair("tableNumber", String.valueOf(tableNumber)));
-                        params.add(new BasicNameValuePair("customers", myCustomers));
-                        params.add(new BasicNameValuePair("customer", myCustomer));
-                        params.add(new BasicNameValuePair("changedPosition", String.valueOf(changedPosition)));
+                        params.add("modifiers", mods);
+                        params.add("printType", String.valueOf(10));
+                        params.add("billId", String.valueOf(billId));
+                        params.add("deviceName", String.valueOf(deviceName));
+                        params.add("orderNumber", String.valueOf(orderNumber + 1)); // add +1,
+                        params.add("tableNumber", String.valueOf(tableNumber));
+                        params.add("customers", myCustomers);
+                        params.add("customer", myCustomer);
+                        params.add("changedPosition", String.valueOf(changedPosition));
 
                         ((Operative) context).callHttpHandler("/printOrderCorrectionInc", params);
                     }
@@ -6642,7 +6900,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 }
                 else
                 {
-                    ArrayList<CashButtonLayout> newProducts = new ArrayList<CashButtonLayout>();
+                    ArrayList<CashButtonLayout>                                newProducts  = new ArrayList<CashButtonLayout>();
                     HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>> newModifiers = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
                     //position is neded because in server method the modifiers are remapped on product using map key position
                     //so I set the new position using an int and incrementing it (maybe this could be done better?)
@@ -6671,9 +6929,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     newModifiers.put(newButton, listDataChild.get(listDataHeader.get(changedPosition)));
 
 
-                    Intent intent = getActivity().getIntent();
-                    int orderNumber = intent.getIntExtra("orderNumber", -1);
-                    Map<CashButtonLayout, ArrayList<CashButtonListLayout>> b = oldListDataChild;
+                    Intent                                                 intent      = getActivity().getIntent();
+                    int                                                    orderNumber = intent.getIntExtra("orderNumber", -1);
+                    Map<CashButtonLayout, ArrayList<CashButtonListLayout>> b           = oldListDataChild;
 
 
                     if (StaticValue.blackbox)
@@ -6706,9 +6964,9 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                             CashButtonListLayout list = new CashButtonListLayout();
                             list.setTitle(myListProva.get(i).getTitle());
                             list.setPrice(myListProva.get(i).getPriceFloat());
-                            int a = myListProva.get(i).getQuantityInt();
-                            int b1 = listDataHeader.get(changedPosition).getQuantityInt();
-                            int c = oldModifiedProduct.getQuantityInt();
+                            int a      = myListProva.get(i).getQuantityInt();
+                            int b1     = listDataHeader.get(changedPosition).getQuantityInt();
+                            int c      = oldModifiedProduct.getQuantityInt();
                             int result = (a / b1);
                             list.setQuantity(result);
                             list.setModifierId(myListProva.get(i).getModifierId());
@@ -6727,27 +6985,27 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
                         test1.put(String.valueOf(0), oldListDataChild.get(oldModifiedProduct));
 
-                        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                        Gson gson = new Gson();
-                        String newProduct = gson.toJson(newButton);
-                        String oldProduct = gson.toJson(oldModifiedProduct);
-                        String newMods = gson.toJson(test);
-                        String oldMods = gson.toJson(test1);
-                        String myCustomers = gson.toJson(listDataCustomer);
-                        String myCustomer = gson.toJson(customer);
+                        RequestParam params      = new RequestParam();
+                        Gson         gson        = new Gson();
+                        String       newProduct  = gson.toJson(newButton);
+                        String       oldProduct  = gson.toJson(oldModifiedProduct);
+                        String       newMods     = gson.toJson(test);
+                        String       oldMods     = gson.toJson(test1);
+                        String       myCustomers = gson.toJson(listDataCustomer);
+                        String       myCustomer  = gson.toJson(customer);
 
-                        params.add(new BasicNameValuePair("newProduct", newProduct));
-                        params.add(new BasicNameValuePair("oldProduct", oldProduct));
-                        params.add(new BasicNameValuePair("newModifiers", newMods));
-                        params.add(new BasicNameValuePair("oldModifiers", oldMods));
-                        params.add(new BasicNameValuePair("change", String.valueOf(change)));
-                        params.add(new BasicNameValuePair("printType", String.valueOf(9)));
-                        params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
-                        params.add(new BasicNameValuePair("deviceName", String.valueOf(deviceName)));
-                        params.add(new BasicNameValuePair("orderNumber", String.valueOf(orderNumber)));
-                        params.add(new BasicNameValuePair("tableNumber", String.valueOf(tableNumber)));
-                        params.add(new BasicNameValuePair("customers", myCustomers));
-                        params.add(new BasicNameValuePair("changedPosition", String.valueOf(changedPosition)));
+                        params.add("newProduct", newProduct);
+                        params.add("oldProduct", oldProduct);
+                        params.add("newModifiers", newMods);
+                        params.add("oldModifiers", oldMods);
+                        params.add("change", String.valueOf(change));
+                        params.add("printType", String.valueOf(9));
+                        params.add("billId", String.valueOf(billId));
+                        params.add("deviceName", String.valueOf(deviceName));
+                        params.add("orderNumber", String.valueOf(orderNumber));
+                        params.add("tableNumber", String.valueOf(tableNumber));
+                        params.add("customers", myCustomers);
+                        params.add("changedPosition", String.valueOf(changedPosition));
 
                         ((Operative) context).callHttpHandler("/printOrderCorrection", params);
                     }
@@ -6782,36 +7040,36 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
     public void printOrderDelete(int changedPosition, Customer customer)
     {
-        Intent intent = getActivity().getIntent();
-        int orderNumber = intent.getIntExtra("orderNumber", -1);
+        Intent intent      = getActivity().getIntent();
+        int    orderNumber = intent.getIntExtra("orderNumber", -1);
         if (StaticValue.blackbox)
         {
             Map<String, ArrayList<CashButtonListLayout>> test =
                     new HashMap<String, ArrayList<CashButtonListLayout>>();
             test.put(String.valueOf(0), oldListDataChild.get(oldModifiedProduct));
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            Gson gson = new Gson();
-            String newProduct = gson.toJson(oldModifiedProduct);
-            String mods = gson.toJson(test);
-            String myCustomers = gson.toJson(listDataCustomer);
-            String myCustomer = gson.toJson(customer);
+            RequestParam params      = new RequestParam();
+            Gson         gson        = new Gson();
+            String       newProduct  = gson.toJson(oldModifiedProduct);
+            String       mods        = gson.toJson(test);
+            String       myCustomers = gson.toJson(listDataCustomer);
+            String       myCustomer  = gson.toJson(customer);
 
             Operative op = (Operative) getActivity();
-            params.add(new BasicNameValuePair("username", op.getUser()));
-            params.add(new BasicNameValuePair("oldProduct", newProduct));
-            params.add(new BasicNameValuePair("modifiers", mods));
+            params.add("username", op.getUser());
+            params.add("oldProduct", newProduct);
+            params.add("modifiers", mods);
 
-            params.add(new BasicNameValuePair("printType", String.valueOf(9)));
-            params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
-            params.add(new BasicNameValuePair("deviceName", String.valueOf(deviceName)));
-            params.add(new BasicNameValuePair("orderNumber", String.valueOf(orderNumber)));
-            params.add(new BasicNameValuePair("tableNumber", String.valueOf(tableNumber)));
-            //params.add(new BasicNameValuePair("customers", myCustomers));
-            params.add(new BasicNameValuePair("changedPosition", String.valueOf(changedPosition)));
+            params.add("printType", String.valueOf(9));
+            params.add("billId", String.valueOf(billId));
+            params.add("deviceName", String.valueOf(deviceName));
+            params.add("orderNumber", String.valueOf(orderNumber));
+            params.add("tableNumber", String.valueOf(tableNumber));
+            //params.add("customers", myCustomers);
+            params.add("changedPosition", String.valueOf(changedPosition));
 
             ((Operative) context).callHttpHandler("/printOrderDelete", params);
             oldModifiedProduct = new CashButtonLayout();
-            oldListDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+            oldListDataChild   = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
         }
         else
         {
@@ -6835,10 +7093,11 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 myThread.setRunBaby(true);
 
                 oldModifiedProduct = new CashButtonLayout();
-                oldListDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+                oldListDataChild   = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
             }
         }
     }
+
 
     public void printSingleOrderBill(int billId, CashButtonLayout newProduct, ArrayList<CashButtonListLayout> newModifier, Customer customer)
     {
@@ -6846,16 +7105,16 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         {
             ArrayList<Customer> newCustomer = new ArrayList<Customer>();
 
-            ArrayList<CashButtonLayout> newProducts = new ArrayList<CashButtonLayout>();
+            ArrayList<CashButtonLayout>                                newProducts  = new ArrayList<CashButtonLayout>();
             HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>> newModifiers = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
             //position is neded because in server method the modifiers are remapped on product using map key position
             //so I set the new position using an int and incrementing it (maybe this could be done better?)
             newProducts.add(newProduct);
             newModifiers.put(newProduct, newModifier);
-            Gson gson = new Gson();
-            JSONObject combined = new JSONObject();
-            Intent intent = getActivity().getIntent();
-            int orderNumber = intent.getIntExtra("orderNumber", -1);
+            Gson       gson        = new Gson();
+            JSONObject combined    = new JSONObject();
+            Intent     intent      = getActivity().getIntent();
+            int        orderNumber = intent.getIntExtra("orderNumber", -1);
 
             ClientThread myThread = ClientThread.getInstance();
             myThread.setProducts(newProducts);
@@ -6871,8 +7130,13 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             myThread.setTableNumber(tableNumber);
             Room room = dbA.fetchRoomById(roomId);
             if (room.getId() > 0)
-            { myThread.setRoomName(room.getName()); }
-            else { myThread.setRoomName(""); }
+            {
+                myThread.setRoomName(room.getName());
+            }
+            else
+            {
+                myThread.setRoomName("");
+            }
 
             myThread.setClientThread();
             myThread.setRunBaby(true);
@@ -6884,7 +7148,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         {
             ArrayList<Customer> newCustomer = new ArrayList<Customer>();
 
-            ArrayList<CashButtonLayout> newProducts = new ArrayList<CashButtonLayout>();
+            ArrayList<CashButtonLayout>                                newProducts  = new ArrayList<CashButtonLayout>();
             HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>> newModifiers = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
             //position is neded because in server method the modifiers are remapped on product using map key position
             //so I set the new position using an int and incrementing it (maybe this could be done better?)
@@ -6893,12 +7157,12 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             newModifiers.put(newProduct, newModifier);
             newCustomer.add(customer);
 
-            Gson gson = new Gson();
+            Gson       gson     = new Gson();
             JSONObject combined = new JSONObject();
            /* ClientDelegate myClient = new ClientDelegate(8080);
             myClient.delegate = forClient;*/
-            Intent intent = getActivity().getIntent();
-            int orderNumber = intent.getIntExtra("orderNumber", -1);
+            Intent intent      = getActivity().getIntent();
+            int    orderNumber = intent.getIntExtra("orderNumber", -1);
 
             ClientThread myThread = ClientThread.getInstance();
             myThread.setProducts(newProducts);
@@ -6914,8 +7178,13 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             myThread.setTableNumber(tableNumber);
             Room room = dbA.fetchRoomById(roomId);
             if (room.getId() > 0)
-            { myThread.setRoomName(room.getName()); }
-            else { myThread.setRoomName(""); }
+            {
+                myThread.setRoomName(room.getName());
+            }
+            else
+            {
+                myThread.setRoomName("");
+            }
 
             myThread.setClientThread();
             myThread.setRunBaby(true);
@@ -6923,6 +7192,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
         }
     }
+
 
     /**
      * DISCOUNT AND ROUND SECTION
@@ -6935,11 +7205,11 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         if (listDataHeader.size() > 0)
         {
             //salvo i data header e i suoi subelementi
-            Intent intent = getActivity().getIntent();
-            int numberBill = intent.getIntExtra("orderNumber", 1);
+            Intent intent     = getActivity().getIntent();
+            int    numberBill = intent.getIntExtra("orderNumber", 1);
 
             int billId = dbA.saveTotalBillForPayment(total, numberBill, listDataHeader.size());
-            bill_id = billId;
+            bill_id                   = billId;
             CashFragment.this.bill_id = billId;
             if (billId != 0)
             {
@@ -6969,8 +7239,8 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 printOrderBill(billId);
 
                 listDataHeader = new ArrayList<CashButtonLayout>();
-                listDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
-                listAdapter = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, paid);
+                listDataChild  = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+                listAdapter    = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, paid);
                 expListView.setAdapter(listAdapter);
                 listAdapter.notifyDataSetChanged();
                 activityCommunicator.deleteCurrentCash();
@@ -6978,7 +7248,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 ArrayList<TotalBill> paidBills = dbA.getBillsList("Select * from bill_total where paid=" + 1);
 
                 long sessionTime = dbA.getLastClosing();
-                int number = dbA.getMaxOrderId(sessionTime);
+                int  number      = dbA.getMaxOrderId(sessionTime);
 
                 intent.putExtra("paidBills", paidBills);
                 if (number + 1 > numberBill + 1)
@@ -6994,10 +7264,10 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                     numberBillView.setText("#" + (numberBill + 2));
                 }
                 CustomTextView numberTableSet = (CustomTextView) myself.findViewById(R.id.cash_table_number);
-                String setto = "";
+                String         setto          = "";
                 numberTableSet.setText(setto);
 
-                listDataCustomer = new ArrayList<Customer>();
+                listDataCustomer     = new ArrayList<Customer>();
                 currentCustomerArray = new ArrayList<Integer>();
 
                 setModifyBar(false);
@@ -7005,16 +7275,17 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         }
     }
 
+
     //ci vuole un metodo che tenga traccia di tutti gli sconti
     public void addDiscountToBill()
     {
         if (listDataHeader.size() > 0)
         {
             //salvo i data header e i suoi subelementi
-            Intent intent = getActivity().getIntent();
-            int numberBill = intent.getIntExtra("orderNumber", 1);
-            int billId = dbA.checkIfExists("SELECT id FROM bill_total");
-            bill_id = billId;
+            Intent intent     = getActivity().getIntent();
+            int    numberBill = intent.getIntExtra("orderNumber", 1);
+            int    billId     = dbA.checkIfExists("SELECT id FROM bill_total");
+            bill_id                   = billId;
             CashFragment.this.bill_id = billId;
             if (billId <= 0)
             {
@@ -7043,15 +7314,18 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         dbA.updateDiscount(total, bill_id);
         int id = dbA.checkIfExists("SELECT id FROM bill_total_extra WHERE bill_total_id=" + billId);
         if (id == -11)
-        { dbA.addDiscountToTable(totalDiscount, bill_id); }
+        {
+            dbA.addDiscountToTable(totalDiscount, bill_id);
+        }
         totalDiscount = 0;
     }
+
 
     //adds discount to global variable totalDiscount
     public void setRoundDiscount()
     {
-        double remain = total;
-        float perc = (float) remain % 1;
+        double remain   = total;
+        float  perc     = (float) remain % 1;
         double newTotal = 0;
         if (perc == 0.0f)
         {
@@ -7061,9 +7335,13 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             viewTotal.setText(txt.replace(".", ","));
             totalDiscount += 1;
             if (dbA.checkIfDiscountExists(billId) < 0)
-            { dbA.addDiscountToTable(1, billId); }
+            {
+                dbA.addDiscountToTable(1, billId);
+            }
             else
-            { dbA.updateBillExtra(billId, totalDiscount, totalDiscount); }
+            {
+                dbA.updateBillExtra(billId, totalDiscount, totalDiscount);
+            }
         }
         else
         {
@@ -7074,18 +7352,16 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             viewTotal.setText(txt.replace(".", ","));
             totalDiscount += perc;
             if (dbA.checkIfDiscountExists(billId) < 0)
-            { dbA.addDiscountToTable(1, billId); }
+            {
+                dbA.addDiscountToTable(1, billId);
+            }
             else
-            { dbA.updateBillExtra(billId, totalDiscount, totalDiscount); }
+            {
+                dbA.updateBillExtra(billId, totalDiscount, totalDiscount);
+            }
         }
     }
 
-    public static Float roundDecimal(float floatNum, int numberOfDecimals)
-    {
-        BigDecimal value = new BigDecimal(floatNum);
-        value = value.setScale(numberOfDecimals, RoundingMode.HALF_EVEN);
-        return value.floatValue();
-    }
 
     @Override
     public void onTaskEndWithResult(String success)
@@ -7094,29 +7370,32 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
     }
 
+
     @Override
     public void onTaskFinishGettingData(String result)
     {
         // Toast.makeText(context, "fine", Toast.LENGTH_SHORT).show();
     }
 
+
     public void openBillDecisionPopup(View view)
     {
         LayoutInflater layoutInflater = (LayoutInflater) context
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
-        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        Display        display    = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
 
-        float density = context.getResources().getDisplayMetrics().density;
+        float density  = context.getResources().getDisplayMetrics().density;
         float dpHeight = outMetrics.heightPixels;// / density;
-        float dpWidth = outMetrics.widthPixels;// / density;
+        float dpWidth  = outMetrics.widthPixels;// / density;
 
         final View popupView = layoutInflater.inflate(R.layout.popup_recent_orders, null);
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
 
         RelativeLayout.LayoutParams rll = (RelativeLayout.LayoutParams) popupView.findViewById(R.id.recent_orders_window)
                                                                                  .getLayoutParams();
@@ -7127,10 +7406,10 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
         popupWindow.showAtLocation(((Activity) context).findViewById(R.id.operative), 0, 0, 0);
 
-        CustomButton delete = (CustomButton) popupView.findViewById(R.id.first_button);
-        CustomButton unpaid = (CustomButton) popupView.findViewById(R.id.second_button);
+        CustomButton delete  = (CustomButton) popupView.findViewById(R.id.first_button);
+        CustomButton unpaid  = (CustomButton) popupView.findViewById(R.id.second_button);
         CustomButton partial = (CustomButton) popupView.findViewById(R.id.third_button);
-        CustomButton cancel = (CustomButton) popupView.findViewById(R.id.cancel_delete_button);
+        CustomButton cancel  = (CustomButton) popupView.findViewById(R.id.cancel_delete_button);
 
         delete.setOnClickListener(new View.OnClickListener()
         {
@@ -7141,11 +7420,11 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 if (StaticValue.blackbox)
                 {
                     myPopupWindow = popupWindow;
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                    String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                    params.add(new BasicNameValuePair("androidId", android_id));
-                    params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
-                    params.add(new BasicNameValuePair("type", String.valueOf(3)));
+                    RequestParam params     = new RequestParam();
+                    String       android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                    params.add("androidId", android_id);
+                    params.add("billId", String.valueOf(billId));
+                    params.add("type", String.valueOf(3));
                     ((Operative) context).callHttpHandler("/payBillFromOperative", params);
                 }
                 else
@@ -7166,11 +7445,11 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 if (StaticValue.blackbox)
                 {
                     myPopupWindow = popupWindow;
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                    String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                    params.add(new BasicNameValuePair("androidId", android_id));
-                    params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
-                    params.add(new BasicNameValuePair("type", String.valueOf(4)));
+                    RequestParam params     = new RequestParam();
+                    String       android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                    params.add("androidId", android_id);
+                    params.add("billId", String.valueOf(billId));
+                    params.add("type", String.valueOf(4));
                     ((Operative) context).callHttpHandler("/payBillFromOperative", params);
                 }
                 else
@@ -7190,11 +7469,11 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
                 if (StaticValue.blackbox)
                 {
                     myPopupWindow = popupWindow;
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                    String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                    params.add(new BasicNameValuePair("androidId", android_id));
-                    params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
-                    params.add(new BasicNameValuePair("type", String.valueOf(5)));
+                    RequestParam params     = new RequestParam();
+                    String       android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                    params.add("androidId", android_id);
+                    params.add("billId", String.valueOf(billId));
+                    params.add("type", String.valueOf(5));
                     ((Operative) context).callHttpHandler("/payBillFromOperative", params);
                 }
                 else
@@ -7218,6 +7497,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
 
 
     }
+
 
     public void setOrderStatus()
     {
@@ -7244,16 +7524,16 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         {
             numberBill = dbA.getMaxOrderId(TimerManager.getSessionTimeStart());
         }
-        totalDiscount = 0.0f;
-        billId = -1;
-        bill_id = -1;
+        totalDiscount             = 0.0f;
+        billId                    = -1;
+        bill_id                   = -1;
         CashFragment.this.bill_id = billId;
         intent.putExtra("billId", billId);
         activityCommunicator = (ActivityCommunicator) getActivity();
-        listDataCustomer = new ArrayList<>();
-        listDataHeader = new ArrayList<CashButtonLayout>();
-        listDataChild = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
-        listAdapter = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, paid);
+        listDataCustomer     = new ArrayList<>();
+        listDataHeader       = new ArrayList<CashButtonLayout>();
+        listDataChild        = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+        listAdapter          = new CashAdapter(getActivity(), listDataHeader, listDataChild, dbA, 0, listDataCustomer, paid);
         expListView.setAdapter(listAdapter);
         listAdapter.notifyDataSetChanged();
         activityCommunicator.deleteCurrentCash();
@@ -7266,7 +7546,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
         ArrayList<TotalBill> paidBills = dbA.getBillsList("Select * from bill_total where paid=" + 1);
 
         long sessionTime = dbA.getLastClosing();
-        int number = dbA.getMaxOrderId(sessionTime);
+        int  number      = dbA.getMaxOrderId(sessionTime);
         intent.putExtra("paidBills", paidBills);
         if (number + 1 > numberBill + 1)
         {
@@ -7283,7 +7563,7 @@ public class CashFragment extends Fragment implements ClientThread.TaskDelegate
             numberBillView.setText("#" + (numberBill + 2));
         }
         mailSelected = false;
-        email = "";
+        email        = "";
         intent.putExtra("email", email);
     }
 }

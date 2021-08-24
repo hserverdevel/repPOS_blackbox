@@ -120,6 +120,8 @@ public class DbAdapterProducts extends DbAdapterUsers
     }
 
 
+
+
     public void deleteButton(ButtonLayout b)
     {
         try
@@ -441,10 +443,11 @@ public class DbAdapterProducts extends DbAdapterUsers
         try
         {
             //if (database.isOpen()) database.close();
-            if (!database.isOpen())
-            { database = dbHelper.getReadableDatabase(); }
+            if (!database.isOpen()) { database = dbHelper.getReadableDatabase(); }
+
             Cursor mCursor = database.rawQuery(query, null);
             ArrayList<OModifierAdapter.OModifier> array = new ArrayList<>();
+
             if (mCursor != null)
             {
                 while (mCursor.moveToNext())
@@ -630,11 +633,12 @@ public class DbAdapterProducts extends DbAdapterUsers
         try
         {
             //if (database.isOpen()) database.close();
-            if (!database.isOpen())
-            { database = dbHelper.getReadableDatabase(); }
+            if (!database.isOpen()) { database = dbHelper.getReadableDatabase(); }
+
             int id = -1;
             Cursor mCursor = database.rawQuery("SELECT * FROM modifiers_group_assigned " +
                     "WHERE prod_id =" + prodID + " AND group_id =" + groupID + ";", null);
+
             if (mCursor != null)
             {
                 if (mCursor.moveToFirst())
@@ -851,11 +855,11 @@ public class DbAdapterProducts extends DbAdapterUsers
         try
         {
             //if (database.isOpen()) database.close();
-            if (!database.isOpen())
-            { database = dbHelper.getReadableDatabase(); }
+            if (!database.isOpen()) { database = dbHelper.getReadableDatabase(); }
+
             Cursor mCursor = database.rawQuery(query, null);
             ArrayList<OModifierGroupAdapter.OModifiersGroup> array = new ArrayList<>();
-            //Log.e("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
+
             if (mCursor != null)
             {
                 while (mCursor.moveToNext())
@@ -864,27 +868,24 @@ public class DbAdapterProducts extends DbAdapterUsers
                     c.setID(mCursor.getInt(mCursor.getColumnIndex(DatabaseAdapter.KEY_ID)));
                     c.setTitle(mCursor.getString(mCursor.getColumnIndex(DatabaseAdapter.KEY_TITLE)));
                     c.setPosition(mCursor.getInt(mCursor.getColumnIndex(DatabaseAdapter.KEY_POSITION)));
-                    String prova = mCursor.getString(mCursor.getColumnIndex(DatabaseAdapter.KEY_NOTES));
-                    int notes = mCursor.getInt(mCursor.getColumnIndex(DatabaseAdapter.KEY_NOTES));
-                    if (prova.equals("1"))
-                    { c.setNotes(true); }
-                    else
-                    { c.setNotes(false); }
+                    String note = mCursor.getString(mCursor.getColumnIndex(DatabaseAdapter.KEY_NOTES));
+                    c.setNotes(note.equals("1"));
                     array.add(c);
                 }
-                mCursor.close();
 
+                mCursor.close();
             }
+
             database.close();
             return array;
         }
+
         catch (Exception e)
         {
             ArrayList<OModifierGroupAdapter.OModifiersGroup> array = new ArrayList<>();
             Log.e("fetchFailure", e.getMessage());
 
-            ArrayList<OModifierGroupAdapter.OModifiersGroup> newarray = new ArrayList<>();
-            return newarray;
+            return new ArrayList<>();
         }
     }
 
@@ -896,14 +897,17 @@ public class DbAdapterProducts extends DbAdapterUsers
             //if (database.isOpen()) database.close();
             if (!database.isOpen())
             { database = dbHelper.getReadableDatabase(); }
+
             String query = "SELECT modifiers_group.id, modifiers_group.title, modifiers_group.position, modifiers_group.notes , modifiers_group_assigned.fixed " +
                     "FROM modifiers_group " +
                     "LEFT JOIN modifiers_group_assigned " +
                     "ON modifiers_group.id=modifiers_group_assigned.group_id " +
                     "WHERE modifiers_group_assigned.prod_id=" + categoryId + " ORDER BY modifiers_group.position";
+
             Cursor mCursor = database.rawQuery(query, null);
             ArrayList<OModifierGroupAdapter.OModifiersGroup> array = new ArrayList<>();
-            //Log.e("fetchButtonsByQuery: ", DatabaseUtils.dumpCursorToString(mCursor));
+
+
             if (mCursor != null)
             {
                 while (mCursor.moveToNext())

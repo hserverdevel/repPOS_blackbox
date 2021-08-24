@@ -352,9 +352,7 @@ public class ClientsActivity extends AppCompatActivity implements HttpHandler.As
         setupButtons();
         setupXOK();
 
-        List<NameValuePair> numOrderParams = new ArrayList<NameValuePair>(2);
-        String              android_id     = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        numOrderParams.add(new BasicNameValuePair("androidId", android_id));
+        RequestParam numOrderParams = new RequestParam();
         callHttpHandler("/getLastBillNumber", numOrderParams);
 
 
@@ -362,8 +360,8 @@ public class ClientsActivity extends AppCompatActivity implements HttpHandler.As
         {
             if (StaticValue.blackbox)
             {
-                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                params.add(new BasicNameValuePair("currentClientId", String.valueOf(currentClientId)));
+                RequestParam params = new RequestParam();
+                params.add("currentClientId", String.valueOf(currentClientId));
                 callHttpHandler("fetchSingleClient", params);
             }
 
@@ -1054,58 +1052,44 @@ public class ClientsActivity extends AppCompatActivity implements HttpHandler.As
                                             {
                                                 if (StaticValue.blackbox)
                                                 {
-                                                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                                                    params.add(new BasicNameValuePair("name", name));
-                                                    params.add(new BasicNameValuePair("surname", surname));
-                                                    params.add(new BasicNameValuePair("email", email));
+                                                    RequestParam params = new RequestParam();
+                                                    params.add("name", name);
+                                                    params.add("surname", surname);
+                                                    params.add("email", email);
                                                     if (getDiscountButton().isActivated())
                                                     {
-                                                        params.add(new BasicNameValuePair("discountButton", getDiscountButton()
+                                                        params.add("discountButton", getDiscountButton()
                                                                 .getText()
                                                                 .toString()
-                                                                .toLowerCase()));
+                                                                .toLowerCase());
                                                     }
                                                     else
                                                     {
-                                                        params.add(new BasicNameValuePair("discountButton", String
-                                                                .valueOf(-1)));
+                                                        params.add("discountButton", String.valueOf(-1));
                                                     }
                                                     if (getClientButton().isActivated())
                                                     {
-                                                        params.add(new BasicNameValuePair("clientButton", getClientButton()
+                                                        params.add("clientButton", getClientButton()
                                                                 .getText()
                                                                 .toString()
-                                                                .toLowerCase()));
+                                                                .toLowerCase());
                                                     }
                                                     else
                                                     {
-                                                        params.add(new BasicNameValuePair("clientButton", String
-                                                                .valueOf(-1)));
+                                                        params.add("clientButton", String.valueOf(-1));
                                                     }
-                                                    params.add(new BasicNameValuePair("id", String.valueOf(currentClient
-                                                                                                                   .getClient_id())));
-
-                                                    params.add(new BasicNameValuePair("companyId", String
-                                                            .valueOf(currentClient.getCompany_id())));
-                                                    params.add(new BasicNameValuePair("companyName", String
-                                                            .valueOf(company_name)));
-                                                    params.add(new BasicNameValuePair("address", String
-                                                            .valueOf(address)));
-                                                    params.add(new BasicNameValuePair("vat_number", String
-                                                            .valueOf(vat_number)));
-                                                    params.add(new BasicNameValuePair("postal_code", String
-                                                            .valueOf(postal_code)));
-                                                    params.add(new BasicNameValuePair("city", String
-                                                            .valueOf(city)));
-                                                    params.add(new BasicNameValuePair("country", String
-                                                            .valueOf(country)));
-                                                    params.add(new BasicNameValuePair("codicefiscale", String
-                                                            .valueOf(codicefiscale)));
-                                                    params.add(new BasicNameValuePair("provincia", String
-                                                            .valueOf(provincia)));
-                                                    params.add(new BasicNameValuePair("codiceDestinatario", String
-                                                            .valueOf(codiceDestinatario)));
-                                                    params.add(new BasicNameValuePair("pec", String.valueOf(pec)));
+                                                    params.add("id", String.valueOf(currentClient.getClient_id()));
+                                                    params.add("companyId", String.valueOf(currentClient.getCompany_id()));
+                                                    params.add("companyName", String.valueOf(company_name));
+                                                    params.add("address", String.valueOf(address));
+                                                    params.add("vat_number", String.valueOf(vat_number));
+                                                    params.add("postal_code", String.valueOf(postal_code));
+                                                    params.add("city", String.valueOf(city));
+                                                    params.add("country", String.valueOf(country));
+                                                    params.add("codicefiscale", String.valueOf(codicefiscale));
+                                                    params.add("provincia", String.valueOf(provincia));
+                                                    params.add("codiceDestinatario", String.valueOf(codiceDestinatario));
+                                                    params.add("pec", String.valueOf(pec));
 
                                                     callHttpHandler("/updateClientWithCompany", params);
                                                     addNewClient.setEnabled(false);
@@ -1165,45 +1149,43 @@ public class ClientsActivity extends AppCompatActivity implements HttpHandler.As
                                             {
                                                 if (StaticValue.blackbox)
                                                 {
-                                                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                                                    params.add(new BasicNameValuePair("name", name));
-                                                    params.add(new BasicNameValuePair("surname", surname));
-                                                    params.add(new BasicNameValuePair("email", email));
+                                                    RequestParam params = new RequestParam();
+                                                    params.add("name", name);
+                                                    params.add("surname", surname);
+                                                    params.add("email", email);
                                                     if (getDiscountButton().isActivated())
                                                     {
-                                                        params.add(new BasicNameValuePair("discountButton", getDiscountButton()
+                                                        params.add("discountButton", getDiscountButton()
                                                                 .getText()
                                                                 .toString()
-                                                                .toLowerCase()));
+                                                                .toLowerCase());
                                                     }
                                                     else
                                                     {
-                                                        params.add(new BasicNameValuePair("discountButton", String
-                                                                .valueOf(-1)));
+                                                        params.add("discountButton", String.valueOf(-1));
                                                     }
                                                     if (getClientButton().isActivated())
                                                     {
-                                                        params.add(new BasicNameValuePair("clientButton", getClientButton()
+                                                        params.add("clientButton", getClientButton()
                                                                 .getText()
                                                                 .toString()
-                                                                .toLowerCase()));
+                                                                .toLowerCase());
                                                     }
                                                     else
                                                     {
-                                                        params.add(new BasicNameValuePair("clientButton", String
-                                                                .valueOf(-1)));
+                                                        params.add("clientButton", String.valueOf(-1));
                                                     }
 
-                                                    params.add(new BasicNameValuePair("companyName", company_name));
-                                                    params.add(new BasicNameValuePair("address", address));
-                                                    params.add(new BasicNameValuePair("vat_number", vat_number));
-                                                    params.add(new BasicNameValuePair("postal_code", postal_code));
-                                                    params.add(new BasicNameValuePair("city", city));
-                                                    params.add(new BasicNameValuePair("country", country));
-                                                    params.add(new BasicNameValuePair("codicefiscale", codicefiscale));
-                                                    params.add(new BasicNameValuePair("provincia", provincia));
-                                                    params.add(new BasicNameValuePair("codiceDestinatario", codiceDestinatario));
-                                                    params.add(new BasicNameValuePair("pec", pec));
+                                                    params.add("companyName", company_name);
+                                                    params.add("address", address);
+                                                    params.add("vat_number", vat_number);
+                                                    params.add("postal_code", postal_code);
+                                                    params.add("city", city);
+                                                    params.add("country", country);
+                                                    params.add("codicefiscale", codicefiscale);
+                                                    params.add("provincia", provincia);
+                                                    params.add("codiceDestinatario", codiceDestinatario);
+                                                    params.add("pec", pec);
 
                                                     callHttpHandler("/insertClientWithCompany", params);
                                                     addNewClient.setEnabled(false);
@@ -1375,58 +1357,44 @@ public class ClientsActivity extends AppCompatActivity implements HttpHandler.As
                                             {
                                                 if (StaticValue.blackbox)
                                                 {
-                                                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                                                    params.add(new BasicNameValuePair("name", name));
-                                                    params.add(new BasicNameValuePair("surname", surname));
-                                                    params.add(new BasicNameValuePair("email", email));
+                                                    RequestParam params = new RequestParam();
+                                                    params.add("name", name);
+                                                    params.add("surname", surname);
+                                                    params.add("email", email);
                                                     if (getDiscountButton().isActivated())
                                                     {
-                                                        params.add(new BasicNameValuePair("discountButton", getDiscountButton()
+                                                        params.add("discountButton", getDiscountButton()
                                                                 .getText()
                                                                 .toString()
-                                                                .toLowerCase()));
+                                                                .toLowerCase());
                                                     }
                                                     else
                                                     {
-                                                        params.add(new BasicNameValuePair("discountButton", String
-                                                                .valueOf(-1)));
+                                                        params.add("discountButton", String.valueOf(-1));
                                                     }
                                                     if (getClientButton().isActivated())
                                                     {
-                                                        params.add(new BasicNameValuePair("clientButton", getClientButton()
+                                                        params.add("clientButton", getClientButton()
                                                                 .getText()
                                                                 .toString()
-                                                                .toLowerCase()));
+                                                                .toLowerCase());
                                                     }
                                                     else
                                                     {
-                                                        params.add(new BasicNameValuePair("clientButton", String
-                                                                .valueOf(-1)));
+                                                        params.add("clientButton", String.valueOf(-1));
                                                     }
-                                                    params.add(new BasicNameValuePair("id", String.valueOf(currentClient
-                                                                                                                   .getClient_id())));
-
-                                                    params.add(new BasicNameValuePair("companyId", String
-                                                            .valueOf(currentClient.getCompany_id())));
-                                                    params.add(new BasicNameValuePair("companyName", String
-                                                            .valueOf(company_name)));
-                                                    params.add(new BasicNameValuePair("address", String
-                                                            .valueOf(address)));
-                                                    params.add(new BasicNameValuePair("vat_number", String
-                                                            .valueOf(vat_number)));
-                                                    params.add(new BasicNameValuePair("postal_code", String
-                                                            .valueOf(postal_code)));
-                                                    params.add(new BasicNameValuePair("city", String
-                                                            .valueOf(city)));
-                                                    params.add(new BasicNameValuePair("country", String
-                                                            .valueOf(country)));
-                                                    params.add(new BasicNameValuePair("codicefiscale", String
-                                                            .valueOf(codicefiscale)));
-                                                    params.add(new BasicNameValuePair("provincia", String
-                                                            .valueOf(provincia)));
-                                                    params.add(new BasicNameValuePair("codiceDestinatario", String
-                                                            .valueOf(codiceDestinatario)));
-                                                    params.add(new BasicNameValuePair("pec", String.valueOf(pec)));
+                                                    params.add("id", String.valueOf(currentClient.getClient_id()));
+                                                    params.add("companyId", String.valueOf(currentClient.getCompany_id()));
+                                                    params.add("companyName", String.valueOf(company_name));
+                                                    params.add("address", String.valueOf(address));
+                                                    params.add("vat_number", String.valueOf(vat_number));
+                                                    params.add("postal_code", String.valueOf(postal_code));
+                                                    params.add("city", String.valueOf(city));
+                                                    params.add("country", String.valueOf(country));
+                                                    params.add("codicefiscale", String.valueOf(codicefiscale));
+                                                    params.add("provincia", String.valueOf(provincia));
+                                                    params.add("codiceDestinatario", String.valueOf(codiceDestinatario));
+                                                    params.add("pec", String.valueOf(pec));
 
 
                                                     callHttpHandler("/updateClientWithCompany", params);
@@ -1486,54 +1454,43 @@ public class ClientsActivity extends AppCompatActivity implements HttpHandler.As
                                             {
                                                 if (StaticValue.blackbox)
                                                 {
-                                                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                                                    params.add(new BasicNameValuePair("name", name));
-                                                    params.add(new BasicNameValuePair("surname", surname));
-                                                    params.add(new BasicNameValuePair("email", email));
+                                                    RequestParam params = new RequestParam();
+                                                    params.add("name", name);
+                                                    params.add("surname", surname);
+                                                    params.add("email", email);
                                                     if (getDiscountButton().isActivated())
                                                     {
-                                                        params.add(new BasicNameValuePair("discountButton", getDiscountButton()
+                                                        params.add("discountButton", getDiscountButton()
                                                                 .getText()
                                                                 .toString()
-                                                                .toLowerCase()));
+                                                                .toLowerCase());
                                                     }
                                                     else
                                                     {
-                                                        params.add(new BasicNameValuePair("discountButton", String
-                                                                .valueOf(-1)));
+                                                        params.add("discountButton", String.valueOf(-1));
                                                     }
                                                     if (getClientButton().isActivated())
                                                     {
-                                                        params.add(new BasicNameValuePair("clientButton", getClientButton()
+                                                        params.add("clientButton", getClientButton()
                                                                 .getText()
                                                                 .toString()
-                                                                .toLowerCase()));
+                                                                .toLowerCase());
                                                     }
                                                     else
                                                     {
-                                                        params.add(new BasicNameValuePair("clientButton", String
-                                                                .valueOf(-1)));
+                                                        params.add("clientButton", String.valueOf(-1));
                                                     }
 
-                                                    params.add(new BasicNameValuePair("companyName", String
-                                                            .valueOf(company_name)));
-                                                    params.add(new BasicNameValuePair("address", String
-                                                            .valueOf(address)));
-                                                    params.add(new BasicNameValuePair("vat_number", String
-                                                            .valueOf(vat_number)));
-                                                    params.add(new BasicNameValuePair("postal_code", String
-                                                            .valueOf(postal_code)));
-                                                    params.add(new BasicNameValuePair("city", String
-                                                            .valueOf(city)));
-                                                    params.add(new BasicNameValuePair("country", String
-                                                            .valueOf(country)));
-                                                    params.add(new BasicNameValuePair("codicefiscale", String
-                                                            .valueOf(codicefiscale)));
-                                                    params.add(new BasicNameValuePair("provincia", String
-                                                            .valueOf(provincia)));
-                                                    params.add(new BasicNameValuePair("codiceDestinatario", String
-                                                            .valueOf(codiceDestinatario)));
-                                                    params.add(new BasicNameValuePair("pec", String.valueOf(pec)));
+                                                    params.add("companyName", String.valueOf(company_name));
+                                                    params.add("address", String.valueOf(address));
+                                                    params.add("vat_number", String.valueOf(vat_number));
+                                                    params.add("postal_code", String.valueOf(postal_code));
+                                                    params.add("city", String.valueOf(city));
+                                                    params.add("country", String.valueOf(country));
+                                                    params.add("codicefiscale", String.valueOf(codicefiscale));
+                                                    params.add("provincia", String.valueOf(provincia));
+                                                    params.add("codiceDestinatario", String.valueOf(codiceDestinatario));
+                                                    params.add("pec", String.valueOf(pec));
 
 
                                                     callHttpHandler("/insertClientWithCompany", params);
@@ -1711,33 +1668,33 @@ public class ClientsActivity extends AppCompatActivity implements HttpHandler.As
                                 else
                                 {
                                     /*
-                                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                                    params.add(new BasicNameValuePair("name", name));
-                                    params.add(new BasicNameValuePair("surname", surname));
-                                    params.add(new BasicNameValuePair("email", email));
+                                    RequestParam params = new RequestParam();
+                                    params.add("name", name);
+                                    params.add("surname", surname);
+                                    params.add("email", email);
                                     if (getDiscountButton().isActivated())
                                     {
-                                        params.add(new BasicNameValuePair("discountButton", getDiscountButton()
+                                        params.add("discountButton", getDiscountButton(
                                                 .getText()
                                                 .toString()
                                                 .toLowerCase()));
                                     }
                                     else
                                     {
-                                        params.add(new BasicNameValuePair("discountButton", String.valueOf(-1)));
+                                        params.add("discountButton", String.valueOf(-1));
                                     }
                                     if (getClientButton().isActivated())
                                     {
-                                        params.add(new BasicNameValuePair("clientButton", getClientButton()
+                                        params.add("clientButton", getClientButton(
                                                 .getText()
                                                 .toString()
                                                 .toLowerCase()));
                                     }
                                     else
                                     {
-                                        params.add(new BasicNameValuePair("clientButton", String.valueOf(-1)));
+                                        params.add("clientButton", String.valueOf(-1));
                                     }
-                                    params.add(new BasicNameValuePair("companyId", String.valueOf(-1)));
+                                    params.add("companyId", String.valueOf(-1));
 
                                      */
 
@@ -1770,14 +1727,13 @@ public class ClientsActivity extends AppCompatActivity implements HttpHandler.As
                             {
                                 if (StaticValue.blackbox)
                                 {
-                                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                                    params.add(new BasicNameValuePair("name", name));
-                                    params.add(new BasicNameValuePair("surname", surname));
-                                    params.add(new BasicNameValuePair("email", email));
-                                    params.add(new BasicNameValuePair("id", String.valueOf(currentClient
-                                                                                                   .getClient_id())));
+                                    RequestParam params = new RequestParam();
+                                    params.add("name", name);
+                                    params.add("surname", surname);
+                                    params.add("email", email);
+                                    params.add("id", String.valueOf(currentClient.getClient_id()));
 
-                                    params.add(new BasicNameValuePair("companyId", String.valueOf(-1)));
+                                    params.add("companyId", String.valueOf(-1));
 
 
                                     callHttpHandler("/updateClient", params);
@@ -2478,23 +2434,23 @@ public class ClientsActivity extends AppCompatActivity implements HttpHandler.As
                                                      * NEW WAY: CALLING BLACKBOX
                                                      *//*
                                             String myUrl = url + "/updateClient";
-                                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                                            params.add(new BasicNameValuePair("client_id", String.valueOf(selectedClient.getClient_id())));
-                                            params.add(new BasicNameValuePair("company_id", String.valueOf(company_id)));
-                                            params.add(new BasicNameValuePair("client_in_company_id", String.valueOf(selectedClient.getClient_in_company_id())));
-                                            params.add(new BasicNameValuePair("client_name", name));
-                                            params.add(new BasicNameValuePair("client_surname", surname));
-                                            params.add(new BasicNameValuePair("email", email));
-                                            params.add(new BasicNameValuePair("company_name", company_name));
-                                            params.add(new BasicNameValuePair("company_address", address));
-                                            params.add(new BasicNameValuePair("company_vat_number", vat_number));
-                                            params.add(new BasicNameValuePair("company_postal_code", postal_code));
-                                            params.add(new BasicNameValuePair("city", city));
-                                            params.add(new BasicNameValuePair("country", country));
-                                            params.add(new BasicNameValuePair("province", provincia));
-                                            params.add(new BasicNameValuePair("fiscal_code", codicefiscale));
-                                            params.add(new BasicNameValuePair("sdi", codice_destinatario));
-                                            params.add(new BasicNameValuePair("pec", pec));
+                                            RequestParam params = new RequestParam();
+                                            params.add("client_id", String.valueOf(selectedClient.getClient_id()));
+                                            params.add("company_id", String.valueOf(company_id));
+                                            params.add("client_in_company_id", String.valueOf(selectedClient.getClient_in_company_id()));
+                                            params.add("client_name", name);
+                                            params.add("client_surname", surname);
+                                            params.add("email", email);
+                                            params.add("company_name", company_name);
+                                            params.add("company_address", address);
+                                            params.add("company_vat_number", vat_number);
+                                            params.add("company_postal_code", postal_code);
+                                            params.add("city", city);
+                                            params.add("country", country);
+                                            params.add("province", provincia);
+                                            params.add("fiscal_code", codicefiscale);
+                                            params.add("sdi", codice_destinatario);
+                                            params.add("pec", pec);
                                             httpHandler = new HttpHandler();
                                             httpHandler.delegate = myself;
                                             httpHandler.UpdateInfoAsyncTask(myUrl, params);
@@ -3446,8 +3402,8 @@ public class ClientsActivity extends AppCompatActivity implements HttpHandler.As
 
 
                 String creditAmount_input = fidelity_package_creditAmount_et.getText().toString().trim();
-                String price_input = fidelity_package_price_et.getText().toString().trim();
-                String name_input = fidelity_pacakge_name_et.getText().toString().trim();
+                String price_input        = fidelity_package_price_et.getText().toString().trim();
+                String name_input         = fidelity_pacakge_name_et.getText().toString().trim();
 
                 // if no input has been given, just dismiss this
                 if (creditAmount_input.isEmpty() && price_input.isEmpty() && name_input.isEmpty())
@@ -3463,7 +3419,9 @@ public class ClientsActivity extends AppCompatActivity implements HttpHandler.As
                 }
 
                 else if (name_input.contains("(") || name_input.contains(")"))
-                    { DialogCreator.error(ClientsActivity.this, "Sorry! Characters '(' and ')' are not allowed"); }
+                {
+                    DialogCreator.error(ClientsActivity.this, "Sorry! Characters '(' and ')' are not allowed");
+                }
 
                 // if anything is correct, we can insert a new fidelity package
                 // TODO add checking of input format
@@ -3474,23 +3432,23 @@ public class ClientsActivity extends AppCompatActivity implements HttpHandler.As
                     // and put all the fidelity credit products (the packages)
                     // in the button table, under the special category of value -5
 
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                    RequestParam params = new RequestParam();
 
                     String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                    params.add(new BasicNameValuePair("androidId", android_id));
+                    params.add("androidId", android_id);
 
                     // the title is fundamental, since it will be used to recreate the FiscalPackage model class
-                    params.add(new BasicNameValuePair("title", String.format("%s (%s) FC", name_input, creditAmount_input)));
-                    params.add(new BasicNameValuePair("subtitle", ""));
-                    params.add(new BasicNameValuePair("color", "-690665"));
-                    params.add(new BasicNameValuePair("position", "1"));
-                    params.add(new BasicNameValuePair("catID", FIDELITY_CREDIT_CATEGORY_ID));
-                    params.add(new BasicNameValuePair("isCat", "0"));
-                    params.add(new BasicNameValuePair("price", price_input));
-                    params.add(new BasicNameValuePair("vat", "1")); // TODO which VAT????
-                    params.add(new BasicNameValuePair("printerId", "-1")); // TODO
-                    params.add(new BasicNameValuePair("fidelityDiscount", "false"));
-                    params.add(new BasicNameValuePair("fidelityCredit", "0"));
+                    params.add("title", String.format("%s (%s) FC", name_input, creditAmount_input));
+                    params.add("subtitle", "");
+                    params.add("color", "-690665");
+                    params.add("position", "1");
+                    params.add("catID", FIDELITY_CREDIT_CATEGORY_ID);
+                    params.add("isCat", "0");
+                    params.add("price", price_input);
+                    params.add("vat", "1"); // TODO which VAT????
+                    params.add("printerId", "-1"); // TODO
+                    params.add("fidelityDiscount", "false");
+                    params.add("fidelityCredit", "0");
 
                     callHttpHandler("/insertButton5", params);
 
@@ -3571,18 +3529,18 @@ public class ClientsActivity extends AppCompatActivity implements HttpHandler.As
         String customers      = gson.toJson(cust);
 
 
-        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>(2);
-        params.add(new BasicNameValuePair("username", username));
-        params.add(new BasicNameValuePair("androidId", StaticValue.androidId));
-        params.add(new BasicNameValuePair("billId", String.valueOf(-1)));               // here both billId and orderNumber have -1 as value.
-        params.add(new BasicNameValuePair("orderNumber", String.valueOf(orderNumber + 1)));           // this allow the blackbox to generate a new billId
-        params.add(new BasicNameValuePair("total", String.valueOf(fidelityPackage.getPrice())));
-        params.add(new BasicNameValuePair("products", creditProducts));
-        params.add(new BasicNameValuePair("customers", customers));
-        params.add(new BasicNameValuePair("modifiers", emptyModifiers));
-        params.add(new BasicNameValuePair("totalDiscount", String.valueOf(0)));
-        params.add(new BasicNameValuePair("from", "clientActivity"));
-        params.add(new BasicNameValuePair("cashListIndex", String.valueOf(1))); // TODO what's this??
+        RequestParam params = new RequestParam();
+        params.add("username", username);
+        params.add("androidId", StaticValue.androidId);
+        params.add("billId", String.valueOf(-1));               // here both billId and orderNumber have -1 as value.
+        params.add("orderNumber", String.valueOf(orderNumber + 1));           // this allow the blackbox to generate a new billId
+        params.add("total", String.valueOf(fidelityPackage.getPrice()));
+        params.add("products", creditProducts);
+        params.add("customers", customers);
+        params.add("modifiers", emptyModifiers);
+        params.add("totalDiscount", String.valueOf(0));
+        params.add("from", "clientActivity");
+        params.add("cashListIndex", String.valueOf(1)); // TODO what's this??
 
         callHttpHandler("/saveBill", params);
 
@@ -3631,14 +3589,6 @@ public class ClientsActivity extends AppCompatActivity implements HttpHandler.As
         return super.dispatchTouchEvent(event);
     }
 
-
-    public void callHttpHandler(String route, List<NameValuePair> params)
-    {
-        HttpHandler httpHandler = new HttpHandler();
-        httpHandler.delegate = this;
-        httpHandler.UpdateInfoAsyncTask(route, params);
-        httpHandler.execute();
-    }
 
     public void callHttpHandler(String route, RequestParam params)
     {

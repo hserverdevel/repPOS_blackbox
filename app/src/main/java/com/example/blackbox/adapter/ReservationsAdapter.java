@@ -470,8 +470,8 @@ public class ReservationsAdapter extends RecyclerView.Adapter
             {
                 if (StaticValue.blackbox)
                 {
-                    ArrayList<NameValuePair> params = new ArrayList<>();
-                    params.add(new BasicNameValuePair("id", String.valueOf(res.getReservation_id()) ));
+                    RequestParam params = new RequestParam();
+                    params.add("id", res.getReservation_id());
 
                     ((ReservationsActivity) context).callHttpHandler("/deleteReservation", params);
                 }

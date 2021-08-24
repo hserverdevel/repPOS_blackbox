@@ -590,9 +590,9 @@ public class DbAdapterTables extends DbAdapterBillExtra
                     c.setTableNumber(mCursor.getInt(mCursor.getColumnIndex("tcTNUMBER")));
                     c.setTableSeat(mCursor.getInt(mCursor.getColumnIndex("tcSN")));
                     c.setRoomId(mCursor.getInt(mCursor.getColumnIndex("tcRID")));
+
                     if (mCursor.getInt(mCursor.getColumnIndex("tcST")) == 1)
                     {
-
                         Cursor mCursor4 = database.rawQuery("SELECT SUM(total_seat)" +
                                 " FROM table_use " +
                                 " LEFT JOIN bill_total" +
@@ -623,9 +623,9 @@ public class DbAdapterTables extends DbAdapterBillExtra
                                 " WHERE table_id=" + mCursor.getInt(mCursor.getColumnIndex("tcID")) +
                                 " AND ((bill_total.paid=0) OR (bill_total.paid=1 AND bill_total.pay_time>='" + fiveminute + "' AND bill_total.pay_time<='" + now + "'))", null);
 
+
                         if (mCursor3 != null)
                         {
-
                             while (mCursor3.moveToNext())
                             {
                                 TableUse c1 = new TableUse();
@@ -637,19 +637,23 @@ public class DbAdapterTables extends DbAdapterBillExtra
                                 c1.setTableSeat(mCursor.getInt(mCursor.getColumnIndex("tcSN")));
                                 c1.setId(mCursor3.getInt(mCursor3.getColumnIndex("tuID")));
                                 c1.setBillId(mCursor3.getInt(mCursor3.getColumnIndex("tuTBID")));
+
                                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
                                 String startString = mCursor3.getString(mCursor3.getColumnIndex("tuST"));
                                 if (startString != null)
                                 {
                                     Date startDate = format.parse(startString);
                                     c1.setStartTime(startDate);
                                 }
+
                                 String endString = mCursor3.getString(mCursor3.getColumnIndex("tuET"));
                                 if (endString != null)
                                 {
                                     Date endDate = format.parse(endString);
                                     c1.setEndTime(endDate);
                                 }
+
                                 c1.setTotalSeats(mCursor3.getInt(mCursor3.getColumnIndex("tuTS")));
                                 c1.setMainTable(mCursor3.getInt(mCursor3.getColumnIndex("tuMT")));
                                 c1.setMainTableNumber(mCursor3.getInt(mCursor3.getColumnIndex("tuMTN")));
@@ -660,6 +664,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
                         }
 
                     }
+
                     else
                     {
                         Cursor mCursor2 = database.rawQuery("SELECT " +
@@ -680,10 +685,10 @@ public class DbAdapterTables extends DbAdapterBillExtra
                         {
                             while (mCursor2.moveToNext())
                             {
-
                                 c.setId(mCursor2.getInt(mCursor2.getColumnIndex("tuID")));
                                 c.setBillId(mCursor2.getInt(mCursor2.getColumnIndex("tuTBID")));
                                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
                                 String startString = mCursor2.getString(mCursor2.getColumnIndex("tuST"));
                                 if (startString != null)
                                 {
@@ -711,6 +716,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
             }
             return array;
         }
+
         catch (Exception e)
         {
             Log.e("fetchFailure", e.getMessage());
@@ -1928,7 +1934,7 @@ public class DbAdapterTables extends DbAdapterBillExtra
 
     public int getReservationPopupTimer()
     {
-        int timer = 0;
+        int timer = 1;
         try
         {
             if (!database.isOpen())

@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
-
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +48,7 @@ import com.example.blackbox.client.ClientThread;
 import com.example.blackbox.graphics.CustomButton;
 import com.example.blackbox.graphics.CustomEditText;
 import com.example.blackbox.model.CashManagement;
+import com.example.blackbox.model.RequestParam;
 import com.example.blackbox.model.StaticValue;
 import com.example.blackbox.model.TimerManager;
 import com.example.blackbox.model.User;
@@ -69,53 +69,53 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import cz.msebera.android.httpclient.NameValuePair;
-import cz.msebera.android.httpclient.message.BasicNameValuePair;
-
 //import java.net.URL;
 
 
 public class Login extends AppCompatActivity implements SessionAdapter.AdapterSessionCallback, UserAdapter.AdapterUserCallback, ClientThread.TaskDelegate, HttpHandler.AsyncResponse
 {
 
-    public static final String          alphaNumChars      = "h2iMN09jkl3mnWXop4st87uv5wxabJKe1yz65ABCfgD6EY0ZF43GH7ILqrOP8QR21ST9UcdV";
-    private static final String TAG = "<Login>";
+    public static final  String          alphaNumChars            = "h2iMN09jkl3mnWXop4st87uv5wxabJKe1yz65ABCfgD6EY0ZF43GH7ILqrOP8QR21ST9UcdV";
+    private static final String          TAG                      = "<Login>";
     // Storage Permissions
-    private static final int      REQUEST_EXTERNAL_STORAGE = 1;
-    private static final int      PERMISSION_REQUEST_CODE  = 200;
-    private static final String[] PERMISSIONS_STORAGE      = {
+    private static final int             REQUEST_EXTERNAL_STORAGE = 1;
+    private static final int             PERMISSION_REQUEST_CODE  = 200;
+    private static final String[]        PERMISSIONS_STORAGE      = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-    private final       String          IP                 = StaticValue.IP;
-    private final int red   = Color.parseColor("#cd0046");
-    private final int black = Color.parseColor("#DD000000");
-    public              float           density;
-    public              float           dpHeight;
-    public              float           dpWidth;
-    public              DatabaseAdapter dbA;
+    private final        String          IP                       = StaticValue.IP;
+    private final        int             red                      = Color.parseColor("#cd0046");
+    private final        int             black                    = Color.parseColor("#DD000000");
+    public               float           density;
+    public               float           dpHeight;
+    public               float           dpWidth;
+    public               DatabaseAdapter dbA;
     Animation shake;
-    Login forClient;
-    String barcode = "";
-    private             String          user;
-    private             Intent          intentPasscode;
-    private             int             userType           = -1;
-    private             int             userId;
-    private             SessionAdapter  sessionAdapter;
-    private             Context         context;
-    private             String          passcode           = "";
-    private             String          licenseString      = "";
-    private             CustomButton    licenseButton;
-    private             boolean         keyboard_next_flag = false;
+    Login     forClient;
+    String    barcode = "";
+    private String         user;
+    private Intent         intentPasscode;
+    private int            userType           = -1;
+    private int            userId;
+    private SessionAdapter sessionAdapter;
+    private Context        context;
+    private String         passcode           = "";
+    private String         licenseString      = "";
+    private CustomButton   licenseButton;
+    private boolean        keyboard_next_flag = false;
 
     // the views that show how many number has
     // been inputed in the pinpad
-    private List<View> sixInputCounterViews;
+    private List<View>  sixInputCounterViews;
     private HttpHandler httpHandler;
     private User        myUser = new User();
+
+
     public Login()
     {
     }
+
 
     public static Login newInstance()
     {
@@ -139,6 +139,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         }
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -160,17 +161,14 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         // TODO
         // this is uncessary. Maybe this should happen only at the first start of the application
         // to be tested
-        dbA.execOnDb("ALTER TABLE kitchen_printer ADD COLUMN single_order INTEGER DEFAULT 0;");
-        dbA.execOnDb("ALTER TABLE button ADD COLUMN printer INTEGER DEFAULT -1;");
-        dbA.execOnDb("ALTER TABLE client ADD COLUMN fidelity_id INTEGER DEFAULT null;");
-        dbA.execOnDb("ALTER TABLE client ADD COLUMN codeValue TEXT DEFAULT null;");
-        dbA.execOnDb("ALTER TABLE bill_total ADD COLUMN android_id TEXT ;");
-        dbA.execOnDb("ALTER TABLE vat ADD COLUMN perc INTEGER DEFAULT NULL;");
-        dbA.execOnDb("ALTER TABLE device_info ADD COLUMN store_name TEXT DEFAULT NULL;");
+//        dbA.execOnDb("ALTER TABLE kitchen_printer ADD COLUMN single_order INTEGER DEFAULT 0;");
+//        dbA.execOnDb("ALTER TABLE client ADD COLUMN fidelity_id INTEGER DEFAULT null;");
+//        dbA.execOnDb("ALTER TABLE client ADD COLUMN codeValue TEXT DEFAULT null;");
+//        dbA.execOnDb("ALTER TABLE bill_total ADD COLUMN android_id TEXT ;");
+//        dbA.execOnDb("ALTER TABLE vat ADD COLUMN perc INTEGER DEFAULT NULL;");
+//        dbA.execOnDb("ALTER TABLE device_info ADD COLUMN store_name TEXT DEFAULT NULL;");
 
 
-        // TODO
-        // this function empty various table at login. Why?
         dropInitial();
 
 
@@ -198,8 +196,6 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
             StrictMode.setThreadPolicy(policy);
         }
 
-        // TODO change password, don't use a static one
-        // dbA.insertUser("admin", "", "admin@me.com", "463791", 0, "463791");
 
         dbA.setupDefaultPaymentValues();
 
@@ -214,7 +210,9 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
 
         String status = startIntent.getStringExtra("status");
         if (status == null)
-            { setupLoginLayout(); }
+        {
+            setupLoginLayout();
+        }
 
         else if (status.equals("pinpad"))
         {
@@ -227,6 +225,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
 
 
     // ---- SETUP ---- //
+
 
     @Override
     public void processFinish(String output)
@@ -251,8 +250,6 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
             e.printStackTrace();
         }
 
-        Log.i(TAG, "[processFinish] " + route + "success: " + success);
-
         if (success)
         {
             boolean check = false;
@@ -260,8 +257,6 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
             try
             {
                 jsonObject = new JSONObject(output);
-
-                Log.i(TAG, "route response: " + output);
 
                 switch (route)
                 {
@@ -328,10 +323,10 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
 
                             DividerItemDecoration divider = new
                                     DividerItemDecoration(getApplicationContext(),
-                                                          DividerItemDecoration.VERTICAL
+                                    DividerItemDecoration.VERTICAL
                             );
                             divider.setDrawable(ContextCompat.getDrawable(getBaseContext(),
-                                                                          R.drawable.divider_line_horizontal1dp
+                                    R.drawable.divider_line_horizontal1dp
                             ));
                             session_recycler.addItemDecoration(divider);
                             final CustomEditText newSessionNameContainer = (CustomEditText) findViewById(R.id.new_session_name_et);
@@ -416,14 +411,14 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         else
         {
             Toast.makeText(this,
-                           getString(R.string.error_blackbox_comm, StaticValue.blackboxInfo.getName(), StaticValue.blackboxInfo.getAddress()),
-                           Toast.LENGTH_LONG
+                    getString(R.string.error_blackbox_comm, StaticValue.blackboxInfo.getName(), StaticValue.blackboxInfo.getAddress()),
+                    Toast.LENGTH_LONG
             ).show();
         }
     }
 
 
-    public void callHttpHandler(String route, List<NameValuePair> params)
+    public void callHttpHandler(String route, RequestParam params)
     {
         httpHandler          = new HttpHandler();
         httpHandler.delegate = this;
@@ -483,6 +478,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         }
     }
 
+
     // reset the six input contianer to black color
     private void resetFields()
     {
@@ -490,7 +486,6 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         {
             v.setBackgroundColor(black);
         }
-        ;
 
         passcode = "";
     }
@@ -555,6 +550,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
             }
         });
 
+
         findViewById(R.id.operation_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -575,6 +571,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                 }
             }
         });
+
+
         findViewById(R.id.addUser_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -585,6 +583,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                 setupNewUserWindow();
             }
         });
+
+
         findViewById(R.id.switchUser_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -592,12 +592,14 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
             {
                 findViewById(R.id.AdminWindow).setVisibility(View.GONE);
                 findViewById(R.id.LoginWindow).setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplicationContext(), PinpadActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SplashScreen1.class);
                 startActivity(intent);
                 finish();
-                setupLoginLayout();
+                // setupLoginLayout();
             }
         });
+
+
         findViewById(R.id.switchUser_button).setOnLongClickListener(new View.OnLongClickListener()
         {
 
@@ -608,6 +610,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                 return true;
             }
         });
+
+
         findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -618,13 +622,17 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                 setupLoginLayout();
             }
         });
+
+
         findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+
             }
         });
+
 
         findViewById(R.id.printerOption_button).setOnClickListener(new View.OnClickListener()
         {
@@ -634,6 +642,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                 openPopupForPrinterMethod();
             }
         });
+
 
         findViewById(R.id.cashstatus_button).setOnClickListener(new View.OnClickListener()
         {
@@ -668,6 +677,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         });
     }
 
+
     public void openPopupForPrinterMethod()
     {
         LayoutInflater layoutInflater = (LayoutInflater) this
@@ -678,6 +688,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT
         );
+
         popupView.post(new Runnable()
         {
             @Override
@@ -685,12 +696,13 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
             {
                 setUpPrinterMethodPopup(popupView, popupWindow);
 
-
             }
         });
+
         popupWindow.setFocusable(true);
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
     }
+
 
     public void setUpPrinterMethodPopup(final View popupView, final PopupWindow popupWindow)
     {
@@ -703,16 +715,20 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                 azzeramentoNumeroScontrini();
             }
         });
+
+
         popupView.findViewById(R.id.print_report_x).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                printeReport(1);
+                printReport(1);
                 popupWindow.dismiss();
 
             }
         });
+
+
         popupView.findViewById(R.id.chiusura_fiscale_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -722,6 +738,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                 popupWindow.dismiss();
             }
         });
+
+
         popupView.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -730,6 +748,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                 popupWindow.dismiss();
             }
         });
+
+
         popupView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -739,6 +759,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
             }
         });
     }
+
 
     public void openCashStatusPopup()
     {
@@ -760,6 +781,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         popupWindow.setFocusable(true);
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
     }
+
 
     public void setupCashStatus(final View popupView, final PopupWindow popupWindow)
     {
@@ -812,6 +834,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
 
                             total_deposit.setText("");
                         }
+
                         else
                         {
                             String fiveCents   = five_cents.getText().toString();
@@ -828,12 +851,12 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                             String twoHundred  = twohundred_euros.getText().toString();
 
                             dbA.insertCashStatus(Float.parseFloat(total_deposit_string.replace(",", ".")),
-                                                 fiveCents.equals("") ? 0 : Integer.parseInt(fiveCents), tenCents.equals("") ? 0 : Integer.parseInt(tenCents),
-                                                 twentyCents.equals("") ? 0 : Integer.parseInt(twentyCents), fiftyCents.equals("") ? 0 : Integer.parseInt(fiftyCents),
-                                                 oneE.equals("") ? 0 : Integer.parseInt(oneE), twoE.equals("") ? 0 : Integer.parseInt(twoE),
-                                                 fiveE.equals("") ? 0 : Integer.parseInt(fiveE), tenE.equals("") ? 0 : Integer.parseInt(tenE),
-                                                 twentyE.equals("") ? 0 : Integer.parseInt(twentyE), fiftyE.equals("") ? 0 : Integer.parseInt(fiftyE),
-                                                 hundred.equals("") ? 0 : Integer.parseInt(hundred), twoHundred.equals("") ? 0 : Integer.parseInt(twoHundred)
+                                    fiveCents.equals("") ? 0 : Integer.parseInt(fiveCents), tenCents.equals("") ? 0 : Integer.parseInt(tenCents),
+                                    twentyCents.equals("") ? 0 : Integer.parseInt(twentyCents), fiftyCents.equals("") ? 0 : Integer.parseInt(fiftyCents),
+                                    oneE.equals("") ? 0 : Integer.parseInt(oneE), twoE.equals("") ? 0 : Integer.parseInt(twoE),
+                                    fiveE.equals("") ? 0 : Integer.parseInt(fiveE), tenE.equals("") ? 0 : Integer.parseInt(tenE),
+                                    twentyE.equals("") ? 0 : Integer.parseInt(twentyE), fiftyE.equals("") ? 0 : Integer.parseInt(fiftyE),
+                                    hundred.equals("") ? 0 : Integer.parseInt(hundred), twoHundred.equals("") ? 0 : Integer.parseInt(twoHundred)
                             );
 
                             total_deposit.setText("");
@@ -885,6 +908,12 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                             CustomEditText withdraw_amount = (CustomEditText) popupView.findViewById(R.id.withdraw_amount);
                             withdraw_amount.setText(twoD.format(amount).replace(".", ","));
 
+                            for (int i = 11; i >= 0; i--)
+                            {
+                                five_cents_a.setText( counter[i] <= 0 ? "" : counter[i] + "" );
+                            }
+
+                            /* OLD
                             if (counter[11] <= 0)
                             {
                                 five_cents_a.setText("");
@@ -893,6 +922,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                             {
                                 five_cents_a.setText(counter[11] + "");
                             }
+
+
                             if (counter[10] <= 0)
                             {
                                 ten_cents_a.setText("");
@@ -901,6 +932,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                             {
                                 ten_cents_a.setText(counter[10] + "");
                             }
+
+
                             if (counter[9] <= 0)
                             {
                                 twenty_cents_a.setText("");
@@ -909,6 +942,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                             {
                                 twenty_cents_a.setText(counter[9] + "");
                             }
+
+
                             if (counter[8] <= 0)
                             {
                                 fifty_cents_a.setText("");
@@ -917,6 +952,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                             {
                                 fifty_cents_a.setText(counter[8] + "");
                             }
+
+
                             if (counter[7] <= 0)
                             {
                                 one_euro_a.setText("");
@@ -925,6 +962,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                             {
                                 one_euro_a.setText(counter[7] + "");
                             }
+
+
                             if (counter[6] <= 0)
                             {
                                 two_euros_a.setText("");
@@ -937,6 +976,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                             {
                                 five_euros_a.setText("");
                             }
+
+
                             else
                             {
                                 five_euros_a.setText(counter[5] + "");
@@ -945,6 +986,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                             {
                                 ten_euros_a.setText("");
                             }
+
+
                             else
                             {
                                 ten_euros_a.setText(counter[4] + "");
@@ -981,6 +1024,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                             {
                                 twohundred_euros_a.setText(counter[0] + "");
                             }
+                             */
                         }
                         else
                         {
@@ -1024,6 +1068,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         });
     }
 
+
     /**
      * show setup new session windows to create sessions, only admin can do this
      */
@@ -1038,25 +1083,29 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
 
         DividerItemDecoration divider = new
                 DividerItemDecoration(this,
-                                      DividerItemDecoration.VERTICAL
+                DividerItemDecoration.VERTICAL
         );
         divider.setDrawable(ContextCompat.getDrawable(getBaseContext(),
-                                                      R.drawable.divider_line_horizontal1dp
+                R.drawable.divider_line_horizontal1dp
         ));
         session_recycler.addItemDecoration(divider);
 
 
         String               startTime               = "";
         String               endTime                 = "";
+
         final CustomEditText newSessionNameContainer = findViewById(R.id.new_session_name_et);
         newSessionNameContainer.setText("");
+
         CustomButton startTimeContainer = findViewById(R.id.start_session_button_et);
         startTimeContainer.setText(R.string.startTime);
+
         CustomButton endTimeContainer = findViewById(R.id.end_session_button_et);
         endTimeContainer.setText(R.string.endTime);
+
+
         startTimeContainer.setOnClickListener(new View.OnClickListener()
         {
-
             @Override
             public void onClick(View v)
             {
@@ -1082,6 +1131,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
 
             }
         });
+
+
         endTimeContainer.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -1109,10 +1160,10 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
             }
         });
 
-        /**
+
+        /*
          * OK Button behavior while in New User window
          */
-
         findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -1136,10 +1187,10 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
 
                     DividerItemDecoration divider = new
                             DividerItemDecoration(getApplicationContext(),
-                                                  DividerItemDecoration.VERTICAL
+                            DividerItemDecoration.VERTICAL
                     );
                     divider.setDrawable(ContextCompat.getDrawable(getBaseContext(),
-                                                                  R.drawable.divider_line_horizontal1dp
+                            R.drawable.divider_line_horizontal1dp
                     ));
                     session_recycler.addItemDecoration(divider);
 
@@ -1154,7 +1205,9 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                 }
             }
         });
-        /**
+
+
+        /*
          *  X button behavior while in New User window
          */
         findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
@@ -1172,7 +1225,10 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
     }
 
 
+
+
     // --- LOGIN ---- //
+
 
     // used by SessionAdapter
     public void setButtonSet(int sessionTimeId, String sessionName, String start, String end)
@@ -1214,6 +1270,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
             }
         });
 
+
         endTimeContainer.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -1241,7 +1298,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
             }
         });
 
-        /**
+
+        /*
          * OK Button behavior while in New User window
          */
         findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
@@ -1268,7 +1326,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
             }
         });
 
-        /**
+
+        /*
          *  X button behavior while in New User window
          */
         findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
@@ -1282,6 +1341,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         });
     }
 
+
     public void setupNewUserWindow()
     {
         RecyclerView user_recycler = findViewById(R.id.users_recycler);
@@ -1293,16 +1353,20 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
 
         final CustomEditText Name = findViewById(R.id.name_et);
         Name.setText("");
+
         final CustomEditText Surname = findViewById(R.id.surname_et);
         Surname.setText("");
+
         final CustomEditText Email = findViewById(R.id.email_et);
         Email.setText("");
+
         final CustomEditText Passcode = findViewById(R.id.passcode_et);
         Passcode.setText("");
         //set max length to 4 for passcode and 6 for password
         //   Password.setFilters(new InputFilter[] { new InputFilter.LengthFilter(6) });
         Passcode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(6)});
         final ImageButton manager = findViewById(R.id.manager_checkbox);
+
         manager.setActivated(false);
         manager.setOnClickListener(new View.OnClickListener()
         {
@@ -1313,7 +1377,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
             }
         });
 
-        /**
+
+        /*
          * OK Button behavior while in New User window
          */
         findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
@@ -1325,6 +1390,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                 String surname  = Surname.getText().toString();
                 String email    = Email.getText().toString();
                 String passcode = Passcode.getText().toString();
+
                 if (name.equals("") || surname.equals("") || email.equals("") || passcode.equals(""))
                 {
                     Toast.makeText(getBaseContext(), R.string.please_fill_all_fields, Toast.LENGTH_SHORT).show();
@@ -1347,13 +1413,13 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                             if (manager.isActivated())
                             {
                                 //dbA.insertUser(name, surname, email , passcode, 1, passcode);
-                                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                                params.add(new BasicNameValuePair("password", passcode));
-                                params.add(new BasicNameValuePair("name", name));
-                                params.add(new BasicNameValuePair("surname", surname));
-                                params.add(new BasicNameValuePair("email", email));
-                                params.add(new BasicNameValuePair("passcode", passcode));
-                                params.add(new BasicNameValuePair("userType", String.valueOf(1)));
+                                RequestParam params = new RequestParam();
+                                params.add("password", passcode);
+                                params.add("name", name);
+                                params.add("surname", surname);
+                                params.add("email", email);
+                                params.add("passcode", passcode);
+                                params.add("userType", String.valueOf(1));
 
                                 callHttpHandler("/insertUser", params);
                               /*  httpHandler.UpdateInfoAsyncTask("/insertUser", params);
@@ -1362,13 +1428,13 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                             else /*if(cashier.isActivated())*/
                             {
                                 //dbA.insertUser(name, surname, email, passcode, 2, passcode);
-                                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                                params.add(new BasicNameValuePair("password", passcode));
-                                params.add(new BasicNameValuePair("name", name));
-                                params.add(new BasicNameValuePair("surname", surname));
-                                params.add(new BasicNameValuePair("email", email));
-                                params.add(new BasicNameValuePair("passcode", passcode));
-                                params.add(new BasicNameValuePair("userType", String.valueOf(2)));
+                                RequestParam params = new RequestParam();
+                                params.add("password", passcode);
+                                params.add("name", name);
+                                params.add("surname", surname);
+                                params.add("email", email);
+                                params.add("passcode", passcode);
+                                params.add("userType", String.valueOf(2));
                                 callHttpHandler("/insertUser", params);
                                /* httpHandler.UpdateInfoAsyncTask("/insertUser", params);
                                 httpHandler.execute();*/
@@ -1394,7 +1460,9 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                 }
             }
         });
-        /**
+
+
+        /*
          *  X button behavior while in New User window
          */
         findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
@@ -1409,6 +1477,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         });
     }
 
+
     /**
      * check if the input PIN is correct
      */
@@ -1420,6 +1489,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         if (passcode.length() == 6)
         {
             Cursor c = dbA.fetchUserDataByPasscode(passcode);
+
             if (c.getCount() > 0)
             {
                 if (c.moveToNext())
@@ -1437,6 +1507,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         }
 
     }
+
 
     /**
      * if a correct PIN was passed,
@@ -1456,7 +1527,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
 
             if (StaticValue.blackbox)
             {
-                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                RequestParam params = new RequestParam();
                 httpHandler          = new HttpHandler();
                 httpHandler.delegate = this;
                 httpHandler.UpdateInfoAsyncTask("/getSessionTime", params);
@@ -1480,6 +1551,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
 
 
     // --- PERMISSION --- //
+
 
     /**
      * Handle the HTTP response of getSessionTime
@@ -1517,6 +1589,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         }
     }
 
+
     public void loginFunction(int isAdmin, String username)
     {
         intentPasscode = new Intent(getApplicationContext(), PinpadBroadcastReciver.class);
@@ -1552,6 +1625,8 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                 break;
         }
     }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
@@ -1593,11 +1668,13 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
 
     // ---- OTHER --- //
 
+
     private void openActivity()
     {
         //add your further process after giving permission or to download images from remote server.
         //exportDatabse("");
     }
+
 
     public void insertDurationCode()
     {
@@ -1614,11 +1691,12 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         dbA.execOnDb("INSERT INTO registered_activation_code(code, registration) VALUES('015578941326', '"+formattedDate+"')");*/
     }
 
+
     public void azzeramentoNumeroScontrini()
     {
         if (StaticValue.blackbox)
         {
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+            RequestParam params = new RequestParam();
             httpHandler          = new HttpHandler();
             httpHandler.delegate = this;
             httpHandler.UpdateInfoAsyncTask("/azzeramentoScontrini", params);
@@ -1635,11 +1713,12 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         }
     }
 
+
     public void chiusuraCassa()
     {
         if (StaticValue.blackbox)
         {
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+            RequestParam params = new RequestParam();
             httpHandler          = new HttpHandler();
             httpHandler.delegate = this;
             httpHandler.UpdateInfoAsyncTask("/chiusuraCassa", params);
@@ -1658,34 +1737,32 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
             {
                 dbA.updateClosingTime();
                 dbA.insertIntoStatistic();
-                printeReport(0);
+                printReport(0);
 
 
-                new java.util.Timer().schedule(
-                        new java.util.TimerTask()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                // your code here
-                                Intent intent = new Intent(getApplicationContext(), Login.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        },
-                        10000
-                );
+                new java.util.Timer().schedule(new java.util.TimerTask()
+                {
+                    @Override
+                    public void run()
+                    {
+                        // your code here
+                        Intent intent = new Intent(getApplicationContext(), Login.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, 10000);
 
             }
         }
     }
 
-    public void printeReport(int report)
+
+    public void printReport(int report)
     {
         if (StaticValue.blackbox)
         {
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            params.add(new BasicNameValuePair("report", String.valueOf(report)));
+            RequestParam params = new RequestParam();
+            params.add("report", String.valueOf(report));
             httpHandler          = new HttpHandler();
             httpHandler.delegate = this;
             httpHandler.UpdateInfoAsyncTask("/printReport", params);
@@ -1715,11 +1792,13 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
 
     }
 
+
     public void deleteSession(int sessionId)
     {
         dbA.deleteSessionTime(sessionId);
         setupNewSessionWindow();
     }
+
 
     @Override
     public void setButtonSetPopup(int sessionTimeId, String sessionName, String start, String end, View popupview, PopupWindow popupwindow)
@@ -1727,11 +1806,13 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
 
     }
 
+
     @Override
     public void deleteSessionPopup(int sessionTimeId, View popupview, PopupWindow popupwindow)
     {
 
     }
+
 
     @Override
     public void onTaskEndWithResult(String success)
@@ -1739,11 +1820,13 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
 
     }
 
+
     @Override
     public void onTaskFinishGettingData(String result)
     {
 
     }
+
 
     @Override
     public void setModifyUser(User user, final View popupview, final PopupWindow popupWindow)
@@ -1812,15 +1895,15 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
                 {
                     if (StaticValue.blackbox)
                     {
-                        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                        params.add(new BasicNameValuePair("password", passcode));
-                        params.add(new BasicNameValuePair("oldPassword", user.getPasscode()));
-                        params.add(new BasicNameValuePair("name", name));
-                        params.add(new BasicNameValuePair("surname", surname));
-                        params.add(new BasicNameValuePair("email", email));
-                        params.add(new BasicNameValuePair("passcode", passcode));
-                        params.add(new BasicNameValuePair("userType", String.valueOf(user.getUserRole())));
-                        params.add(new BasicNameValuePair("id", String.valueOf(user.getId())));
+                        RequestParam params = new RequestParam();
+                        params.add("password", passcode);
+                        params.add("oldPassword", user.getPasscode());
+                        params.add("name", name);
+                        params.add("surname", surname);
+                        params.add("email", email);
+                        params.add("passcode", passcode);
+                        params.add("userType", String.valueOf(user.getUserRole()));
+                        params.add("id", String.valueOf(user.getId()));
                         callHttpHandler("/updateUser", params);
 
                     /*    httpHandler.UpdateInfoAsyncTask("/updateUser", params);
@@ -1861,6 +1944,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         });
     }
 
+
     public void resetPinpadTimer(int type)
     {
         TimerManager.stopPinpadAlert();
@@ -1873,6 +1957,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         TimerManager.setIntentPinpad(intentPasscode);
         TimerManager.startPinpadAlert(type);
     }
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event)
@@ -1896,6 +1981,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         return super.dispatchTouchEvent(event);
     }
 
+
     @Override
     public boolean dispatchKeyEvent(KeyEvent e)
     {
@@ -1909,7 +1995,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
         if (e.getAction() == KeyEvent.ACTION_DOWN && e.getKeyCode() == KeyEvent.KEYCODE_ENTER)
         {
             Toast.makeText(getApplicationContext(),
-                           "barcode--->>>" + barcode, Toast.LENGTH_LONG
+                    "barcode--->>>" + barcode, Toast.LENGTH_LONG
             )
                  .show();
             Log.i("BARCODE", barcode);
@@ -2472,7 +2558,7 @@ public class Login extends AppCompatActivity implements SessionAdapter.AdapterSe
 
 
 
-    private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException{
+    private String getQuery(RequestParam params) throws UnsupportedEncodingException{
         StringBuilder result = new StringBuilder();
         boolean first = true;
 

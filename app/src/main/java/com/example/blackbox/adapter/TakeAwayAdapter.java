@@ -27,6 +27,7 @@ import com.example.blackbox.graphics.CustomButton;
 import com.example.blackbox.graphics.CustomTextView;
 import com.example.blackbox.graphics.ItemTouchHelperAdapter;
 import com.example.blackbox.graphics.OnSwipeTouchListener;
+import com.example.blackbox.model.RequestParam;
 import com.example.blackbox.model.StaticValue;
 import com.example.blackbox.model.TotalBill;
 import com.utils.db.DatabaseAdapter;
@@ -66,10 +67,10 @@ public class TakeAwayAdapter extends Adapter<ViewHolder> implements ItemTouchHel
 
         if (StaticValue.blackbox)
         {
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+            RequestParam params = new RequestParam();
             String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-            params.add(new BasicNameValuePair("androidId", android_id));
-            // params.add(new BasicNameValuePair("billTotalChecksum", dbA.getChecksumForTable("bill_total")));
+            params.add("androidId", android_id);
+            // params.add("billTotalChecksum", dbA.getChecksumForTable("bill_total"));
 
             ((OrderActivity) context).callHttpHandler("/getTakeAwayOrders", params);
         }
@@ -233,11 +234,11 @@ public class TakeAwayAdapter extends Adapter<ViewHolder> implements ItemTouchHel
                     myPopupView = popupView;
                     myPopupWindow = popupWindow;
 
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                    params.add(new BasicNameValuePair("billId", String.valueOf(totalBill.getId())));
-                    params.add(new BasicNameValuePair("type", String.valueOf(CODE_DELETE)));
+                    RequestParam params = new RequestParam();
+                    params.add("billId", String.valueOf(totalBill.getId()));
+                    params.add("type", String.valueOf(CODE_DELETE));
                     String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                    params.add(new BasicNameValuePair("androidId", android_id));
+                    params.add("androidId", android_id);
 
                     ((OrderActivity) context).callHttpHandler("/payBillTypeReturnTAList", params);
                 }
@@ -264,11 +265,11 @@ public class TakeAwayAdapter extends Adapter<ViewHolder> implements ItemTouchHel
                     myPopupView = popupView;
                     myPopupWindow = popupWindow;
 
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                    params.add(new BasicNameValuePair("billId", String.valueOf(totalBill.getId())));
-                    params.add(new BasicNameValuePair("type", String.valueOf(CODE_WHITEOUT)));
+                    RequestParam params = new RequestParam();
+                    params.add("billId", String.valueOf(totalBill.getId()));
+                    params.add("type", String.valueOf(CODE_WHITEOUT));
                     String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                    params.add(new BasicNameValuePair("androidId", android_id));
+                    params.add("androidId", android_id);
 
                     ((OrderActivity) context).callHttpHandler("/payBillTypeReturnTAList", params);
 
@@ -298,11 +299,11 @@ public class TakeAwayAdapter extends Adapter<ViewHolder> implements ItemTouchHel
                     myPopupView = popupView;
                     myPopupWindow = popupWindow;
 
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                    params.add(new BasicNameValuePair("billId", String.valueOf(totalBill.getId())));
-                    params.add(new BasicNameValuePair("type", String.valueOf(CODE_UNPAID)));
+                    RequestParam params = new RequestParam();
+                    params.add("billId", String.valueOf(totalBill.getId()));
+                    params.add("type", String.valueOf(CODE_UNPAID));
                     String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                    params.add(new BasicNameValuePair("androidId", android_id));
+                    params.add("androidId", android_id);
 
                     ((OrderActivity) context).callHttpHandler("/payBillTypeReturnTAList", params);
                 }
@@ -331,11 +332,11 @@ public class TakeAwayAdapter extends Adapter<ViewHolder> implements ItemTouchHel
                     myPopupView = popupView;
                     myPopupWindow = popupWindow;
 
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                    params.add(new BasicNameValuePair("billId", String.valueOf(totalBill.getId())));
-                    params.add(new BasicNameValuePair("type", String.valueOf(CODE_PARTIAL)));
+                    RequestParam params = new RequestParam();
+                    params.add("billId", String.valueOf(totalBill.getId()));
+                    params.add("type", String.valueOf(CODE_PARTIAL));
                     String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                    params.add(new BasicNameValuePair("androidId", android_id));
+                    params.add("androidId", android_id);
 
                     ((OrderActivity) context).callHttpHandler("/payBillTypeReturnTAList", params);
                 }

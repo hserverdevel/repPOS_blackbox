@@ -280,8 +280,8 @@ public class WaitingListAdapter extends RecyclerView.Adapter
             {
                 if (StaticValue.blackbox)
                 {
-                    ArrayList<NameValuePair> params = new ArrayList<>();
-                    params.add(new BasicNameValuePair("id", String.valueOf(model.getId())));
+                    RequestParam params = new RequestParam();
+                    params.add("id", model.getId());
 
                     ((ReservationsActivity) context).callHttpHandler("/deleteWaitingList", params);
                 }

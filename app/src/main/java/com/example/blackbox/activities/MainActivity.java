@@ -1,10 +1,12 @@
 package com.example.blackbox.activities;
 
+
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.DatabaseUtils;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,8 +42,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import android.database.DatabaseUtils;
-
 
 import com.example.blackbox.R;
 import com.example.blackbox.adapter.BlackboxSettingAdapter;
@@ -104,6 +104,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.example.blackbox.model.StaticValue.deviceInfo;
 
+
 public class MainActivity extends AppCompatActivity implements
         SessionAdapter.AdapterSessionCallback,
         UserAdapter.AdapterUserCallback,
@@ -131,16 +132,10 @@ public class MainActivity extends AppCompatActivity implements
     private HttpHandler            httpHandler;
     private View                   myPopupView;
     private PopupWindow            myPopupWindow;
-    private User                   myUser             = new User();
-    private ButtonLayout           myButtonLayout;
-    private Vat                    myVat;
     private Context                me;
     private Resources              resources;
     private StatusInfoHolder       grid_status;
-    private ButtonLayout           big_plus_button;
     private DatabaseAdapter        dbA;
-    private RecyclerView           recyclerview;
-    private RecyclerView           mod_group_recyclerview;
     private RecyclerView           modifiers_recyclerview;
     private GridLayoutManager      grid_manager;
     private ModifierLineSeparator  myLine;
@@ -149,10 +144,8 @@ public class MainActivity extends AppCompatActivity implements
     private String                 username;
     private SessionAdapter         sessionAdapter;
     private Server                 server;
-    private UserAdapter            userAdapter;
     private int                    userType;
     private int                    userId;
-    private Intent                 intentPasscode;
     private PrinterSettingAdapter  printerSettingAdapter;
     private BlackboxSettingAdapter bbSettingAdaper;
     private MainActivity           myself;
@@ -160,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements
     private boolean                isBarcodeShow      = false;
     private String                 licenseString      = "";
     private CustomButton           licenseButton;
+
 
     /**
      * UPDATES THE BUTTON SET AND NOTIFIES IT TO THE ADAPTER
@@ -170,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements
         buttons = bs;
         rv_adapter.notifyDataSetChanged();
     }
-
 
 
     @Override
@@ -210,7 +203,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
     /**
      * Handles the ouput of the HttpHandler async process
      * which send a POST request to the blackbox server
@@ -240,13 +232,16 @@ public class MainActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
 
-        if (success || (!success && route.equals("testBlackboxComm")))
+        if (success || route.equals("testBlackboxComm"))
         {
             boolean check = false;
 
             try
             {
                 jsonObject = new JSONObject(output);
+                ButtonLayout myButtonLayout;
+                User         myUser = new User();
+                Vat          myVat;
                 switch (route)
                 {
                     case "testBlackboxComm":
@@ -268,6 +263,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         break;
 
+
                     case "insertUser":
                         check = jsonObject.getBoolean("check");
                         if (check)
@@ -286,6 +282,7 @@ public class MainActivity extends AppCompatActivity implements
                                  .show();
                         }
                         break;
+
 
                     case "insertButton":
                         check = jsonObject.getBoolean("check");
@@ -313,6 +310,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         break;
 
+
                     case "insertButton2":
                         check = jsonObject.getBoolean("check");
                         if (check)
@@ -338,6 +336,7 @@ public class MainActivity extends AppCompatActivity implements
                                  .show();
                         }
                         break;
+
 
                     case "insertButton3":
                         check = jsonObject.getBoolean("check");
@@ -368,6 +367,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         break;
 
+
                     case "insertButton4":
                         check = jsonObject.getBoolean("check");
                         if (check)
@@ -385,6 +385,7 @@ public class MainActivity extends AppCompatActivity implements
                                  .show();
                         }
                         break;
+
 
                     case "insertButton5":
                         check = jsonObject.getBoolean("check");
@@ -415,10 +416,10 @@ public class MainActivity extends AppCompatActivity implements
 
                         else
                         {
-                            Toast.makeText(getApplicationContext(), getString(R.string.route_check_false, jsonObject
-                                    .getString("reason")), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.route_check_false, route, jsonObject.getString("reason")), Toast.LENGTH_SHORT).show();
                         }
                         break;
+
 
                     case "moveButton":
                         check = jsonObject.getBoolean("check");
@@ -437,47 +438,59 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         break;
 
+
                     case "updateButton":
                         check = jsonObject.getBoolean("check");
                         if (check)
                         {
                             JSONObject jObject        = new JSONObject(output).getJSONObject("button");
-                            Boolean    updatePrinter  = jsonObject.getBoolean("updatePrinter");
-                            Boolean    updateDiscount = jsonObject.getBoolean("updateDiscount");
-                            Boolean    updateCredit   = jsonObject.getBoolean("updateCredit");
-                            String     action         = jsonObject.getString("action");
+                            boolean    updatePrinter  = jsonObject.getBoolean("updatePrinter");
+                            boolean    updateDiscount = jsonObject.getBoolean("updateDiscount");
+                            boolean    updateCredit   = jsonObject.getBoolean("updateCredit");
+
+                            String action = jsonObject.getString("action");
                             myButtonLayout = ButtonLayout.fromJson(jObject);
+
                             dbA.execOnDb("UPDATE button SET title = \"" + myButtonLayout.getTitle()
                                                                                         .replaceAll("'", "'") +
-                                                 "\", subtitle = \"" + myButtonLayout.getSubTitle()
-                                                                                     .replaceAll("'", "'") + "\", img_name = \"" + myButtonLayout
+                                    "\", subtitle = \"" + myButtonLayout.getSubTitle()
+                                                                        .replaceAll("'", "'") + "\", img_name = \"" + myButtonLayout
                                     .getImg() + "\"," +
-                                                 "color = " + myButtonLayout.getColor() + " , printer= " + myButtonLayout
+                                    "color = " + myButtonLayout.getColor() + " , printer= " + myButtonLayout
                                     .getPrinterId() + ", fidelity_discount=" + myButtonLayout.getFidelity_discount() + ", fidelity_credit=" + myButtonLayout
                                     .getFidelity_credit() + " WHERE id = " + myButtonLayout.getID() + "");
+
                             if (updatePrinter)
                             {
                                 dbA.recursiveUpdatePrinter(myButtonLayout.getID(), myButtonLayout.getPrinterId());
                             }
+
+
                             if (updateDiscount)
                             {
                                 dbA.recursiveUpdateFidelityDiscount(myButtonLayout.getID(), myButtonLayout
                                         .getFidelity_discount());
                             }
+
+
                             if (updateCredit)
                             {
                                 dbA.recursiveUpdateFidelityCredit(myButtonLayout.getID(), myButtonLayout
                                         .getFidelity_credit());
                             }
+
+
                             if (action.equals("update"))
                             {
                                 rv_adapter.getCurrentCatButtonSet(myButtonLayout.getCatID());
                             }
+
                             else
                             {
                                 rv_adapter.goToCategory(myButtonLayout.getCatID(), myButtonLayout.getID(), myButtonLayout
                                         .getTitle());
                             }
+
                             rv_adapter.closePopupWindow();
                         }
                         else
@@ -487,19 +500,18 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         break;
 
+
                     case "updateButton2":
                         check = jsonObject.getBoolean("check");
                         if (check)
                         {
                             JSONObject jObject = new JSONObject(output).getJSONObject("button");
                             myButtonLayout = ButtonLayout.fromJson(jObject);
-                            dbA.execOnDb("UPDATE button SET title = \"" + myButtonLayout.getTitle()
-                                                                                        .replaceAll("'", "'") +
-                                                 "\", subtitle = \"" + myButtonLayout.getSubTitle()
-                                                                                     .replaceAll("'", "'") + "\", img_name = \"" + myButtonLayout
+                            dbA.execOnDb("UPDATE button SET title = \"" + myButtonLayout.getTitle().replaceAll("'", "'") +
+                                    "\", subtitle = \"" + myButtonLayout.getSubTitle().replaceAll("'", "'") + "\", img_name = \"" + myButtonLayout
                                     .getImg() + "\", isCat = " + myButtonLayout.getCat() + ", price= " + myButtonLayout
                                     .getPrice() + ", vat=" + myButtonLayout.getVat() +
-                                                 ",color = " + myButtonLayout.getColor() + " , printer= " + myButtonLayout
+                                    ",color = " + myButtonLayout.getColor() + " , printer= " + myButtonLayout
                                     .getPrinterId() + ", fidelity_discount=" + myButtonLayout.getFidelity_discount() + ", fidelity_credit=" + myButtonLayout
                                     .getFidelity_credit() + ", credit_value=" + myButtonLayout.getCredit_value() + " WHERE id = " + myButtonLayout
                                     .getID() + "");
@@ -516,6 +528,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         break;
 
+
                     case "updateButton3":
                         check = jsonObject.getBoolean("check");
                         if (check)
@@ -523,13 +536,11 @@ public class MainActivity extends AppCompatActivity implements
                             JSONObject jObject = new JSONObject(output).getJSONObject("button");
                             myButtonLayout = ButtonLayout.fromJson(jObject);
                             //dbA.insertButtonFromServer(myButtonLayout);
-                            dbA.execOnDb("UPDATE button SET title = \"" + myButtonLayout.getTitle()
-                                                                                        .replaceAll("'", "'") +
-                                                 "\", subtitle = \"" + myButtonLayout.getSubTitle()
-                                                                                     .replaceAll("'", "'") + "\", img_name = \"" + myButtonLayout
+                            dbA.execOnDb("UPDATE button SET title = \"" + myButtonLayout.getTitle().replaceAll("'", "'") +
+                                    "\", subtitle = \"" + myButtonLayout.getSubTitle().replaceAll("'", "'") + "\", img_name = \"" + myButtonLayout
                                     .getImg() + "\", isCat = " + myButtonLayout.getCat() + ", price= " + myButtonLayout
                                     .getPrice() + ", vat=" + myButtonLayout.getVat() +
-                                                 ",color = " + myButtonLayout.getColor() + " , printer= " + myButtonLayout
+                                    ",color = " + myButtonLayout.getColor() + " , printer= " + myButtonLayout
                                     .getPrinterId() + ", fidelity_discount=" + myButtonLayout.getFidelity_discount() + ", fidelity_credit=" + myButtonLayout
                                     .getFidelity_credit() + ", credit_value=" + myButtonLayout.getCredit_value() + " WHERE id = " + myButtonLayout
                                     .getID() + "");
@@ -547,11 +558,9 @@ public class MainActivity extends AppCompatActivity implements
 
                             setGridStatus(sh);
                             int catID = rv_adapter.returnCatIdBlackbox();
-                            switchView(MainActivity.MODIFIERS_VIEW, /**catID*/myButtonLayout.getID());
+                            switchView(MainActivity.MODIFIERS_VIEW, /*catID*/myButtonLayout.getID());
 
                             rv_adapter.closePopupWindow();
-
-
                         }
                         else
                         {
@@ -559,6 +568,7 @@ public class MainActivity extends AppCompatActivity implements
                                  .show();
                         }
                         break;
+
 
                     case "deleteButton":
                         check = jsonObject.getBoolean("check");
@@ -584,9 +594,9 @@ public class MainActivity extends AppCompatActivity implements
                         else if (jsonObject.getString("reason").equals("buttonInOrder"))
                         {
                             Toast.makeText(getApplicationContext(),
-                                           "This button or any of its sub-buttons is present in order N. " + (jsonObject
-                                                   .getInt("billNumber") + 1),
-                                           Toast.LENGTH_LONG
+                                    "This button or any of its sub-buttons is present in order N. " + (jsonObject
+                                            .getInt("billNumber") + 1),
+                                    Toast.LENGTH_LONG
                             ).show();
                         }
                         else
@@ -595,6 +605,7 @@ public class MainActivity extends AppCompatActivity implements
                                  .show();
                         }
                         break;
+
 
                     case "insertVat":
                         check = jsonObject.getBoolean("check");
@@ -633,6 +644,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         break;
 
+
                     case "insertVat1":
                         check = jsonObject.getBoolean("check");
                         if (check)
@@ -652,6 +664,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         break;
 
+
                     case "updateVat":
                         check = jsonObject.getBoolean("check");
                         if (check)
@@ -670,11 +683,11 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         break;
 
+
                     case "deleteVat":
                         check = jsonObject.getBoolean("check");
                         if (check)
                         {
-
                             int status = jsonObject.getInt("status");
                             switch (status)
                             {
@@ -688,9 +701,7 @@ public class MainActivity extends AppCompatActivity implements
 
                                 default:
                                     break;
-
                             }
-
                         }
                         else
                         {
@@ -698,6 +709,7 @@ public class MainActivity extends AppCompatActivity implements
                                  .show();
                         }
                         break;
+
 
                     case "insertFiscalPrinter":
                         check = jsonObject.getBoolean("check");
@@ -731,6 +743,7 @@ public class MainActivity extends AppCompatActivity implements
                                  .show();
                         }
                         break;
+
 
                     case "insertKitchenPrinter":
                         check = jsonObject.getBoolean("check");
@@ -960,6 +973,25 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         break;
 
+
+                    case "deleteFromModifierGroupAssigned":
+                        check = jsonObject.getBoolean("check");
+                        if (check)
+                        {
+                            group_rv_adapter.myPopupView.setActivated(false);
+
+                            dbA.execOnDb("DELETE FROM modifiers_group_assigned WHERE group_id = " + jsonObject.getInt("groupId") +
+                                    " AND prod_id=" + jsonObject.getInt("productId"));
+                        }
+
+                        else
+                        {
+                            //findViewById(R.id.AddUserWindow).startAnimation(shake);
+                            Toast.makeText(getApplicationContext(), "error deleting modifier group", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+
+
                     case "moveModifierGroup":
                         check = jsonObject.getBoolean("check");
                         if (check)
@@ -976,6 +1008,7 @@ public class MainActivity extends AppCompatActivity implements
                                  .show();
                         }
                         break;
+
 
                     case "updateModifierVat":
                         check = jsonObject.getBoolean("check");
@@ -997,6 +1030,7 @@ public class MainActivity extends AppCompatActivity implements
                                  .show();
                         }
                         break;
+
 
                     case "insertModifier":
                         check = jsonObject.getBoolean("check");
@@ -1020,6 +1054,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         break;
 
+
                     case "updateModifier":
                         check = jsonObject.getBoolean("check");
                         if (check)
@@ -1036,6 +1071,7 @@ public class MainActivity extends AppCompatActivity implements
                                  .show();
                         }
                         break;
+
 
                     case "deleteModifier":
                         check = jsonObject.getBoolean("check");
@@ -1054,6 +1090,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         break;
 
+
                     case "moveModifier":
                         check = jsonObject.getBoolean("check");
                         if (check)
@@ -1070,6 +1107,7 @@ public class MainActivity extends AppCompatActivity implements
                                  .show();
                         }
                         break;
+
 
                     case "deleteFromModifierAssigned":
                         check = jsonObject.getBoolean("check");
@@ -1094,6 +1132,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         break;
 
+
                     case "insertInModifierAssigned":
                         check = jsonObject.getBoolean("check");
                         if (check)
@@ -1101,13 +1140,15 @@ public class MainActivity extends AppCompatActivity implements
                             JSONObject            jObject  = new JSONObject(output).getJSONObject("ma");
                             JSONObject            jObject2 = new JSONObject(output).getJSONObject("mga");
                             ModifierGroupAssigned mga      = ModifierGroupAssigned.fromJson(jObject2);
+                            ModifierAssigned      ma       = ModifierAssigned.fromJson(jObject);
 
-                            dbA.execOnDb("DELETE FROM modifiers_group_assigned WHERE group_id = " + mga
-                                    .getGroupId() + " AND prod_id=" + mga.getProdId());
+
+                            //dbA.execOnDb("DELETE FROM modifiers_group_assigned WHERE group_id = " + mga.getGroupId() + " AND prod_id=" + mga.getProdId());
+                            dbA.execOnDb("DELETE FROM modifiers_group_assigned WHERE id = " + ma.getAssignementId());
+
                             dbA.insertModifiersGroupGroupsFromServer(mga);
 
-                            ModifierAssigned ma      = ModifierAssigned.fromJson(jObject);
-                            int              groupId = jsonObject.getInt("groupId");
+                            int groupId = jsonObject.getInt("groupId");
 
                             modifiers_rv_adapter.myPopupView.setActivated(true);
 
@@ -1119,7 +1160,7 @@ public class MainActivity extends AppCompatActivity implements
                                     .getModifierId());
 
                             dbA.execOnDb("INSERT INTO modifiers_assigned(assignment_id, modifier_id, fixed) " +
-                                                 "VALUES(" + ma.getAssignementId() + "," + ma.getModifierId() + ", " + ma
+                                    "VALUES(" + ma.getAssignementId() + "," + ma.getModifierId() + ", " + ma
                                     .getFixed() + ");");
 
                             modifiers_rv_adapter.nModifiersAttached++;
@@ -1134,6 +1175,7 @@ public class MainActivity extends AppCompatActivity implements
                                  .show();
                         }
                         break;
+
 
                     case "insertVatFromModifier":
                         check = jsonObject.getBoolean("check");
@@ -1179,6 +1221,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         break;
 
+
                     case "azzeramentoScontrini":
                         check = jsonObject.getBoolean("check");
                         if (check)
@@ -1211,6 +1254,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         break;
 
+
                     case "getInvoiceNumber":
                         check = jsonObject.getBoolean("check");
                         if (check)
@@ -1226,6 +1270,7 @@ public class MainActivity extends AppCompatActivity implements
 
                         }
                         break;
+
 
                     case "updateAdminDeviceInfo":
                         check = jsonObject.getBoolean("check");
@@ -1277,9 +1322,6 @@ public class MainActivity extends AppCompatActivity implements
                 e.printStackTrace();
             }
         }
-        else
-        {
-        }
     }
 
 
@@ -1307,7 +1349,7 @@ public class MainActivity extends AppCompatActivity implements
         if (e.getAction() == KeyEvent.ACTION_DOWN && e.getKeyCode() == KeyEvent.KEYCODE_ENTER)
         {
             Toast.makeText(getApplicationContext(),
-                           "barcode--->>>" + barcode, Toast.LENGTH_LONG
+                    "barcode--->>>" + barcode, Toast.LENGTH_LONG
             )
                  .show();
             if (isBarcodeShow)
@@ -1325,7 +1367,7 @@ public class MainActivity extends AppCompatActivity implements
     {
         TimerManager.stopPinpadAlert();
         TimerManager.setContext(getApplicationContext());
-        intentPasscode = new Intent(getApplicationContext(), PinpadBroadcastReciver.class);
+        Intent intentPasscode = new Intent(getApplicationContext(), PinpadBroadcastReciver.class);
 
         intentPasscode.putExtra("isAdmin", isAdmin);
         intentPasscode.putExtra("username", username);
@@ -1362,6 +1404,7 @@ public class MainActivity extends AppCompatActivity implements
         httpHandler.execute();
     }
 
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event)
     {
@@ -1384,17 +1427,17 @@ public class MainActivity extends AppCompatActivity implements
         return super.dispatchTouchEvent(event);
     }
 
+
     /**
      * END OF onCreate
      **/
-
-
     @Override
     protected void onResume()
     {
         super.onResume();
         switchView(3, 0);
     }
+
 
     // Updates adapter and sets it in gridview
     public void switchView(int view_id, int id)
@@ -1415,9 +1458,9 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+
     private void fireUserWindow()
     {
-
         LayoutInflater layoutInflater = (LayoutInflater) this
                 .getSystemService(LAYOUT_INFLATER_SERVICE);
         final View popupView = layoutInflater.inflate(R.layout.popup_user_interface, null);
@@ -1430,6 +1473,7 @@ public class MainActivity extends AppCompatActivity implements
         popupWindow.setFocusable(true);
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
     }
+
 
     public void setupAdminWindow(final View popupView, final PopupWindow popupWindow)
     {
@@ -1458,6 +1502,8 @@ public class MainActivity extends AppCompatActivity implements
 
             }
         });
+
+
         popupView.findViewById(R.id.addUser_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -1468,6 +1514,8 @@ public class MainActivity extends AppCompatActivity implements
                 setupNewUserWindow(popupView, popupWindow);
             }
         });
+
+
         popupView.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -1476,6 +1524,8 @@ public class MainActivity extends AppCompatActivity implements
                 popupWindow.dismiss();
             }
         });
+
+
         popupView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -1484,6 +1534,8 @@ public class MainActivity extends AppCompatActivity implements
                 popupWindow.dismiss();
             }
         });
+
+
         popupView.findViewById(R.id.configure_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -1492,41 +1544,28 @@ public class MainActivity extends AppCompatActivity implements
                 popupWindow.dismiss();
             }
         });
-        popupView.findViewById(R.id.printerOption_button)
-                 .setOnClickListener(new View.OnClickListener()
-                 {
 
-                     @Override
-                     public void onClick(View v)
-                     {
-                         Toast.makeText(me, R.string.please_perform_this_operation_from_operative, Toast.LENGTH_SHORT)
-                              .show();
-               /* popupView.findViewById(R.id.AdminWindow).setVisibility(View.GONE);
-                popupView.findViewById(R.id.AddUserWindow).setVisibility(View.GONE);
-                popupView.findViewById(R.id.SessionWindow_ma).setVisibility(View.VISIBLE);
 
-                @SuppressLint("WrongViewCast")
-                RelativeLayout.LayoutParams rlp1 =
-                        (RelativeLayout.LayoutParams) popupView.findViewById(R.id.SessionWindow_ma).getLayoutParams();
-                int top1 = (int)(dpHeight-52)/2 - rlp1.height/2;
-                rlp1.topMargin = top1;
-                popupView.findViewById(R.id.SessionWindow_ma).setLayoutParams(rlp1);
+        popupView.findViewById(R.id.printerOption_button).setOnClickListener(new View.OnClickListener()
+        {
+         @Override
+         public void onClick(View v)
+            { Toast.makeText(me, R.string.please_perform_this_operation_from_operative, Toast.LENGTH_SHORT).show();  }
+        });
 
-                setupNewSessionWindow(popupView, popupWindow);*/
 
-                     }
-                 });
         popupView.findViewById(R.id.switchUser_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
 
-                Intent intent = new Intent(getApplicationContext(), PinpadActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SplashScreen1.class);
                 startActivity(intent);
                 finish();
             }
         });
+
 
         popupView.findViewById(R.id.cashstatus_button).setOnClickListener(new View.OnClickListener()
         {
@@ -1553,16 +1592,15 @@ public class MainActivity extends AppCompatActivity implements
                     myThread.setClientThread();
                     myThread.setRunBaby(true);
                 }
+
                 else
-                {
-                    Toast.makeText(me, R.string.please_fill_cash_management_first, Toast.LENGTH_SHORT)
-                         .show();
-                }
+                    { Toast.makeText(me, R.string.please_fill_cash_management_first, Toast.LENGTH_SHORT).show(); }
 
             }
         });
 
     }
+
 
     public void openCashStatusPopup()
     {
@@ -1584,6 +1622,7 @@ public class MainActivity extends AppCompatActivity implements
         popupWindow.setFocusable(true);
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
     }
+
 
     public void setupCashStatus(final View popupView, final PopupWindow popupWindow)
     {
@@ -1625,30 +1664,17 @@ public class MainActivity extends AppCompatActivity implements
                         String total_deposit_string = total_deposit.getText().toString();
 
                         //all other fields not filled
-                        if (five_cents.getText().toString().equals("") && ten_cents.getText()
-                                                                                   .toString()
-                                                                                   .equals("") && twenty_cents
-                                .getText()
-                                .toString()
-                                .equals("")
-                                && fifty_cents.getText().toString().equals("") && one_euro.getText()
-                                                                                          .toString()
-                                                                                          .equals("") && two_euros
-                                .getText()
-                                .toString()
-                                .equals("")
-                                && five_euros.getText().toString().equals("") && ten_euros.getText()
-                                                                                          .toString()
-                                                                                          .equals("") && twenty_euros
-                                .getText()
-                                .toString()
-                                .equals("")
-                                && fifty_euros.getText()
-                                              .toString()
-                                              .equals("") && hundred_euros.getText()
-                                                                          .toString()
-                                                                          .equals("")
-                                && twohundred_euros.getText().toString().equals(""))
+                        if (five_cents.getText().toString().equals("") && ten_cents.getText().toString().equals("") &&
+                                twenty_cents.getText().toString().equals("") &&
+                                fifty_cents.getText().toString().equals("") &&
+                                one_euro.getText().toString().equals("") &&
+                                two_euros.getText().toString().equals("") &&
+                                five_euros.getText().toString().equals("") &&
+                                ten_euros.getText().toString().equals("") &&
+                                twenty_euros.getText().toString().equals("") &&
+                                fifty_euros.getText().toString().equals("") &&
+                                hundred_euros.getText().toString().equals("") &&
+                                twohundred_euros.getText().toString().equals(""))
                         {
 
                             dbA.insertTotalDeposit(Float.parseFloat(total_deposit_string));
@@ -1671,18 +1697,18 @@ public class MainActivity extends AppCompatActivity implements
                             String twoHundred  = twohundred_euros.getText().toString();
 
                             dbA.insertCashStatus(Float.parseFloat(total_deposit_string.replace(",", ".")),
-                                                 fiveCents.equals("") ? 0 : Integer.parseInt(fiveCents), tenCents
-                                                         .equals("") ? 0 : Integer.parseInt(tenCents),
-                                                 twentyCents.equals("") ? 0 : Integer.parseInt(twentyCents), fiftyCents
-                                                         .equals("") ? 0 : Integer.parseInt(fiftyCents),
-                                                 oneE.equals("") ? 0 : Integer.parseInt(oneE), twoE.equals("") ? 0 : Integer
-                                            .parseInt(twoE),
-                                                 fiveE.equals("") ? 0 : Integer.parseInt(fiveE), tenE
-                                                         .equals("") ? 0 : Integer.parseInt(tenE),
-                                                 twentyE.equals("") ? 0 : Integer.parseInt(twentyE), fiftyE
-                                                         .equals("") ? 0 : Integer.parseInt(fiftyE),
-                                                 hundred.equals("") ? 0 : Integer.parseInt(hundred), twoHundred
-                                                         .equals("") ? 0 : Integer.parseInt(twoHundred)
+                                    fiveCents.equals("") ? 0 : Integer.parseInt(fiveCents),
+                                    tenCents.equals("") ? 0 : Integer.parseInt(tenCents),
+                                    twentyCents.equals("") ? 0 : Integer.parseInt(twentyCents),
+                                    fiftyCents.equals("") ? 0 : Integer.parseInt(fiftyCents),
+                                    oneE.equals("") ? 0 : Integer.parseInt(oneE),
+                                    twoE.equals("") ? 0 : Integer.parseInt(twoE),
+                                    fiveE.equals("") ? 0 : Integer.parseInt(fiveE),
+                                    tenE.equals("") ? 0 : Integer.parseInt(tenE),
+                                    twentyE.equals("") ? 0 : Integer.parseInt(twentyE),
+                                    fiftyE.equals("") ? 0 : Integer.parseInt(fiftyE),
+                                    hundred.equals("") ? 0 : Integer.parseInt(hundred),
+                                    twoHundred.equals("") ? 0 : Integer.parseInt(twoHundred)
                             );
 
                             total_deposit.setText("");
@@ -1878,6 +1904,7 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
+
     /**
      * show setup new session windows to create sessions, only admin can do this
      */
@@ -1892,10 +1919,10 @@ public class MainActivity extends AppCompatActivity implements
 
         DividerItemDecoration divider = new
                 DividerItemDecoration(this,
-                                      DividerItemDecoration.VERTICAL
+                DividerItemDecoration.VERTICAL
         );
         divider.setDrawable(ContextCompat.getDrawable(getBaseContext(),
-                                                      R.drawable.divider_line_horizontal1dp
+                R.drawable.divider_line_horizontal1dp
         ));
         session_recycler.addItemDecoration(divider);
 
@@ -1926,7 +1953,7 @@ public class MainActivity extends AppCompatActivity implements
                     {
                         String formattedHours   = new DecimalFormat("00").format((selectedHour));
                         String formattedMinutes = new DecimalFormat("00").format((selectedMinute));
-                        startTimeContainer.setText(formattedHours + ":" + formattedMinutes);
+                        startTimeContainer.setText(String.format("%s:%s", formattedHours, formattedMinutes));
                         String startTime = formattedHours + ":" + formattedMinutes + ":00";
 
                     }
@@ -1953,7 +1980,7 @@ public class MainActivity extends AppCompatActivity implements
                     {
                         String formattedHours   = new DecimalFormat("00").format((selectedHour));
                         String formattedMinutes = new DecimalFormat("00").format((selectedMinute));
-                        endTimeContainer.setText(formattedHours + ":" + formattedMinutes);
+                        endTimeContainer.setText(String.format("%s:%s", formattedHours, formattedMinutes));
                         String endTime = formattedHours + ":" + formattedMinutes + ":00";
                     }
                 }, hour, minute, true);//Yes 24 hour time
@@ -1972,8 +1999,7 @@ public class MainActivity extends AppCompatActivity implements
                 final CustomEditText newSessionNameContainer = popupView.findViewById(R.id.new_session_name_et);
                 CustomButton         startTimeContainer      = popupView.findViewById(R.id.start_session_button_et);
                 CustomButton         endTimeContainer        = popupView.findViewById(R.id.end_session_button_et);
-                String sessionName = newSessionNameContainer.getText()
-                                                            .toString();
+                String sessionName = newSessionNameContainer.getText().toString();
                 String startTime = startTimeContainer.getText()
                                                      .toString();
                 String endTime = endTimeContainer.getText()
@@ -1990,10 +2016,10 @@ public class MainActivity extends AppCompatActivity implements
 
                     DividerItemDecoration divider = new
                             DividerItemDecoration(getApplicationContext(),
-                                                  DividerItemDecoration.VERTICAL
+                            DividerItemDecoration.VERTICAL
                     );
                     divider.setDrawable(ContextCompat.getDrawable(getBaseContext(),
-                                                                  R.drawable.divider_line_horizontal1dp
+                            R.drawable.divider_line_horizontal1dp
                     ));
                     session_recycler.addItemDecoration(divider);
 
@@ -2001,14 +2027,13 @@ public class MainActivity extends AppCompatActivity implements
                     startTimeContainer.setText(R.string.startTime);
                     endTimeContainer.setText(R.string.endTime);
                 }
-                else
-                {
-                    Toast.makeText(MainActivity.this, R.string.please_fill_all_fields, Toast.LENGTH_SHORT)
-                         .show();
 
-                }
+                else
+                    { Toast.makeText(MainActivity.this, R.string.please_fill_all_fields, Toast.LENGTH_SHORT).show(); }
             }
         });
+
+
         popupView.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -2029,17 +2054,20 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+
     @Override
     public void setButtonSet(int sessionTimeId, String sessionName, String start, String end)
     {
 
     }
 
+
     @Override
     public void deleteSession(int sessionTimeId)
     {
 
     }
+
 
     public void setButtonSetPopup(int sessionTimeId, String sessionName, String start, String end, View popupView, PopupWindow popupWindow)
     {
@@ -2095,7 +2123,7 @@ public class MainActivity extends AppCompatActivity implements
                     {
                         String formattedHours   = new DecimalFormat("00").format((selectedHour));
                         String formattedMinutes = new DecimalFormat("00").format((selectedMinute));
-                        endTimeContainer.setText(formattedHours + ":" + formattedMinutes);
+                        endTimeContainer.setText(String.format("%s:%s", formattedHours, formattedMinutes));
                         String endTime = formattedHours + ":" + formattedMinutes + ":00";
                     }
                 }, hour, minute, true);//Yes 24 hour time
@@ -2116,12 +2144,9 @@ public class MainActivity extends AppCompatActivity implements
                 final CustomEditText newSessionNameContainer = popupView.findViewById(R.id.new_session_name_et);
                 CustomButton         startTimeContainer      = popupView.findViewById(R.id.start_session_button_et);
                 CustomButton         endTimeContainer        = popupView.findViewById(R.id.end_session_button_et);
-                String sessionName = newSessionNameContainer.getText()
-                                                            .toString();
-                String startTime = startTimeContainer.getText()
-                                                     .toString();
-                String endTime = endTimeContainer.getText()
-                                                 .toString();
+                String sessionName = newSessionNameContainer.getText().toString();
+                String startTime = startTimeContainer.getText().toString();
+                String endTime = endTimeContainer.getText().toString();
                 if (!sessionName.equals("") && !startTime.equals("Start Time") && !endTime.equals("End Time"))
                 {
                     dbA.updateNewSessionTime(sessionTimeId, startTime + ":00", endTime + ":00", sessionName);
@@ -2136,7 +2161,9 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         });
-        /**
+
+
+        /*
          *  X button behavior while in New User window
          */
         popupView.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
@@ -2150,18 +2177,20 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
+
     public void deleteSessionPopup(int sessionId, View popupView, PopupWindow popupWindow)
     {
         dbA.deleteSessionTime(sessionId);
         setupNewSessionWindow(popupView, popupWindow);
     }
 
+
     public void setupNewUserWindow(final View popupView, final PopupWindow popupWindow)
     {
         RecyclerView user_recycler = popupView.findViewById(R.id.users_recycler);
         user_recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         user_recycler.setHasFixedSize(true);
-        userAdapter = new UserAdapter(this, dbA, userType, userId, popupView, popupWindow);
+        UserAdapter userAdapter = new UserAdapter(this, dbA, userType, userId, popupView, popupWindow);
         user_recycler.setAdapter(userAdapter);
 
 
@@ -2258,7 +2287,9 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         });
-        /**
+
+
+        /*
          *  X button behavior while in New User window
          */
         popupView.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
@@ -2278,6 +2309,8 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
+
+
     /**
      * Default settings setup: grid manager, recycler view, rv adapter etc..
      */
@@ -2292,6 +2325,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
+
         this.findViewById(R.id.orders).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -2302,6 +2336,8 @@ public class MainActivity extends AppCompatActivity implements
                 startActivity(intent);*/
             }
         });
+
+
         findViewById(R.id.clients).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -2323,6 +2359,8 @@ public class MainActivity extends AppCompatActivity implements
                 fireSingleInputDialogForTimerPopup();
             }
         });
+
+
         //if(isAdmin)
         ((CustomTextView) findViewById(R.id.admin_username_button_tv)).setText(username);
         findViewById(R.id.admin).setOnClickListener(new View.OnClickListener()
@@ -2333,22 +2371,17 @@ public class MainActivity extends AppCompatActivity implements
                 switch (isAdmin)
                 {
                     case 0:
-                        fireUserWindow();
-                        break;
                     case 1:
                         fireUserWindow();
                         break;
-                    case 2:
 
-                        break;
+                    case 2:
                     default:
                         break;
                 }
-
-                /*Intent intent = new Intent(MainActivity.this, Login.class);
-                startActivity(intent);*/
             }
         });
+
 
         findViewById(R.id.table_set).setOnClickListener(new View.OnClickListener()
         {
@@ -2365,18 +2398,19 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         wereModifiersOpen = false;
-        recyclerview      = findViewById(R.id.recyclerView);
+        RecyclerView recyclerview = findViewById(R.id.recyclerView);
         recyclerview.setHasFixedSize(true);
         grid_manager = new GridLayoutManager(this, 4);
         grid_manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup()
         {
-
             @Override
             public int getSpanSize(int position)
             {
                 return 1;
             }
         });
+
+
         recyclerview.setLayoutManager(grid_manager);
         if (restorePreviousView)
         {
@@ -2386,11 +2420,13 @@ public class MainActivity extends AppCompatActivity implements
         {
             getHomeButtonSet();
         }
+
         recyclerview.addItemDecoration(new LineSeparator(this, 14));
         if (!restorePreviousView)
         {
             rv_adapter = new GridAdapter(this, buttons, dbA);
         }
+
         recyclerview.setAdapter(rv_adapter);
 
         ItemTouchHelper.Callback callback =
@@ -2488,6 +2524,7 @@ public class MainActivity extends AppCompatActivity implements
                      {
                          Toast.makeText(me, "Update Invoice Number", Toast.LENGTH_SHORT).show();
                          popupWindow.dismiss();
+
                          if (!StaticValue.blackbox)
                          {
                              openUpdateInvoiceNumber();
@@ -2509,7 +2546,9 @@ public class MainActivity extends AppCompatActivity implements
 
             }
         });
-        /**
+
+
+        /*
          *  X button behavior while in New User window
          */
         popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
@@ -2522,15 +2561,15 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
+
     public void openUpdateInvoiceForBlackbox()
     {
         List<NameValuePair> params     = new ArrayList<NameValuePair>(2);
-        String              android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        params.add(new BasicNameValuePair("androidId", android_id));
+        params.add(new BasicNameValuePair("androidId", StaticValue.androidId));
 
         callHttpHandler("/getInvoiceNumber", params);
-
     }
+
 
     public void openUpdateInvoiceNumber()
     {
@@ -2552,6 +2591,7 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+
     public void setupUpdateInvoicePopup(View popupview, final PopupWindow popupWindow)
     {
         CustomEditText text = popupview.findViewById(R.id.single_input);
@@ -2572,8 +2612,7 @@ public class MainActivity extends AppCompatActivity implements
                     {
                         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
                         params.add(new BasicNameValuePair("numeroFattura", newNumber));
-                        String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-                        params.add(new BasicNameValuePair("androidId", android_id));
+                        params.add(new BasicNameValuePair("androidId", StaticValue.androidId));
 
                         callHttpHandler("/updateInvoiceNumber", params);
 
@@ -2592,7 +2631,9 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         });
-        /**
+
+
+        /*
          *  X button behavior while in New User window
          */
         popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
@@ -2604,9 +2645,8 @@ public class MainActivity extends AppCompatActivity implements
                 openSettingPopup();
             }
         });
-
-
     }
+
 
     public void openDatabasePopup()
     {
@@ -2634,6 +2674,7 @@ public class MainActivity extends AppCompatActivity implements
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
 
     }
+
 
     private void setupDatabasePopup(View popupview, final PopupWindow popupWindow)
     {
@@ -2685,7 +2726,7 @@ public class MainActivity extends AppCompatActivity implements
                 if (!database.equals(""))
                 {
                     File file = new File(Environment.getExternalStorageDirectory() + File.separator
-                                                 + "Download" + File.separator + database + ".db");
+                            + "Download" + File.separator + database + ".db");
                     if (file.exists())
                     {
                         //Do something
@@ -2715,7 +2756,9 @@ public class MainActivity extends AppCompatActivity implements
                 popupWindow.dismiss();
             }
         });
-        /**
+
+
+        /*
          *  X button behavior while in New User window
          */
         popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
@@ -2724,11 +2767,11 @@ public class MainActivity extends AppCompatActivity implements
             public void onClick(View v)
             {
                 popupWindow.dismiss();
-
             }
         });
 
     }
+
 
     public void exportDatabase(String databaseName, View popupview)
     {
@@ -2737,6 +2780,7 @@ public class MainActivity extends AppCompatActivity implements
             File backupDB = new File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
                     databaseName + ".db"
+
             ); // for example "my_data_backup.db"
             File currentDB = getApplicationContext().getDatabasePath("mydatabase.db");
             if (currentDB.exists())
@@ -2760,15 +2804,16 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+
     public void importDatabase(String databaseName)
     {
         try
         {
             dbA.getDbHelper()
                .importDatabase(Environment.getExternalStorageDirectory() + File.separator
-                                       + "Download" + File.separator + databaseName + ".db", getApplicationContext()
-                                       .getDatabasePath("mydatabase.db")
-                                       .getPath());
+                       + "Download" + File.separator + databaseName + ".db", getApplicationContext()
+                       .getDatabasePath("mydatabase.db")
+                       .getPath());
 
             Intent i = getBaseContext().getPackageManager()
                                        .getLaunchIntentForPackage(getBaseContext().getPackageName());
@@ -2781,6 +2826,7 @@ public class MainActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
     }
+
 
     private void openRFIDPopup()
     {
@@ -2813,6 +2859,7 @@ public class MainActivity extends AppCompatActivity implements
 
     //class for Printer Model Selection
 
+
     private void setupIpSettingsPopup()
     {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -2825,14 +2872,15 @@ public class MainActivity extends AppCompatActivity implements
         );
 
         popupView.post(() ->
-                       {
-                           //setupSettingWindows(popupView, popupWindow);
-                       });
+        {
+            //setupSettingWindows(popupView, popupWindow);
+        });
 
         setUpIpSettingsLayout(popupView, popupWindow);
         popupWindow.setFocusable(true);
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
     }
+
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id)
@@ -2848,11 +2896,13 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+
     @Override
     public void onNothingSelected(AdapterView<?> adapterView)
     {
 
     }
+
 
     public void setSelectedPrinter(View popupview, KitchenPrinter kitchenPrinter)
     {
@@ -2873,19 +2923,19 @@ public class MainActivity extends AppCompatActivity implements
             if (!kitchenPrinter.getName().equals(""))
             {
                 ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_name)).setText(kitchenPrinter
-                                                                                                     .getName());
+                        .getName());
             }
 
             if (!kitchenPrinter.getAddress().equals(""))
             {
                 ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_IP)).setText(kitchenPrinter
-                                                                                                   .getAddress());
+                        .getAddress());
             }
 
             if (kitchenPrinter.getPort() > 0)
             {
                 ((CustomEditText) popupview.findViewById(R.id.kitchen_printer_port)).setText(String.valueOf(kitchenPrinter
-                                                                                                                    .getPort()));
+                        .getPort()));
 
             }
 
@@ -2893,6 +2943,7 @@ public class MainActivity extends AppCompatActivity implements
 
         }
     }
+
 
     public void setSelectedBlackbox(View popupview, BlackboxInfo blackbox)
     {
@@ -2907,6 +2958,7 @@ public class MainActivity extends AppCompatActivity implements
         popupview.findViewById(R.id.blackbox_selection).setVisibility(View.VISIBLE);
         ((CustomEditText) popupview.findViewById(R.id.blackbox_IP)).setText(blackbox.getAddress());
     }
+
 
     private void setUpIpSettingsLayout(View popupview, final PopupWindow popupWindow)
     {
@@ -2970,13 +3022,13 @@ public class MainActivity extends AppCompatActivity implements
             if (!fiscalPrinter.getAddress().equals(""))
             {
                 ((CustomEditText) popupview.findViewById(R.id.pos_printer_IP)).setText(fiscalPrinter
-                                                                                               .getAddress());
+                        .getAddress());
             }
 
             if (fiscalPrinter.getPort() > 0)
             {
                 ((CustomEditText) popupview.findViewById(R.id.pos_printer_port)).setText(String.valueOf(fiscalPrinter
-                                                                                                                .getPort()));
+                        .getPort()));
 
             }
 
@@ -3037,13 +3089,13 @@ public class MainActivity extends AppCompatActivity implements
                     if (!fiscalPrinter.getAddress().equals(""))
                     {
                         ((CustomEditText) popupview.findViewById(R.id.pos_printer_IP)).setText(fiscalPrinter
-                                                                                                       .getAddress());
+                                .getAddress());
                     }
 
                     if (fiscalPrinter.getPort() > 0)
                     {
                         ((CustomEditText) popupview.findViewById(R.id.pos_printer_port)).setText(String.valueOf(fiscalPrinter
-                                                                                                                        .getPort()));
+                                .getPort()));
 
                     }
                     checkbox.setActivated(fiscalPrinter.isUseApi());
@@ -3141,7 +3193,7 @@ public class MainActivity extends AppCompatActivity implements
                                 params.add(new BasicNameValuePair("port", port));
                                 params.add(new BasicNameValuePair("api", String.valueOf(i)));
                                 params.add(new BasicNameValuePair("printerId", String.valueOf(fiscalPrinter
-                                                                                                      .getId())));
+                                        .getId())));
 
                                 callHttpHandler("/insertFiscalPrinter", params);
                             }
@@ -3210,7 +3262,7 @@ public class MainActivity extends AppCompatActivity implements
                                 params.add(new BasicNameValuePair("port", portK));
                                 params.add(new BasicNameValuePair("singleOrder", String.valueOf(iK)));
                                 params.add(new BasicNameValuePair("printerId", String.valueOf(selectedKitchenPrinter
-                                                                                                      .getId())));
+                                        .getId())));
                                 myPopupView = popupview;
                                 callHttpHandler("/insertKitchenPrinter", params);
                             }
@@ -3329,6 +3381,7 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
+
     public void openCashManagementPopup()
     {
         LayoutInflater layoutInflater = (LayoutInflater) this
@@ -3349,6 +3402,7 @@ public class MainActivity extends AppCompatActivity implements
         popupWindow.setFocusable(true);
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
     }
+
 
     public void setupCashManagement(final View popupView, final PopupWindow popupWindow)
     {
@@ -3462,20 +3516,20 @@ public class MainActivity extends AppCompatActivity implements
                         String twoHundred  = twohundred_euros.getText().toString();
 
                         dbA.insertCashManagement(Float.parseFloat(min_cash_string.replace(",", ".")),
-                                                 Float.parseFloat(max_cash_string.replace(",", ".")),
-                                                 Float.parseFloat(min_withdraw_string.replace(",", ".")), fiveCents
-                                                         .equals("") ? 0 : Integer.parseInt(fiveCents),
-                                                 tenCents.equals("") ? 0 : Integer.parseInt(tenCents), twentyCents
-                                                         .equals("") ? 0 : Integer.parseInt(twentyCents),
-                                                 fiftyCents.equals("") ? 0 : Integer.parseInt(fiftyCents), oneE
-                                                         .equals("") ? 0 : Integer.parseInt(oneE),
-                                                 twoE.equals("") ? 0 : Integer.parseInt(twoE), fiveE
-                                                         .equals("") ? 0 : Integer.parseInt(fiveE), tenE
-                                                         .equals("") ? 0 : Integer.parseInt(tenE),
-                                                 twentyE.equals("") ? 0 : Integer.parseInt(twentyE), fiftyE
-                                                         .equals("") ? 0 : Integer.parseInt(fiftyE),
-                                                 hundred.equals("") ? 0 : Integer.parseInt(hundred), twoHundred
-                                                         .equals("") ? 0 : Integer.parseInt(twoHundred)
+                                Float.parseFloat(max_cash_string.replace(",", ".")),
+                                Float.parseFloat(min_withdraw_string.replace(",", ".")), fiveCents
+                                        .equals("") ? 0 : Integer.parseInt(fiveCents),
+                                tenCents.equals("") ? 0 : Integer.parseInt(tenCents), twentyCents
+                                        .equals("") ? 0 : Integer.parseInt(twentyCents),
+                                fiftyCents.equals("") ? 0 : Integer.parseInt(fiftyCents), oneE
+                                        .equals("") ? 0 : Integer.parseInt(oneE),
+                                twoE.equals("") ? 0 : Integer.parseInt(twoE), fiveE
+                                        .equals("") ? 0 : Integer.parseInt(fiveE), tenE
+                                        .equals("") ? 0 : Integer.parseInt(tenE),
+                                twentyE.equals("") ? 0 : Integer.parseInt(twentyE), fiftyE
+                                        .equals("") ? 0 : Integer.parseInt(fiftyE),
+                                hundred.equals("") ? 0 : Integer.parseInt(hundred), twoHundred
+                                        .equals("") ? 0 : Integer.parseInt(twoHundred)
                         );
 
                         min_cash.setText("");
@@ -3531,6 +3585,7 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
+
     private void setupRegistrationLayout()
     {
         LayoutInflater layoutInflater = (LayoutInflater) this
@@ -3558,6 +3613,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
     }
+
 
     private void setUpRegistrationLayout(final View popupview, final PopupWindow popupWindow)
     {
@@ -3623,7 +3679,7 @@ public class MainActivity extends AppCompatActivity implements
                     {
                         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
                         String android_id = Settings.Secure.getString(getApplicationContext()
-                                                                              .getContentResolver(), Settings.Secure.ANDROID_ID);
+                                .getContentResolver(), Settings.Secure.ANDROID_ID);
                         params.add(new BasicNameValuePair("androidId", android_id));
                         params.add(new BasicNameValuePair("deviceId", String.valueOf(deviceInfo.getId())));
                         params.add(new BasicNameValuePair("ragioneSociale", ragioneSociale));
@@ -3693,6 +3749,7 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
+
     public void fireSingleInputDialogForTimerPopup()
     {
         LayoutInflater layoutInflater = (LayoutInflater) this
@@ -3756,6 +3813,7 @@ public class MainActivity extends AppCompatActivity implements
         popupWindow.setFocusable(true);
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
     }
+
 
     public String fireSingleInputDialogPopup()
     {
@@ -3824,13 +3882,14 @@ public class MainActivity extends AppCompatActivity implements
         return licenseString;
     }
 
+
     /**
      * Modifiers settings setup
      */
     private void setModifiersSettings()
     {
-        mod_group_recyclerview = findViewById(R.id.modifiersGroupRecyclerView);
-        grid_manager           = new GridLayoutManager(this, 6);
+        RecyclerView mod_group_recyclerview = findViewById(R.id.modifiersGroupRecyclerView);
+        grid_manager = new GridLayoutManager(this, 6);
         grid_manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup()
         {
 
@@ -3881,8 +3940,7 @@ public class MainActivity extends AppCompatActivity implements
                     else
                     {
                         ((CustomTextView) findViewById(R.id.modifiers_group_tv)).setText(R.string.select_modifier_group);
-                        ((CustomTextView) findViewById(R.id.infoTextView))
-                                .setText(R.string.info_tv_main_modifiers);
+                        ((CustomTextView) findViewById(R.id.infoTextView)).setText(R.string.info_tv_main_modifiers);
                         ((CustomButton) v).setText(R.string.select_group);
                         group_rv_adapter.setFireGroupPopupWindow();
                         group_rv_adapter.switchAddGroupActive(false);
@@ -3979,9 +4037,9 @@ public class MainActivity extends AppCompatActivity implements
                         if (!((Activity) me).findViewById(R.id.addGroup).isActivated())
                         {
                             ((Activity) me).findViewById(R.id.addGroup).setActivated(!
-                                                                                             ((Activity) me)
-                                                                                                     .findViewById(R.id.addGroup)
-                                                                                                     .isActivated());
+                                    ((Activity) me)
+                                            .findViewById(R.id.addGroup)
+                                            .isActivated());
                             group_rv_adapter.setAddGroupActive();
                         }
                         //addModifier era attivo
@@ -4170,7 +4228,6 @@ public class MainActivity extends AppCompatActivity implements
         });
 
 
-
         findViewById(R.id.addModifier).setOnLongClickListener(new View.OnLongClickListener()
         {
             @Override
@@ -4352,7 +4409,7 @@ public class MainActivity extends AppCompatActivity implements
                 isAdded = true;
             }
             modifiers_rv_adapter = new ModifierAdapter(this, dbA, grid_status.getCurrent_product(),
-                                                       groupID, group_rv_adapter
+                    groupID, group_rv_adapter
             );
             modifiers_recyclerview.setAdapter(modifiers_rv_adapter);
             ItemTouchHelper.Callback callback =
@@ -4427,8 +4484,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private void getHomeButtonSet()
     {
-        buttons         = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE catID = 0 AND id!=-30 and id!=-20 ORDER BY position");
-        big_plus_button = new ButtonLayout(this);
+        buttons = dbA.fetchButtonsByQuery("SELECT * FROM button WHERE catID = 0 AND id!=-30 and id!=-20 ORDER BY position");
+        ButtonLayout big_plus_button = new ButtonLayout(this);
         big_plus_button.setID(-11);
         big_plus_button.setPos(buttons.size());
         big_plus_button.setImg("big_plus_button");
@@ -4440,6 +4497,7 @@ public class MainActivity extends AppCompatActivity implements
     {
         grid_status = s;
     }
+
 
     public void notifyVatValueModified()
     {
@@ -4496,21 +4554,25 @@ public class MainActivity extends AppCompatActivity implements
                 String surname  = Surname.getText().toString();
                 String passcode = Passcode.getText().toString();
                 String email    = Email.getText().toString();
+
                 if (name.equals("") || surname.equals("") /*|| email.equals("") */ || passcode.equals(""))
                 {
                     Toast.makeText(getBaseContext(), R.string.please_fill_all_fields, Toast.LENGTH_SHORT)
                          .show();
                 }
+
                 else if (dbA.checkIfPasscodeExistsWithId(passcode, user.getId()))
                 {
                     Toast.makeText(getBaseContext(), R.string.passcode_is_already_used, Toast.LENGTH_SHORT)
                          .show();
                 }
+
                 else if (!Pattern.matches("^[-a-zA-Z0-9_]+@[a-zA-Z]+\\.[a-zA-Z]{2,5}$", email))
                 {
                     Toast.makeText(getBaseContext(), R.string.not_a_valid_email, Toast.LENGTH_SHORT)
                          .show();
                 }
+
                 else
                 {
                     if (StaticValue.blackbox)
@@ -4529,9 +4591,9 @@ public class MainActivity extends AppCompatActivity implements
                         httpHandler.UpdateInfoAsyncTask("/updateUser", params);
                         httpHandler.execute();
                     }
+
                     else
                     {
-                        String password = passcode;
                         if (user.getUserRole() == 0)
                         {
                             dbA.updateUser(name, surname, passcode, email, 0, user.getId());
@@ -4549,23 +4611,12 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         setupNewUserWindow(popupview, popupWindow);
                     }
-
-                   /* String password = passcode;
-                    if(user.getUserRole()==0){
-                        dbA.updateUser(name, surname, passcode,email,  0, user.getId());
-                    }else {
-                        if (manager.isActivated()) {
-                            dbA.updateUser(name, surname, passcode,email,  1, user.getId());
-                        } else *//*if(cashier.isActivated())*//* {
-                            dbA.updateUser(name, surname, passcode, email, 2, user.getId());
-                        }
-                    }
-                    setupNewUserWindow(popupview, popupWindow);*/
-
                 }
             }
         });
-        /**
+
+
+        /*
          *  X button behavior while in New User window
          */
         popupview.findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
@@ -4578,17 +4629,20 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
+
     @Override
     public void onTaskEndWithResult(String success)
     {
 
     }
 
+
     @Override
     public void onTaskFinishGettingData(String result)
     {
 
     }
+
 
     public void setupDismissKeyboard(View view)
     {
@@ -4607,6 +4661,8 @@ public class MainActivity extends AppCompatActivity implements
                     return false;
                 }
             });
+
+
             view.setOnFocusChangeListener(new View.OnFocusChangeListener()
             {
                 @Override
@@ -4616,7 +4672,7 @@ public class MainActivity extends AppCompatActivity implements
                     {
                         if (!(getCurrentFocus() instanceof EditText) && !keyboard_next_flag)
                         {
-                            Log.d(TAG, "[setupdDismissKeyboard]::[OnFocusChange] You clicked out of an Edit Text!");
+                            Log.d(TAG, "[setupDismissKeyboard]::[OnFocusChange] You clicked out of an Edit Text!");
                             InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                         }
@@ -4625,6 +4681,8 @@ public class MainActivity extends AppCompatActivity implements
                 }
             });
         }
+
+
         //If a layout container, iterate over children and seed recursion.
         if (view instanceof ViewGroup)
         {
@@ -4635,7 +4693,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
     }
-} // END OF MainActivity
+}
 
 
 

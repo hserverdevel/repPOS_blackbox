@@ -262,7 +262,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CLIENT_CREATE = "CREATE TABLE client (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "name TEXT, " +
             "surname TEXT, " +
-            "email TEXT);";
+            "email TEXT," +
+            "fidelity_id INTEGER DEFAULT null," +
+            "codeValue TEXT DEFAULT null)";
 
     //add
     private static final String COMPANY_CREATE = "CREATE TABLE company (id INTEGER PRIMARY KEY AUTOINCREMENT, " +

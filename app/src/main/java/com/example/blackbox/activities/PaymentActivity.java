@@ -116,135 +116,194 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 {
 
     public static final String TAG = "<PaymentActivity>";
-
-    public static String deviceName = "A";
-
-    private DatabaseAdapter dbA;
-
-    private PaymentActivity me;
-
-    public static final int CALCULATOR_ACTIVATION = 1;
-    public static final int CALCULATOR_NOTIFY_COST = 2;
-    public static final int CALCULATOR_OFF = 3;
-    public static final int CALCULATOR_INSERT_NUMBER = 4;
-    public static final int CALCULATOR_INSERT_PERCENTAGE = 5;
-    public static final int ADD_SUBDIVISION_ELEMENT = 6;
-    public static final int DISCOUNT_MODE_OFF = 7;
-    public static final int CALCULATOR_INSERT_PARTIAL = 103;
-    public static final int CALCULATOR_ACTIVATION_TICKET = 104;
+    public static final int CALCULATOR_ACTIVATION            = 1;
+    public static final int CALCULATOR_NOTIFY_COST           = 2;
+    public static final int CALCULATOR_OFF                   = 3;
+    public static final int CALCULATOR_INSERT_NUMBER         = 4;
+    public static final int CALCULATOR_INSERT_PERCENTAGE     = 5;
+    public static final int ADD_SUBDIVISION_ELEMENT          = 6;
+    public static final int DISCOUNT_MODE_OFF                = 7;
+    public static final int CALCULATOR_INSERT_PARTIAL        = 103;
+    public static final int CALCULATOR_ACTIVATION_TICKET     = 104;
     public static final int CALCULATOR_ACTIVATION_FOR_CREDIT = 105;
-    public static final int CALCULATOR_ACTIVATION_FIDELITY = 106;
-
-
-    private CalculatorFragment calculatorFragment;
-    private OptionsFragment optionsFragment;
-    private OrderFragment orderFragment;
-    private OrderSubdivisionFragment orderSubdivisionFragment;
-
-    PaymentActivity forClient = null;
-
-    private ClientsPopupAdapter clientsAdapter;
-
-    private Intent intentPay;
-    private Intent intentPasscode;
-
-    private ButtonPermission buttonPer;
-
-    private CustomButton perc_button;
-    private CustomButton perperson_button;
-    private CustomButton peritem_button;
-    private CustomButton pernumber_button;
-    public boolean greenButton;
-    public boolean optionbutton = true;
-
-
-    public boolean anyButtonPressed = false;
-    private boolean percentageSplit = false;
-    private boolean numberSplit = false;
-    private boolean billSplitToZero = false;
-    public Boolean splitItemSet = false;
-    public Boolean isHomage = false;
-    private boolean discountSet = false;
-    public boolean isCalculatorOn = false;
-    public boolean invoiceBill = false;
-
-    // this is used only for the buy credit specific mode
-    private int clientForCredit;
-
-
-    private int selectedClient;
-    private int tableNumber = -1;
-    private int orderNumber = -1;
-
-    private int fidelityClientId;
-
-    public int mode;
-
-    public static final int PAY_TOTAL_BILL = 101;
-    public static final int PAY_PARTIAL_BILL = 102;
-    private int pay_mode = PAY_TOTAL_BILL;
+    public static final int CALCULATOR_ACTIVATION_FIDELITY   = 106;
+    public static final int PAY_TOTAL_BILL                   = 101;
+    public static final int PAY_PARTIAL_BILL                 = 102;
+    public static String deviceName = "A";
+    private final int red       = Color.parseColor("#cd0046");
+    private final int black     = Color.parseColor("#DD000000");
+    private final int lightBlue = Color.parseColor("#05a8c0");
+    private final boolean billSplitToZero  = false;
+    public              int mode;
+    public        boolean greenButton;
+    public        boolean optionbutton     = true;
+    public        boolean anyButtonPressed = false;
+    public        Boolean splitItemSet     = false;
+    public        Boolean isHomage         = false;
+    public        boolean isCalculatorOn   = false;
+    public        boolean invoiceBill      = false;
 
     public int paymentType = -1;
-
-    private String passcode;
-    private String email = "";
-    private String IP = "";
-
-    protected ArrayList<CashButtonLayout> products = new ArrayList<CashButtonLayout>();
-    protected Map<CashButtonLayout, ArrayList<CashButtonListLayout>> modifiers;
-    public ArrayList<Integer> creditId = new ArrayList<Integer>();
-
-
-    private final int red = Color.parseColor("#cd0046");
-    private final int black = Color.parseColor("#DD000000");
-    private final int lightBlue = Color.parseColor("#05a8c0");
 
     public float density;
     public float dpHeight;
     public float dpWidth;
+    public    ArrayList<Integer>                                     creditId = new ArrayList<Integer>();
+    protected ArrayList<CashButtonLayout>                            products = new ArrayList<CashButtonLayout>();
+    protected Map<CashButtonLayout, ArrayList<CashButtonListLayout>> modifiers;
+    PaymentActivity forClient = null;
+    private DatabaseAdapter          dbA;
+    private PaymentActivity          me;
+    private CalculatorFragment       calculatorFragment;
+    private OptionsFragment          optionsFragment;
+    private OrderFragment            orderFragment;
+    private OrderSubdivisionFragment orderSubdivisionFragment;
+    private ClientsPopupAdapter      clientsAdapter;
+    private Intent                   intentPay;
+    private Intent                   intentPasscode;
+    private ButtonPermission buttonPer;
+    private CustomButton     perc_button;
+    private CustomButton     perperson_button;
+    private CustomButton     peritem_button;
+    private CustomButton     pernumber_button;
+    private boolean percentageSplit = false;
+    private boolean numberSplit     = false;
+    private boolean discountSet     = false;
+    // this is used only for the buy credit specific mode
+    private int clientForCredit;
+    private int selectedClient;
+    private int tableNumber = -1;
+    private int orderNumber = -1;
+    private int fidelityClientId;
+    private int pay_mode = PAY_TOTAL_BILL;
+    private String passcode;
+    private String email = "";
+    private String IP    = "";
+    private CustomEditText name_et;
+    private CustomEditText surname_et;
+    private CustomEditText email_et;
+    private CustomEditText company_name_et;
+    private CustomEditText vat_number_et;
+    private CustomEditText address_et;
+    private CustomEditText postal_code_et;
+    private CustomEditText country_et;
+    private CustomEditText city_et;
+    //private CustomEditText codice_fiscale_et;
+    private CustomEditText provincia_et;
+    private CustomButton   addCompanyInfo;
+    private CustomButton   addPersonalInfo;
+    private CustomButton   addNewClient;
+    private boolean        newClient = false;
+    private CustomButton   searchClients;
+    private CustomButton   setDiscount;
+    private CustomEditText search_et;
+    private Animation      shake;
+    private CustomEditText codice_destinatario_et;
 
 
-    // ----- Class GET/SET ------
+    private CustomEditText pec_et;
+    private CustomEditText vat_number_et_p;
+    private CustomEditText address_et_p;
+    private CustomEditText postal_code_et_p;
+    private CustomEditText country_et_p;
+    private CustomEditText city_et_p;
+    private CustomEditText codice_fiscale_et_p;
+    private CustomEditText provincia_et_p;
+    private CustomEditText codice_destinatario_et_p;
+
+
+    // ==========================================
+    //  [ GET / SET ]
+    // ==========================================
+
+    // handle the subdivision setup and get/set methods
+    // which allow to controls the Items (the groups in which the bill is divided)
+    // like one item per client, or one item per groups of products present in the bill
+    private CustomEditText pec_et_p;
+    private ClientInfo     sClient = null;
+
 
     public void setOptionButton(Boolean b)
     {
         optionbutton = b;
     }
 
+
     public void setNumberSplit()
     {
         numberSplit = false;
     }
 
-    public boolean getDiscountSet() { return discountSet; }
 
-    public void setDiscountSet(boolean b) { discountSet = b; }
+    public boolean getDiscountSet()
+    {
+        return discountSet;
+    }
 
-    public void setProductsList(ArrayList<CashButtonLayout> p) { products = p; }
 
-    public void setModifiersList(Map<CashButtonLayout, ArrayList<CashButtonListLayout>> m) { modifiers = m; }
+    public void setDiscountSet(boolean b)
+    {
+        discountSet = b;
+    }
 
-    public int getOrderNumber() { return orderNumber; }
 
-    public int getTableNumber() { return tableNumber; }
+    public void setProductsList(ArrayList<CashButtonLayout> p)
+    {
+        products = p;
+    }
 
-    public int getPaymentType() { return paymentType; }
 
-    public void setPaymentType(int paymentType) { this.paymentType = paymentType; }
+    public void setModifiersList(Map<CashButtonLayout, ArrayList<CashButtonListLayout>> m)
+    {
+        modifiers = m;
+    }
+
+
+    public int getOrderNumber()
+    {
+        return orderNumber;
+    }
+
+
+    public int getTableNumber()
+    {
+        return tableNumber;
+    }
+
+
+    public int getPaymentType()
+    {
+        return paymentType;
+    }
+
+
+    public void setPaymentType(int paymentType)
+    {
+        this.paymentType = paymentType;
+    }
+
 
     public float getCredit()
     {
         float c = 0.0f;
         if (creditId != null)
-        { for (int id : creditId) { c += dbA.getBillCreditPrice(id); } }
+        {
+            for (int id : creditId)
+            {
+                c += dbA.getBillCreditPrice(id);
+            }
+        }
         return c;
 
     }
 
+
     public boolean setCreditId(Integer i)
     {
         if (creditId.contains(i))
-        { return false; }
+        {
+            return false;
+        }
 
         creditId.add(i);
         return true;
@@ -256,25 +315,30 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         return mode;
     }
 
+
     public void setMode(int i)
     {
         mode = i;
     }
+
 
     public void setPay_mode(int pay_mode)
     {
         this.pay_mode = pay_mode;
     }
 
+
     public void setPercentageSplit(boolean percentageSplit)
     {
         this.percentageSplit = percentageSplit;
     }
 
+
     public void setNumberSplit(boolean numberSplit)
     {
         this.numberSplit = numberSplit;
     }
+
 
     @Override
     public void setProducts(ArrayList<CashButtonLayout> prod)
@@ -289,7 +353,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         for (CashButtonLayout p : prod)
         {
             if (products.size() == 0)
-            { products.add(p); }
+            {
+                products.add(p);
+            }
 
             else
             {
@@ -304,7 +370,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                     }
 
                     else
-                    { products.add(p); }
+                    {
+                        products.add(p);
+                    }
                 }
             }
         }
@@ -318,7 +386,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     }
 
 
-    // ------ MAIN --------
+    // =============================================================
+    // [ MAIN ]
+    // =============================================================
 
 
     @Override
@@ -327,7 +397,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
-        me = (PaymentActivity) this;
+        me  = (PaymentActivity) this;
         dbA = new DatabaseAdapter(this);
 
         // this fragment handle the calculator,
@@ -347,12 +417,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         // (by item, by client ...) and represent the sub-bills
         orderSubdivisionFragment = new OrderSubdivisionFragment();
 
-        perc_button = (CustomButton) findViewById(R.id.percentage_button);
+        perc_button      = (CustomButton) findViewById(R.id.percentage_button);
         perperson_button = (CustomButton) findViewById(R.id.perperson_button);
-        peritem_button = (CustomButton) findViewById(R.id.peritem_button);
+        peritem_button   = (CustomButton) findViewById(R.id.peritem_button);
         pernumber_button = (CustomButton) findViewById(R.id.pernumber_button);
-        buttonPer = new ButtonPermission();
-        greenButton = false;
+        buttonPer        = new ButtonPermission();
+        greenButton      = false;
         setupButtons();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -366,19 +436,19 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        Display        display    = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
 
-        density = getResources().getDisplayMetrics().density;
+        density  = getResources().getDisplayMetrics().density;
         dpHeight = outMetrics.heightPixels;// / density;
-        dpWidth = outMetrics.widthPixels;// / density;
+        dpWidth  = outMetrics.widthPixels;// / density;
 
         intentPay = this.getIntent();
         Log.i(TAG, "[onCreate] Processing billId: " + intentPay.getIntExtra("billId", -1));
 
-        orderNumber = intentPay.getIntExtra("orderNumber", -1);
-        tableNumber = intentPay.getIntExtra("tableNumber", -1);
+        orderNumber    = intentPay.getIntExtra("orderNumber", -1);
+        tableNumber    = intentPay.getIntExtra("tableNumber", -1);
         selectedClient = intentPay.getIntExtra("customer", -1);
 
         forClient = this;
@@ -386,9 +456,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         email = intentPay.getStringExtra("email");
         boolean moreThanOneMail = intentPay.getBooleanExtra("more", false);
         if (email != null)
-        { optionsFragment.setEmail(email); }
+        {
+            optionsFragment.setEmail(email);
+        }
         if (moreThanOneMail)
-        { optionsFragment.setMoreThanOneMail(true); }
+        {
+            optionsFragment.setMoreThanOneMail(true);
+        }
 
         TimerManager.setContext(getApplicationContext());
         intentPasscode = new Intent(getApplicationContext(), PinpadBroadcastReciver.class);
@@ -398,6 +472,8 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         TimerManager.setIntentPinpad(intentPasscode);
         TimerManager.startPinpadAlert(2);
     }
+
+
 
 
     /**
@@ -420,8 +496,8 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         try
         {
             jsonObject = new JSONObject(output);
-            route = jsonObject.getString("route");
-            success = jsonObject.getBoolean("success");
+            route      = jsonObject.getString("route");
+            success    = jsonObject.getBoolean("success");
         }
         catch (Exception e)
         {
@@ -445,17 +521,17 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         {
                             JSONObject tbArray = new JSONObject(output).getJSONObject("totalBill");
 
-                            JSONArray productArray = new JSONObject(output).getJSONArray("products");
+                            JSONArray productArray  = new JSONObject(output).getJSONArray("products");
                             JSONArray modifierArray = new JSONObject(output).getJSONArray("modifiers");
                             JSONArray customerArray = new JSONObject(output).getJSONArray("customers");
 
-                            int homage = jsonObject.getInt("homage");
-                            double discount = jsonObject.getDouble("discount");
-                            TotalBill totals = TotalBill.fromJson(tbArray);
+                            int       homage   = jsonObject.getInt("homage");
+                            double    discount = jsonObject.getDouble("discount");
+                            TotalBill totals   = TotalBill.fromJson(tbArray);
 
-                            ArrayList<CashButtonLayout> products = CashButtonLayout.fromJsonArray(productArray);
-                            ArrayList<CashButtonListLayout> modifiers = CashButtonListLayout.fromJsonArray(modifierArray);
-                            Map<CashButtonLayout, ArrayList<CashButtonListLayout>> map = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+                            ArrayList<CashButtonLayout>                            products  = CashButtonLayout.fromJsonArray(productArray);
+                            ArrayList<CashButtonListLayout>                        modifiers = CashButtonListLayout.fromJsonArray(modifierArray);
+                            Map<CashButtonLayout, ArrayList<CashButtonListLayout>> map       = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
 
                             for (CashButtonLayout product : products)
                             {
@@ -480,15 +556,15 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         check = jsonObject.getBoolean("check");
                         if (check)
                         {
-                            int billId = jsonObject.getInt("billId");
-                            JSONArray splits = new JSONObject(output).getJSONArray("billSplits");
-                            ArrayList<SubdivisionItemJson> bill_s = SubdivisionItemJson.fromJsonArray(splits);
-                            ArrayList<SubdivisionItem> bill_splits = new ArrayList<>();
+                            int                            billId      = jsonObject.getInt("billId");
+                            JSONArray                      splits      = new JSONObject(output).getJSONArray("billSplits");
+                            ArrayList<SubdivisionItemJson> bill_s      = SubdivisionItemJson.fromJsonArray(splits);
+                            ArrayList<SubdivisionItem>     bill_splits = new ArrayList<>();
                             for (SubdivisionItemJson b : bill_s)
                             {
-                                HashMap<CashButtonLayout, Integer> map = new HashMap<CashButtonLayout, Integer>();
-                                ArrayList<CashButtonLayout> cbls = b.getItems();
-                                ArrayList<TwoString> tss = b.getItems_map();
+                                HashMap<CashButtonLayout, Integer> map  = new HashMap<CashButtonLayout, Integer>();
+                                ArrayList<CashButtonLayout>        cbls = b.getItems();
+                                ArrayList<TwoString>               tss  = b.getItems_map();
                                 for (TwoString ts : tss)
                                 {
                                     for (CashButtonLayout cbl : cbls)
@@ -526,7 +602,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                 orderFragment.getOrderListAdapter().loadBillSplits(bill_splits);
 
                                 if (!checkIfOtherSplitBillArePaid())
-                                { orderFragment.showRemaingTotal(); }
+                                {
+                                    orderFragment.showRemaingTotal();
+                                }
                             }
                             orderSubdivisionFragment.getSubdivisionAdapter().showFirstPaid();
                             orderFragment.getOrderListAdapter().notifyDataSetChanged();
@@ -542,10 +620,10 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         if (check)
                         {
                             // close payment activity
-                            Intent intent = new Intent(PaymentActivity.this, Operative.class);
-                            int orderNumber = intentPay.getIntExtra("orderNumber", 1);
-                            String username = intentPay.getStringExtra("username");
-                            int isAdmin = intentPay.getIntExtra("isAdmin", -1);
+                            Intent intent      = new Intent(PaymentActivity.this, Operative.class);
+                            int    orderNumber = intentPay.getIntExtra("orderNumber", 1);
+                            String username    = intentPay.getStringExtra("username");
+                            int    isAdmin     = intentPay.getIntExtra("isAdmin", -1);
 
                             intent.putExtra("username", username);
                             intent.putExtra("isAdmin", isAdmin);
@@ -611,7 +689,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                 }
                             }
                             if (orderFragment.getOrderListAdapter().getCustomers().size() > 0)
-                            { perc_button.performClick(); }
+                            {
+                                perc_button.performClick();
+                            }
                         }
                         else
                         {
@@ -649,7 +729,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                             {
                                 item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
                             }
-                            float other = orderSubdivisionFragment.getSubdivisionAdapter().getRemainingCostForTotal();
+                            float other  = orderSubdivisionFragment.getSubdivisionAdapter().getRemainingCostForTotal();
                             float remain = item.getOwed_money() - item.getDiscount() - getDiscountForItemSelected(item)/*getDiscountForItem()*/ - getHomageForItem()/*-other*/;
                             remain = remain - calculatorFragment.getActualCredit();
                             float cost1 = remain;
@@ -696,16 +776,18 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         check = jsonObject.getBoolean("check");
                         if (check)
                         {
-                            JSONObject jObject = new JSONObject(output).getJSONObject("client");
-                            JSONObject jObject1 = new JSONObject(output).getJSONObject("cic");
-                            Client client = Client.fromJson(jObject);
-                            ClientInCompany cic = ClientInCompany.fromJson(jObject1);
+                            JSONObject      jObject  = new JSONObject(output).getJSONObject("client");
+                            JSONObject      jObject1 = new JSONObject(output).getJSONObject("cic");
+                            Client          client   = Client.fromJson(jObject);
+                            ClientInCompany cic      = ClientInCompany.fromJson(jObject1);
                             dbA.insertClientFromServer(client);
 
                             dbA.insertCiCFromServer(cic);
                             if (!clientsAdapter.searchMode)
                             //clientsAdapter.updateDataSet();
-                            { name_et.setText(""); }
+                            {
+                                name_et.setText("");
+                            }
                             surname_et.setText("");
                             email_et.setText("");
                             clientsAdapter.reloadCLients();
@@ -720,12 +802,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         check = jsonObject.getBoolean("check");
                         if (check)
                         {
-                            JSONObject jObject = new JSONObject(output).getJSONObject("client");
-                            JSONObject jObject1 = new JSONObject(output).getJSONObject("cic");
-                            JSONObject jObject2 = new JSONObject(output).getJSONObject("company");
-                            Client client = Client.fromJson(jObject);
-                            ClientInCompany cic = ClientInCompany.fromJson(jObject1);
-                            Company company = Company.fromJson(jObject2);
+                            JSONObject      jObject  = new JSONObject(output).getJSONObject("client");
+                            JSONObject      jObject1 = new JSONObject(output).getJSONObject("cic");
+                            JSONObject      jObject2 = new JSONObject(output).getJSONObject("company");
+                            Client          client   = Client.fromJson(jObject);
+                            ClientInCompany cic      = ClientInCompany.fromJson(jObject1);
+                            Company         company  = Company.fromJson(jObject2);
                             dbA.insertClientFromServer(client);
                             dbA.insertCiCFromServer(cic);
                             dbA.insertCompanyFromServer(company);
@@ -734,7 +816,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                             if (!clientsAdapter.searchMode)
                             //clientsAdapter.updateDataSet();
                             //reset dataFields
-                            { name_et.setText(""); }
+                            {
+                                name_et.setText("");
+                            }
                             surname_et.setText("");
                             email_et.setText("");
                             company_name_et.setText("");
@@ -749,7 +833,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                             pec_et.setText("");
                             addCompanyInfo = (CustomButton) findViewById(R.id.add_company_info_button);
                             if (addCompanyInfo.isActivated())
-                            { addCompanyInfo.performClick(); }
+                            {
+                                addCompanyInfo.performClick();
+                            }
 
                             address_et_p.setText("");
                             vat_number_et_p.setText("");
@@ -762,7 +848,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                             pec_et_p.setText("");
                             addPersonalInfo = (CustomButton) findViewById(R.id.add_personal_info_button);
                             if (addPersonalInfo.isActivated())
-                            { addPersonalInfo.performClick(); }
+                            {
+                                addPersonalInfo.performClick();
+                            }
                             clientsAdapter.reloadCLients();
 
                         }
@@ -810,9 +898,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         check = jsonObject.getBoolean("check");
                         if (check)
                         {
-                            int billId = jsonObject.getInt("billId");
+                            int billId      = jsonObject.getInt("billId");
                             int paymentType = jsonObject.getInt("paymentType");
-                            int clientId = jsonObject.getInt("clientId");
+                            int clientId    = jsonObject.getInt("clientId");
                             savePaidBillInvoice(paymentType, clientId);
 
                         }
@@ -823,10 +911,10 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         if (check)
                         {
                             // close payment activity
-                            Intent intent = new Intent(PaymentActivity.this, Operative.class);
-                            int orderNumber = intentPay.getIntExtra("orderNumber", 1);
-                            String username = intentPay.getStringExtra("username");
-                            int isAdmin = intentPay.getIntExtra("isAdmin", -1);
+                            Intent intent      = new Intent(PaymentActivity.this, Operative.class);
+                            int    orderNumber = intentPay.getIntExtra("orderNumber", 1);
+                            String username    = intentPay.getStringExtra("username");
+                            int    isAdmin     = intentPay.getIntExtra("isAdmin", -1);
 
                             intent.putExtra("username", username);
                             intent.putExtra("isAdmin", isAdmin);
@@ -870,11 +958,11 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                             int customerId = jsonObject.getInt("customerId");
                             if (customerId != -1)
                             {
-                                double saldoPunti = jsonObject.getDouble("saldoPunti");
-                                double earned = jsonObject.getDouble("earned");
-                                double used = jsonObject.getDouble("used");
-                                ClientInfo c = dbA.fetchSingleClient(customerId);
-                                Fidelity f = dbA.fetchFidelityById(c.getFidelity_id());
+                                double     saldoPunti = jsonObject.getDouble("saldoPunti");
+                                double     earned     = jsonObject.getDouble("earned");
+                                double     used       = jsonObject.getDouble("used");
+                                ClientInfo c          = dbA.fetchSingleClient(customerId);
+                                Fidelity   f          = dbA.fetchFidelityById(c.getFidelity_id());
                                 dbA.updateFidelityPoint(saldoPunti, f.getEarned() + earned, f.getUsed() + used, f.getId());
 
                             }
@@ -1141,7 +1229,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                             orderFragment.activateSelectionMode(OrderListAdapter.DEFAULT_MODE);
 
                             if (calculatorFragment.isActive())
-                            { calculatorFragment.turnOnOffCalculator(); }
+                            {
+                                calculatorFragment.turnOnOffCalculator();
+                            }
 
                             buttonOpacitySetting();
                             optionsFragment.activatePayments();
@@ -1224,7 +1314,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     }
 
 
-    // ----- OK/KILL BUTTONS ------
+
+    // =============================================================
+    // [ OK / KILL buttons ]
+    // =============================================================
+
+
     public void setKillOkButtonForSubdivision()
     {
         findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
@@ -1271,12 +1366,15 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         });
     }
 
+
     public void setKillForSplitOnCalculator()
     {
         SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
 
         if (item == null)
-        { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
+        {
+            item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+        }
 
         switch (item.getMode())
         {
@@ -1296,6 +1394,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
     }
 
+
     public void setNormalKillOkButton()
     {
         resetOptionsButton();
@@ -1307,7 +1406,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         {
             SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
             if (item == null)
-            { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
+            {
+                item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+            }
 
             switch (item.getMode())
             {
@@ -1318,7 +1419,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 case PERSON_MODE:
                 case ITEM_MODE:
                     if (!item.isHomage())
-                    { activatePaymentButtonsOnly(); }
+                    {
+                        activatePaymentButtonsOnly();
+                    }
                     hideSplitButton();
                     showAllBlueButtonExSplit();
                     break;
@@ -1337,7 +1440,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
 
         else
-        { resetOpacityForOptionsButton(); }
+        {
+            resetOpacityForOptionsButton();
+        }
 
         findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
         {
@@ -1348,10 +1453,11 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 // delete all and go back
                 if (clientForCredit != -1)
                 {
-                    Intent intent = new Intent(PaymentActivity.this, Operative.class);
-                    String username = intentPay.getStringExtra("username");
-                    int isAdmin = intentPay.getIntExtra("isAdmin", -1);
-                    int tableNumber = intentPay.getIntExtra("tableNumber", -1);
+                    Intent intent      = new Intent(PaymentActivity.this, Operative.class);
+                    String username    = intentPay.getStringExtra("username");
+                    int billId = intentPay.getIntExtra("billId", -1);
+                    int    isAdmin     = intentPay.getIntExtra("isAdmin", -1);
+                    int    tableNumber = intentPay.getIntExtra("tableNumber", -1);
 
                     // completely remove the bill for buying credits,
                     // since this bill can't be repeated
@@ -1360,7 +1466,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                     intent.putExtra("username", username);
                     intent.putExtra("isAdmin", isAdmin);
                     intent.setAction("normal");
-                    intent.putExtra("billId", -1);
+                    intent.putExtra("billId", billId);
                     intent.putExtra("orderNumber", (orderNumber - 1));
                     intent.putExtra("tableNumber", tableNumber);
                     startActivity(intent);
@@ -1403,12 +1509,16 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 {
                     SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
                     if (item == null)
-                    { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
+                    {
+                        item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+                    }
 
                     if (item.isHomage())
                     {
                         if (item.getMode() == -1)
-                        { orderFragment.setTotalHomageMethod(item); }
+                        {
+                            orderFragment.setTotalHomageMethod(item);
+                        }
                         else
                         {
                             int position = getSelectedItemPosition(item);
@@ -1469,12 +1579,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
                         else
                         {
-                            Intent intent = new Intent(PaymentActivity.this, Operative.class);
-                            int billId = intentPay.getIntExtra("billId", -1);
-                            int orderNumber = intentPay.getIntExtra("orderNumber", 1);
-                            String username = intentPay.getStringExtra("username");
-                            int isAdmin = intentPay.getIntExtra("isAdmin", -1);
-                            int tableNumber = intentPay.getIntExtra("tableNumber", -1);
+                            Intent intent      = new Intent(PaymentActivity.this, Operative.class);
+                            int    billId      = intentPay.getIntExtra("billId", -1);
+                            int    orderNumber = intentPay.getIntExtra("orderNumber", 1);
+                            String username    = intentPay.getStringExtra("username");
+                            int    isAdmin     = intentPay.getIntExtra("isAdmin", -1);
+                            int    tableNumber = intentPay.getIntExtra("tableNumber", -1);
 
                             intent.putExtra("username", username);
                             intent.putExtra("isAdmin", isAdmin);
@@ -1499,6 +1609,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             }
         });
 
+
         findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -1512,11 +1623,11 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         if (orderFragment.getTotalCost() == 0.0f)
                         {
                             //omaggio tutto il bill
-                            Intent intent = new Intent(PaymentActivity.this, Operative.class);
-                            int billId = intentPay.getIntExtra("billId", -1);
-                            int orderNumber = intentPay.getIntExtra("orderNumber", 1);
-                            String username = intentPay.getStringExtra("username");
-                            int isAdmin = intentPay.getIntExtra("isAdmin", -1);
+                            Intent intent      = new Intent(PaymentActivity.this, Operative.class);
+                            int    billId      = intentPay.getIntExtra("billId", -1);
+                            int    orderNumber = intentPay.getIntExtra("orderNumber", 1);
+                            String username    = intentPay.getStringExtra("username");
+                            int    isAdmin     = intentPay.getIntExtra("isAdmin", -1);
 
                             intent.putExtra("username", username);
                             intent.putExtra("isAdmin", isAdmin);
@@ -1536,15 +1647,17 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                     {
                         item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
                         if (item.isHomage())
-                        { printBill(0.0f, 0.0f, 0.0f, 1); }
+                        {
+                            printBill(0.0f, 0.0f, 0.0f, 1);
+                        }
 
                         else
                         {
-                            int billId = intentPay.getIntExtra("billId", -1);
-                            int orderNumber = intentPay.getIntExtra("orderNumber", 1);
-                            String username = intentPay.getStringExtra("username");
-                            int isAdmin = intentPay.getIntExtra("isAdmin", -1);
-                            int tableNumber = intentPay.getIntExtra("tableNumber", -1);
+                            int    billId      = intentPay.getIntExtra("billId", -1);
+                            int    orderNumber = intentPay.getIntExtra("orderNumber", 1);
+                            String username    = intentPay.getStringExtra("username");
+                            int    isAdmin     = intentPay.getIntExtra("isAdmin", -1);
+                            int    tableNumber = intentPay.getIntExtra("tableNumber", -1);
 
                             Intent intent = new Intent(PaymentActivity.this, Operative.class);
                             intent.putExtra("username", username);
@@ -1571,15 +1684,17 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         if (item.isHomage())
                         {
                             if (StaticValue.blackbox)
-                            { printBill(0.0f, 0.0f, 0.0f, 1); }
+                            {
+                                printBill(0.0f, 0.0f, 0.0f, 1);
+                            }
 
                             else
                             {
-                                Gson gson = new Gson();
-                                JSONObject combined = new JSONObject();
+                                Gson                                                   gson        = new Gson();
+                                JSONObject                                             combined    = new JSONObject();
                                 Map<CashButtonLayout, ArrayList<CashButtonListLayout>> myModifiers = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
 
-                                ArrayList<CashButtonLayout> products = item.getItems();
+                                ArrayList<CashButtonLayout> products   = item.getItems();
                                 ArrayList<CashButtonLayout> myProducts = new ArrayList<CashButtonLayout>();
                                 for (CashButtonLayout cashButton : products)
                                 {
@@ -1598,10 +1713,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                 {
                                     myProducts.get(i).setPosition(i);
                                     if (myProducts.get(i).getHomage() != 1)
-                                    { itemsDiscount += myProducts.get(i).getDiscount(); }
+                                    {
+                                        itemsDiscount += myProducts.get(i).getDiscount();
+                                    }
                                 }
 
-                                int billId = intentPay.getIntExtra("billId", -1);
+                                int billId      = intentPay.getIntExtra("billId", -1);
                                 int orderNumber = intentPay.getIntExtra("orderNumber", 1);
 
                                 if (StaticValue.printerName.equals("ditron") && StaticValue.ditronApi)
@@ -1646,12 +1763,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
                         else
                         {
-                            Intent intent = new Intent(PaymentActivity.this, Operative.class);
-                            int billId = intentPay.getIntExtra("billId", -1);
-                            int orderNumber = intentPay.getIntExtra("orderNumber", 1);
-                            String username = intentPay.getStringExtra("username");
-                            int isAdmin = intentPay.getIntExtra("isAdmin", -1);
-                            int tableNumber = intentPay.getIntExtra("tableNumber", -1);
+                            Intent intent      = new Intent(PaymentActivity.this, Operative.class);
+                            int    billId      = intentPay.getIntExtra("billId", -1);
+                            int    orderNumber = intentPay.getIntExtra("orderNumber", 1);
+                            String username    = intentPay.getStringExtra("username");
+                            int    isAdmin     = intentPay.getIntExtra("isAdmin", -1);
+                            int    tableNumber = intentPay.getIntExtra("tableNumber", -1);
 
                             // FIXME
                             // blunt solution
@@ -1695,11 +1812,6 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     }
 
 
-    // ----- ORDER SUBDIVISON FRAGMENT  -----
-
-    // handle the subdivision setup and get/set methods
-    // which allow to controls the Items (the groups in which the bill is divided)
-    // like one item per client, or one item per groups of products present in the bill
 
     //get discount for this bill
     public float getDiscount()
@@ -1708,24 +1820,29 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         return dbA.getBillDiscountPrice(billId);
     }
 
+
     //get discount for a subdivision item
     public float getDiscountForItem()
     {
         return orderSubdivisionFragment.getSubdivisionAdapter().returnDiscountForItem(products);
     }
 
+
     //get discount for specific subdivision item
     public float getDiscountForItemSelected(SubdivisionItem item)
     {
-        float discount = 0.0f;
+        float                       discount = 0.0f;
         ArrayList<CashButtonLayout> products = item.getItems();
         for (int i = 0; i < products.size(); i++)
         {
             if (!products.get(i).isSelected())
-            { discount += products.get(i).getDiscount(); }
+            {
+                discount += products.get(i).getDiscount();
+            }
         }
         return discount;
     }
+
 
     //set total bill items -> put the list of products inside total item
     public void setTotalBillItems(ArrayList<CashButtonLayout> products)
@@ -1733,11 +1850,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         orderSubdivisionFragment.getSubdivisionAdapter().setTotalBillItemsForHomage(products);
     }
 
+
     //set products for specific subdivision item
     public void setItemProduct(ArrayList<CashButtonLayout> products)
     {
         orderSubdivisionFragment.getSubdivisionAdapter().setItemProduct(products);
     }
+
 
     //get homage for this item
     public float getHomageForItem()
@@ -1764,11 +1883,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         return homage;
     }
 
+
     //check if there are subdivision item person or item
     public boolean getIfSplitBillsAreItem()
     {
         return orderSubdivisionFragment.getSubdivisionAdapter().checkIfOtherAreItemSelectAndPaid2();
     }
+
 
     //easy....
     public boolean checkIfTotalBillHasDiscount()
@@ -1776,21 +1897,27 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         return orderSubdivisionFragment.getSubdivisionAdapter().checkIfTotalHasDiscount();
     }
 
+
     //return the selected item
     public SubdivisionItem getSelectedItem()
     {
         return orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
     }
 
+
     //show the subdivision item
     public void showSubdivisionItem()
     {
         SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
         if (item == null)
-        { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
+        {
+            item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+        }
 
         if (item.getMode() == -1)
-        { orderSubdivisionFragment.getSubdivisionAdapter().performClickOnTotal(); }
+        {
+            orderSubdivisionFragment.getSubdivisionAdapter().performClickOnTotal();
+        }
         else
         {
             int position = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItemPosition(item);
@@ -1798,11 +1925,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
     }
 
+
     //return the position of the selected subdivision item
     public int getSelectedItemPosition(SubdivisionItem item)
     {
         return orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItemPosition(item);
     }
+
 
     //return total subdivision item
     public SubdivisionItem getTotalItem()
@@ -1810,11 +1939,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         return orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
     }
 
+
     //set total item as homage
     public void setTotalHomageForItem(int position, boolean activate)
     {
         orderSubdivisionFragment.getSubdivisionAdapter().setTotalHomageForItem(position, activate);
     }
+
 
     //check if total item is homage
     public boolean checkIfTotalHomage()
@@ -1822,56 +1953,72 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
 
         if (item == null)
-        { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
+        {
+            item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+        }
 
         return item.isHomage();
     }
+
 
     public Fidelity checkIfBillHasCustomer()
     {
         SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
 
         if (item == null)
-        { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
+        {
+            item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+        }
 
         Fidelity fid = new Fidelity();
         if (item.getMode() == ITEM_MODE || item.getMode() == PERSON_MODE || item.getMode() == -1)
         {
             if (item.getItems().get(0).getClientPosition() > 0)
             {
-                Customer c = orderFragment.getOrderListAdapter().getCustomer(item.getItems().get(0).getClientPosition());
-                ClientInfo client = dbA.fetchSingleClient(c.getCustomerId());
-                Fidelity fidelity = dbA.fetchFidelityById(client.getFidelity_id());
+                Customer   c        = orderFragment.getOrderListAdapter().getCustomer(item.getItems().get(0).getClientPosition());
+                ClientInfo client   = dbA.fetchSingleClient(c.getCustomerId());
+                Fidelity   fidelity = dbA.fetchFidelityById(client.getFidelity_id());
                 if (fidelity.getActive() == 1)
-                { fid = fidelity; }
+                {
+                    fid = fidelity;
+                }
             }
         }
         return fid;
     }
 
+
     public boolean checkSelectedItem()
     {
         SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
         if (item != null)
-        { return item.getMode() != NUMBER_MODE && item.getMode() != PERCENTAGE_MODE; }
+        {
+            return item.getMode() != NUMBER_MODE && item.getMode() != PERCENTAGE_MODE;
+        }
         else
-        { return true; }
+        {
+            return true;
+        }
     }
+
 
     public float getRemainingCostSubdivisionItem()
     {
         return orderSubdivisionFragment.getSubdivisionAdapter().getRemainingCost();
     }
 
+
     public float getRemainingCostForItemAndPerson()
     {
         return orderSubdivisionFragment.getSubdivisionAdapter().returnSubdivisionItemsPrice();
     }
 
+
     public void setTotalSubdivisionPaid(float c)
     {
         orderSubdivisionFragment.getSubdivisionAdapter().setTotalSubdivisionPaid(c);
     }
+
 
     public void setItemPaid(SubdivisionItem item)
     {
@@ -1884,13 +2031,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         return orderSubdivisionFragment.getSubdivisionAdapter().getRemainingCostForTotal();
     }
 
+
     public int getSubdivisionAdapterSize()
     {
         return orderSubdivisionFragment.getSubdivisionAdapter().getItemCount();
     }
 
-
-    // ----- CALCULATOR FRAGMENT ------
 
     //get credit value from calculator fragment
     public float getActualCreditValue()
@@ -1898,15 +2044,18 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         return calculatorFragment.getActualCredit();
     }
 
-    public void setTempPositionDiscount(int i)
-    {
-        calculatorFragment.setTmpPositionDiscount(i);
-    }
 
     public int getTempPositionDiscount()
     {
         return calculatorFragment.getTmpPositionDiscount();
     }
+
+
+    public void setTempPositionDiscount(int i)
+    {
+        calculatorFragment.setTmpPositionDiscount(i);
+    }
+
 
     public boolean getPercentageAmount()
     {
@@ -1914,17 +2063,17 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     }
 
 
-    // ----- HIDE/SHOW BUTTONS ------ //
-
     public void hidePaymentButton()
     {
         optionsFragment.deactivatePayments();
     }
 
+
     public void showPaymentButton()
     {
         optionsFragment.activatePayments();
     }
+
 
     public void hidePersonAndItemDivision()
     {
@@ -1943,6 +2092,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         optionbutton = true;
     }
 
+
     public void hidenBlueButtonExDiscount()
     {
         findViewById(R.id.invoice_button).setAlpha(0.15f);
@@ -1952,6 +2102,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         findViewById(R.id.email_it_button).setAlpha(0.15f);
         optionsFragment.setOnlyDiscount(true);
     }
+
 
     public void hidenBlueButtonExPrint()
     {
@@ -1964,6 +2115,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         optionsFragment.setButtonPermissionForPrintOnly();
     }
 
+
     public void hidenBlueButtonExPrintAndEmail()
     {
         findViewById(R.id.invoice_button).setAlpha(0.15f);
@@ -1975,6 +2127,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         optionsFragment.setButtonPermissionForNumber();
     }
 
+
     public void hidenBlueButtonForTotalHomage()
     {
         findViewById(R.id.invoice_button).setAlpha(0.15f);
@@ -1985,6 +2138,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         findViewById(R.id.email_it_button).setAlpha(1f);
     }
 
+
     public void hidenBlueButtonExHomage()
     {
         findViewById(R.id.invoice_button).setAlpha(0.15f);
@@ -1994,6 +2148,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         findViewById(R.id.email_it_button).setAlpha(0.15f);
         //optionsFragment.setOnlyDiscount(true);
     }
+
 
     public void showAllBlueButton()
     {
@@ -2007,6 +2162,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         findViewById(R.id.discount_button).setBackgroundResource(R.drawable.button_lightblue_3dp_white_press);
         optionsFragment.setButtonPermission();
     }
+
 
     public void showAllBlueButtonExSplit()
     {
@@ -2022,6 +2178,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         optionsFragment.setButtonPermissionExSplit();
     }
 
+
     public void showBlueButtonExDiscount()
     {
         findViewById(R.id.invoice_button).setAlpha(1f);
@@ -2033,6 +2190,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         optionsFragment.setOnlyDiscount(false);
     }
 
+
     public void hidenOnlyBlueButton()
     {
         findViewById(R.id.invoice_button).setAlpha(0.15f);
@@ -2042,6 +2200,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         findViewById(R.id.email_it_button).setAlpha(0.15f);
     }
 
+
     public void hidenOnlyBlueButton2()
     {
         findViewById(R.id.invoice_button).setAlpha(0.15f);
@@ -2050,11 +2209,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         findViewById(R.id.email_it_button).setAlpha(0.15f);
     }
 
+
     public void hideBlueButton()
     {
         buttonOpacitySetting1();
         hidenOnlyBlueButton2();
     }
+
 
     public void hideButtonPerNumber()
     {
@@ -2065,6 +2226,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         greenButton = true;
         optionsFragment.setOnlyPrint(true);
     }
+
 
     public void resetButtonPerNumberBlue()
     {
@@ -2078,12 +2240,14 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         setOptionButton(true);
     }
 
+
     public void resetButtonPerNumberGreen()
     {
         resetOpacityForPayementButtons();
 
         greenButton = false;
     }
+
 
     public void activatePaymentButtonsOnly()
     {
@@ -2092,19 +2256,27 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         optionsFragment.activateOnlyPayment();
     }
 
+
     public void activatePaymentButtonsSpec()
     {
         if (orderSubdivisionFragment.getSubdivisionAdapter().getItemCount() == 1)
-        { optionsFragment.getAdapter().loadButtons(0); }
+        {
+            optionsFragment.getAdapter().loadButtons(0);
+        }
 
         else
         {
             if (!orderSubdivisionFragment.getSubdivisionAdapter().checkIfOtherPersonOrItem())
-            { optionsFragment.getAdapter().loadButtons(0); }
+            {
+                optionsFragment.getAdapter().loadButtons(0);
+            }
             else
-            { optionsFragment.getAdapter().loadButtonsPaymentOnly(); }
+            {
+                optionsFragment.getAdapter().loadButtonsPaymentOnly();
+            }
         }
     }
+
 
     public void hideOtherButtons(View v)
     {
@@ -2119,6 +2291,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
     }
 
+
     public void resetOtherButtons()
     {
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.button_container);
@@ -2128,17 +2301,21 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             child.setAlpha(1.0f);
 
             if (child.isActivated())
-            { child.setActivated(!child.isActivated()); }
+            {
+                child.setActivated(!child.isActivated());
+            }
 
         }
         setOptionButton(true);
     }
+
 
     public void setAllButtonPermission()
     {
         buttonPer.setPeritem(true);
         buttonPer.setPerperson(true);
     }
+
 
     public void setButtonPermission()
     {
@@ -2155,13 +2332,21 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     public void buttonOpacitySetting1()
     {
         if (perc_button.isActivated())
-        { perc_button.setActivated(!perc_button.isActivated()); }
+        {
+            perc_button.setActivated(!perc_button.isActivated());
+        }
         if (pernumber_button.isActivated())
-        { pernumber_button.setActivated(!pernumber_button.isActivated()); }
+        {
+            pernumber_button.setActivated(!pernumber_button.isActivated());
+        }
         if (perperson_button.isActivated())
-        { perperson_button.setActivated(!perperson_button.isActivated()); }
+        {
+            perperson_button.setActivated(!perperson_button.isActivated());
+        }
         if (peritem_button.isActivated())
-        { peritem_button.setActivated(!peritem_button.isActivated()); }
+        {
+            peritem_button.setActivated(!peritem_button.isActivated());
+        }
         perc_button.setAlpha(0.15f);
         pernumber_button.setAlpha(0.15f);
         perperson_button.setAlpha(0.15f);
@@ -2169,11 +2354,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         setOptionButton(false);
     }
 
+
     public void buttonOpacitySettingForPerNumber()
     {
-        perc_button = (CustomButton) findViewById(R.id.percentage_button);
+        perc_button      = (CustomButton) findViewById(R.id.percentage_button);
         perperson_button = (CustomButton) findViewById(R.id.perperson_button);
-        peritem_button = (CustomButton) findViewById(R.id.peritem_button);
+        peritem_button   = (CustomButton) findViewById(R.id.peritem_button);
         pernumber_button = (CustomButton) findViewById(R.id.pernumber_button);
         perc_button.setAlpha(0.15f);
 
@@ -2183,11 +2369,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         optionsFragment.setButtonPermissionForPrintOnly();
     }
 
+
     public void hideSplitButton()
     {
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.button_container);
         relativeLayout.setAlpha(0.15f);
-        View upperLine = findViewById(R.id.bottom_hline1_button_container);
+        View upperLine  = findViewById(R.id.bottom_hline1_button_container);
         View bottomLine = findViewById(R.id.bottom_hline2_button_container);
         upperLine.setAlpha(0.15f);
         bottomLine.setAlpha(0.15f);
@@ -2200,7 +2387,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     {
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.button_container);
         relativeLayout.setAlpha(1f);
-        View upperLine = findViewById(R.id.bottom_hline1_button_container);
+        View upperLine  = findViewById(R.id.bottom_hline1_button_container);
         View bottomLine = findViewById(R.id.bottom_hline2_button_container);
         upperLine.setAlpha(1f);
         bottomLine.setAlpha(1f);
@@ -2221,15 +2408,20 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         for (Map.Entry<CustomButton, Boolean> entry : buttons.entrySet())
         {
             if (!entry.getValue())
-            { entry.getKey().setAlpha(0.15f); }
+            {
+                entry.getKey().setAlpha(0.15f);
+            }
             else
             {
                 entry.getKey().setAlpha(1.0f);
                 if (entry.getKey().isActivated())
-                { entry.getKey().setActivated(false); }
+                {
+                    entry.getKey().setActivated(false);
+                }
             }
         }
     }
+
 
     public void hidePartial()
     {
@@ -2273,11 +2465,11 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     }
 
 
-    // --------------------------------------------
     public void closeBill(boolean close)
     {
         orderFragment.getOrderListAdapter().setBillClose(close);
     }
+
 
     public void openCashDrawer()
     {
@@ -2306,6 +2498,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
     }
 
+
     //expand group in order fragment
     public void expandGroup()
     {
@@ -2330,11 +2523,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         optionsFragment.setButtonPermissionForInvoice();
     }
 
+
     public boolean returnTotalIsPaid()
     {
         int billId = intentPay.getIntExtra("billId", -1);
         return dbA.checkIfBillIsPaid(billId);
     }
+
 
     public float returnTotalBillDiscount()
     {
@@ -2353,7 +2548,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         hideSplitButton();
 
         discountSet = true;
-        mode = MODIFY_DISCOUNT_MODE;
+        mode        = MODIFY_DISCOUNT_MODE;
 
         orderFragment.activateSelectionMode(OrderListAdapter.MODIFY_DISCOUNT_MODE);
         orderSubdivisionFragment.setMode(OrderListAdapter.MODIFY_DISCOUNT_MODE);
@@ -2372,6 +2567,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     {
         orderFragment.doSomething(v, groupPosition, click);
     }
+
 
     public void setTotalHomage()
     {
@@ -2475,7 +2671,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 savePaidBill(1);
                 break;
 
-            case DISCOUNT_MODE: // 7
+            case DISCOUNT_MODE: // 9
                 float cost = orderFragment.getElementPrice();
                 String txt = String.format("%.2f", roundDecimal(cost, 2));
                 calculatorFragment.setCost(txt);
@@ -2490,7 +2686,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 }
                 break;
 
-            case MODIFY_DISCOUNT_MODE:
+            case MODIFY_DISCOUNT_MODE: // 16
                 float elementCost = orderFragment.getElementDiscount(Math.round(any_float_value));
                 calculatorFragment.setMode(MODIFY_DISCOUNT_MODE);
                 calculatorFragment.setDiscountMode(false);
@@ -2499,13 +2695,15 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 calculatorFragment.setDiscountValue(elementCost, (CashButtonLayout) dataBundle);
                 break;
 
-            case ADD_DISCOUNT:
+            case ADD_DISCOUNT: // 10
                 break;
 
-            case DISCOUNT_MODE_OFF:
+            case DISCOUNT_MODE_OFF: // 7
                 SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
                 if (item == null)
-                { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
+                {
+                    item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+                }
                 float other = orderSubdivisionFragment.getSubdivisionAdapter().getRemainingCostForTotal();
                 float remain = item.getOwed_money() - item.getDiscount() - getDiscountForItemSelected(item)/*getDiscountForItem()*/ - getHomageForItem()/*-other*/;
                 remain = remain - calculatorFragment.getActualCredit();
@@ -2593,12 +2791,14 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
 
             if (item == null)
-            { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
+            {
+                item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+            }
 
             Map<String, ArrayList<CashButtonListLayout>> myModifiers = new HashMap<String, ArrayList<CashButtonListLayout>>();
 
             ArrayList<Customer> myCustomers = new ArrayList<>();
-            Customer customer = new Customer();
+            Customer            customer    = new Customer();
             customer.setActive(true);
             customer.setDescription("Fatture per " + clientInfo.getCompany_name());
             customer.setCustomerId(clientInfo.getClient_id());
@@ -2606,7 +2806,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             customer.setDelete(false);
             myCustomers.add(customer);
 
-            ArrayList<CashButtonLayout> products = item.getItems();
+            ArrayList<CashButtonLayout> products   = item.getItems();
             ArrayList<CashButtonLayout> myProducts = new ArrayList<CashButtonLayout>();
             for (CashButtonLayout cashButton : products)
             {
@@ -2627,15 +2827,17 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             {
                 myProducts.get(i).setPosition(i);
                 if (myProducts.get(i).getHomage() != 1)
-                { itemsDiscount += myProducts.get(i).getDiscount(); }
+                {
+                    itemsDiscount += myProducts.get(i).getDiscount();
+                }
             }
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            Gson gson = new Gson();
-            String selectedC = gson.toJson(clientInfo);
-            String prods = gson.toJson(myProducts);
-            String mods = gson.toJson(myModifiers);
-            String costum = gson.toJson(myCustomers);
+            List<NameValuePair> params    = new ArrayList<NameValuePair>(2);
+            Gson                gson      = new Gson();
+            String              selectedC = gson.toJson(clientInfo);
+            String              prods     = gson.toJson(myProducts);
+            String              mods      = gson.toJson(myModifiers);
+            String              costum    = gson.toJson(myCustomers);
 
             params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
             params.add(new BasicNameValuePair("paymentType", String.valueOf(paymentType)));
@@ -2657,23 +2859,25 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
         else
         {
-            ClientInfo clientInfo = dbA.fetchSingleClientForPayment(selectedClient);
-            int numeroFattura = dbA.selectNumeroFattura();
+            ClientInfo clientInfo    = dbA.fetchSingleClientForPayment(selectedClient);
+            int        numeroFattura = dbA.selectNumeroFattura();
             numeroFattura++;
             SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
             if (item == null)
-            { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
+            {
+                item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+            }
             Map<CashButtonLayout, ArrayList<CashButtonListLayout>> myModifiers = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
 
             ArrayList<Customer> myCustomers = new ArrayList<>();
-            Customer customer = new Customer();
+            Customer            customer    = new Customer();
             customer.setActive(true);
             customer.setDescription("Fatture per " + clientInfo.getCompany_name());
             customer.setCustomerId(clientInfo.getClient_id());
             customer.setPosition(1);
             customer.setDelete(false);
             myCustomers.add(customer);
-            ArrayList<CashButtonLayout> products = item.getItems();
+            ArrayList<CashButtonLayout> products   = item.getItems();
             ArrayList<CashButtonLayout> myProducts = new ArrayList<CashButtonLayout>();
             for (CashButtonLayout cashButton : products)
             {
@@ -2692,7 +2896,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             {
                 myProducts.get(i).setPosition(i);
                 if (myProducts.get(i).getHomage() != 1)
-                { itemsDiscount += myProducts.get(i).getDiscount(); }
+                {
+                    itemsDiscount += myProducts.get(i).getDiscount();
+                }
             }
             XmlParser xml = new XmlParser();
             xml.createXml(clientInfo, myProducts, myModifiers, numeroFattura, paymentType);
@@ -2728,6 +2934,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
     }
 
+
     public double getFidelityValue()
     {
         double fidelity = 0.0;
@@ -2740,6 +2947,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
         return fidelity;
     }
+
 
     public int getFidelityCustomer()
     {
@@ -2754,13 +2962,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     }
 
 
-    // -------- PRINTER ------ //
-
     @Override
     public void printBill(float paid, float cost, float credit, int paymentType)
     {
         if (invoiceBill)
-        { printInvoice(paid, cost, credit, paymentType); }
+        {
+            printInvoice(paid, cost, credit, paymentType);
+        }
 
         else
         {
@@ -2786,7 +2994,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
             float creditToGive = getCreditValueAgain();
 
-            int billId = intentPay.getIntExtra("billId", -1);
+            int billId      = intentPay.getIntExtra("billId", -1);
             int orderNumber = intentPay.getIntExtra("orderNumber", 1);
 
             if (StaticValue.blackbox)
@@ -2804,9 +3012,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                     customerId = c.getCustomerId();
                 }
 
-                Gson gson = new Gson();
-                String prods = gson.toJson(item.getItems());
-                String mods = gson.toJson(test);
+                Gson   gson        = new Gson();
+                String prods       = gson.toJson(item.getItems());
+                String mods        = gson.toJson(test);
                 String creditArray = gson.toJson(creditId);
 
                 List<NameValuePair> params = new ArrayList<NameValuePair>(2);
@@ -2910,6 +3118,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
     }
 
+
     public void printItemBill(SubdivisionItem item, float cost, float paid, int paymentType)
     {
         // if(!StaticValue.blackbox) {
@@ -2923,7 +3132,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
         else
         {
-            ArrayList<CashButtonLayout> products = item.getItems();
+            ArrayList<CashButtonLayout> products   = item.getItems();
             ArrayList<CashButtonLayout> myProducts = new ArrayList<CashButtonLayout>();
 
 
@@ -2932,12 +3141,16 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             {
                 myProducts.get(i).setPosition(i);
                 if (myProducts.get(i).getHomage() != 1)
-                { itemsDiscount += myProducts.get(i).getDiscount(); }
+                {
+                    itemsDiscount += myProducts.get(i).getDiscount();
+                }
             }
             if (paymentType == 2)
-            { paid = item.getOwed_money(); }
+            {
+                paid = item.getOwed_money();
+            }
 
-            int billId = intentPay.getIntExtra("billId", -1);
+            int billId      = intentPay.getIntExtra("billId", -1);
             int orderNumber = intentPay.getIntExtra("orderNumber", 1);
 
             Customer myCustomer = new Customer();
@@ -2991,11 +3204,11 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                     myCustomer = orderFragment.getOrderListAdapter().getCustomer(myProducts.get(0).getClientPosition());
                 }
 
-                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                Gson gson = new Gson();
-                String prods = gson.toJson(myProducts);
-                String mods = gson.toJson(myModifiers);
-                String creditArray = gson.toJson(creditId);
+                List<NameValuePair> params      = new ArrayList<NameValuePair>(2);
+                Gson                gson        = new Gson();
+                String              prods       = gson.toJson(myProducts);
+                String              mods        = gson.toJson(myModifiers);
+                String              creditArray = gson.toJson(creditId);
                 params.add(new BasicNameValuePair("products", prods));
                 params.add(new BasicNameValuePair("modifiers", mods));
                 params.add(new BasicNameValuePair("printType", String.valueOf(2)));
@@ -3070,27 +3283,33 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         return intentPay.getIntExtra("billId", -1);
     }
 
+
     public void saveBillCredit(float credit)
     {
         int bId = intentPay.getIntExtra("billId", -1);
         if (bId != -1)
-        { dbA.insertBillCredit(bId, credit); }
+        {
+            dbA.insertBillCredit(bId, credit);
+        }
     }
+
 
     public boolean savePaidBillInvoice(int paymentType, int clientId)
     {
-        int billId = intentPay.getIntExtra("billId", -1);
-        SubdivisionItem item = orderFragment.getOrderListAdapter().getSubdivisionItem();
+        int             billId = intentPay.getIntExtra("billId", -1);
+        SubdivisionItem item   = orderFragment.getOrderListAdapter().getSubdivisionItem();
         calculatorFragment.resetActualCredit();
 
         if (orderSubdivisionFragment.getSubdivisionAdapter().getItemCount() > 0)
-        { orderSubdivisionFragment.getSubdivisionAdapter().setOpenSplitPaid(); }
+        {
+            orderSubdivisionFragment.getSubdivisionAdapter().setOpenSplitPaid();
+        }
 
         // If pay mode is set to PAY_TOTAL_BILL or if the bill splits are all paid, it
         // updates the total bill db value setting it to paid on the current timestamp.
         // If not, it saves the paid bill split data for the next time.
         boolean f;
-        Float delta = orderSubdivisionFragment.getSubdivisionAdapter().getRemainingCost();
+        Float   delta = orderSubdivisionFragment.getSubdivisionAdapter().getRemainingCost();
         if (delta <= 0 || pay_mode == PAY_TOTAL_BILL)
         {
             //if( orderFragment.returnRemaningTotal()==0.0f || pay_mode == PAY_TOTAL_BILL){
@@ -3108,10 +3327,10 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             {
                 f = dbA.savePaidBillInvoice(null, billId, paymentType, clientId);
                 // close payment activity
-                Intent intent = new Intent(PaymentActivity.this, Operative.class);
-                int orderNumber = intentPay.getIntExtra("orderNumber", 1);
-                String username = intentPay.getStringExtra("username");
-                int isAdmin = intentPay.getIntExtra("isAdmin", -1);
+                Intent intent      = new Intent(PaymentActivity.this, Operative.class);
+                int    orderNumber = intentPay.getIntExtra("orderNumber", 1);
+                String username    = intentPay.getStringExtra("username");
+                int    isAdmin     = intentPay.getIntExtra("isAdmin", -1);
 
                 intent.putExtra("username", username);
                 intent.putExtra("isAdmin", isAdmin);
@@ -3141,9 +3360,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
                 params.add(new BasicNameValuePair("paymentType", String.valueOf(paymentType)));
                 params.add(new BasicNameValuePair("clientId", String.valueOf(clientId)));
-                Gson gson = new Gson();
+                Gson                gson   = new Gson();
                 SubdivisionItemJson myJson = new SubdivisionItemJson(item);
-                String myItem = gson.toJson(myJson);
+                String              myItem = gson.toJson(myJson);
                 params.add(new BasicNameValuePair("item", myItem));
                 callHttpHandler("/savePaidBillItemInvoice", params);
             }
@@ -3152,11 +3371,14 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             {
                 f = dbA.savePaidBillInvoice(item, billId, paymentType, clientId);
                 if (item != null)
-                { item.setPaid(true); }
+                {
+                    item.setPaid(true);
+                }
             }
         }
         return f;
     }
+
 
     public void savePaidSubdivisionBill(SubdivisionItem item, int paymentType)
     {
@@ -3164,20 +3386,23 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         dbA.savePaidBill(item, billId, paymentType);
     }
 
+
     public boolean savePaidBill(int paymentType)
     {
-        int billId = intentPay.getIntExtra("billId", -1);
-        SubdivisionItem item = orderFragment.getOrderListAdapter().getSubdivisionItem();
+        int             billId = intentPay.getIntExtra("billId", -1);
+        SubdivisionItem item   = orderFragment.getOrderListAdapter().getSubdivisionItem();
         calculatorFragment.resetActualCredit();
         if (orderSubdivisionFragment.getSubdivisionAdapter().getItemCount() > 0)
-        { orderSubdivisionFragment.getSubdivisionAdapter().setOpenSplitPaid(); }
+        {
+            orderSubdivisionFragment.getSubdivisionAdapter().setOpenSplitPaid();
+        }
         /**
          * If pay mode is set to PAY_TOTAL_BILL or if the bill splits are all paid, it
          * updates the total bill db value setting it to paid on the current timestamp.
          * If not, it saves the paid bill split data for the next time.
          */
         boolean f;
-        Float delta = orderSubdivisionFragment.getSubdivisionAdapter().getRemainingCost();
+        Float   delta = orderSubdivisionFragment.getSubdivisionAdapter().getRemainingCost();
 
         if (roundDecimal(delta, 2) <= 0 || pay_mode == PAY_TOTAL_BILL)
         {
@@ -3193,10 +3418,10 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             {
                 f = dbA.savePaidBill(null, billId, paymentType);
                 // close payment activity
-                Intent intent = new Intent(PaymentActivity.this, Operative.class);
-                int orderNumber = intentPay.getIntExtra("orderNumber", 1);
-                String username = intentPay.getStringExtra("username");
-                int isAdmin = intentPay.getIntExtra("isAdmin", -1);
+                Intent intent      = new Intent(PaymentActivity.this, Operative.class);
+                int    orderNumber = intentPay.getIntExtra("orderNumber", 1);
+                String username    = intentPay.getStringExtra("username");
+                int    isAdmin     = intentPay.getIntExtra("isAdmin", -1);
 
                 intent.putExtra("username", username);
                 intent.putExtra("isAdmin", isAdmin);
@@ -3223,9 +3448,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 List<NameValuePair> params = new ArrayList<NameValuePair>(2);
                 params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
                 params.add(new BasicNameValuePair("paymentType", String.valueOf(paymentType)));
-                Gson gson = new Gson();
+                Gson                gson   = new Gson();
                 SubdivisionItemJson myJson = new SubdivisionItemJson(item);
-                String myItem = gson.toJson(myJson);
+                String              myItem = gson.toJson(myJson);
                 params.add(new BasicNameValuePair("item", myItem));
                 callHttpHandler("/savePaidBillItem", params);
             }
@@ -3233,7 +3458,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             {
                 f = dbA.savePaidBill(item, billId, paymentType);
                 if (item != null)
-                { item.setPaid(true); }
+                {
+                    item.setPaid(true);
+                }
             }
 
 
@@ -3269,7 +3496,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         }
                     }
                     else
-                    { Toast.makeText(this, R.string.null_client, Toast.LENGTH_SHORT).show(); }
+                    {
+                        Toast.makeText(this, R.string.null_client, Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else if (resultCode == RESULT_CANCELED)
                 {
@@ -3292,7 +3521,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         else
                         {
                             Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-                            String mailto = "mailto:" + client.getEmail() + "?subject=" + Uri.encode("Scontrino Burgheria") + "&body=" + Uri.encode("corpo del messaggio contenente lo scontrino o fattura");
+                            String mailto      = "mailto:" + client.getEmail() + "?subject=" + Uri.encode("Scontrino Burgheria") + "&body=" + Uri.encode("corpo del messaggio contenente lo scontrino o fattura");
                             emailIntent.setData(Uri.parse(mailto));
 
                             try
@@ -3308,7 +3537,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         }
                     }
                     else
-                    { Toast.makeText(this, R.string.null_client, Toast.LENGTH_SHORT).show(); }
+                    {
+                        Toast.makeText(this, R.string.null_client, Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else if (resultCode == RESULT_CANCELED)
                 {
@@ -3331,9 +3562,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     public void openPinpad(int code)
     {
         calculatorFragment.turnOffCalculator();
-        LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.activity_pinpad, null);
-        final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        LayoutInflater    layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View        popupView      = layoutInflater.inflate(R.layout.activity_pinpad, null);
+        final PopupWindow popupWindow    = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
             @Override
@@ -3349,6 +3580,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
         // }
     }
+
 
     private void setUpPinpadPopup(View popupView, PopupWindow popupWindow, int code)
     {
@@ -3375,10 +3607,11 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         });
     }
 
+
     private void setupDigits(View popupView, int code, PopupWindow popupWindow)
     {
         RelativeLayout digitContainer = (RelativeLayout) popupView.findViewById(R.id.digits_container);
-        View v;
+        View           v;
         for (int i = 0; i < digitContainer.getChildCount(); i++)
         {
             v = digitContainer.getChildAt(i);
@@ -3395,6 +3628,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
     }
 
+
     public void resetDigitPinpads(View popupView)
     {
         popupView.findViewById(R.id.first_d).setBackgroundColor(black);
@@ -3405,6 +3639,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         popupView.findViewById(R.id.sixth_d).setBackgroundColor(black);
 
     }
+
 
     private void setDigitsPinpad(char digit, View popupView, int code, PopupWindow popupWindow)
     {
@@ -3420,26 +3655,31 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                     popupView.findViewById(R.id.first_d).setBackgroundColor(red);
                     break;
                 }
+
                 case 1:
                 {
                     popupView.findViewById(R.id.second_d).setBackgroundColor(red);
                     break;
                 }
+
                 case 2:
                 {
                     popupView.findViewById(R.id.third_d).setBackgroundColor(red);
                     break;
                 }
+
                 case 3:
                 {
                     popupView.findViewById(R.id.fourth_d).setBackgroundColor(red);
                     break;
                 }
+
                 case 4:
                 {
                     popupView.findViewById(R.id.fifth_d).setBackgroundColor(red);
                     break;
                 }
+
                 case 5:
                 {
                     popupView.findViewById(R.id.sixth_d).setBackgroundColor(red);
@@ -3467,7 +3707,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         {
                             Toast.makeText(me, R.string.please_insert_your_supervisor_passcode, Toast.LENGTH_SHORT).show();
                             resetDigitPinpads(popupView);
-                            passcode = new String();
+                            passcode = "";
                         }
                     }
                     else
@@ -3497,7 +3737,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                 popupWindow.dismiss();
 
                                 discountSet = true;
-                                mode = DISCOUNT_MODE;
+                                mode        = DISCOUNT_MODE;
                                 orderFragment.activateSelectionMode(OrderListAdapter.DISCOUNT_MODE);
                                 orderSubdivisionFragment.setMode(OrderListAdapter.DISCOUNT_MODE);
                                 orderFragment.setTotalCostDiscount();
@@ -3512,7 +3752,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         {
                             Toast.makeText(me, R.string.please_insert_your_supervisor_passcode, Toast.LENGTH_SHORT).show();
                             resetDigitPinpads(popupView);
-                            passcode = new String();
+                            passcode = "";
                         }
                     }
 
@@ -3526,10 +3766,11 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
     }
 
+
     private void setupDigitsModifyDiscount(View popupView, int code, PopupWindow popupWindow, View view, int groupPosition, int click)
     {
         RelativeLayout digitContainer = (RelativeLayout) popupView.findViewById(R.id.digits_container);
-        View v;
+        View           v;
         for (int i = 0; i < digitContainer.getChildCount(); i++)
         {
             v = digitContainer.getChildAt(i);
@@ -3547,6 +3788,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
 
     }
+
 
     private void setDigitsPinpadModifyDiscount(char digit, View popupView, int code, PopupWindow popupWindow, View v, int groupPosition, int click)
     {
@@ -3593,7 +3835,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         popupWindow.dismiss();
 
                         discountSet = true;
-                        mode = MODIFY_DISCOUNT_MODE;
+                        mode        = MODIFY_DISCOUNT_MODE;
                         orderFragment.activateSelectionMode(OrderListAdapter.MODIFY_DISCOUNT_MODE);
                         orderSubdivisionFragment.setMode(OrderListAdapter.MODIFY_DISCOUNT_MODE);
                         orderFragment.setTotalCostDiscount();
@@ -3611,7 +3853,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                     {
                         Toast.makeText(me, R.string.please_insert_your_supervisor_passcode, Toast.LENGTH_SHORT).show();
                         resetDigitPinpads(popupView);
-                        passcode = new String();
+                        passcode = "";
                     }
 
 
@@ -3625,10 +3867,11 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
     }
 
+
     public void exitHomageMode()
     {
         discountSet = false;
-        mode = DEFAULT_MODE;
+        mode        = DEFAULT_MODE;
         resetOptionsButton();
         setNormalKillOkButton();
         optionsFragment.setButtonPermission();
@@ -3636,10 +3879,11 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         setOptionButton(true);
     }
 
+
     public void exitHomageModeForTotal()
     {
         discountSet = false;
-        mode = DEFAULT_MODE;
+        mode        = DEFAULT_MODE;
         resetOptionsButton();
         hidenBlueButtonForTotalHomage();
         setNormalKillOkButton();
@@ -3649,10 +3893,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         setOptionButton(false);
     }
 
+
     public void setCalculatorCost(String cost)
     {
         calculatorFragment.setCost(cost);
     }
+
 
     /**
      * DISCOUNT PART
@@ -3674,14 +3920,16 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             if (item.getMode() == -1)
             {
                 if (orderSubdivisionFragment.getSubdivisionAdapter().getItemCount() == 1)
-                { orderFragment.activateSelectionMode(OrderListAdapter.DEFAULT_MODE); }
+                {
+                    orderFragment.activateSelectionMode(OrderListAdapter.DEFAULT_MODE);
+                }
             }
         }
         else
         {
             orderFragment.activateSelectionMode(OrderListAdapter.DEFAULT_MODE);
         }
-        discountSet = false;
+        discountSet               = false;
         orderFragment.discountSet = false;
         calculatorFragment.setIsActive(false);
         calculatorFragment.setTmpPositionDiscount(-1);
@@ -3689,6 +3937,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         dbA.showData("bill_total_extra");
         dbA.showData("product_bill");
     }
+
 
     public void setDiscountAmount(float discountAmount, float discountValue, boolean reset, int groupPosition, boolean fidelity)
     {
@@ -3709,8 +3958,8 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                             orderFragment.getOrderListAdapter().resetDiscountElement(groupPosition, discountValue);
                             if (StaticValue.blackbox)
                             {
-                                int myBillId = getBillId();
-                                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                                int                 myBillId = getBillId();
+                                List<NameValuePair> params   = new ArrayList<NameValuePair>(2);
                                 params.add(new BasicNameValuePair("billId", String.valueOf(myBillId)));
                                 params.add(new BasicNameValuePair("position", String.valueOf(groupPosition)));
                                 callHttpHandler("/resetDiscountForElement", params);
@@ -3732,8 +3981,8 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
                         calculatorFragment.turnOnOffCalculator();
 
-                        float remain = orderFragment.returnRemaningTotal();
-                        String txt = String.format("%.2f", roundDecimal((remain), 2));//.replaceAll(",", ".");
+                        float  remain = orderFragment.returnRemaningTotal();
+                        String txt    = String.format("%.2f", roundDecimal((remain), 2));//.replaceAll(",", ".");
                         calculatorFragment.setCost(txt);
 
                         orderSubdivisionFragment.getSubdivisionAdapter().resetDiscount(item, discountAmount);
@@ -3749,8 +3998,8 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         {
                             if (StaticValue.blackbox)
                             {
-                                int myBillId = getBillId();
-                                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                                int                 myBillId = getBillId();
+                                List<NameValuePair> params   = new ArrayList<NameValuePair>(2);
                                 params.add(new BasicNameValuePair("billId", String.valueOf(myBillId)));
                                 params.add(new BasicNameValuePair("position", String.valueOf(groupPosition)));
                                 callHttpHandler("/resetDiscountForElement", params);
@@ -3758,22 +4007,24 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                             else
                             {
                                 int positionToUpdate = orderFragment.getOrderListAdapter().returnOriginalPosition(groupPosition);
-                                int productBillId = dbA.getBillProduct(getBillId(), positionToUpdate);
+                                int productBillId    = dbA.getBillProduct(getBillId(), positionToUpdate);
                                 dbA.updateProductBillDiscount(discountValue, productBillId);
                             }
 
                         }
                         calculatorFragment.turnOnOffCalculator();
 
-                        float itemsDiscount = 0.0f;
-                        ArrayList<CashButtonLayout> products = item.getItems();
+                        float                       itemsDiscount = 0.0f;
+                        ArrayList<CashButtonLayout> products      = item.getItems();
                         for (int i = 0; i < products.size(); i++)
                         {
                             if (!products.get(i).isSelected() && products.get(i).getPosition() != groupPosition)
-                            { itemsDiscount += products.get(i).getDiscount(); }
+                            {
+                                itemsDiscount += products.get(i).getDiscount();
+                            }
                         }
-                        float remain = item.getOwed_money() - item.getDiscount() - itemsDiscount;
-                        String txt = String.format("%.2f", roundDecimal((remain), 2));//.replaceAll(",", ".");
+                        float  remain = item.getOwed_money() - item.getDiscount() - itemsDiscount;
+                        String txt    = String.format("%.2f", roundDecimal((remain), 2));//.replaceAll(",", ".");
                         calculatorFragment.setCost(txt);
 
                         orderSubdivisionFragment.getSubdivisionAdapter().notifyChange();
@@ -3789,8 +4040,8 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         orderFragment.getOrderListAdapter().resetDiscountElement(groupPosition, discountValue);
                         if (StaticValue.blackbox)
                         {
-                            int myBillId = getBillId();
-                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                            int                 myBillId = getBillId();
+                            List<NameValuePair> params   = new ArrayList<NameValuePair>(2);
                             params.add(new BasicNameValuePair("billId", String.valueOf(myBillId)));
                             params.add(new BasicNameValuePair("position", String.valueOf(groupPosition)));
                             callHttpHandler("/resetDiscountForElement", params);
@@ -3813,8 +4064,8 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
                     calculatorFragment.turnOnOffCalculator();
 
-                    float remain = orderFragment.returnRemaningTotal();
-                    String txt = String.format("%.2f", roundDecimal((remain), 2));//.replaceAll(",", ".");
+                    float  remain = orderFragment.returnRemaningTotal();
+                    String txt    = String.format("%.2f", roundDecimal((remain), 2));//.replaceAll(",", ".");
                     calculatorFragment.setCost(txt);
                 }
 
@@ -3850,8 +4101,8 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                             {
                                 if (StaticValue.blackbox)
                                 {
-                                    int myBillId = getBillId();
-                                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                                    int                 myBillId = getBillId();
+                                    List<NameValuePair> params   = new ArrayList<NameValuePair>(2);
                                     params.add(new BasicNameValuePair("billId", String.valueOf(myBillId)));
                                     params.add(new BasicNameValuePair("position", String.valueOf(groupPosition)));
                                     params.add(new BasicNameValuePair("discount", String.valueOf(discountAmount + discountValue)));
@@ -3874,9 +4125,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         {
                             if (StaticValue.blackbox)
                             {
-                                int positionToUpdate = orderFragment.getOrderListAdapter().returnOriginalPosition(groupPosition);
-                                int myBillId = getBillId();
-                                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                                int                 positionToUpdate = orderFragment.getOrderListAdapter().returnOriginalPosition(groupPosition);
+                                int                 myBillId         = getBillId();
+                                List<NameValuePair> params           = new ArrayList<NameValuePair>(2);
                                 params.add(new BasicNameValuePair("billId", String.valueOf(myBillId)));
                                 params.add(new BasicNameValuePair("position", String.valueOf(positionToUpdate)));
                                 params.add(new BasicNameValuePair("discount", String.valueOf(discountValue)));
@@ -3885,21 +4136,23 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                             else
                             {
                                 int positionToUpdate = orderFragment.getOrderListAdapter().returnOriginalPosition(groupPosition);
-                                int productBillId = dbA.getBillProduct(getBillId(), positionToUpdate);
+                                int productBillId    = dbA.getBillProduct(getBillId(), positionToUpdate);
                                 dbA.updateProductBillDiscount(discountValue, productBillId);
                             }
                         }
                         orderFragment.setItemDiscountAmount(item, discountAmount, discountValue, reset, groupPosition, fidelity);
                         calculatorFragment.turnOnOffCalculator();
-                        float itemsDiscount = 0.0f;
-                        ArrayList<CashButtonLayout> products = item.getItems();
+                        float                       itemsDiscount = 0.0f;
+                        ArrayList<CashButtonLayout> products      = item.getItems();
                         for (int i = 0; i < products.size(); i++)
                         {
                             if (!products.get(i).isSelected())
-                            { itemsDiscount += products.get(i).getDiscount(); }
+                            {
+                                itemsDiscount += products.get(i).getDiscount();
+                            }
                         }
-                        float remain = item.getOwed_money() - item.getDiscount() - itemsDiscount;
-                        String txt = String.format("%.2f", roundDecimal((remain), 2));//.replaceAll(",", ".");
+                        float  remain = item.getOwed_money() - item.getDiscount() - itemsDiscount;
+                        String txt    = String.format("%.2f", roundDecimal((remain), 2));//.replaceAll(",", ".");
                         calculatorFragment.setCost(txt);
 
                         orderSubdivisionFragment.getSubdivisionAdapter().notifyChange();
@@ -3913,8 +4166,8 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                     {
                         if (StaticValue.blackbox)
                         {
-                            int myBillId = getBillId();
-                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                            int                 myBillId = getBillId();
+                            List<NameValuePair> params   = new ArrayList<NameValuePair>(2);
                             params.add(new BasicNameValuePair("billId", String.valueOf(myBillId)));
                             params.add(new BasicNameValuePair("position", String.valueOf(groupPosition)));
                             params.add(new BasicNameValuePair("discount", String.valueOf(discountAmount + discountValue)));
@@ -3944,8 +4197,8 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         {
                             if (StaticValue.blackbox)
                             {
-                                int myBillId = getBillId();
-                                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                                int                 myBillId = getBillId();
+                                List<NameValuePair> params   = new ArrayList<NameValuePair>(2);
                                 params.add(new BasicNameValuePair("billId", String.valueOf(myBillId)));
                                 params.add(new BasicNameValuePair("position", String.valueOf(groupPosition)));
                                 params.add(new BasicNameValuePair("discount", String.valueOf(discountValue)));
@@ -3961,14 +4214,16 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         orderFragment.setItemDiscountAmount(item, discountAmount, discountValue, reset, groupPosition, fidelity);
                         calculatorFragment.turnOnOffCalculator();
 
-                        float itemsDiscount = 0.0f;
-                        ArrayList<CashButtonLayout> products = item.getItems();
+                        float                       itemsDiscount = 0.0f;
+                        ArrayList<CashButtonLayout> products      = item.getItems();
                         for (int i = 0; i < products.size(); i++)
                         {
                             if (!products.get(i).isSelected() && products.get(i).getPosition() != groupPosition)
-                            { itemsDiscount += products.get(i).getDiscount(); }
+                            {
+                                itemsDiscount += products.get(i).getDiscount();
+                            }
                         }
-                        float rem = getRemainingForTotal();
+                        float  rem = getRemainingForTotal();
                         String txt = String.format("%.2f", item.getOwed_money() - item.getDiscount() - rem - discountAmount - itemsDiscount);
 
                         calculatorFragment.setCost(txt);
@@ -3989,9 +4244,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                     {
                         if (StaticValue.blackbox)
                         {
-                            int positionToUpdate = orderFragment.getOrderListAdapter().returnOriginalPosition(groupPosition);
-                            int myBillId = getBillId();
-                            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                            int                 positionToUpdate = orderFragment.getOrderListAdapter().returnOriginalPosition(groupPosition);
+                            int                 myBillId         = getBillId();
+                            List<NameValuePair> params           = new ArrayList<NameValuePair>(2);
                             params.add(new BasicNameValuePair("billId", String.valueOf(myBillId)));
                             params.add(new BasicNameValuePair("position", String.valueOf(positionToUpdate)));
                             params.add(new BasicNameValuePair("discount", String.valueOf(discountValue)));
@@ -4000,21 +4255,23 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         else
                         {
                             int positionToUpdate = orderSubdivisionFragment.getSubdivisionAdapter().returnOriginalPosition(groupPosition);
-                            int productBillId = dbA.getBillProduct(getBillId(), positionToUpdate);
+                            int productBillId    = dbA.getBillProduct(getBillId(), positionToUpdate);
                             dbA.updateProductBillDiscount(discountValue, productBillId);
                         }
                     }
                     orderFragment.setItemDiscountAmount(item, discountAmount, discountValue, reset, groupPosition, fidelity);
                     calculatorFragment.turnOnOffCalculator();
-                    float itemsDiscount = 0.0f;
-                    ArrayList<CashButtonLayout> products = item.getItems();
+                    float                       itemsDiscount = 0.0f;
+                    ArrayList<CashButtonLayout> products      = item.getItems();
                     for (int i = 0; i < products.size(); i++)
                     {
                         if (!products.get(i).isSelected() && products.get(i).getPosition() != groupPosition)
-                        { itemsDiscount += products.get(i).getDiscount(); }
+                        {
+                            itemsDiscount += products.get(i).getDiscount();
+                        }
                     }
-                    float remain = item.getOwed_money() - item.getDiscount() - discountValue - itemsDiscount;
-                    String txt = String.format("%.2f", roundDecimal((remain), 2));//.replaceAll(",", ".");
+                    float  remain = item.getOwed_money() - item.getDiscount() - discountValue - itemsDiscount;
+                    String txt    = String.format("%.2f", roundDecimal((remain), 2));//.replaceAll(",", ".");
                     calculatorFragment.setCost(txt);
 
                     orderSubdivisionFragment.getSubdivisionAdapter().notifyChange();
@@ -4024,7 +4281,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             {
                 //NON HO FATTO LO SPLIT APPLICO AL TOTALE
                 if (String.valueOf(discountValue).equals("GRATI"))
-                { orderFragment.setHomageMethod(groupPosition); }
+                {
+                    orderFragment.setHomageMethod(groupPosition);
+                }
                 else
                 {
                     orderFragment.setPartialTotalDiscountAmount(discountAmount, discountValue);
@@ -4035,6 +4294,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
     }
 
+
     public void setDiscountOnTotalBill(float discountAmount, float discountValue, int groupPosition, boolean reset)
     {
         orderFragment.setDiscountElementFromFragment(groupPosition, discountValue, reset);
@@ -4042,9 +4302,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         {
             if (StaticValue.blackbox)
             {
-                int positionToUpdate = orderFragment.getOrderListAdapter().returnOriginalPosition(groupPosition);
-                int myBillId = getBillId();
-                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                int                 positionToUpdate = orderFragment.getOrderListAdapter().returnOriginalPosition(groupPosition);
+                int                 myBillId         = getBillId();
+                List<NameValuePair> params           = new ArrayList<NameValuePair>(2);
                 params.add(new BasicNameValuePair("billId", String.valueOf(myBillId)));
                 params.add(new BasicNameValuePair("position", String.valueOf(positionToUpdate)));
                 params.add(new BasicNameValuePair("discount", String.valueOf(discountValue)));
@@ -4052,14 +4312,14 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             }
             else
             {
-                int positionToUpdate = orderFragment.getOrderListAdapter().returnOriginalPosition(groupPosition);
-                int productBillId = dbA.getBillProduct(getBillId(), positionToUpdate);
-                float oldDiscount = dbA.getBillProductDiscount(getBillId(), positionToUpdate);
+                int   positionToUpdate = orderFragment.getOrderListAdapter().returnOriginalPosition(groupPosition);
+                int   productBillId    = dbA.getBillProduct(getBillId(), positionToUpdate);
+                float oldDiscount      = dbA.getBillProductDiscount(getBillId(), positionToUpdate);
                 dbA.updateProductBillDiscount(discountValue + oldDiscount, productBillId);
             }
         }
         float tc1 = orderFragment.getOrderListAdapter().getPartial_cost();
-        float tc = orderFragment.getTotalCost();
+        float tc  = orderFragment.getTotalCost();
         if (orderFragment.getOrderListAdapter().isSplit())
         {
             orderSubdivisionFragment.getSubdivisionAdapter().setTotalBill(orderFragment.getOrderListAdapter().getPartial_cost());
@@ -4069,10 +4329,11 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             orderSubdivisionFragment.getSubdivisionAdapter().setTotalBill(orderFragment.getTotalCost());
         }
         calculatorFragment.turnOnOffCalculator();
-        float remain = orderFragment.getOrderListAdapter().getLeftCost();
-        String txt = String.format("%.2f", roundDecimal((remain), 2));//;.replaceAll(",", ".");
+        float  remain = orderFragment.getOrderListAdapter().getLeftCost();
+        String txt    = String.format("%.2f", roundDecimal((remain), 2));//;.replaceAll(",", ".");
         calculatorFragment.setCost(txt);
     }
+
 
     public void setTotalDiscountAmount(float discountAmount, float discountValue, boolean reset, boolean fidelity)
     {
@@ -4088,27 +4349,29 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
                     float otherRemain = 0.0f;
                     otherRemain = orderSubdivisionFragment.getSubdivisionAdapter().getRemainingCostForTotal();
-                    float itemsDiscount = 0.0f;
-                    float itemsHomage = 0.0f;
-                    ArrayList<CashButtonLayout> products = item.getItems();
+                    float                       itemsDiscount = 0.0f;
+                    float                       itemsHomage   = 0.0f;
+                    ArrayList<CashButtonLayout> products      = item.getItems();
                     for (int i = 0; i < products.size(); i++)
                     {
                         if (!products.get(i).isSelected())
                         {
                             itemsDiscount += products.get(i).getDiscount();
                             if (products.get(i).getHomage() == 1)
-                            { itemsHomage += products.get(i).getPriceFloat(); }
+                            {
+                                itemsHomage += products.get(i).getPriceFloat();
+                            }
                         }
                     }
 
-                    float remain = item.getOwed_money() - item.getDiscount() - otherRemain - itemsDiscount - itemsHomage;
-                    String txt = String.format("%.2f", roundDecimal((remain), 2));//.replaceAll(",", ".");
+                    float  remain = item.getOwed_money() - item.getDiscount() - otherRemain - itemsDiscount - itemsHomage;
+                    String txt    = String.format("%.2f", roundDecimal((remain), 2));//.replaceAll(",", ".");
                     calculatorFragment.setCost(txt);
 
                     orderSubdivisionFragment.getSubdivisionAdapter().notifyChange();
 
-                    RelativeLayout container = (RelativeLayout) findViewById(R.id.second_bottom_container);
-                    RelativeLayout discount = (RelativeLayout) findViewById(R.id.euro_icon_discount);
+                    RelativeLayout container  = (RelativeLayout) findViewById(R.id.second_bottom_container);
+                    RelativeLayout discount   = (RelativeLayout) findViewById(R.id.euro_icon_discount);
                     RelativeLayout nodiscount = (RelativeLayout) findViewById(R.id.euro_icon_no_discount);
                     if (discountValue == 0.0f)
                     {
@@ -4151,23 +4414,25 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                     orderSubdivisionFragment.getSubdivisionAdapter().resetDiscount(item, item.getDiscount());
                     item.setDiscount(0.0f);
                 }
-                float itemsDiscount = 0.0f;
-                ArrayList<CashButtonLayout> products = item.getItems();
+                float                       itemsDiscount = 0.0f;
+                ArrayList<CashButtonLayout> products      = item.getItems();
                 for (int i = 0; i < products.size(); i++)
                 {
                     if (!products.get(i).isSelected())
-                    { itemsDiscount += products.get(i).getDiscount(); }
+                    {
+                        itemsDiscount += products.get(i).getDiscount();
+                    }
                 }
                 calculatorFragment.turnOnOffCalculator();
 
-                float remain = item.getOwed_money() - item.getDiscount() - itemsDiscount;
-                String txt = String.format("%.2f", roundDecimal((remain), 2));//.replaceAll(",", ".");
+                float  remain = item.getOwed_money() - item.getDiscount() - itemsDiscount;
+                String txt    = String.format("%.2f", roundDecimal((remain), 2));//.replaceAll(",", ".");
                 calculatorFragment.setCost(txt);
 
                 orderSubdivisionFragment.getSubdivisionAdapter().notifyChange();
 
-                RelativeLayout container = (RelativeLayout) findViewById(R.id.second_bottom_container);
-                RelativeLayout discount = (RelativeLayout) findViewById(R.id.euro_icon_discount);
+                RelativeLayout container  = (RelativeLayout) findViewById(R.id.second_bottom_container);
+                RelativeLayout discount   = (RelativeLayout) findViewById(R.id.euro_icon_discount);
                 RelativeLayout nodiscount = (RelativeLayout) findViewById(R.id.euro_icon_no_discount);
                 if (discountValue == 0.0f)
                 {
@@ -4198,13 +4463,15 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
             orderSubdivisionFragment.getSubdivisionAdapter().setItemDiscount(discountAmount);
             calculatorFragment.turnOnOffCalculator();
-            SubdivisionItem item2 = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
-            float itemsDiscount = 0.0f;
-            ArrayList<CashButtonLayout> produc = item2.getItems();
+            SubdivisionItem             item2         = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+            float                       itemsDiscount = 0.0f;
+            ArrayList<CashButtonLayout> produc        = item2.getItems();
             for (int i = 0; i < produc.size(); i++)
             {
                 if (!produc.get(i).isSelected())
-                { itemsDiscount += produc.get(i).getDiscount(); }
+                {
+                    itemsDiscount += produc.get(i).getDiscount();
+                }
             }
             float homage = 0.0f;
             for (int i = 0; i < products.size(); i++)
@@ -4225,9 +4492,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
             float remain = 0.0f;
             if (!reset)
-            { remain = item2.getOwed_money() - item2.getDiscount() - itemsDiscount - homage; }
+            {
+                remain = item2.getOwed_money() - item2.getDiscount() - itemsDiscount - homage;
+            }
             else
-            { remain = item2.getOwed_money() - item2.getDiscount() - itemsDiscount - homage; }
+            {
+                remain = item2.getOwed_money() - item2.getDiscount() - itemsDiscount - homage;
+            }
             String txt = String.format("%.2f", roundDecimal((remain), 2));//.replaceAll(",", ".");
             calculatorFragment.setCost(txt);
             mode = 0;
@@ -4236,6 +4507,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
         }
     }
+
 
     public void setPartialTotalDiscountAmount(float discountAmount, float discountValue)
     {
@@ -4258,14 +4530,15 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         calculatorFragment.setPayementShortcut();
     }
 
+
     /**
      * popup for process card from PaymentsOptionAdapter
      */
     public void openProcessCardPopupForItem()
     {
-        LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.popup_two_button, null);
-        final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        LayoutInflater    layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View        popupView      = layoutInflater.inflate(R.layout.popup_two_button, null);
+        final PopupWindow popupWindow    = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
             @Override
@@ -4286,6 +4559,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
 
     }
+
 
     /**
      * popup for acceppting payement with card, only kill and ok
@@ -4320,13 +4594,15 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 try
                 {
 
-                    float credit1 = getCreditValueAgain();
+                    float           credit1   = getCreditValueAgain();
                     SubdivisionItem totalItem = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
-                    SubdivisionItem item = orderFragment.getOrderListAdapter().getSubdivisionItem();
+                    SubdivisionItem item      = orderFragment.getOrderListAdapter().getSubdivisionItem();
                     if (item == null)
-                    { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
-                    String mode = "";
-                    int billId1 = intentPay.getIntExtra("billId", -1);
+                    {
+                        item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+                    }
+                    String mode    = "";
+                    int    billId1 = intentPay.getIntExtra("billId", -1);
                     if (item.getMode() == NUMBER_MODE)
                     {
                         mode = "Per number";
@@ -4343,9 +4619,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                 }
 
                                 List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                                Gson gson = new Gson();
-                                String prods = gson.toJson(products);
-                                String mods = gson.toJson(test);
+                                Gson                gson   = new Gson();
+                                String              prods  = gson.toJson(products);
+                                String              mods   = gson.toJson(test);
                                 params.add(new BasicNameValuePair("products", prods));
                                 params.add(new BasicNameValuePair("modifiers", mods));
                                 params.add(new BasicNameValuePair("printType", String.valueOf(1)));
@@ -4393,7 +4669,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         }
                         else
                         {
-                            Gson gson = new Gson();
+                            Gson       gson     = new Gson();
                             JSONObject combined = new JSONObject();
 
                             int billNumber = intentPay.getIntExtra("orderNumber", -1);
@@ -4539,14 +4815,15 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         });
     }
 
+
     /**
      * popup for process card from PaymentsOptionAdapter
      */
     public void openProcessCardPopup()
     {
-        LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.popup_two_button, null);
-        final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        LayoutInflater    layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View        popupView      = layoutInflater.inflate(R.layout.popup_two_button, null);
+        final PopupWindow popupWindow    = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
             @Override
@@ -4562,6 +4839,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
 
     }
+
 
     /**
      * popup for acceppting payement with card, only kill and ok
@@ -4608,7 +4886,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                             for (CashButtonLayout cashButton : products)
                             {
                                 if (cashButton.getHomage() != 0)
-                                { homage += cashButton.getPriceFloat(); }
+                                {
+                                    homage += cashButton.getPriceFloat();
+                                }
                                 myProducts.add(cashButton);
                                 int qty = orderFragment.getOrderListAdapter().returnQuantity(cashButton);
                                 myProducts.get(myProducts.size() - 1).setQuantity(qty);
@@ -4658,11 +4938,11 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                         }
 
 
-                                        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                                        Gson gson = new Gson();
-                                        String prods = gson.toJson(myProducts);
-                                        String mods = gson.toJson(test);
-                                        String creditArray = gson.toJson(creditId);
+                                        List<NameValuePair> params      = new ArrayList<NameValuePair>(2);
+                                        Gson                gson        = new Gson();
+                                        String              prods       = gson.toJson(myProducts);
+                                        String              mods        = gson.toJson(test);
+                                        String              creditArray = gson.toJson(creditId);
                                         params.add(new BasicNameValuePair("products", prods));
                                         params.add(new BasicNameValuePair("modifiers", mods));
                                         params.add(new BasicNameValuePair("printType", String.valueOf(1)));
@@ -4709,7 +4989,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                         else
                                         {
                                             Double costo = dbA.getBillPrice(billId);
-                                            float paid = (float) (costo - totalDiscount - homage);
+                                            float  paid  = (float) (costo - totalDiscount - homage);
 
                                             if (StaticValue.printerName.equals("ditron") && StaticValue.ditronApi)
                                             {
@@ -4757,19 +5037,19 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                             }
                             else
                             {
-                                float credit1 = getCreditValueAgain();
+                                float           credit1   = getCreditValueAgain();
                                 SubdivisionItem totalItem = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
-                                SubdivisionItem item = orderFragment.getOrderListAdapter().getSubdivisionItem();
-                                String mode = "";
-                                int billId1 = intentPay.getIntExtra("billId", -1);
+                                SubdivisionItem item      = orderFragment.getOrderListAdapter().getSubdivisionItem();
+                                String          mode      = "";
+                                int             billId1   = intentPay.getIntExtra("billId", -1);
                                 if (item.getMode() == NUMBER_MODE)
                                 {
                                     mode = "Per number";
                                     if (item.getOwed_money() * item.getNumber_subdivision() == totalItem.getOwed_money())
                                     {
-                                        Gson gson = new Gson();
-                                        JSONObject combined = new JSONObject();
-                                        int billNumber = intentPay.getIntExtra("orderNumber", -1);
+                                        Gson       gson       = new Gson();
+                                        JSONObject combined   = new JSONObject();
+                                        int        billNumber = intentPay.getIntExtra("orderNumber", -1);
                                         if (StaticValue.printerName.equals("ditron") && StaticValue.ditronApi)
                                         {
                                             PrinterDitronThread ditron = PrinterDitronThread.getInstance();
@@ -4799,9 +5079,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                     }
                                     else
                                     {
-                                        Gson gson = new Gson();
-                                        JSONObject combined = new JSONObject();
-                                        int billNumber = intentPay.getIntExtra("orderNumber", -1);
+                                        Gson       gson       = new Gson();
+                                        JSONObject combined   = new JSONObject();
+                                        int        billNumber = intentPay.getIntExtra("orderNumber", -1);
                                         if (StaticValue.printerName.equals("ditron") && StaticValue.ditronApi)
                                         {
                                             PrinterDitronThread ditron = PrinterDitronThread.getInstance();
@@ -4856,7 +5136,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                     if (item.getMode() == PERCENTAGE_MODE)
                                     {
                                         mode = "Per Amount";
-                                        Gson gson = new Gson();
+                                        Gson       gson     = new Gson();
                                         JSONObject combined = new JSONObject();
                                        /* ClientDelegate myClient = new ClientDelegate(8080);
                                         myClient.delegate = forClient;*/
@@ -4891,9 +5171,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                         {
                                             a1.get(i).setPosition(i);
                                         }
-                                        Map<CashButtonLayout, ArrayList<CashButtonListLayout>> b1 = orderFragment.getOrderListAdapter().getCurrentSplitMap(a1);
-                                        Gson gson = new Gson();
-                                        JSONObject combined = new JSONObject();
+                                        Map<CashButtonLayout, ArrayList<CashButtonListLayout>> b1       = orderFragment.getOrderListAdapter().getCurrentSplitMap(a1);
+                                        Gson                                                   gson     = new Gson();
+                                        JSONObject                                             combined = new JSONObject();
                                        /* ClientDelegate myClient = new ClientDelegate(8080);
                                         myClient.delegate = forClient;*/
                                         int billNumber = intentPay.getIntExtra("orderNumber", -1);
@@ -4925,9 +5205,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                     orderSubdivisionFragment.getSubdivisionAdapter().setItemPaid(item);
                                     if (orderSubdivisionFragment.getSubdivisionAdapter().getRemainingCost() <= 0)
                                     {
-                                        int billNumber = intentPay.getIntExtra("orderNumber", -1);
-                                        Gson gson = new Gson();
-                                        JSONObject combined = new JSONObject();
+                                        int        billNumber = intentPay.getIntExtra("orderNumber", -1);
+                                        Gson       gson       = new Gson();
+                                        JSONObject combined   = new JSONObject();
                                         Collections.sort(products);
 
                                         if (StaticValue.printerName.equals("ditron") && StaticValue.ditronApi)
@@ -4978,11 +5258,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
     }
 
+
     public void openProcessLeftCreditCardPopup(SubdivisionItem item)
     {
-        LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.popup_two_button, null);
-        final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        LayoutInflater    layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View        popupView      = layoutInflater.inflate(R.layout.popup_two_button, null);
+        final PopupWindow popupWindow    = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
             @Override
@@ -5003,6 +5284,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
 
     }
+
 
     public void setUpButtonForLeftPopup(View popupView, PopupWindow popupWindow, SubdivisionItem item)
     {
@@ -5041,9 +5323,10 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
     }
 
+
     public Map<CashButtonLayout, ArrayList<CashButtonListLayout>> setSplitillToPrint(ArrayList<CashButtonLayout> items)
     {
-        Map<CashButtonLayout, ArrayList<CashButtonListLayout>> map = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+        Map<CashButtonLayout, ArrayList<CashButtonListLayout>> map  = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
         Map<CashButtonLayout, ArrayList<CashButtonListLayout>> map1 = orderFragment.getOrderListAdapter().getGroupsBackup();
 
         for (CashButtonLayout prod : items)
@@ -5073,15 +5356,16 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         return greenButton;
     }
 
+
     /**
      * opacity forr green payment button
      */
     public void setOpacityForPayementButtons()
     {
         RelativeLayout payementButtons = (RelativeLayout) findViewById(R.id.payment_options_container);
-        View upperLine = findViewById(R.id.top_line1);
-        CustomTextView title = (CustomTextView) findViewById(R.id.options_title);
-        View bottomLine = findViewById(R.id.top_line2);
+        View           upperLine       = findViewById(R.id.top_line1);
+        CustomTextView title           = (CustomTextView) findViewById(R.id.options_title);
+        View           bottomLine      = findViewById(R.id.top_line2);
         if (payementButtons != null)
         {
             payementButtons.setAlpha(0.15f);
@@ -5091,15 +5375,16 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
     }
 
+
     /**
      * reset opacity for green button
      */
     public void resetOpacityForPayementButtons()
     {
         RelativeLayout payementButtons = (RelativeLayout) findViewById(R.id.payment_options_container);
-        View upperLine = findViewById(R.id.top_line1);
-        CustomTextView title = (CustomTextView) findViewById(R.id.options_title);
-        View bottomLine = findViewById(R.id.top_line2);
+        View           upperLine       = findViewById(R.id.top_line1);
+        CustomTextView title           = (CustomTextView) findViewById(R.id.options_title);
+        View           bottomLine      = findViewById(R.id.top_line2);
         if (payementButtons != null)
         {
             payementButtons.setAlpha(1f);
@@ -5110,15 +5395,18 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
     }
 
+
     public void activatePaymentButtons()
     {
         optionsFragment.activatePayments();
     }
 
+
     public void reactivatePaymentButtons()
     {
         optionsFragment.reactivatePayments();
     }
+
 
     public void resetOpacityForOptionsButton()
     {
@@ -5129,11 +5417,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
     }
 
+
     public void resetOpacityForSplit()
     {
         RelativeLayout payementOptions = (RelativeLayout) findViewById(R.id.button_container);
 
-        View upperLine = findViewById(R.id.bottom_hline1_button_container);
+        View upperLine  = findViewById(R.id.bottom_hline1_button_container);
         View bottomLine = findViewById(R.id.bottom_hline2_button_container);
 
         if (payementOptions != null)
@@ -5151,9 +5440,16 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             upperLine.setAlpha(1f);
             bottomLine.setAlpha(1f);
         }
-        greenButton = false;
+        greenButton  = false;
         optionbutton = true;
     }
+
+
+    /**
+     * CLIENT POPUP NEW PART
+     * not in a fragment, already too many fragment inside this activity
+     *
+     */
 
     /**
      * opacity for options button, homage etc....
@@ -5162,7 +5458,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     {
         RelativeLayout payementOptions = (RelativeLayout) findViewById(R.id.options_button_container_aa);
 
-        View upperLine = findViewById(R.id.bottom_hline1_button_container);
+        View upperLine  = findViewById(R.id.bottom_hline1_button_container);
         View bottomLine = findViewById(R.id.bottom_hline2_button_container);
 
         if (payementOptions != null)
@@ -5189,6 +5485,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         greenButton = false;
     }
 
+
     public void setOpacityForSplitButton()
     {
 
@@ -5201,11 +5498,11 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             child.setEnabled(false);
 
         }
-        View upperLine = findViewById(R.id.bottom_hline1_button_container);
+        View upperLine  = findViewById(R.id.bottom_hline1_button_container);
         View bottomLine = findViewById(R.id.bottom_hline2_button_container);
-        View vline1 = findViewById(R.id.vline1);
-        View vline2 = findViewById(R.id.vline2);
-        View vline3 = findViewById(R.id.vline3);
+        View vline1     = findViewById(R.id.vline1);
+        View vline2     = findViewById(R.id.vline2);
+        View vline3     = findViewById(R.id.vline3);
 
         payementOptions.setAlpha(0.15f);
         upperLine.setAlpha(0.15f);
@@ -5215,6 +5512,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         vline3.setAlpha(0.15f);
 
     }
+
 
     public void setOpacityExSplit()
     {
@@ -5229,15 +5527,18 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         setOptionButton(true);
     }
 
+
     public boolean getIsCardFromActivity()
     {
         return optionsFragment.getAdapter().getIsCar();
     }
 
+
     public float getCreditValue(int billId)
     {
         return dbA.getBillCreditPrice(billId);
     }
+
 
     public float getCreditValueAgain()
     {
@@ -5252,6 +5553,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         return value;
     }
 
+
     public void deleteCredit()
     {
         if (creditId != null)
@@ -5264,6 +5566,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             creditId = new ArrayList<Integer>();
         }
     }
+
 
     public int returnSubdivisionSize()
     {
@@ -5280,8 +5583,8 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         if (size > 1)
         {
             //get selected item
-            SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
-            float other = orderSubdivisionFragment.getSubdivisionAdapter().getRemainingCostForTotal();
+            SubdivisionItem item  = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
+            float           other = orderSubdivisionFragment.getSubdivisionAdapter().getRemainingCostForTotal();
             //float remain = orderFragment.returnRemaningTotal();
             float remain = 0.0f;
             if (item.getMode() != -1)
@@ -5289,7 +5592,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 remain = item.getOwed_money() - item.getDiscount() - getDiscountForItemSelected(item)/*getDiscountForItem()*//*-getHomageForItem()*//*-other*/;
             }
             else
-            { remain = item.getOwed_money() - item.getDiscount() - getDiscountForItemSelected(item)/*getDiscountForItem()*/ - getHomageForItem()/*-other*/; }
+            {
+                remain = item.getOwed_money() - item.getDiscount() - getDiscountForItemSelected(item)/*getDiscountForItem()*/ - getHomageForItem()/*-other*/;
+            }
             remain = remain - calculatorFragment.getActualCredit();
 
             if (remain > 0.0)
@@ -5299,9 +5604,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 {
                     orderFragment.setItemDiscountAmount(item, 1, 1, false, -1, false);
                     if (item == null)
-                    { orderFragment.setTotalDiscountAmount(1, 1, false, false); }
+                    {
+                        orderFragment.setTotalDiscountAmount(1, 1, false, false);
+                    }
                     else if (item.getMode() == -1)
-                    { orderFragment.setTotalDiscountAmount(1, 1, false, false); }
+                    {
+                        orderFragment.setTotalDiscountAmount(1, 1, false, false);
+                    }
                     else if (/*item.getMode()==-1 ||*/ item.getMode() == PERSON_MODE || item.getMode() == ITEM_MODE || item.getMode() == PERCENTAGE_MODE)
                     {
                         //SHOW DISCOUNT
@@ -5326,9 +5635,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 {
                     orderFragment.setItemDiscountAmount(item, perc, perc, false, -1, false);
                     if (item == null)
-                    { orderFragment.setTotalDiscountAmount(perc, perc, false, false); }
+                    {
+                        orderFragment.setTotalDiscountAmount(perc, perc, false, false);
+                    }
                     else if (item.getMode() == PERCENTAGE_MODE)
-                    { orderFragment.setTotalDiscountAmount(perc, perc, false, false); }
+                    {
+                        orderFragment.setTotalDiscountAmount(perc, perc, false, false);
+                    }
                     else if (item.getMode() == -1 || item.getMode() == PERSON_MODE || item.getMode() == ITEM_MODE)
                     {
                         //SHOW DISCOUNT
@@ -5348,7 +5661,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         {
             SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
             if (item == null)
-            { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
+            {
+                item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+            }
             float other = orderSubdivisionFragment.getSubdivisionAdapter().getRemainingCostForTotal();
             //float remain = orderFragment.returnRemaningTotal();
 
@@ -5403,15 +5718,15 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
     public void printLeftPayment()
     {
-        int billId = intentPay.getIntExtra("billId", -1);
-        SubdivisionItem item = calculatorFragment.getLeftPayment().get(0).getItem();
+        int             billId = intentPay.getIntExtra("billId", -1);
+        SubdivisionItem item   = calculatorFragment.getLeftPayment().get(0).getItem();
         if (StaticValue.blackbox)
         {
             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            Gson gson = new Gson();
+            Gson                gson   = new Gson();
             SubdivisionItemJson myJson = new SubdivisionItemJson(item);
-            String myItem = gson.toJson(myJson);
-            String lefts = gson.toJson(calculatorFragment.getLeftPayment());
+            String              myItem = gson.toJson(myJson);
+            String              lefts  = gson.toJson(calculatorFragment.getLeftPayment());
             params.add(new BasicNameValuePair("item", myItem));
             params.add(new BasicNameValuePair("left", lefts));
             params.add(new BasicNameValuePair("billId", String.valueOf(billId)));
@@ -5426,16 +5741,16 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         int i = -1;
         synchronized (this)
         {
-            Float totalDiscount = item.getDiscount();
-            Double costo = Double.valueOf(item.getOwed_money());
-            int orderNumber1 = intentPay.getIntExtra("orderNumber", 1);
+            Float  totalDiscount = item.getDiscount();
+            Double costo         = Double.valueOf(item.getOwed_money());
+            int    orderNumber1  = intentPay.getIntExtra("orderNumber", 1);
 
             ArrayList<Customer> customers = new ArrayList<Customer>();
 
             int tableNumber = orderFragment.getTableNumber();
 
 
-            ArrayList<CashButtonLayout> myProducts = new ArrayList<CashButtonLayout>();
+            ArrayList<CashButtonLayout>                            myProducts = new ArrayList<CashButtonLayout>();
             Map<CashButtonLayout, ArrayList<CashButtonListLayout>> myModifier = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
             for (CashButtonLayout cashButton : item.getItems())
             {
@@ -5458,7 +5773,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 {
                     Customer customer = orderFragment.getOrderListAdapter().getCustomer(cashButton.getClientPosition());
                     if (!customers.contains(customer))
-                    { customers.add(customer); }
+                    {
+                        customers.add(customer);
+                    }
                 }
             }
             Collections.sort(myProducts);
@@ -5473,11 +5790,11 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 }
 
 
-                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                Gson gson = new Gson();
-                String prods = gson.toJson(myProducts);
-                String mods = gson.toJson(test);
-                String leftPayment = gson.toJson(calculatorFragment.getLeftPayment());
+                List<NameValuePair> params      = new ArrayList<NameValuePair>(2);
+                Gson                gson        = new Gson();
+                String              prods       = gson.toJson(myProducts);
+                String              mods        = gson.toJson(test);
+                String              leftPayment = gson.toJson(calculatorFragment.getLeftPayment());
                 params.add(new BasicNameValuePair("products", prods));
                 params.add(new BasicNameValuePair("modifiers", mods));
                 params.add(new BasicNameValuePair("left", leftPayment));
@@ -5541,10 +5858,10 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             if (item.getMode() == -1)
             {
                 //sto pagando tutto lo split bill
-                Intent intent = new Intent(PaymentActivity.this, Operative.class);
-                int orderNumber = intentPay.getIntExtra("orderNumber", 1);
-                String username = intentPay.getStringExtra("username");
-                int isAdmin = intentPay.getIntExtra("isAdmin", -1);
+                Intent intent      = new Intent(PaymentActivity.this, Operative.class);
+                int    orderNumber = intentPay.getIntExtra("orderNumber", 1);
+                String username    = intentPay.getStringExtra("username");
+                int    isAdmin     = intentPay.getIntExtra("isAdmin", -1);
 
                 intent.putExtra("username", username);
                 intent.putExtra("isAdmin", isAdmin);
@@ -5627,11 +5944,14 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
     }
 
+
     public void printNonFiscal()
     {
         SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
         if (item == null)
-        { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
+        {
+            item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+        }
         if (item.isPaid())
         {
             openPopupToReprint(item);
@@ -5659,12 +5979,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         orderFragment.getOrderListAdapter().notifyDataSetChanged();
     }
 
+
     public void openPopupToReprint(SubdivisionItem item)
     {
 
-        LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.popup_two_button, null);
-        final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        LayoutInflater    layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View        popupView      = layoutInflater.inflate(R.layout.popup_two_button, null);
+        final PopupWindow popupWindow    = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
             @Override
@@ -5685,6 +6006,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
 
     }
+
 
     public void setUpReprintPopup(View popupView, PopupWindow popupWindow, SubdivisionItem item)
     {
@@ -5765,15 +6087,16 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
     }
 
+
     public void printItemBillNonFiscalForNumber(SubdivisionItem item)
     {
         int billId = intentPay.getIntExtra("billId", -1);
 
-        int orderNumber = intentPay.getIntExtra("orderNumber", 1);
-        ArrayList<Customer> customers = new ArrayList<Customer>();
-        int tableNumber = orderFragment.getTableNumber();
-        ArrayList<CashButtonLayout> myProducts = new ArrayList<CashButtonLayout>();
-        Map<CashButtonLayout, ArrayList<CashButtonListLayout>> myModifier = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+        int                                                    orderNumber = intentPay.getIntExtra("orderNumber", 1);
+        ArrayList<Customer>                                    customers   = new ArrayList<Customer>();
+        int                                                    tableNumber = orderFragment.getTableNumber();
+        ArrayList<CashButtonLayout>                            myProducts  = new ArrayList<CashButtonLayout>();
+        Map<CashButtonLayout, ArrayList<CashButtonListLayout>> myModifier  = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
 
         CashButtonLayout button = new CashButtonLayout();
         button.setTitle("per number");
@@ -5800,9 +6123,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             }
 
             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            Gson gson = new Gson();
-            String prods = gson.toJson(myProducts);
-            String mods = gson.toJson(test);
+            Gson                gson   = new Gson();
+            String              prods  = gson.toJson(myProducts);
+            String              mods   = gson.toJson(test);
             params.add(new BasicNameValuePair("products", prods));
             params.add(new BasicNameValuePair("modifiers", mods));
             params.add(new BasicNameValuePair("printType", String.valueOf(4)));
@@ -5844,21 +6167,22 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
     }
 
+
     public void printItemBillNonFiscal(SubdivisionItem item)
     {
         int billId = intentPay.getIntExtra("billId", -1);
 
-        Float totalDiscount = item.getDiscount();
-        Double costo = Double.valueOf(item.getOwed_money());
-        int orderNumber = intentPay.getIntExtra("orderNumber", 1);
+        Float  totalDiscount = item.getDiscount();
+        Double costo         = Double.valueOf(item.getOwed_money());
+        int    orderNumber   = intentPay.getIntExtra("orderNumber", 1);
 
         int tableNumber = orderFragment.getTableNumber();
 
 
-        Map<CashButtonLayout, ArrayList<CashButtonListLayout>> myModifier = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
-        Map<Integer, ArrayList<CashButtonListLayout>> myModifier2 = new HashMap<Integer, ArrayList<CashButtonListLayout>>();
-        ArrayList<CashButtonLayout> products = item.getItems();
-        ArrayList<CashButtonLayout> myProducts = new ArrayList<CashButtonLayout>();
+        Map<CashButtonLayout, ArrayList<CashButtonListLayout>> myModifier  = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
+        Map<Integer, ArrayList<CashButtonListLayout>>          myModifier2 = new HashMap<Integer, ArrayList<CashButtonListLayout>>();
+        ArrayList<CashButtonLayout>                            products    = item.getItems();
+        ArrayList<CashButtonLayout>                            myProducts  = new ArrayList<CashButtonLayout>();
         for (CashButtonLayout cashButton : products)
         {
             if (!cashButton.isSelected())
@@ -5877,7 +6201,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 myProducts.add(newbutton);
                 //myProducts.add(cashButton);
                 ArrayList<CashButtonListLayout> newList = new ArrayList<>();
-                ArrayList<CashButtonListLayout> mList = cashButton.getCashList();
+                ArrayList<CashButtonListLayout> mList   = cashButton.getCashList();
                 for (CashButtonListLayout m : mList)
                 {
                     int qtyM = orderFragment.getOrderListAdapter().returnQuantityForModifier(cashButton, m);
@@ -5911,11 +6235,11 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 test.put(String.valueOf(myProducts.get(i).getPosition()), myProducts.get(i).getCashList());
             }
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            Gson gson = new Gson();
-            String prods = gson.toJson(myProducts);
-            String mods = gson.toJson(myModifier2);
-            String creditArray = gson.toJson(creditId);
+            List<NameValuePair> params      = new ArrayList<NameValuePair>(2);
+            Gson                gson        = new Gson();
+            String              prods       = gson.toJson(myProducts);
+            String              mods        = gson.toJson(myModifier2);
+            String              creditArray = gson.toJson(creditId);
             params.add(new BasicNameValuePair("products", prods));
             params.add(new BasicNameValuePair("modifiers", mods));
             params.add(new BasicNameValuePair("printType", String.valueOf(4)));
@@ -5963,13 +6287,14 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
     }
 
+
     public void printTotalBillNonFiscal()
     {
         int billId = intentPay.getIntExtra("billId", -1);
 
-        Float totalDiscount = dbA.getBillDiscountPrice(billId);
-        Double costo = dbA.getBillPrice(billId);
-        int orderNumber = intentPay.getIntExtra("orderNumber", 1);
+        Float  totalDiscount = dbA.getBillDiscountPrice(billId);
+        Double costo         = dbA.getBillPrice(billId);
+        int    orderNumber   = intentPay.getIntExtra("orderNumber", 1);
 
         ArrayList<Customer> customers = new ArrayList<Customer>();
 
@@ -5980,12 +6305,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         Map<CashButtonLayout, ArrayList<CashButtonListLayout>> myModifier = new HashMap<CashButtonLayout, ArrayList<CashButtonListLayout>>();
 
 
-        float mycost = 0.0f;
+        float                       mycost   = 0.0f;
         ArrayList<CashButtonLayout> products = new ArrayList<>();
         products.addAll(item.getItems());
 
-
         ArrayList<CashButtonLayout> myProducts = new ArrayList<CashButtonLayout>();
+
         for (CashButtonLayout cashButton : products)
         {
             if (!cashButton.isSelected())
@@ -6001,9 +6326,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 newbutton.setID(cashButton.getID());
                 newbutton.setClientPosition(cashButton.getClientPosition());
                 newbutton.setVat(cashButton.getVat());
+                newbutton.setDiscount(cashButton.getDiscount());
+
                 myProducts.add(newbutton);
+
                 ArrayList<CashButtonListLayout> newList = new ArrayList<>();
-                ArrayList<CashButtonListLayout> mList = cashButton.getCashList();
+                ArrayList<CashButtonListLayout> mList   = cashButton.getCashList();
                 for (CashButtonListLayout m : mList)
                 {
                     int qtyM = orderFragment.getOrderListAdapter().returnQuantityForModifier(cashButton, m);
@@ -6019,8 +6347,11 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
                     mycost += m.getQuantityInt() * m.getPriceFloat();
                 }
+
                 int qty = orderFragment.getOrderListAdapter().returnQuantity(cashButton);
+
                 myProducts.get(myProducts.size() - 1).setQuantity(qty);
+
                 mycost += myProducts.get(myProducts.size() - 1).getQuantityInt() * myProducts.get(myProducts.size() - 1).getPriceFloat();
                 myModifier.put(myProducts.get(myProducts.size() - 1), newList);
                 //myModifiers.put(myProducts.get(myProducts.size() - 1), cashButton.getCashList());
@@ -6036,9 +6367,10 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             }
 
             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            Gson gson = new Gson();
-            String prods = gson.toJson(myProducts);
-            String mods = gson.toJson(test);
+            Gson                gson   = new Gson();
+            String              prods  = gson.toJson(myProducts);
+            String              mods   = gson.toJson(test);
+
             params.add(new BasicNameValuePair("products", prods));
             params.add(new BasicNameValuePair("modifiers", mods));
             params.add(new BasicNameValuePair("printType", String.valueOf(4)));
@@ -6083,9 +6415,10 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
     }
 
+
     public void printFiscalBillWithNonFiscal(float credit, float paid, float cost, String description, int billIdToSplit, int paymentType)
     {
-        int billId = intentPay.getIntExtra("billId", -1);
+        int billId     = intentPay.getIntExtra("billId", -1);
         int billNumber = intentPay.getIntExtra("orderNumber", -1);
 
         int orderNumber = intentPay.getIntExtra("orderNumber", 1);
@@ -6100,14 +6433,16 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
             SubdivisionItem item = orderFragment.getOrderListAdapter().getSubdivisionItem();
             if (orderSubdivisionFragment.getSubdivisionAdapter().getItemCount() > 0)
-            { orderSubdivisionFragment.getSubdivisionAdapter().setOpenSplitPaid(); }
+            {
+                orderSubdivisionFragment.getSubdivisionAdapter().setOpenSplitPaid();
+            }
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            Gson gson = new Gson();
-            String prods = gson.toJson(products);
-            String mods = gson.toJson(test);
-            String itemString = gson.toJson(item);
-            String creditArray = gson.toJson(creditId);
+            List<NameValuePair> params      = new ArrayList<NameValuePair>(2);
+            Gson                gson        = new Gson();
+            String              prods       = gson.toJson(products);
+            String              mods        = gson.toJson(test);
+            String              itemString  = gson.toJson(item);
+            String              creditArray = gson.toJson(creditId);
             params.add(new BasicNameValuePair("products", prods));
             params.add(new BasicNameValuePair("modifiers", mods));
             params.add(new BasicNameValuePair("printType", String.valueOf(6)));
@@ -6126,9 +6461,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             callHttpHandler("/printBillWithNonFiscal", params);
 
             deleteCredit();
-            Intent intent = new Intent(PaymentActivity.this, Operative.class);
+            Intent intent   = new Intent(PaymentActivity.this, Operative.class);
             String username = intentPay.getStringExtra("username");
-            int isAdmin = intentPay.getIntExtra("isAdmin", -1);
+            int    isAdmin  = intentPay.getIntExtra("isAdmin", -1);
 
             intent.putExtra("username", username);
             intent.putExtra("isAdmin", isAdmin);
@@ -6176,7 +6511,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             deleteCredit();
             SubdivisionItem item = orderFragment.getOrderListAdapter().getSubdivisionItem();
             if (orderSubdivisionFragment.getSubdivisionAdapter().getItemCount() > 0)
-            { orderSubdivisionFragment.getSubdivisionAdapter().setOpenSplitPaid(); }
+            {
+                orderSubdivisionFragment.getSubdivisionAdapter().setOpenSplitPaid();
+            }
             /**
              * If pay mode is set to PAY_TOTAL_BILL or if the bill splits are all paid, it
              * updates the total bill db value setting it to paid on the current timestamp.
@@ -6189,9 +6526,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 saveBillCredit(credit);
             }
             // close payment activity
-            Intent intent = new Intent(PaymentActivity.this, Operative.class);
+            Intent intent   = new Intent(PaymentActivity.this, Operative.class);
             String username = intentPay.getStringExtra("username");
-            int isAdmin = intentPay.getIntExtra("isAdmin", -1);
+            int    isAdmin  = intentPay.getIntExtra("isAdmin", -1);
 
             intent.putExtra("username", username);
             intent.putExtra("isAdmin", isAdmin);
@@ -6211,10 +6548,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
     }
 
+
     public void setIsActivePayementsOptions(Boolean b)
     {
         optionsFragment.getAdapter().setActive(b);
     }
+
 
     public boolean checkIfOtherSplitBillArePaid()
     {
@@ -6230,13 +6569,18 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 return true;
             }
         }
-        else {return true;}
+        else
+        {
+            return true;
+        }
     }
+
 
     public boolean checkIfOtherSplitBillAreItemOrPerson()
     {
         return orderSubdivisionFragment.getSubdivisionAdapter().checkIfOtherPersonOrItem();
     }
+
 
     public boolean checkIfThereIsOneAmount()
     {
@@ -6249,11 +6593,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         return orderFragment.getOrderListAdapter().getCustomer(customerPosition);
     }
 
+
     public SubdivisionItem returnSplitPosition()
     {
         SubdivisionItem a = orderSubdivisionFragment.getSubdivisionAdapter().returnSplitOpen();
         return a;
     }
+
 
     public void setSubdivisionCostLeft(float c, boolean add)
     {
@@ -6261,15 +6607,16 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
     }
 
+
     /**
      * part for partial payment on split bill for item and person
      */
 
     public void openPopupForPaymentLeft(ArrayList<LeftPayment> leftPayments)
     {
-        LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.popup_left_payment, null);
-        final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        LayoutInflater    layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View        popupView      = layoutInflater.inflate(R.layout.popup_left_payment, null);
+        final PopupWindow popupWindow    = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
             @Override
@@ -6373,6 +6720,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         });
     }
 
+
     public void resetPaymentLeft()
     {
         ArrayList<LeftPayment> leftPayments = calculatorFragment.getLeftPayment();
@@ -6390,18 +6738,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
     }
 
+
     @Override
     public void onTaskFinishGettingData(String result)
     {
 
     }
 
-
-    /**
-     * CLIENT POPUP NEW PART
-     * not in a fragment, already too many fragment inside this activity
-     *
-     */
 
     /**
      * open client popup to select client for invoice or email
@@ -6411,7 +6754,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
         SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
         if (item == null)
-        { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
+        {
+            item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+        }
         switch (item.getMode())
         {
             case -1:
@@ -6474,11 +6819,12 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
     }
 
+
     public void openRealClientPopup()
     {
-        LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.activity_clients, null);
-        final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        LayoutInflater    layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View        popupView      = layoutInflater.inflate(R.layout.activity_clients, null);
+        final PopupWindow popupWindow    = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
             @Override
@@ -6493,77 +6839,43 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
     }
 
-    private CustomEditText name_et;
-    private CustomEditText surname_et;
-    private CustomEditText email_et;
-    private CustomEditText company_name_et;
-    private CustomEditText vat_number_et;
-    private CustomEditText address_et;
-    private CustomEditText postal_code_et;
-    private CustomEditText country_et;
-    private CustomEditText city_et;
-    //private CustomEditText codice_fiscale_et;
-    private CustomEditText provincia_et;
-    private CustomButton addCompanyInfo;
-    private CustomButton addPersonalInfo;
-    private CustomButton addNewClient;
-    private boolean newClient = false;
-    private CustomButton searchClients;
-    private CustomButton setDiscount;
-    private CustomEditText search_et;
-    private Animation shake;
-    private CustomEditText codice_destinatario_et;
-    private CustomEditText pec_et;
-
-    private CustomEditText vat_number_et_p;
-    private CustomEditText address_et_p;
-    private CustomEditText postal_code_et_p;
-    private CustomEditText country_et_p;
-    private CustomEditText city_et_p;
-    private CustomEditText codice_fiscale_et_p;
-    private CustomEditText provincia_et_p;
-    private CustomEditText codice_destinatario_et_p;
-    private CustomEditText pec_et_p;
-
-    private ClientInfo sClient = null;
-
 
     private void setUpClientPopup(View popupView, PopupWindow popupWindow)
     {
-        shake = AnimationUtils.loadAnimation(this, R.anim.shake);
-        newClient = false;
-        name_et = (CustomEditText) popupView.findViewById(R.id.name_et);
-        surname_et = (CustomEditText) popupView.findViewById(R.id.surname_et);
-        email_et = (CustomEditText) popupView.findViewById(R.id.email_et);
+        shake           = AnimationUtils.loadAnimation(this, R.anim.shake);
+        newClient       = false;
+        name_et         = (CustomEditText) popupView.findViewById(R.id.name_et);
+        surname_et      = (CustomEditText) popupView.findViewById(R.id.surname_et);
+        email_et        = (CustomEditText) popupView.findViewById(R.id.email_et);
         company_name_et = (CustomEditText) popupView.findViewById(R.id.company_name_et);
-        vat_number_et = (CustomEditText) popupView.findViewById(R.id.vat_number_et);
-        address_et = (CustomEditText) popupView.findViewById(R.id.address_et);
-        postal_code_et = (CustomEditText) popupView.findViewById(R.id.postal_code_et);
-        country_et = (CustomEditText) popupView.findViewById(R.id.country_et);
-        city_et = (CustomEditText) popupView.findViewById(R.id.city_et);
+        vat_number_et   = (CustomEditText) popupView.findViewById(R.id.vat_number_et);
+        address_et      = (CustomEditText) popupView.findViewById(R.id.address_et);
+        postal_code_et  = (CustomEditText) popupView.findViewById(R.id.postal_code_et);
+        country_et      = (CustomEditText) popupView.findViewById(R.id.country_et);
+        city_et         = (CustomEditText) popupView.findViewById(R.id.city_et);
         //codice_fiscale_et = (CustomEditText)popupView.findViewById(R.id.codice_fiscale_et);
-        provincia_et = (CustomEditText) popupView.findViewById(R.id.provincia_et);
-        addCompanyInfo = (CustomButton) popupView.findViewById(R.id.add_company_info_button);
-        addPersonalInfo = (CustomButton) popupView.findViewById(R.id.add_personal_info_button);
-        addNewClient = (CustomButton) popupView.findViewById(R.id.add_new_client_button);
-        searchClients = (CustomButton) popupView.findViewById(R.id.search_client_button);
-        setDiscount = (CustomButton) popupView.findViewById(R.id.discount_button);
-        search_et = (CustomEditText) popupView.findViewById(R.id.search_et);
+        provincia_et           = (CustomEditText) popupView.findViewById(R.id.provincia_et);
+        addCompanyInfo         = (CustomButton) popupView.findViewById(R.id.add_company_info_button);
+        addPersonalInfo        = (CustomButton) popupView.findViewById(R.id.add_personal_info_button);
+        addNewClient           = (CustomButton) popupView.findViewById(R.id.add_new_client_button);
+        searchClients          = (CustomButton) popupView.findViewById(R.id.search_client_button);
+        setDiscount            = (CustomButton) popupView.findViewById(R.id.discount_button);
+        search_et              = (CustomEditText) popupView.findViewById(R.id.search_et);
         codice_destinatario_et = (CustomEditText) popupView.findViewById(R.id.codice_destinatario_et);
-        pec_et = (CustomEditText) popupView.findViewById(R.id.pec_et);
+        pec_et                 = (CustomEditText) popupView.findViewById(R.id.pec_et);
 
-        vat_number_et_p = (CustomEditText) popupView.findViewById(R.id.vat_number_et_p);
-        address_et_p = (CustomEditText) popupView.findViewById(R.id.address_et_p);
-        postal_code_et_p = (CustomEditText) popupView.findViewById(R.id.postal_code_et_p);
-        country_et_p = (CustomEditText) popupView.findViewById(R.id.country_et_p);
-        city_et_p = (CustomEditText) popupView.findViewById(R.id.city_et_p);
-        codice_fiscale_et_p = (CustomEditText) popupView.findViewById(R.id.codice_fiscale_et_p);
-        provincia_et_p = (CustomEditText) popupView.findViewById(R.id.provincia_et_p);
+        vat_number_et_p          = (CustomEditText) popupView.findViewById(R.id.vat_number_et_p);
+        address_et_p             = (CustomEditText) popupView.findViewById(R.id.address_et_p);
+        postal_code_et_p         = (CustomEditText) popupView.findViewById(R.id.postal_code_et_p);
+        country_et_p             = (CustomEditText) popupView.findViewById(R.id.country_et_p);
+        city_et_p                = (CustomEditText) popupView.findViewById(R.id.city_et_p);
+        codice_fiscale_et_p      = (CustomEditText) popupView.findViewById(R.id.codice_fiscale_et_p);
+        provincia_et_p           = (CustomEditText) popupView.findViewById(R.id.provincia_et_p);
         codice_destinatario_et_p = (CustomEditText) popupView.findViewById(R.id.codice_destinatario_et_p);
-        pec_et_p = (CustomEditText) popupView.findViewById(R.id.pec_et_p);
+        pec_et_p                 = (CustomEditText) popupView.findViewById(R.id.pec_et_p);
 
-        vat_number_et.setFilters(new InputFilter[] {new InputFilter.LengthFilter(11)});
-        vat_number_et_p.setFilters(new InputFilter[] {new InputFilter.LengthFilter(11)});
+        vat_number_et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
+        vat_number_et_p.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
 
         InputFilter[] input = new InputFilter[2];
 
@@ -6593,23 +6905,24 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 outRect.set(0, 0, 0, 1);
             }
 
+
             @Override
             public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state)
             {
                 //super.onDraw(c, parent, state);
-                Drawable divider = PaymentActivity.this.getDrawable(R.drawable.divider_line_horizontal1dp);
-                final int size = divider.getIntrinsicHeight();
-                int left = parent.getLeft() + parent.getPaddingLeft();
-                int right = parent.getRight() - parent.getPaddingRight();
-                int top = 0;
-                int bottom = 0;
-                int childCount = parent.getChildCount();
+                Drawable  divider    = PaymentActivity.this.getDrawable(R.drawable.divider_line_horizontal1dp);
+                final int size       = divider.getIntrinsicHeight();
+                int       left       = parent.getLeft() + parent.getPaddingLeft();
+                int       right      = parent.getRight() - parent.getPaddingRight();
+                int       top        = 0;
+                int       bottom     = 0;
+                int       childCount = parent.getChildCount();
                 for (int i = 0; i < childCount; i++)
                 {
                     final View child = parent.getChildAt(i);
                     if (i != childCount)
                     {
-                        top = child.getBottom();
+                        top    = child.getBottom();
                         bottom = top + 1;
                         divider.setBounds(left, top, right, bottom);
                         divider.draw(c);
@@ -6638,22 +6951,25 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                     popupView.findViewById(R.id.title_tv).setVisibility(View.INVISIBLE);
                     popupView.findViewById(R.id.hline_rv_top).setVisibility(View.INVISIBLE);
                     search_et.requestFocus();
-                    ((InputMethodManager) getSystemService(PaymentActivity.this.INPUT_METHOD_SERVICE)).showSoftInput(search_et, InputMethodManager.SHOW_IMPLICIT);
+                    ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(search_et, InputMethodManager.SHOW_IMPLICIT);
 
                     search_et.addTextChangedListener(new TextWatcher()
                     {
+                        private final long DELAY = 500; // milliseconds
+                        private Timer timer = new Timer();
+
+
                         @Override
                         public void beforeTextChanged(CharSequence s, int start, int count, int after)
                         {
                         }
+
 
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count)
                         {
                         }
 
-                        private Timer timer = new Timer();
-                        private final long DELAY = 500; // milliseconds
 
                         @Override
                         public void afterTextChanged(final Editable s)
@@ -6781,26 +7097,26 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             {
 
 
-                String name = ((CustomEditText) popupView.findViewById(R.id.name_et)).getText().toString().replaceAll("'", "\'");
-                String surname = ((CustomEditText) popupView.findViewById(R.id.surname_et)).getText().toString().replaceAll("'", "\'");
-                String email = ((CustomEditText) popupView.findViewById(R.id.email_et)).getText().toString().replaceAll("'", "\'");
+                String name    = ((CustomEditText) popupView.findViewById(R.id.name_et)).getText().toString().replaceAll("'", "'");
+                String surname = ((CustomEditText) popupView.findViewById(R.id.surname_et)).getText().toString().replaceAll("'", "'");
+                String email   = ((CustomEditText) popupView.findViewById(R.id.email_et)).getText().toString().replaceAll("'", "'");
 
 
-                 // if the addCompanyInfo button is active then  there's the need to satisfy two more conditions(company name and vat_number)
-                 // in order to add(or update) a client.
+                // if the addCompanyInfo button is active then  there's the need to satisfy two more conditions(company name and vat_number)
+                // in order to add(or update) a client.
 
                 if (addCompanyInfo.isActivated())
                 {
-                    String company_name = ((CustomEditText) popupView.findViewById(R.id.company_name_et)).getText().toString().replaceAll("'", "\'");
-                    String vat_number = ((CustomEditText) popupView.findViewById(R.id.vat_number_et)).getText().toString().replaceAll("'", "\'");
-                    String address = ((CustomEditText) popupView.findViewById(R.id.address_et)).getText().toString().replaceAll("'", "\'");
-                    String postal_code = ((CustomEditText) popupView.findViewById(R.id.postal_code_et)).getText().toString().replaceAll("'", "\'");
-                    String country = ((CustomEditText) popupView.findViewById(R.id.country_et)).getText().toString().replaceAll("'", "\'");
-                    String city = ((CustomEditText) popupView.findViewById(R.id.city_et)).getText().toString().replaceAll("'", "\'");
-                    String codicefiscale = "";
-                    String provincia = ((CustomEditText) popupView.findViewById(R.id.provincia_et)).getText().toString().replaceAll("'", "\'");
-                    String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et)).getText().toString().replaceAll("'", "\'");
-                    String pec = ((CustomEditText) popupView.findViewById(R.id.pec_et)).getText().toString().replaceAll("'", "\'");
+                    String company_name       = ((CustomEditText) popupView.findViewById(R.id.company_name_et)).getText().toString().replaceAll("'", "'");
+                    String vat_number         = ((CustomEditText) popupView.findViewById(R.id.vat_number_et)).getText().toString().replaceAll("'", "'");
+                    String address            = ((CustomEditText) popupView.findViewById(R.id.address_et)).getText().toString().replaceAll("'", "'");
+                    String postal_code        = ((CustomEditText) popupView.findViewById(R.id.postal_code_et)).getText().toString().replaceAll("'", "'");
+                    String country            = ((CustomEditText) popupView.findViewById(R.id.country_et)).getText().toString().replaceAll("'", "'");
+                    String city               = ((CustomEditText) popupView.findViewById(R.id.city_et)).getText().toString().replaceAll("'", "'");
+                    String codicefiscale      = "";
+                    String provincia          = ((CustomEditText) popupView.findViewById(R.id.provincia_et)).getText().toString().replaceAll("'", "'");
+                    String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et)).getText().toString().replaceAll("'", "'");
+                    String pec                = ((CustomEditText) popupView.findViewById(R.id.pec_et)).getText().toString().replaceAll("'", "'");
 
 
                     // The following set of If statements checks whether the minimum conditions to create a new user are
@@ -6834,7 +7150,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                         {
                                             View myEmail = findViewById(R.id.email_et);
                                             if (myEmail != null)
-                                            { myEmail.startAnimation(shake); }
+                                            {
+                                                myEmail.startAnimation(shake);
+                                            }
                                             ////Toast.makeText(getBaseContext(), "Not a Valid E-Mail", //Toast.LENGTH_SHORT).show();
                                         }
                                         else
@@ -6845,16 +7163,16 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                                 params.add(new BasicNameValuePair("name", name));
                                                 params.add(new BasicNameValuePair("surname", surname));
                                                 params.add(new BasicNameValuePair("email", email));
-                                                params.add(new BasicNameValuePair("companyName", String.valueOf(company_name)));
-                                                params.add(new BasicNameValuePair("address", String.valueOf(address)));
-                                                params.add(new BasicNameValuePair("vat_number", String.valueOf(vat_number)));
-                                                params.add(new BasicNameValuePair("postal_code", String.valueOf(postal_code)));
-                                                params.add(new BasicNameValuePair("city", String.valueOf(city)));
-                                                params.add(new BasicNameValuePair("country", String.valueOf(country)));
-                                                params.add(new BasicNameValuePair("codicefiscale", String.valueOf(codicefiscale)));
-                                                params.add(new BasicNameValuePair("provincia", String.valueOf(provincia)));
-                                                params.add(new BasicNameValuePair("codiceDestinatario", String.valueOf(codiceDestinatario)));
-                                                params.add(new BasicNameValuePair("pec", String.valueOf(pec)));
+                                                params.add(new BasicNameValuePair("companyName", company_name));
+                                                params.add(new BasicNameValuePair("address", address));
+                                                params.add(new BasicNameValuePair("vat_number", vat_number));
+                                                params.add(new BasicNameValuePair("postal_code", postal_code));
+                                                params.add(new BasicNameValuePair("city", city));
+                                                params.add(new BasicNameValuePair("country", country));
+                                                params.add(new BasicNameValuePair("codicefiscale", codicefiscale));
+                                                params.add(new BasicNameValuePair("provincia", provincia));
+                                                params.add(new BasicNameValuePair("codiceDestinatario", codiceDestinatario));
+                                                params.add(new BasicNameValuePair("pec", pec));
 
 
                                                 callHttpHandler("/insertClientWithCompanyPA", params);
@@ -6871,7 +7189,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                                     // clientsAdapter.updateDataSet();
 
                                                     //reset dataFields
-                                                    { name_et.setText(""); }
+                                                    {
+                                                        name_et.setText("");
+                                                    }
                                                     surname_et.setText("");
                                                     email_et.setText("");
                                                     company_name_et.setText("");
@@ -6943,18 +7263,18 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 else if (addPersonalInfo.isActivated())
                 {
                     String company_name = "";
-                    String vat_number = ((CustomEditText) popupView.findViewById(R.id.vat_number_et_p)).getText().toString().replaceAll("'", "\'");
-                    String address = (((CustomEditText) popupView.findViewById(R.id.address_et_p)).getText().toString()).replaceAll("'", "\'");
+                    String vat_number   = ((CustomEditText) popupView.findViewById(R.id.vat_number_et_p)).getText().toString().replaceAll("'", "'");
+                    String address      = (((CustomEditText) popupView.findViewById(R.id.address_et_p)).getText().toString()).replaceAll("'", "'");
                     address = address.replaceAll("'", "''");
-                    String postal_code = ((CustomEditText) popupView.findViewById(R.id.postal_code_et_p)).getText().toString().replace("'", "\'");
-                    String country = ((CustomEditText) popupView.findViewById(R.id.country_et_p)).getText().toString().replaceAll("'", "\'");
+                    String postal_code = ((CustomEditText) popupView.findViewById(R.id.postal_code_et_p)).getText().toString().replace("'", "'");
+                    String country     = ((CustomEditText) popupView.findViewById(R.id.country_et_p)).getText().toString().replaceAll("'", "'");
                     country = country.replaceAll("'", "''");
-                    String city = ((CustomEditText) popupView.findViewById(R.id.city_et_p)).getText().toString().replaceAll("'", "\'");
+                    String city = ((CustomEditText) popupView.findViewById(R.id.city_et_p)).getText().toString().replaceAll("'", "'");
                     city = city.replaceAll("'", "''");
-                    String codicefiscale = ((CustomEditText) popupView.findViewById(R.id.codice_fiscale_et_p)).getText().toString().replaceAll("'", "\'");
-                    String provincia = ((CustomEditText) popupView.findViewById(R.id.provincia_et_p)).getText().toString().replaceAll("'", "\'");
-                    String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et_p)).getText().toString().replaceAll("'", "\'");
-                    String pec = ((CustomEditText) popupView.findViewById(R.id.pec_et_p)).getText().toString().replaceAll("'", "\'");
+                    String codicefiscale      = ((CustomEditText) popupView.findViewById(R.id.codice_fiscale_et_p)).getText().toString().replaceAll("'", "'");
+                    String provincia          = ((CustomEditText) popupView.findViewById(R.id.provincia_et_p)).getText().toString().replaceAll("'", "'");
+                    String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et_p)).getText().toString().replaceAll("'", "'");
+                    String pec                = ((CustomEditText) popupView.findViewById(R.id.pec_et_p)).getText().toString().replaceAll("'", "'");
                     /**
                      * The following set of If statements checks whether the minimum conditions to create a new user are
                      * satisfied.
@@ -6997,16 +7317,16 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                                 params.add(new BasicNameValuePair("name", name));
                                                 params.add(new BasicNameValuePair("surname", surname));
                                                 params.add(new BasicNameValuePair("email", email));
-                                                params.add(new BasicNameValuePair("companyName", String.valueOf(company_name)));
-                                                params.add(new BasicNameValuePair("address", String.valueOf(address)));
-                                                params.add(new BasicNameValuePair("vat_number", String.valueOf(vat_number)));
-                                                params.add(new BasicNameValuePair("postal_code", String.valueOf(postal_code)));
-                                                params.add(new BasicNameValuePair("city", String.valueOf(city)));
-                                                params.add(new BasicNameValuePair("country", String.valueOf(country)));
-                                                params.add(new BasicNameValuePair("codicefiscale", String.valueOf(codicefiscale)));
-                                                params.add(new BasicNameValuePair("provincia", String.valueOf(provincia)));
-                                                params.add(new BasicNameValuePair("codiceDestinatario", String.valueOf(codiceDestinatario)));
-                                                params.add(new BasicNameValuePair("pec", String.valueOf(pec)));
+                                                params.add(new BasicNameValuePair("companyName", company_name));
+                                                params.add(new BasicNameValuePair("address", address));
+                                                params.add(new BasicNameValuePair("vat_number", vat_number));
+                                                params.add(new BasicNameValuePair("postal_code", postal_code));
+                                                params.add(new BasicNameValuePair("city", city));
+                                                params.add(new BasicNameValuePair("country", country));
+                                                params.add(new BasicNameValuePair("codicefiscale", codicefiscale));
+                                                params.add(new BasicNameValuePair("provincia", provincia));
+                                                params.add(new BasicNameValuePair("codiceDestinatario", codiceDestinatario));
+                                                params.add(new BasicNameValuePair("pec", pec));
 
 
                                                 callHttpHandler("/insertClientWithCompanyPA", params);
@@ -7024,7 +7344,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                                     ////Toast.makeText(ClientsActivity.this, "Client and company added", //Toast.LENGTH_SHORT).show();
 
                                                     //reset dataFields
-                                                    { name_et.setText(""); }
+                                                    {
+                                                        name_et.setText("");
+                                                    }
                                                     surname_et.setText("");
                                                     email_et.setText("");
                                                     //company_name_et.setText("");
@@ -7198,19 +7520,19 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                 {
                     if (addCompanyInfo.isActivated())
                     {
-                        String name = ((CustomEditText) popupView.findViewById(R.id.name_et)).getText().toString().replaceAll("'", "\'");
-                        String surname = ((CustomEditText) popupView.findViewById(R.id.surname_et)).getText().toString().replaceAll("'", "\'");
-                        String email = ((CustomEditText) popupView.findViewById(R.id.email_et)).getText().toString().replaceAll("'", "\'");
-                        String company_name = ((CustomEditText) popupView.findViewById(R.id.company_name_et)).getText().toString().replaceAll("'", "\'");
-                        String vat_number = ((CustomEditText) popupView.findViewById(R.id.vat_number_et)).getText().toString().replaceAll("'", "\'");
-                        String address = ((CustomEditText) popupView.findViewById(R.id.address_et)).getText().toString().replaceAll("'", "\'");
-                        String postal_code = ((CustomEditText) popupView.findViewById(R.id.postal_code_et)).getText().toString().replaceAll("'", "\'");
-                        String country = ((CustomEditText) popupView.findViewById(R.id.country_et)).getText().toString().replaceAll("'", "\'");
-                        String city = ((CustomEditText) popupView.findViewById(R.id.city_et)).getText().toString().replaceAll("'", "\'");
-                        String codicefiscale = "";
-                        String provincia = ((CustomEditText) popupView.findViewById(R.id.provincia_et)).getText().toString().replaceAll("'", "\'");
-                        String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et)).getText().toString().replaceAll("'", "\'");
-                        String pec = ((CustomEditText) popupView.findViewById(R.id.pec_et)).getText().toString().replaceAll("'", "\'");
+                        String name               = ((CustomEditText) popupView.findViewById(R.id.name_et)).getText().toString().replaceAll("'", "'");
+                        String surname            = ((CustomEditText) popupView.findViewById(R.id.surname_et)).getText().toString().replaceAll("'", "'");
+                        String email              = ((CustomEditText) popupView.findViewById(R.id.email_et)).getText().toString().replaceAll("'", "'");
+                        String company_name       = ((CustomEditText) popupView.findViewById(R.id.company_name_et)).getText().toString().replaceAll("'", "'");
+                        String vat_number         = ((CustomEditText) popupView.findViewById(R.id.vat_number_et)).getText().toString().replaceAll("'", "'");
+                        String address            = ((CustomEditText) popupView.findViewById(R.id.address_et)).getText().toString().replaceAll("'", "'");
+                        String postal_code        = ((CustomEditText) popupView.findViewById(R.id.postal_code_et)).getText().toString().replaceAll("'", "'");
+                        String country            = ((CustomEditText) popupView.findViewById(R.id.country_et)).getText().toString().replaceAll("'", "'");
+                        String city               = ((CustomEditText) popupView.findViewById(R.id.city_et)).getText().toString().replaceAll("'", "'");
+                        String codicefiscale      = "";
+                        String provincia          = ((CustomEditText) popupView.findViewById(R.id.provincia_et)).getText().toString().replaceAll("'", "'");
+                        String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et)).getText().toString().replaceAll("'", "'");
+                        String pec                = ((CustomEditText) popupView.findViewById(R.id.pec_et)).getText().toString().replaceAll("'", "'");
 
 
                         if (!company_name.equals("") && !vat_number.equals("") && !address.equals("") && !postal_code.equals("") && !country.equals("") && !city.equals("") && !provincia.equals("") && (!codiceDestinatario.equals("") || !pec.equals("")))
@@ -7301,19 +7623,19 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                     }
                     else if (addPersonalInfo.isActivated())
                     {
-                        String name = ((CustomEditText) popupView.findViewById(R.id.name_et)).getText().toString().replaceAll("'", "\'");
-                        String surname = ((CustomEditText) popupView.findViewById(R.id.surname_et)).getText().toString().replaceAll("'", "\'");
-                        String email = ((CustomEditText) popupView.findViewById(R.id.email_et)).getText().toString().replaceAll("'", "\'");
-                        String company_name = "";
-                        String vat_number = ((CustomEditText) popupView.findViewById(R.id.vat_number_et_p)).getText().toString().replaceAll("'", "\'");
-                        String address = ((CustomEditText) popupView.findViewById(R.id.address_et_p)).getText().toString().replaceAll("'", "\'");
-                        String postal_code = ((CustomEditText) popupView.findViewById(R.id.postal_code_et_p)).getText().toString().replaceAll("'", "\'");
-                        String country = ((CustomEditText) popupView.findViewById(R.id.country_et_p)).getText().toString().replaceAll("'", "\'");
-                        String city = ((CustomEditText) popupView.findViewById(R.id.city_et_p)).getText().toString().replaceAll("'", "\'");
-                        String codicefiscale = ((CustomEditText) popupView.findViewById(R.id.codice_fiscale_et_p)).getText().toString().replaceAll("'", "\'");
-                        String provincia = ((CustomEditText) popupView.findViewById(R.id.provincia_et_p)).getText().toString().replaceAll("'", "\'");
-                        String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et_p)).getText().toString().replaceAll("'", "\'");
-                        String pec = ((CustomEditText) popupView.findViewById(R.id.pec_et_p)).getText().toString().replaceAll("'", "\'");
+                        String name               = ((CustomEditText) popupView.findViewById(R.id.name_et)).getText().toString().replaceAll("'", "'");
+                        String surname            = ((CustomEditText) popupView.findViewById(R.id.surname_et)).getText().toString().replaceAll("'", "'");
+                        String email              = ((CustomEditText) popupView.findViewById(R.id.email_et)).getText().toString().replaceAll("'", "'");
+                        String company_name       = "";
+                        String vat_number         = ((CustomEditText) popupView.findViewById(R.id.vat_number_et_p)).getText().toString().replaceAll("'", "'");
+                        String address            = ((CustomEditText) popupView.findViewById(R.id.address_et_p)).getText().toString().replaceAll("'", "'");
+                        String postal_code        = ((CustomEditText) popupView.findViewById(R.id.postal_code_et_p)).getText().toString().replaceAll("'", "'");
+                        String country            = ((CustomEditText) popupView.findViewById(R.id.country_et_p)).getText().toString().replaceAll("'", "'");
+                        String city               = ((CustomEditText) popupView.findViewById(R.id.city_et_p)).getText().toString().replaceAll("'", "'");
+                        String codicefiscale      = ((CustomEditText) popupView.findViewById(R.id.codice_fiscale_et_p)).getText().toString().replaceAll("'", "'");
+                        String provincia          = ((CustomEditText) popupView.findViewById(R.id.provincia_et_p)).getText().toString().replaceAll("'", "'");
+                        String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et_p)).getText().toString().replaceAll("'", "'");
+                        String pec                = ((CustomEditText) popupView.findViewById(R.id.pec_et_p)).getText().toString().replaceAll("'", "'");
 
 
                         if (!codicefiscale.equals("") && !vat_number.equals("") && !address.equals("") && !postal_code.equals("") && !country.equals("") && !city.equals("") && !provincia.equals("") && (!codiceDestinatario.equals("") || !pec.equals("")))
@@ -7415,19 +7737,19 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                             //
                             if (addCompanyInfo.isActivated())
                             {
-                                String name = ((CustomEditText) popupView.findViewById(R.id.name_et)).getText().toString().replaceAll("'", "\'");
-                                String surname = ((CustomEditText) popupView.findViewById(R.id.surname_et)).getText().toString().replaceAll("'", "\'");
-                                String email = ((CustomEditText) popupView.findViewById(R.id.email_et)).getText().toString().replaceAll("'", "\'");
-                                String company_name = ((CustomEditText) popupView.findViewById(R.id.company_name_et)).getText().toString().replaceAll("'", "\'");
-                                String vat_number = ((CustomEditText) popupView.findViewById(R.id.vat_number_et)).getText().toString().replaceAll("'", "\'");
-                                String address = ((CustomEditText) popupView.findViewById(R.id.address_et)).getText().toString().replaceAll("'", "\'");
-                                String postal_code = ((CustomEditText) popupView.findViewById(R.id.postal_code_et)).getText().toString().replaceAll("'", "\'");
-                                String country = ((CustomEditText) popupView.findViewById(R.id.country_et)).getText().toString().replaceAll("'", "\'");
-                                String city = ((CustomEditText) popupView.findViewById(R.id.city_et)).getText().toString().replaceAll("'", "\'");
-                                String codicefiscale = "";
-                                String provincia = ((CustomEditText) popupView.findViewById(R.id.provincia_et)).getText().toString().replaceAll("'", "\'");
-                                String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et)).getText().toString().replaceAll("'", "\'");
-                                String pec = ((CustomEditText) popupView.findViewById(R.id.pec_et)).getText().toString().replaceAll("'", "\'");
+                                String name               = ((CustomEditText) popupView.findViewById(R.id.name_et)).getText().toString().replaceAll("'", "'");
+                                String surname            = ((CustomEditText) popupView.findViewById(R.id.surname_et)).getText().toString().replaceAll("'", "'");
+                                String email              = ((CustomEditText) popupView.findViewById(R.id.email_et)).getText().toString().replaceAll("'", "'");
+                                String company_name       = ((CustomEditText) popupView.findViewById(R.id.company_name_et)).getText().toString().replaceAll("'", "'");
+                                String vat_number         = ((CustomEditText) popupView.findViewById(R.id.vat_number_et)).getText().toString().replaceAll("'", "'");
+                                String address            = ((CustomEditText) popupView.findViewById(R.id.address_et)).getText().toString().replaceAll("'", "'");
+                                String postal_code        = ((CustomEditText) popupView.findViewById(R.id.postal_code_et)).getText().toString().replaceAll("'", "'");
+                                String country            = ((CustomEditText) popupView.findViewById(R.id.country_et)).getText().toString().replaceAll("'", "'");
+                                String city               = ((CustomEditText) popupView.findViewById(R.id.city_et)).getText().toString().replaceAll("'", "'");
+                                String codicefiscale      = "";
+                                String provincia          = ((CustomEditText) popupView.findViewById(R.id.provincia_et)).getText().toString().replaceAll("'", "'");
+                                String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et)).getText().toString().replaceAll("'", "'");
+                                String pec                = ((CustomEditText) popupView.findViewById(R.id.pec_et)).getText().toString().replaceAll("'", "'");
 
                                 if (!company_name.equals("") && !vat_number.equals("") && !address.equals("") && !postal_code.equals("") && !country.equals("") && !city.equals("") && !provincia.equals("") && (!codiceDestinatario.equals("") || !pec.equals("")))
                                 {
@@ -7519,19 +7841,19 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                             }
                             else if (addPersonalInfo.isActivated())
                             {
-                                String name = ((CustomEditText) popupView.findViewById(R.id.name_et)).getText().toString().replaceAll("'", "\'");
-                                String surname = ((CustomEditText) popupView.findViewById(R.id.surname_et)).getText().toString().replaceAll("'", "\'");
-                                String email = ((CustomEditText) popupView.findViewById(R.id.email_et)).getText().toString().replaceAll("'", "\'");
-                                String company_name = "";
-                                String vat_number = ((CustomEditText) popupView.findViewById(R.id.vat_number_et_p)).getText().toString().replaceAll("'", "\'");
-                                String address = ((CustomEditText) popupView.findViewById(R.id.address_et_p)).getText().toString().replaceAll("'", "\'");
-                                String postal_code = ((CustomEditText) popupView.findViewById(R.id.postal_code_et_p)).getText().toString().replaceAll("'", "\'");
-                                String country = ((CustomEditText) popupView.findViewById(R.id.country_et_p)).getText().toString().replaceAll("'", "\'");
-                                String city = ((CustomEditText) popupView.findViewById(R.id.city_et_p)).getText().toString().replaceAll("'", "\'");
-                                String codicefiscale = ((CustomEditText) popupView.findViewById(R.id.codice_fiscale_et_p)).getText().toString().replaceAll("'", "\'");
-                                String provincia = ((CustomEditText) popupView.findViewById(R.id.provincia_et_p)).getText().toString().replaceAll("'", "\'");
-                                String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et_p)).getText().toString().replaceAll("'", "\'");
-                                String pec = ((CustomEditText) popupView.findViewById(R.id.pec_et_p)).getText().toString().replaceAll("'", "\'");
+                                String name               = ((CustomEditText) popupView.findViewById(R.id.name_et)).getText().toString().replaceAll("'", "'");
+                                String surname            = ((CustomEditText) popupView.findViewById(R.id.surname_et)).getText().toString().replaceAll("'", "'");
+                                String email              = ((CustomEditText) popupView.findViewById(R.id.email_et)).getText().toString().replaceAll("'", "'");
+                                String company_name       = "";
+                                String vat_number         = ((CustomEditText) popupView.findViewById(R.id.vat_number_et_p)).getText().toString().replaceAll("'", "'");
+                                String address            = ((CustomEditText) popupView.findViewById(R.id.address_et_p)).getText().toString().replaceAll("'", "'");
+                                String postal_code        = ((CustomEditText) popupView.findViewById(R.id.postal_code_et_p)).getText().toString().replaceAll("'", "'");
+                                String country            = ((CustomEditText) popupView.findViewById(R.id.country_et_p)).getText().toString().replaceAll("'", "'");
+                                String city               = ((CustomEditText) popupView.findViewById(R.id.city_et_p)).getText().toString().replaceAll("'", "'");
+                                String codicefiscale      = ((CustomEditText) popupView.findViewById(R.id.codice_fiscale_et_p)).getText().toString().replaceAll("'", "'");
+                                String provincia          = ((CustomEditText) popupView.findViewById(R.id.provincia_et_p)).getText().toString().replaceAll("'", "'");
+                                String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et_p)).getText().toString().replaceAll("'", "'");
+                                String pec                = ((CustomEditText) popupView.findViewById(R.id.pec_et_p)).getText().toString().replaceAll("'", "'");
 
                                 if (!codicefiscale.equals("") && !vat_number.equals("") && !address.equals("") && !postal_code.equals("") && !country.equals("") && !city.equals("") && !provincia.equals("") && (!codiceDestinatario.equals("") || !pec.equals("")))
                                 {
@@ -7629,16 +7951,16 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                         {
                             if (addCompanyInfo.isActivated())
                             {
-                                String company_name = ((CustomEditText) popupView.findViewById(R.id.company_name_et)).getText().toString().replaceAll("'", "\'");
-                                String vat_number = ((CustomEditText) popupView.findViewById(R.id.vat_number_et)).getText().toString().replaceAll("'", "\'");
-                                String address = ((CustomEditText) popupView.findViewById(R.id.address_et)).getText().toString().replaceAll("'", "\'");
-                                String postal_code = ((CustomEditText) popupView.findViewById(R.id.postal_code_et)).getText().toString().replaceAll("'", "\'");
-                                String country = ((CustomEditText) popupView.findViewById(R.id.country_et)).getText().toString().replaceAll("'", "\'");
-                                String city = ((CustomEditText) popupView.findViewById(R.id.city_et)).getText().toString().replaceAll("'", "\'");
-                                String codicefiscale = "";
-                                String provincia = ((CustomEditText) popupView.findViewById(R.id.provincia_et)).getText().toString().replaceAll("'", "\'");
-                                String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et)).getText().toString().replaceAll("'", "\'");
-                                String pec = ((CustomEditText) popupView.findViewById(R.id.pec_et)).getText().toString().replaceAll("'", "\'");
+                                String company_name       = ((CustomEditText) popupView.findViewById(R.id.company_name_et)).getText().toString().replaceAll("'", "'");
+                                String vat_number         = ((CustomEditText) popupView.findViewById(R.id.vat_number_et)).getText().toString().replaceAll("'", "'");
+                                String address            = ((CustomEditText) popupView.findViewById(R.id.address_et)).getText().toString().replaceAll("'", "'");
+                                String postal_code        = ((CustomEditText) popupView.findViewById(R.id.postal_code_et)).getText().toString().replaceAll("'", "'");
+                                String country            = ((CustomEditText) popupView.findViewById(R.id.country_et)).getText().toString().replaceAll("'", "'");
+                                String city               = ((CustomEditText) popupView.findViewById(R.id.city_et)).getText().toString().replaceAll("'", "'");
+                                String codicefiscale      = "";
+                                String provincia          = ((CustomEditText) popupView.findViewById(R.id.provincia_et)).getText().toString().replaceAll("'", "'");
+                                String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et)).getText().toString().replaceAll("'", "'");
+                                String pec                = ((CustomEditText) popupView.findViewById(R.id.pec_et)).getText().toString().replaceAll("'", "'");
 
                                 /**
                                  * The following set of If statements checks whether the minimum conditions to create a new user are
@@ -7668,7 +7990,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                                     // clientsAdapter.updateDataSet();
 
                                                     //reset dataFields
-                                                    { name_et.setText(""); }
+                                                    {
+                                                        name_et.setText("");
+                                                    }
                                                     surname_et.setText("");
                                                     email_et.setText("");
                                                     company_name_et.setText("");
@@ -7744,16 +8068,16 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                             }
                             else if (addPersonalInfo.isActivated())
                             {
-                                String company_name = "";
-                                String vat_number = ((CustomEditText) popupView.findViewById(R.id.vat_number_et_p)).getText().toString().replaceAll("'", "\'");
-                                String address = ((CustomEditText) popupView.findViewById(R.id.address_et_p)).getText().toString().replaceAll("'", "\'");
-                                String postal_code = ((CustomEditText) popupView.findViewById(R.id.postal_code_et_p)).getText().toString().replaceAll("'", "\'");
-                                String country = ((CustomEditText) popupView.findViewById(R.id.country_et_p)).getText().toString().replaceAll("'", "\'");
-                                String city = ((CustomEditText) popupView.findViewById(R.id.city_et_p)).getText().toString().replaceAll("'", "\'");
-                                String codicefiscale = ((CustomEditText) popupView.findViewById(R.id.codice_fiscale_et_p)).getText().toString().replaceAll("'", "\'");
-                                String provincia = ((CustomEditText) popupView.findViewById(R.id.provincia_et_p)).getText().toString().replaceAll("'", "\'");
-                                String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et_p)).getText().toString().replaceAll("'", "\'");
-                                String pec = ((CustomEditText) popupView.findViewById(R.id.pec_et_p)).getText().toString().replaceAll("'", "\'");
+                                String company_name       = "";
+                                String vat_number         = ((CustomEditText) popupView.findViewById(R.id.vat_number_et_p)).getText().toString().replaceAll("'", "'");
+                                String address            = ((CustomEditText) popupView.findViewById(R.id.address_et_p)).getText().toString().replaceAll("'", "'");
+                                String postal_code        = ((CustomEditText) popupView.findViewById(R.id.postal_code_et_p)).getText().toString().replaceAll("'", "'");
+                                String country            = ((CustomEditText) popupView.findViewById(R.id.country_et_p)).getText().toString().replaceAll("'", "'");
+                                String city               = ((CustomEditText) popupView.findViewById(R.id.city_et_p)).getText().toString().replaceAll("'", "'");
+                                String codicefiscale      = ((CustomEditText) popupView.findViewById(R.id.codice_fiscale_et_p)).getText().toString().replaceAll("'", "'");
+                                String provincia          = ((CustomEditText) popupView.findViewById(R.id.provincia_et_p)).getText().toString().replaceAll("'", "'");
+                                String codiceDestinatario = ((CustomEditText) popupView.findViewById(R.id.codice_destinatario_et_p)).getText().toString().replaceAll("'", "'");
+                                String pec                = ((CustomEditText) popupView.findViewById(R.id.pec_et_p)).getText().toString().replaceAll("'", "'");
 
                                 /**
                                  * The following set of If statements checks whether the minimum conditions to create a new user are
@@ -7784,7 +8108,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
                                                     ////Toast.makeText(ClientsActivity.this, "Client and company added", //Toast.LENGTH_SHORT).show();
 
                                                     //reset dataFields
-                                                    { name_et.setText(""); }
+                                                    {
+                                                        name_et.setText("");
+                                                    }
                                                     surname_et.setText("");
                                                     email_et.setText("");
                                                     //company_name_et_p.setText("");
@@ -7873,6 +8199,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         });
     }
 
+
     /**
      * @param client - selected client
      *               Triggered when client is clicked.
@@ -7924,7 +8251,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             if (!client.getCompany_name().equals("") && client.getCodice_fiscale().equals(""))
             {
                 if (!addCompanyInfo.isActivated())
-                { addCompanyInfo.performClick(); }
+                {
+                    addCompanyInfo.performClick();
+                }
                 company_name_et.setText(client.getCompany_name());
                 address_et.setText(client.getCompany_address());
                 vat_number_et.setText(client.getCompany_vat_number());
@@ -7939,7 +8268,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             else
             {
                 if (!addPersonalInfo.isActivated())
-                { addPersonalInfo.performClick(); }
+                {
+                    addPersonalInfo.performClick();
+                }
                 address_et_p.setText(client.getCompany_address());
                 vat_number_et_p.setText(client.getCompany_vat_number());
                 postal_code_et_p.setText(client.getCompany_postal_code());
@@ -7954,6 +8285,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
 
     }
+
 
     public void deselectClient()
     {
@@ -7989,11 +8321,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
     }
 
+
     public void hideKeyboard(View view)
     {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
 
     /**
      * SPLIT ELEMENT ITEM PART
@@ -8005,7 +8339,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         hidePaymentButton();
         hideSplitButton();
         splitItemSet = true;
-        mode = HOMAGE_MODE;
+        mode         = HOMAGE_MODE;
         orderFragment.activateSelectionMode(OrderListAdapter.HOMAGE_MODE);
         orderSubdivisionFragment.setMode(OrderListAdapter.HOMAGE_MODE);
 
@@ -8014,6 +8348,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         findViewById(R.id.homage_button).setBackgroundResource(R.drawable.button_lightblue_3dp_white);
 
     }
+
 
     public void setElementItemSplitValue(int quantity, int groupPosition)
     {
@@ -8035,19 +8370,22 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
             if (item.getMode() == -1)
             {
                 if (orderSubdivisionFragment.getSubdivisionAdapter().getItemCount() == 1)
-                { orderFragment.activateSelectionMode(OrderListAdapter.DEFAULT_MODE); }
+                {
+                    orderFragment.activateSelectionMode(OrderListAdapter.DEFAULT_MODE);
+                }
             }
         }
         else
         {
             orderFragment.activateSelectionMode(OrderListAdapter.DEFAULT_MODE);
         }
-        discountSet = false;
+        discountSet               = false;
         orderFragment.discountSet = false;
         calculatorFragment.setIsActive(false);
         calculatorFragment.setTmpPositionDiscount(-1);
 
     }
+
 
     /**
      * ask if you want to remove popup from element
@@ -8056,12 +8394,14 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     {
         SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
         if (item == null)
-        { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
+        {
+            item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+        }
         if (!item.isPaid())
         {
-            LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-            final View popupView = layoutInflater.inflate(R.layout.popup_modify_discount, null);
-            final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            LayoutInflater    layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+            final View        popupView      = layoutInflater.inflate(R.layout.popup_modify_discount, null);
+            final PopupWindow popupWindow    = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             popupView.post(new Runnable()
             {
                 @Override
@@ -8083,6 +8423,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
 
     }
+
 
     public void setUpPopupToModifyDiscount(View popupView, PopupWindow popupWindow, int groupPosition, View elementView)
     {
@@ -8145,6 +8486,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         });
     }
 
+
     /**
      * ask if you want to remove popup from element
      */
@@ -8152,13 +8494,15 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     {
         SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
         if (item == null)
-        { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
+        {
+            item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+        }
         if (!item.isPaid())
         {
 
-            LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-            final View popupView = layoutInflater.inflate(R.layout.popup_modify_discount, null);
-            final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            LayoutInflater    layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+            final View        popupView      = layoutInflater.inflate(R.layout.popup_modify_discount, null);
+            final PopupWindow popupWindow    = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             popupView.post(new Runnable()
             {
                 @Override
@@ -8180,6 +8524,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         }
 
     }
+
 
     public void setUpPopupToModifyDiscountForTotal(View popupView, PopupWindow popupWindow)
     {
@@ -8238,9 +8583,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
     public void openRemoveAllDiscount()
     {
 
-        LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.popup_two_button, null);
-        final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        LayoutInflater    layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View        popupView      = layoutInflater.inflate(R.layout.popup_two_button, null);
+        final PopupWindow popupWindow    = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
             @Override
@@ -8262,6 +8607,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         popupWindow.showAtLocation(findViewById(R.id.main), 0, 0, 0);
 
     }
+
 
     public void setUpRemoveAllDiscount(View popupView, PopupWindow popupWindow)
     {
@@ -8290,7 +8636,9 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
                 SubdivisionItem item = orderSubdivisionFragment.getSubdivisionAdapter().getSelectedItem();
                 if (item == null)
-                { item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem(); }
+                {
+                    item = orderSubdivisionFragment.getSubdivisionAdapter().getTotalItem();
+                }
                 if (item.getMode() == -1 || item.getMode() == 2 || item.getMode() == 3)
                 {
                     ArrayList<CashButtonLayout> myProducts = item.getItems();
@@ -8321,12 +8669,13 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
 
     }
 
+
     public void openPayOtherPopup()
     {
 
-        LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.popup_one_button, null);
-        final PopupWindow popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        LayoutInflater    layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View        popupView      = layoutInflater.inflate(R.layout.popup_one_button, null);
+        final PopupWindow popupWindow    = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         popupView.post(new Runnable()
         {
             @Override
@@ -8374,6 +8723,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentActivity
         TimerManager.setIntentPinpad(intentPasscode);
         TimerManager.startPinpadAlert(type);
     }
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event)

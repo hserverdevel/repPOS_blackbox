@@ -456,6 +456,7 @@ public class DbAdapterUsers extends DbAdapterInit
         try
         {
             if (database.isOpen()) { database.close(); }
+
             database = dbHelper.getWritableDatabase();
             //execOnDb("DELETE FROM user");
             for (User user : userList)
@@ -477,8 +478,8 @@ public class DbAdapterUsers extends DbAdapterInit
                             "VALUES(" + user.getId() + ", '" + user.getName() + "','" + user.getSurname() + "','" + user
                             .getEmail() + "','" + user.getPasscode() + "'," + user.getUserRole() + " ,'" + user
                             .getPasscode() + "')");
-
                 }
+
                 c.close();
 
             }

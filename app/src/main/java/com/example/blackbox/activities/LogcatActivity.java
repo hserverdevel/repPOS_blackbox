@@ -25,104 +25,122 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class LogcatActivity extends FragmentActivity {
+
+public class LogcatActivity extends FragmentActivity
+{
     boolean showOnlyApp = true;
 
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logcat);
-        ((TextView)findViewById(R.id.textView1)).setMovementMethod(new ScrollingMovementMethod());
+        ((TextView) findViewById(R.id.textView1)).setMovementMethod(new ScrollingMovementMethod());
 
-        try {
+        try
+        {
             Process process = Runtime.getRuntime().exec("logcat -d");
-            BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(process.getInputStream()));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder log  = new StringBuilder();
+            String        line = "";
 
-            StringBuilder log=new StringBuilder();
-            String line = "";
-            while ((line = bufferedReader.readLine()) != null) {
-                if(line.contains("POS LOGCAT")) {
-                    log.append(line);
-                    log.append("\n");
-                }
-
+            while ((line = bufferedReader.readLine()) != null)
+            {
+                log.append(line);
+                log.append("\n");
             }
-            TextView tv = (TextView)findViewById(R.id.textView1);
+
+            TextView tv = (TextView) findViewById(R.id.textView1);
             tv.setText(log.toString());
+        }
 
-
-        } catch (IOException e) {
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
-        DatabaseAdapter dbA = new DatabaseAdapter(getApplicationContext());
-        int fatt = dbA.selectNumeroFattura();
+
+
+
+        DatabaseAdapter dbA  = new DatabaseAdapter(getApplicationContext());
+        int             fatt = dbA.selectNumeroFattura();
         ((CustomEditText) findViewById(R.id.fourthButton)).setText(String.valueOf(fatt));
 
-        findViewById(R.id.firstButton).setOnClickListener(new View.OnClickListener() {
+
+        findViewById(R.id.firstButton).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 ScrollView scrollView = (ScrollView) findViewById(R.id.scrollview);
                 scrollView.fullScroll(View.FOCUS_UP);
 
             }
         });
-        findViewById(R.id.secondButton).setOnClickListener(new View.OnClickListener() {
+
+
+        findViewById(R.id.secondButton).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 ScrollView scrollView = (ScrollView) findViewById(R.id.scrollview);
                 scrollView.fullScroll(View.FOCUS_DOWN);
 
 
             }
         });
-        findViewById(R.id.thirdButton).setOnClickListener(new View.OnClickListener() {
+
+
+        findViewById(R.id.thirdButton).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                TextView tv = (TextView)findViewById(R.id.textView1);
-                try {
+            public void onClick(View v)
+            {
+                TextView tv = (TextView) findViewById(R.id.textView1);
+                try
+                {
                     File root = new File(Environment.getExternalStorageDirectory(), "Download");
-                    if (!root.exists()) {
+                    if (!root.exists())
+                    {
                         root.mkdirs();
                     }
-                    File gpxfile = new File(root, "Logcat.txt");
-                    FileWriter writer = new FileWriter(gpxfile);
+                    File       gpxfile = new File(root, "Logcat.txt");
+                    FileWriter writer  = new FileWriter(gpxfile);
                     writer.append(tv.getText().toString());
                     writer.flush();
                     writer.close();
 
-                } catch (IOException e) {
+                }
+                catch (IOException e)
+                {
                     e.printStackTrace();
                 }
 
 
-                try {
-                    File Root= Environment.getExternalStorageDirectory();
-                    File filelocation = new File(Root.getAbsolutePath() + "/Download/", "Logcat.txt");
-                    Uri path = Uri.fromFile(filelocation);
-                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                    emailIntent .setType("vnd.android.cursor.dir/email");
+                try
+                {
+                    File   Root         = Environment.getExternalStorageDirectory();
+                    File   filelocation = new File(Root.getAbsolutePath() + "/Download/", "Logcat.txt");
+                    Uri    path         = Uri.fromFile(filelocation);
+
+                    Intent emailIntent  = new Intent(Intent.ACTION_SEND);
+                    emailIntent.setType("vnd.android.cursor.dir/email");
                     String to[] = {"tfiori@burgheria.it"};
-                    emailIntent .putExtra(Intent.EXTRA_EMAIL, to);
-                    emailIntent .putExtra(Intent.EXTRA_STREAM, path);
-                    emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Logcat");
-                    startActivity(Intent.createChooser(emailIntent , "Send email..."));
+
+                    emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
+                    emailIntent.putExtra(Intent.EXTRA_STREAM, path);
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Logcat");
+
+                    startActivity(Intent.createChooser(emailIntent, "Send email..."));
 
 
-                   /* File Root= Environment.getExternalStorageDirectory();
-                    String filelocation=Root.getAbsolutePath() + "Downlaod/Logcat.txt";
-                    Intent intent = new Intent(Intent.ACTION_SENDTO);
-                    intent.setType("text/plain");
-                    String message="Logcat";
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-                    intent.putExtra(Intent.EXTRA_STREAM, Uri.parse( "file://"+filelocation));
-                    intent.putExtra(Intent.EXTRA_TEXT, message);
-                    intent.setData(Uri.parse("tfiori@burgheria.it"));*/
-                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                     //startActivity(intent);
-                } catch(Exception e)  {
-                    System.out.println("is exception raises during sending mail"+e);
+                }
+                catch (Exception e)
+                {
+                    System.out.println("is exception raises during sending mail" + e);
                 }
 
 
@@ -146,86 +164,99 @@ public class LogcatActivity extends FragmentActivity {
 
             }
         });
-        /*findViewById(R.id.fourthButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
 
-            }
-        });*/
-        findViewById(R.id.fifthButton).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.fifthButton).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 String mycost = ((CustomEditText) findViewById(R.id.fourthButton)).getText().toString();
-                if(!mycost.equals("")) {
+                if (!mycost.equals(""))
+                {
                     int newInvoiceNumber = Integer.valueOf(mycost);
 
                     dbA.updateNumeroFatture(newInvoiceNumber);
                     ((CustomEditText) findViewById(R.id.fourthButton)).setText("");
                     int fatt = dbA.selectNumeroFattura();
-                    Log.i("FATTURNA NUOVA", ""+fatt);
                 }
-
 
 
             }
         });
 
-        findViewById(R.id.kill).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.kill).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 Intent intent = new Intent(LogcatActivity.this, PinpadActivity.class);
                 startActivity(intent);
 
             }
         });
 
-        findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+
+        findViewById(R.id.ok).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 TextView tv = (TextView) findViewById(R.id.textView1);
                 tv.setText("");
                 ((TextView) findViewById(R.id.textView1)).setMovementMethod(new ScrollingMovementMethod());
-                if(showOnlyApp) {
-                    try {
+
+                if (showOnlyApp)
+                {
+                    try
+                    {
                         Process process = Runtime.getRuntime().exec("logcat -d");
                         BufferedReader bufferedReader = new BufferedReader(
                                 new InputStreamReader(process.getInputStream()));
 
-                        StringBuilder log = new StringBuilder();
-                        String line = "";
-                        while ((line = bufferedReader.readLine()) != null) {
+                        StringBuilder log  = new StringBuilder();
+                        String        line = "";
+                        while ((line = bufferedReader.readLine()) != null)
+                        {
                             log.append(line);
                             log.append("\n");
 
                         }
                         tv.setText(log.toString());
+                    }
 
-
-                    } catch (IOException e) {
+                    catch (IOException e)
+                    {
                         e.printStackTrace();
                     }
                     showOnlyApp = false;
-                }else{
-                    try {
+                }
+                else
+                {
+                    try
+                    {
                         Process process = Runtime.getRuntime().exec("logcat -d");
                         BufferedReader bufferedReader = new BufferedReader(
                                 new InputStreamReader(process.getInputStream()));
 
-                        StringBuilder log=new StringBuilder();
-                        String line = "";
-                        while ((line = bufferedReader.readLine()) != null) {
-                            if(line.contains("POS LOGCAT")) {
+                        StringBuilder log  = new StringBuilder();
+                        String        line = "";
+                        while ((line = bufferedReader.readLine()) != null)
+                        {
+                            if (line.contains("POS LOGCAT"))
+                            {
                                 log.append(line);
                                 log.append("\n");
                             }
 
                         }
-                        tv = (TextView)findViewById(R.id.textView1);
+                        tv = (TextView) findViewById(R.id.textView1);
                         tv.setText(log.toString());
 
 
-                    } catch (IOException e) {
+                    }
+                    catch (IOException e)
+                    {
                         e.printStackTrace();
                     }
                     showOnlyApp = true;
